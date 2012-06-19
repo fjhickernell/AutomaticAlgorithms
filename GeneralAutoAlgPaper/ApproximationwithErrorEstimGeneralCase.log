@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=latex 2012.1.17)  19 JUN 2012 13:14
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=latex 2012.1.17)  19 JUN 2012 13:37
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -348,5 +348,5 @@ Here is how much of TeX's memory you used:
  831 hyphenation exceptions out of 8191
  32i,17n,30p,1037b,243s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on ApproximationwithErrorEstimGeneralCase.dvi (23 pages, 102392 
+Output written on ApproximationwithErrorEstimGeneralCase.dvi (23 pages, 102420 
 bytes).
