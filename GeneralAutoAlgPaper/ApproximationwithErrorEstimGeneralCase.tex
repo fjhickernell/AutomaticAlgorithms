@@ -484,7 +484,7 @@ These fooling functions must lie inside the cone $\cc_{\tau}$ because
 \begin{align*}
 \norm[\cf]{f_{\pm}} - \tau  \norm[\cg]{f_{\pm}} & \le \tau_0 c_{0,n} + c_1 \norm[\cf]{f_1} - \tau c_{0,n}
 && \text{by \eqref{assumpbumpb},\eqref{assumpbumpc}} \\
-& \le c_1 b n^{q} \norm[\cg]{f_1} - (\tau - \tau_0) c_{0,n} && \text{by \eqref{assumpbumpd}} \\
+& \le c_1 b n^{q} \norm[\cg]{f_1} - (\tau - \tau_0) c_{0,n} && \text{by \eqref{assumpfone}} \\
 & = \frac{\sigma (\tau - \tau_0) [b n^q - b n^q ] }{b n^q + \tau - \tau_0} = 0 && \text{by \eqref{assumpbumpe}, \eqref{c1bumpdef}}.
 \end{align*}
 Moreover, both fooling functions have $\cg$-semi-norms no greater than $\sigma$, since
@@ -498,7 +498,7 @@ Following the argument earlier in this section, it is noted that the data used b
 \[
 \varepsilon  \ge  \max(\norm[\ch]{S(f_+)-A(f_+)},\norm[\ch]{S(f_-)-A(f_-)}) \ge c_1 \norm[\ch]{S(f_1)}=c_1.
 \]
-Since $A$ is successful, $c_1$, as defined in \eqref{c1bumpdef}, must be no larger than the error tolerance, which implies by \eqref{assumpbumpd} that 
+Since $A$ is successful, $c_1$, as defined in \eqref{c1bumpdef}, must be no larger than the error tolerance, which implies by \eqref{assumpfone} that 
 \begin{multline*}
 \frac{\sigma (\tau-\tau_0)}{\varepsilon} \le \frac{\sigma (\tau-\tau_0)}{c_1}  = \norm[\cg]{f_1} (b n^q + \tau-\tau_0) \\
 \le a n^{p} (b n^q + \tau-\tau_0) \le 2 a n^{p} \max( b n^{q}, \tau-\tau_0) 

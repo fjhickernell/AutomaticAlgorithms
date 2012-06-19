@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=latex 2012.1.17)  19 JUN 2012 13:37
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=latex 2012.1.17)  19 JUN 2012 17:51
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -272,17 +272,7 @@ File: ueuf.fd 2009/06/22 v3.00 Euler Fraktur
 
 Package natbib Warning: Citation `???' on page 12 undefined on input line 425.
 
-[12] [13]
-
-LaTeX Warning: Reference `assumpbumpd' on page 14 undefined on input line 489.
-
-
-LaTeX Warning: Reference `assumpbumpd' on page 14 undefined on input line 489.
-
-
-LaTeX Warning: Reference `assumpbumpd' on page 14 undefined on input line 501.
-
-[14] (./ApproxUnivariate.tex
+[12] [13] [14] (./ApproxUnivariate.tex
 Overfull \hbox (23.44011pt too wide) detected at line 25
 [] \OT1/cmr/m/n/10 = [] = [] \OMS/cmsy/m/n/10 ^^T [][] [] ^^T \OML/cmm/m/it/10 
 ^^[[] \OT1/cmr/m/n/10 = \OML/cmm/m/it/10 ":
@@ -333,20 +323,17 @@ Package natbib Warning: There were undefined citations.
 
 [23] (./ApproximationwithErrorEstimGeneralCase.aux)
 
-LaTeX Warning: There were undefined references.
-
-
 LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 3027 strings out of 493630
- 35352 string characters out of 3143346
+ 3026 strings out of 493630
+ 35339 string characters out of 3143346
  97723 words of memory out of 3000000
- 6286 multiletter control sequences out of 15000+200000
+ 6285 multiletter control sequences out of 15000+200000
  14288 words of font info for 53 fonts, out of 3000000 for 9000
  831 hyphenation exceptions out of 8191
  32i,17n,30p,1037b,243s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on ApproximationwithErrorEstimGeneralCase.dvi (23 pages, 102420 
+Output written on ApproximationwithErrorEstimGeneralCase.dvi (23 pages, 102404 
 bytes).
