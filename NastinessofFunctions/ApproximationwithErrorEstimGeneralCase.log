@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=latex 2012.1.17)  19 JUN 2012 09:16
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=latex 2012.1.17)  19 JUN 2012 13:14
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -282,14 +282,14 @@ LaTeX Warning: Reference `assumpbumpd' on page 14 undefined on input line 489.
 
 LaTeX Warning: Reference `assumpbumpd' on page 14 undefined on input line 501.
 
-[14]
-Overfull \hbox (23.44011pt too wide) detected at line 545
+[14] (./ApproxUnivariate.tex
+Overfull \hbox (23.44011pt too wide) detected at line 25
 [] \OT1/cmr/m/n/10 = [] = [] \OMS/cmsy/m/n/10 ^^T [][] [] ^^T \OML/cmm/m/it/10 
 ^^[[] \OT1/cmr/m/n/10 = \OML/cmm/m/it/10 ":
  []
 
 [15]
-Overfull \hbox (2.87662pt too wide) in paragraph at lines 545--547
+Overfull \hbox (2.87662pt too wide) in paragraph at lines 25--27
 \OT1/cmr/m/n/10 tions at $\OML/cmm/m/it/10 x[] \OT1/cmr/m/n/10 = (2\OML/cmm/m/i
 t/10 i \OMS/cmsy/m/n/10 ^^@ \OT1/cmr/m/n/10 1)\OML/cmm/m/it/10 =n;  i \OT1/cmr/
 m/n/10 = 1\OML/cmm/m/it/10 ; [] ; n$ \OT1/cmr/m/n/10 can be used to show that $
@@ -298,7 +298,7 @@ m/n/10 = 1\OML/cmm/m/it/10 ; [] ; n$ \OT1/cmr/m/n/10 can be used to show that $
  []
 
 
-Overfull \hbox (23.20781pt too wide) in paragraph at lines 548--549
+Overfull \hbox (23.20781pt too wide) in paragraph at lines 28--29
 \OT1/cmr/m/n/10 the fool-ing func-tion, $\OML/cmm/m/it/10 f[]$\OT1/cmr/m/n/10 ,
  is eval-u-ated, may de-pend on $(\OML/cmm/m/it/10 x[]; f[]\OT1/cmr/m/n/10 (\OM
 L/cmm/m/it/10 ^^X[]\OT1/cmr/m/n/10 ))\OML/cmm/m/it/10 ; [] ; \OT1/cmr/m/n/10 (\
@@ -307,15 +307,15 @@ OML/cmm/m/it/10 ^^X[]; f[]\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 ^^X[]\OT1/cmr/m/n/1
  []
 
 [16] [17]
-Overfull \hbox (5.13744pt too wide) in paragraph at lines 614--615
+Overfull \hbox (5.13744pt too wide) in paragraph at lines 94--95
 []\OT1/cmr/m/n/10 For any nice func-tion $\OML/cmm/m/it/10 f$ \OT1/cmr/m/n/10 l
 y-ing in $\OMS/cmsy/m/n/10 N[]$\OT1/cmr/m/n/10 , its size is bounded above by $
 [](\OML/cmm/m/it/10 f\OT1/cmr/m/n/10 )\OML/cmm/m/it/10 =\OT1/cmr/m/n/10 (1 \OMS
 /cmsy/m/n/10 ^^@
  []
 
-[18] [19]
-Overfull \hbox (0.64676pt too wide) detected at line 716
+[18]) (./IntegUnivariate.tex) [19]
+Overfull \hbox (0.64676pt too wide) detected at line 583
 \OML/cmm/m/it/10 G[]\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 f\OT1/cmr/m/n/10 ) = []\O
 ML/cmm/m/it/10 ;  A[]\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 f\OT1/cmr/m/n/10 ) = \OM
 L/cmm/m/it/10 A[]\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 f\OT1/cmr/m/n/10 ) + \OML/cm
@@ -323,11 +323,11 @@ m/m/it/10 ^^U[]![] [][] v[]:
  []
 
 [20] [21]
-Overfull \hbox (49.25797pt too wide) in paragraph at lines 776--776
+Overfull \hbox (49.25797pt too wide) in paragraph at lines 643--643
 [] 
  []
 
-(./ApproximationwithErrorEstimGeneralCase.bbl [22])
+[22] (./ApproximationwithErrorEstimGeneralCase.bbl)
 
 Package natbib Warning: There were undefined citations.
 
@@ -340,13 +340,13 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 3018 strings out of 493630
- 35207 string characters out of 3143346
- 98696 words of memory out of 3000000
- 6283 multiletter control sequences out of 15000+200000
+ 3027 strings out of 493630
+ 35352 string characters out of 3143346
+ 97723 words of memory out of 3000000
+ 6286 multiletter control sequences out of 15000+200000
  14288 words of font info for 53 fonts, out of 3000000 for 9000
  831 hyphenation exceptions out of 8191
  32i,17n,30p,1037b,243s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on ApproximationwithErrorEstimGeneralCase.dvi (23 pages, 102316 
+Output written on ApproximationwithErrorEstimGeneralCase.dvi (23 pages, 102392 
 bytes).
