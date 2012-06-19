@@ -1,0 +1,321 @@
+\documentclass[12pt]{amsart}
+\setlength{\marginparwidth}{0.5in}
+\usepackage{amsmath,amssymb,natbib,graphicx}
+\textheight 9in
+\textwidth 6.5 in
+\hoffset -1 in
+\voffset -1 in
+\input FJHDef.tex
+
+\newcommand{\sphere}{\mathbb{S}}
+\newcommand{\cc}{\mathcal{C}}
+\newcommand{\cq}{\mathcal{Q}}
+\newcommand{\bbW}{\mathbb{W}}
+\newcommand{\tP}{\widetilde{P}}
+\newcommand{\bg}{{\bf g}}
+\newcommand{\bu}{{\bf u}}
+\newcommand{\bbu}{\bar{\bf u}}
+\newcommand{\bv}{{\bf v}}
+\newcommand{\bbv}{\bar{\bf v}}
+\newcommand{\bw}{{\bf w}}
+\newcommand{\bbw}{\bar{\bf w}}
+\newcommand{\hv}{\hat{v}}
+\DeclareMathOperator{\MSE}{MSE}
+\DeclareMathOperator{\RMSE}{RMSE}
+\DeclareMathOperator{\rnd}{rnd}
+\DeclareMathOperator{\abso}{abs}
+\DeclareMathOperator{\rel}{rel}
+\DeclareMathOperator{\nor}{nor}
+\DeclareMathOperator{\err}{err}
+\DeclareMathOperator{\lin}{lin}
+%\DeclareMathOperator{\std}{std}
+\DeclareMathOperator{\prob}{prob}
+\DeclareMathOperator{\trunc}{trc}
+\DeclareMathOperator{\third}{third}
+%\DeclareMathOperator{\fourth}{fourth}
+\newtheorem{theorem}{Theorem}
+\newtheorem{prop}[theorem]{Proposition}
+\DeclareMathOperator{\sMC}{sMC}
+\DeclareMathOperator{\aMC}{aMC}
+\DeclareMathOperator{\size}{size}
+\DeclareMathOperator{\guile}{guile}
+\DeclareMathOperator{\up}{up}
+\DeclareMathOperator{\lo}{lo}
+
+\newtheorem{algo}{Algorithm}
+\begin{document}
+
+\title{Complexity of Function Approximation with Error Estimation}
+\author{Fred J. Hickernell}
+\address{Room E1-208, Department of Applied Mathematics, Illinois Institute of Technology, 10 W.\ 32$^{\text{nd}}$ St., Chicago, IL 60616}
+\begin{abstract}
+\end{abstract}
+\maketitle
+
+\section{General Setting}
+The problem investigated is that of function recovery.  Let $\ch$ be some Banach (often Hilbert) space of real-valued functions defined on $\cx$.  Given any $f \in \ch$, one obtains $n$ pieces of information about the function and constructs an approximation $\tf=A(f) \in \cg$, where $\cg$ is some, perhaps different, normed linear space.   The goal is to make $\lVert f - \tf \rVert_{\cg}$ as small as possible.  
+
+Here we follow the terminology, but not exactly the notation, in \cite[Section 3.2]{TraWasWoz88}. Let $\ca(\ch,\Lambda)$ be the set of all algorithms, $A$, that produce approximations $\tf=A(f)$, for any $f \in \ch$ based on information of the class $\Lambda$.  Specifcially, $A(f)$ is some function of $L_1(f), \ldots, L_n(f)$, where the $L_i \in \Lambda$ are real-valued functions defined on $\ch$.  Two common choices are all function values, $\Lambda^{\std}$, and all bounded linear functionals, $\Lambda^{\lin}$.  The algorithm is allowed to be adaptive, i.e., the choice of $L_2$ may depend on the value of $L_1(f)$, the choice of $L_3$ may depend on the values $L_1(f)$ and $L_2(f)$, etc.  Also, $n=:\cost(A,f)$ may be a function of $f$, but need not be.  The choice of $L_i$, $n$, the stopping criterion, etc., are all a part of the definition of $A$, but $f$ is \emph{not} a part of the definition of $A$.
+
+The cost of an algorithm for some $\cf \subseteq \ch$ is defined as
+\begin{equation}\label{algcost}
+\cost(A,\cf) = \sup_{f \in \cf} \cost(A,f).
+\end{equation}
+Given an error tolerance $\varepsilon \ge 0$, let $\ca(\varepsilon,\cf,\Lambda) \subseteq \ca(\ch,\Lambda)$ denote the set of all algorithms that guarantee an absolute error no larger than the tolerance, i.e.,  
+\begin{equation} \label{abserrcrit}
+\norm[\cg]{f - A(f)} \le \varepsilon \qquad \forall f \in \cf,\ \forall A \in \ca(\varepsilon,\cf,\Lambda).
+\end{equation}
+The \emph{complexity} of the problem is the cost of the cheapest algorithm that attains the error tolerance, i.e., 
+\begin{align} \label{compdef}
+\comp(\varepsilon,\cf,\Lambda) &= \min_{A \in \ca(\varepsilon,\cf,\Lambda)} \cost(A,\cf)\\
+\nonumber
+&= \min \left\{\sup_{f \in \cf} \cost(A,f) : A \in \ca(\ch,\Lambda), \ \ \norm[\cg]{f - A(f)} \le \varepsilon \ \forall f \in \cf \right\}.
+\end{align}
+The value of $\comp(\cdot,\cf,\Lambda)$ clearly depends on the problem definition.  If one makes the class of information no larger, $\Lambda' \subseteq \Lambda$, the set of possible functions no smaller, $\cf \le \cf'$, and the norm on $\cg$ no weaker, $\norm[\cg]{g} \le \norm[\cg']{g},  \forall g \in \cg$, then the complexity using these primed quantities will be no smaller, i.e., 
+\[
+\comp(\cdot,\cf,\Lambda) \le \comp(\cdot,\cf',\Lambda').
+\]
+
+The goal in information based complexity theory is to determine the complexity of the problem as a power of the error tolerance and up to a leading constant.  Since the problem is linear, this complexity also depends on the size or scale of the functions to be approximated.  Define a function 
+\[
+\size:\ch \to  [0,+\infty), \qquad \size(cf) = \abs{c} \size(f) \quad \forall f \in \ch
+\]
+which is some appropriate measure of size or scale of a function, e.g., a norm or semi-norm.   Let $\cb_{\sigma}:=\{f \in \ch : \size(f) \le \sigma\}$ denote the ``ball'' of functions of size no larger than $\sigma$.  A desirable complexity result is upper and lower bounds in terms of power of $\varepsilon^{-1}$, e.g., 
+\begin{subequations} \label{typicalres}
+\begin{equation} \label{typcomp}
+C_{\lo} \left(\frac{\sigma}{\varepsilon} \right)^{p_{\lo}} \le \comp(\varepsilon,\cb_{\sigma},\Lambda) \le C_{\up} \left(\frac{\sigma}{\varepsilon} \right)^{p_{\up}}, \quad 0 < \varepsilon < \varepsilon_{\up}.
+\end{equation}
+Here the determination of $p_{\lo}$ and $p_{\up}$ is the most crucial, but often $C_{\lo}$, $C_{\up}$, and $\varepsilon_0$ can be specified explicitly as well. Clearly, $p_{\lo} \le p_{\up}$.  Ideally, it may be possible to choose $p_{\lo} = p_{\up}=p$, and this case is described as
+\[
+\comp(\varepsilon,\cb_{\sigma},\Lambda) \asymp \left(\frac{\sigma}{\varepsilon} \right)^{p}, \quad \varepsilon \downarrow 0.
+\]
+
+Sometimes the complexity result \label{typcomp} has a companion result that identifies an explicit algorithm $A_{\varepsilon,\sigma} \in \ca(\varepsilon,\cb_{\sigma},\Lambda)$ that attains the optimal complexity order, i.e., 
+\begin{equation} \label{typcompcomp}
+\norm[\cg]{f - A_{\varepsilon,\sigma}(f)} \le \varepsilon \quad \forall f \in \cb_{\sigma} \quad \text{and} \quad  \cost(A_{\varepsilon,\sigma},\cb_{\sigma}) \le C_{\up,A_{\varepsilon,\sigma}} \left(\frac{\sigma}{\varepsilon} \right)^{p_{\up}} \quad 0 < \varepsilon < \varepsilon_{\up}.
+\end{equation}
+\end{subequations}
+Other times, \eqref{typcomp} is non-constructive.
+Examples of results of the form \eqref{typicalres} are given in \cite{} and below in ???
+
+Although a complexity result such as \eqref{typicalres} is valuable in explaining how fast the work required increases as the error tolerance decreases, its usefulness for solving practical problems is somewhat limited.  One must know the appropriate value of $\sigma$ in advance.  One must know a priori that $\size(f) \le \sigma$ before one can pick an algorithm $A_{\varepsilon,\sigma} \in \ca(\varepsilon,\cb_{\sigma},\Lambda)$ that guarantees the required error tolerance as in \eqref{typcompcomp}.  
+
+Rather than using an absolute error criterion \eqref{abserrcrit}, as has been described above, complexity analysis may be done using an error criterion \emph{normalized} by the size of the function:
+\begin{equation*} %\label{abserrcrit}
+\frac{\norm[\cg]{f - A(f)}}{\size(f)} \le \varepsilon.
+\end{equation*}
+In this normalized error criterion $0/0$ is taken to be $0$ by convention.  Moreover, the complexity result \eqref{typicalres} now superficially loses the $\sigma$-dependence: 
+\begin{subequations} \label{normtypicalres}
+\begin{gather} \label{normtypcomp}
+C_{\lo} \left(\frac{1}{\varepsilon} \right)^{p_{\lo}} \le \comp(\varepsilon,\ch,\Lambda) \le C_{\up} \left(\frac{1}{\varepsilon} \right)^{p_{\up}}, \quad 0 < \varepsilon < \varepsilon_{\up}, 
+\intertext{and there is found an algorithm $A_{\varepsilon}$ satisfying}
+\label{typcompcomp}
+\frac{\norm[\cg]{f - A_{\varepsilon}(f)}}{\size(f)} \le \varepsilon \quad \forall f \in \ch \quad \text{and} \quad  \cost(A_{\varepsilon},\ch) \le C_{\up,A_{\varepsilon}} \left(\frac{\sigma}{\varepsilon} \right)^{p_{\up}} \quad 0 < \varepsilon < \varepsilon_{\up}.
+\end{gather}
+\end{subequations}
+A successful algorithm works for all functions in $\ch$, and it does not depend on knowing $\size(f)$ in advance.  However, since the error criterion depends on the typically unknown $\size(f)$, one is left still not knowing how accurate the the resulting approximation is.
+
+The purpose of this article is to develop algorithms and a complexity theory that do not require a priori knowledge of the size of a function.  This  requires a generalization of some of the definitions.  The cost of an algorithm, $A$, for functions in some arbitrary set, $\cf \subseteq \ch$, is now broken down by function size, so that definition \eqref{algcost} is replaced by
+\begin{subequations} \label{newres}
+\begin{equation}\label{newalgcost}
+\cost(A,\cf,\sigma) = \sup_{\substack{f \in \cf \\ \size(f) \le \sigma}} \cost(A,f).
+\end{equation}
+A scale-invariant set of functions $\cn_{\tau} \subseteq \ch$ is identified, i.e., one with the property that 
+\[
+f \in \cn_{\tau} \implies cf \in \cn_{\tau} \qquad \forall c \in \reals.
+\]
+An algorithm $A_{\varepsilon} \in \ca(\varepsilon,\cn_{\tau},\Lambda)$ is constructed that satisfies
+\begin{equation}
+\label{newcompcomp}
+\norm[\cg]{f - A_{\varepsilon}(f)} \le \varepsilon \quad \forall f \in \cn_{\tau} \quad \text{and} \quad  \cost(A_{\varepsilon},\cn_{\tau},\sigma) \le C_{\up,\tau,A_{\varepsilon}} \left(\frac{\sigma}{\varepsilon} \right)^{p_{\up}} \quad 0 < \varepsilon < \varepsilon_{\up}.
+\end{equation}
+Note that the definition of this algorithm \emph{does not depend} on knowing $\size(f)$ a priori, although naturally its cost \emph{does} depend on $\size(f)$.
+
+The set $\cn_{\tau}$ consists of nice, naive or innocent functions, i.e., those for which the algorithm can reliably estimate how many pieces of information are needed to attain the error tolerance.  A function outside this set is one that can trick the algorithm into thinking that it is well approximated at a modest cost, when actually more pieces of information are needed.  Specifically, a measure of \emph{guile}, nastiness, or trickiness of a function is defined and $\cn_\tau$ is defined as the set of functions with bounded guile, namely, 
+\begin{equation} \label{nicefundef}
+\cn_{\tau} = \{f \in \ch : \guile(f) \le \tau\}.
+\end{equation}
+As mentioned above, a function may be multiplied by any constant, thus changing its size, but leaving its guile unchanged.
+\end{subequations}
+
+\section{$\cl_{\infty}$ Approximation of Univariate Functions with Bounded First Derivatives Using Function Values}
+
+Let $\ch$ be the space of continuous functions on $[0,1]$ with $\cl_{\infty}$ first derivatives.  Suppose one wants to approximate functions in $\ch$ based on function values.  The goal is to make the $\cl_{\infty}$ error small, i.e., to find an algorithm, $A$ for which $\norm[\infty]{f - A(f)} \le \varepsilon$.  A non-adaptive algorithm is described and analyzed first, however, as described in the introduction it is successful only for functions whose size is known.  Next an adaptive algorithm is constructed from the non-adaptive one.  A measure of guile is defined, and functions with moderate guile are guaranteed to be well-approximated by the non-adpative algorithm.
+
+\subsection{Non-Adaptive Algorithms} As a start, consider the algorithm that produces a piecwise constant approximation using function values at $n+1$ equally spaced data sites, $\left\{x_i = \frac{i}{n}\right\}_{i=0}^n$:
+\begin{equation} \label{appxbuildblock}
+\tA_n(f) = 1_{\left[0,\frac{1}{2n}\right)}(x) \, f(0) + \sum_{i=1}^{n-1} 1_{\left[\frac{2i-1}{2n},\frac{2i+1}{2n}\right)}(x) \, f\left(x_i\right) + 1_{\left[\frac{2n-1}{2n},1\right]}(x) \, f(1).
+\end{equation}
+This algorithm assigns as the value $\tA_n(f)(x)$ the value of $f\left(x_i\right)$ corresponding to the data site, $x_i$, nearest $x$.  The algorithm $\tA_n$ is used to construct an adaptive algorithm to be described later.  Note that the cost of this algorithm is $n+1$, not $n$.  Although this algorithm is slightly sub-optimal for fixed sample size, 
+
+Define the size of a function as the $\cl_{\infty}$ norm of its first derivative, i.e., $\size(f) = \norm[\infty]{f'}$. Furthermore, as in the previous section, define the ball of functions $\cb_{\sigma} :=\{f \in \ch : \norm[\infty]{f'} \le \sigma\}$.
+
+\begin{theorem} \label{stdappxthm}  The problem of approximating functions of bounded size has complexity
+\[
+\comp(\varepsilon,\cb_{\sigma},\Lambda^{\std}) = \left \lceil \frac{\sigma}{2\varepsilon} \right \rceil.
+\]
+The algorithm defined in \eqref{appxbuildblock} is nearly optimal, in the sense that it satisfies the error tolerance with only one additional function evaluation than is optimal:
+\[
+\sup_{f \in \cb_{\sigma}} \norm[\infty]{f - \tA_{\lceil\sigma/(2\varepsilon)\rceil}(f)} \le \varepsilon, \qquad \cost(\tA_{\lceil\sigma/(2\varepsilon)\rceil},\cb_{\sigma}) = \left \lceil \frac{\sigma}{2\varepsilon} \right \rceil + 1.
+\]
+\end{theorem}
+\begin{proof}  For any function $f$ lying in the ball $\cb_\sigma$, and any $x \in [0,1)$, let $x_i$ be the data site nearest $x$, and so $\abs{x-x_i} \le 1/(2\lceil\sigma/(2\varepsilon)\rceil) \le \varepsilon/\sigma$ and $\tA_{\lceil\sigma/(2\varepsilon)\rceil}(f)(x)=f(x_i)$. It then follows that
+\begin{equation*}
+\abs{f(x) - \tA_{\lceil\sigma/(2\varepsilon)\rceil}(f)(x)}=\abs{f(x) - f(x_i)} = \abs{\int_{x_i}^x f'(t) \, \dif t} \le \norm[\infty]{f'} \abs{x-x_i} \le  \sigma \frac{\varepsilon}{\sigma} = \varepsilon.
+\end{equation*}
+This implies that $\tA_{\lceil\sigma/(2\varepsilon)\rceil}$ that attains the error tolerance with  $\left \lceil \frac{\sigma}{2\varepsilon} \right \rceil + 1$ function evaluations.  A similar argument using an algorithm based on function evaluations at $x_i=(2i-1)/n,\ i=1, \ldots, n$ can be used to show that $\comp(\varepsilon,\cb_{\sigma},\Lambda^{\std}) \le \left \lceil \frac{\sigma}{2\varepsilon} \right \rceil$.
+
+To prove a lower bound, one considers \emph{any} (possibly adaptive) algorithm $A$ using $n\le \left \lceil \frac{\sigma}{2\varepsilon} \right \rceil - 1$ function evaluations.  The proof proceeds by constructing a fooling function, $f^* \in \cb_\sigma$ for which $\norm[\infty]{f^* - A(f^*)} > \varepsilon$.  Let $A$ be any such algorithm.  Since the algorithm may be adaptive, the choice of the point, $\xi_i$, where the fooling function, $f^*$, is evaluated, may depend on $(x_1,f^*(\xi_1)), \ldots, (\xi_{i-1},f^*(\xi_{i-1}))$, for $i=2, \ldots, n$. By fiat, the fooling function is constructed to vanish at all data sites, $\xi_i$.  The fooling function is a translated and scaled bump.  Define a standard triangular bump on $\reals$ as 
+\begin{equation} \label{trianglebump}
+\psi(x) : = \max(1-\abs{x},0) = \begin{cases}0, & \abs{x} > 1, \\
+1-\abs{x}, & \abs{x} \le 1,
+\end{cases}
+\end{equation}
+and note that $\norm[\infty]{\psi} = \norm[\infty]{\psi'}=1$.  Given the algorithm $A$ with data sites $\xi_1, \ldots, \xi_n$, there exists at least one point $\xi_0 \in [0,1)$ with $\min_{1 \le i \le n} \abs{\xi_i -\xi_0} \ge 1/(2n)$.  Then define the fooling function by 
+\[
+f^*: x \mapsto \frac{\sigma}{2n}\psi(2n(x-\xi_0)).
+\]
+By definition, $\pm f^*(\xi_i)=0$ for $i=1, \ldots, n$, and $\norm[\infty]{\pm{f^*}'} = \sigma$, so $\pm f^* \in \cb_\sigma$.   Moreover, $\pm f^*(\xi_i)= \pm \sigma/(2n)$.  Since the two functions $\pm f^*$ provide the same data to algorithm $A$, it follows that $A(f)(\xi_0)=A(-f)(\xi_0)$.  The triangle inequality and the strict upper bound on $n$ then imply that the approximation error must be greater than the desired tolerance.
+\begin{align*}
+\sup_{f \in \cb} \norm[\infty]{f - A(f)} 
+&\ge \max\left(\norm[\infty]{f^* - A(f^*)},\norm[\infty]{-f^* - A(- f^*)}\right) \\ 
+& \ge \max\left(\abs{f^*(\xi_0) - A(f)(\xi_0)},\abs{-f^*(\xi_0) - A(-f^*)(\xi_0)}\right) \\
+& \ge \frac{1}{2} \left [ \abs{f(\xi_0) - A(f^*)(\xi_0)} + \abs{f^*(\xi_0)+ A(-f^*)(\xi_0)} \right ]\\
+& \ge \frac{1}{2} \abs{f^*(\xi_0) - A(f^*)(\xi_0) + f^*(\xi_0) + A(-f^*)(\xi_0)}\\
+& = \abs{f^*(\xi_0)} = \frac{\sigma}{2n} \ge \frac{\sigma}{2 \left(\left \lceil \frac{\sigma}{2\varepsilon} \right \rceil - 1\right)} > \varepsilon. 
+\end{align*}
+Thus, $\comp(\varepsilon,\cb_{\sigma},\Lambda^{\std}) > \left \lceil \frac{\sigma}{2\varepsilon} \right \rceil -1$, which completes the proof.
+\end{proof}
+
+\subsection{Adaptive Algorithms}
+
+The complexity result in Theorem \ref{stdappxthm} requires knowledg of the size of the function to be approximated, i.e, $\size(f) = \norm[\infty]{f'}$.  This is typically not known in advance, however, it can be approximated from the data. Given the data sites $0, 1/n, \dots, 1$, and the corresponding function values, one may estimate $\size(f)$ in terms of divided differences:
+\begin{equation}
+\hsigma_n(f)= \max_{i=1, \ldots, n} n\abs{f(i/n)-f((i-1)/n)}.
+\end{equation}
+Note that $\hsigma_n(f)$ never overestimates $\size(f)$.  The quality of this estimate depends on how much $f'$ changes over a short distance.  This motivates the following definition of guile:
+\begin{equation}
+\guile(f):= \frac{\norm[\infty]{f''}}{\norm[\infty]{f'}} = \frac{\norm[\infty]{f''}}{\size(f)},
+\end{equation}
+with the convention that constant functions have zero guile.  The guile of a function is the size of its second derivative relative to the size of its first derivative.  This guile remains unchanged when the function is multiplied by any nonzero constant.
+
+A function with small guile has a size that is well approximated by $\hsigma_n$.  Suppose that $\zeta$ is some point satisfying $\abs{f'(\zeta)} = \norm[\infty]{f'}$ and that $(i-1)/n \le \zeta < i/n$.  It then follows that $f(i/n)-f((i-1)/n) = f'(\eta)/n$ for some $\eta$ between $(i-1)/n$ and $i/n$.  Thus,
+\begin{align*}
+\norm[\infty]{f'} &= \abs{f'(\zeta)} = \abs{f'(\eta) + \int_{\eta}^{\zeta} f''(x) \, \dif x} \le \abs{f'(\eta)} + \abs{\int_{\eta}^{\zeta} f''(x) \, \dif x} \\
+& \le \hsigma_n(f) + \abs{\zeta - \eta} \norm[\infty]{f''} \le \hsigma_n(f) + \frac{\guile(f) \norm[\infty]{f'}}{n}, \\
+\norm[\infty]{f'} & \le \frac{\hsigma_n(f)}{1 - \guile(f)/n}.
+\end{align*}
+Letting $\cn_{\tau} = \{ f \in \ch : \guile(f) \le \tau\}$ now carves out a subset of $\ch$ which includes functions of arbitrarily size, but for which that size can be easily bounded empirically as
+\begin{equation} \label{sizebd}
+\size(f) \le \frac{\hsigma_n(f)}{1 - \tau/n} \qquad \forall f \in \cn_{\tau}.
+\end{equation}
+This then suggests the following adaptive algorithm that is guaranteed to approximate functions in $\cn_{\tau}$ within a tolerance of $\varepsilon$.
+
+
+\begin{algo} \label{adapappxalgo} Given positive numbers $\varepsilon$ and $\tau$, let $n_1=\lceil \tau \rceil +1$, and $j=1$. 
+\begin{enumerate}
+\renewcommand{\labelenumi}{Step \arabic{enumi}.} 
+\item Let $n=n_12^{j-1}$.  Evaluate $\hsigma_{n}(f)$.
+\item If 
+\[
+\frac{\hsigma_n(f)}{2(n - \tau)} \le 
+\varepsilon,
+\]
+then output $A_{\varepsilon}(f) = \tA_{n}(f)$ as the approximation.  Else, let $j=j+1$ and to to Step 1.
+\end{enumerate}
+\end{algo}
+
+\begin{theorem} \label{adapappxthm}  \emph{Nice} functions may be well approximated at a reasonable cost by $A_{\varepsilon}$, the adaptive Algorithm \ref{adapappxalgo}.  In particular,
+\begin{gather*}
+\sup_{f \in \cn_{\tau}} \norm[\infty]{f - A_{\varepsilon}(f)} \le \varepsilon, \\
+\left \lceil \frac{\sigma}{2\varepsilon} \right \rceil \le \comp(\varepsilon,\cn_{\tau},\sigma) \le \cost(A_{\varepsilon},\cn_{\tau},\sigma) \le 2 \lceil \tau \rceil + \max\left(2,\frac{\sigma}{\varepsilon} \right) + 1.
+\end{gather*}
+\end{theorem}
+\begin{proof}  For any nice function $f$ lying in $\cn_\tau$, its size is bounded above by $\hsigma_n(f)/(1-\tau/n)$ according to \eqref{sizebd}.  Furthermore, by the proof of Theorem \ref{stdappxthm} it follows that 
+\[
+\norm[\infty]{f - \tA_n(f)} \le \frac{\size(f)}{2n} \le \frac{\hsigma_n(f)}{2(n-\tau)}.
+\]
+Thus, when the stopping criterion in Step 2 is satisfied, the resulting approximation is within the desired tolerance.
+
+The algorithm terminates for the first positive integer $j$ satisfying the inequality in Step 2.  Since $\hsigma(f)$ never overestimates $\size(f)$ for all $f \in \ch$, this means that
+\begin{align*}
+n \ge \tau + \frac{\hsigma_n(f)}{2 \varepsilon} 
+& \Longleftarrow (\lceil \tau \rceil + 1 ) 2^{j-1} = n_1 2^{j-1} = n \ge \lceil \tau \rceil + \frac{\size(f)}{2 \varepsilon} \\
+& \Longleftarrow j \ge 2 +  \log_2\left(\frac{\lceil \tau \rceil + \frac{\size(f)}{2 \varepsilon}} {\lceil \tau \rceil + 1} \right) \\
+& \Longleftarrow n \ge 2 \lceil \tau \rceil + \max\left(2,\frac{\size(f)}{\varepsilon} \right).
+\end{align*}
+This establishes an upper bound on the cost of the algorithm.
+
+The proof of the lower bound is similar to that in Theorem \ref{stdappxthm}. Consider \emph{any} (possibly adaptive) algorithm $A$ using $n\le \left \lceil \frac{\sigma}{2\varepsilon} \right \rceil - 1$ function evaluations. 
+A fooling function $f^* \in \cn_\tau$ is constructed to vanish at all data sites, $\xi_i$.  Unlike Theorem  \ref{stdappxthm}, the fooling function must be continuously differentiable.  The bump function in Theorem \ref{stdappxthm} is replaced by 
+\begin{equation} \label{contbump}
+\phi(x) : = [\max(0,1-x^2)]^2 = \begin{cases}(1-x^2)^2, & \abs{x} \le 1, \\
+0, & \abs{x} > 1,
+\end{cases}
+\end{equation}
+which has first and second derivatives
+\begin{equation} \label{contbump}
+\phi'(x) = \begin{cases} -4x(1-x^2), & \abs{x} \le 1, \\
+0, & \abs{x} > 1,
+\end{cases} \qquad 
+\phi''(x) = \begin{cases} -4(1-3x^2), & \abs{x} \le 1, \\
+0, & \abs{x} > 1,
+\end{cases}
+\end{equation}
+and note that $\norm[\infty]{\phi} = 1$, $\norm[\infty]{\phi'}=8/(3 \sqrt{3})$, and $\norm[\infty]{\phi''}=8$.  Given the algorithm $A$ with data sites $\xi_1, \ldots, \xi_n$, there exists at least one point $\xi_0 \in [0,1)$ with $\min_{1 \le i \le n} \abs{\xi_i -\xi_0} \ge 1/(2n)$.  Then define the fooling function by 
+\[
+f^*: x \mapsto \frac{\sigma}{2n}\psi(2n(x-\xi_0)).
+\]
+By definition, $\pm f^*(\xi_i)=0$ for $i=1, \ldots, n$, and $\norm[\infty]{\pm{f^*}'} = \sigma$, so $\pm f^* \in \cb_\sigma$.   Moreover, $\pm f^*(\xi_i)= \pm \sigma/(2n)$.  Since the two functions $\pm f^*$ provide the same data to algorithm $A$, it follows that $A(f)(\xi_0)=A(-f)(\xi_0)$.  The triangle inequality and the strict upper bound on $n$ then imply that the approximation error must be greater than the desired tolerance.
+\begin{align*}
+\sup_{f \in \cb} \norm[\infty]{f - A(f)} 
+&\ge \max\left(\norm[\infty]{f^* - A(f^*)},\norm[\infty]{-f^* - A(- f^*)}\right) \\ 
+& \ge \max\left(\abs{f^*(\xi_0) - A(f)(\xi_0)},\abs{-f^*(\xi_0) - A(-f^*)(\xi_0)}\right) \\
+& \ge \frac{1}{2} \left [ \abs{f(\xi_0) - A(f^*)(\xi_0)} + \abs{f^*(\xi_0)+ A(-f^*)(\xi_0)} \right ]\\
+& \ge \frac{1}{2} \abs{f^*(\xi_0) - A(f^*)(\xi_0) + f^*(\xi_0) + A(-f^*)(\xi_0)}\\
+& = \abs{f^*(\xi_0)} = \frac{\sigma}{2n} \ge \frac{\sigma}{2 \left(\left \lceil \frac{\sigma}{2\varepsilon} \right \rceil - 1\right)} > \varepsilon. 
+\end{align*}
+Thus, $\comp(\varepsilon,\cb_{\sigma},\Lambda^{\std}) > \left \lceil \frac{\sigma}{2\varepsilon} \right \rceil -1$, which completes the proof.
+\end{proof}
+
+\section{Approximation of Multivariate Functions in a Hilbert Space with Continuous Linear Functional Data}
+Let $\cl_2=\cl_{2,\rho}$ be a separable Hilbert space of real-valued functions of interest defined on $\cx \subseteq \reals^d$.  Let $\rho: \cx \to [0,\infty)$ be a non-negative weight used to define the $\cl_2$ norm.  Let $\{\phi_k\}_{k=1}^{\infty}$ be an orthonormal basis for this Hilbert space, i.e., 
+\begin{align*}
+\ip[2]{f}{g} &:= \int_{\cx} \overline{f(\vx)} g(\vx) \, \rho(\vx) \, \dif \vx \qquad \forall f,g \in \cl_2,\\
+\ip[2]{\phi_k}{\phi_{\ell}} &= \int_{\cx} \overline{\phi_k(\vx)} \phi_{\ell}(\vx) \, \rho(\vx) \, \dif \vx = \delta_{k\ell} \qquad \forall k,l \in \naturals,\\
+\hf(k) &: = \ip[2]{\phi_k}{f} \qquad \forall k \in \naturals,\\
+f &= \sum_{k=1}^{\infty} \hf(k) \phi_k, \\
+\ip[2]{f}{g} &= \sum_{k=1}^\infty \overline{\hf(k)}\hg(k).
+\end{align*}
+Let $\ch$ be a Hilbert subspace of $\cl_2$ such that $\{\phi_k\}_{k=1}^{\infty}$ is an orthogonal basis for $\ch$.  Let $w:\naturals \to [0,\infty)$ be a non-increasing function.  The inner product for $\ch$ is defined as
+\begin{gather*}
+\ip[\ch]{f}{g} = \sum_{k=1}^\infty \frac{\overline{\hf(k)}\hg(k)}{w(k)} \\
+\ch=\ch_{w} :=\left \{ f = \sum_{k=1}^{\infty} \hf(k) \phi_k : \norm[\ch]{f}^2 = \sum_{k=1}^\infty \frac{\lvert\hf(k)\rvert^2}{w(k)} < \infty \right\}.
+\end{gather*}
+Note that $\{\sqrt{w(k)}\phi_k\}_{k=1}^{\infty}$ is an orthonormal basis for $\ch_w$.
+
+For now, consider the case where one can obtain any bounded linear functionals.  In that case, the best approximation is the Fourier series truncated at the first $n$ terms.  That is, one should compute the information 
+\[
+L_k(f) = \hf(k) = \ip[\ch]{w(k)\phi_k}{f}  = \ip[2]{\phi_k}{f}, \qquad k=1, \ldots, n,
+\]
+and then form the approximation as follows:
+\[
+\tf_{\trunc,n} = A_{\trunc,n}(f) = \sum_{k=1}^{n} L_k(f) \phi_k = \sum_{k=1}^{n} \hf(k) \phi_k.
+\]
+The error of this approximation bounded as follows by H\"older's inequality:
+\begin{gather*}
+\norm[2]{f - \tf_{\trunc,n}}^2 = \norm[2]{\sum_{k=n+1}^{\infty} \hf(k) \phi_k}^2 = \sum_{k=n+1}^{\infty} \abs{\hf(k)}^2 = \sum_{k=n+1}^{\infty} \frac{\abs{\hf(k)}^2}{w(k)} w(k) \le \norm[\ch]{f}^2 \sum_{k=n+1}^{\infty} w(k) \\
+\sup_{0 \ne f \in \ch} \frac{\norm[2]{f - \tf_{\trunc,n}}}{\norm[\ch]{f}} =  \sqrt{\sum_{k=n+1}^{\infty} w(k)} =: W(n) \end{gather*}
+Letting 
+
+
+This is approximation is optimal in the following sense:
+\[
+\tf_{\trunc,n} = \argmin_{g \in \cl_2} \sup_{f \in } \norm[2]{f - g}
+\]
+
+
+
+\bibliographystyle{spbasic}
+\bibliography{FJH21,FJHown21}
+\end{document}
