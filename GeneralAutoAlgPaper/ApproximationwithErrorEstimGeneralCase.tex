@@ -4,7 +4,7 @@
 \input FJHDef.tex
 
 \newcommand{\sphere}{\mathbb{S}}
-\newcommand{\cc}{\mathcal{C}}
+%\newcommand{\cc}{\mathcal{C}}
 \newcommand{\cq}{\mathcal{Q}}
 \newcommand{\bbW}{\mathbb{W}}
 %\newcommand{\tP}{\widetilde{P}}
@@ -55,6 +55,8 @@
 
 \title{The Complexity of Automatic Algorithms}
 \author{Yuhan Ding}
+\author{Nicholas Clancy}
+\author{Caleb Hamilton}
 \author{Fred J. Hickernell}
 \author{Yizhi Zhang}
 \address{Room E1-208, Department of Applied Mathematics, Illinois Institute of Technology,\\ 10 W.\ 32$^{\text{nd}}$ St., Chicago, IL 60616}
@@ -90,7 +92,7 @@ A simple example of the kind of practical problem addressed here is computing $\
 \[
 S(cf) = cS(f) \qquad \forall c\ge 0.
 \]
-Examples of problems satisfying this condition are 
+All linear problems satisfy this condition, as do some nonlinear problems.  Examples include the following:
 \begin{align*}
 \text{Integration:} \quad & S(f) = \int_{\cx} f(\vx) \, \rho(\vx) \, \dif \vx, \quad \rho \text{ is fixed}\\
 \text{Function Recovery:} \quad & S(f) = f, \\

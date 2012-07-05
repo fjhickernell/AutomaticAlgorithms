@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=latex 2012.1.17)  19 JUN 2012 17:51
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=latex 2012.1.17)  4 JUL 2012 16:25
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -239,11 +239,11 @@ LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 52.
 LaTeX Font Info:    ... okay on input line 52.
 LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 52.
 LaTeX Font Info:    ... okay on input line 52.
-LaTeX Font Info:    Try loading font information for U+msa on input line 71.
+LaTeX Font Info:    Try loading font information for U+msa on input line 73.
  (/usr/local/texlive/2011/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2009/06/22 v3.00 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 71.
+LaTeX Font Info:    Try loading font information for U+msb on input line 73.
 
 (/usr/local/texlive/2011/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2009/06/22 v3.00 AMS symbols B
@@ -251,12 +251,12 @@ File: umsb.fd 2009/06/22 v3.00 AMS symbols B
 
 ] [2]
 [3] [4]
-Overfull \hbox (8.39896pt too wide) detected at line 215
+Overfull \hbox (8.39896pt too wide) detected at line 217
  []$[] \OT1/cmr/m/n/10 = []  $ 
  []
 
 [5] [6]
-Overfull \hbox (1.74681pt too wide) in paragraph at lines 265--266
+Overfull \hbox (1.74681pt too wide) in paragraph at lines 267--268
 \OT1/cmr/m/n/10 sir-able to iden-tify an ex-plicit suc-cess-ful al-go-rithm, $(
 \OML/cmm/m/it/10 A; W\OT1/cmr/m/n/10 ) \OMS/cmsy/m/n/10 2 A\OT1/cmr/m/n/10 (\OM
 S/cmsy/m/n/10 N\OML/cmm/m/it/10 ; \OMS/cmsy/m/n/10 H\OML/cmm/m/it/10 ; S; \OT1/
@@ -264,13 +264,13 @@ cmr/m/n/10 ^^C)$,
  []
 
 [7] [8]
-LaTeX Font Info:    Try loading font information for U+euf on input line 320.
+LaTeX Font Info:    Try loading font information for U+euf on input line 322.
  (/usr/local/texlive/2011/texmf-dist/tex/latex/amsfonts/ueuf.fd
 File: ueuf.fd 2009/06/22 v3.00 Euler Fraktur
 )
 [9] [10] [11]
 
-Package natbib Warning: Citation `???' on page 12 undefined on input line 425.
+Package natbib Warning: Citation `???' on page 12 undefined on input line 427.
 
 [12] [13] [14] (./ApproxUnivariate.tex
 Overfull \hbox (23.44011pt too wide) detected at line 25
@@ -305,7 +305,7 @@ y-ing in $\OMS/cmsy/m/n/10 N[]$\OT1/cmr/m/n/10 , its size is bounded above by $
  []
 
 [18]) (./IntegUnivariate.tex) [19]
-Overfull \hbox (0.64676pt too wide) detected at line 583
+Overfull \hbox (0.64676pt too wide) detected at line 585
 \OML/cmm/m/it/10 G[]\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 f\OT1/cmr/m/n/10 ) = []\O
 ML/cmm/m/it/10 ;  A[]\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 f\OT1/cmr/m/n/10 ) = \OM
 L/cmm/m/it/10 A[]\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 f\OT1/cmr/m/n/10 ) + \OML/cm
@@ -313,7 +313,7 @@ m/m/it/10 ^^U[]![] [][] v[]:
  []
 
 [20] [21]
-Overfull \hbox (49.25797pt too wide) in paragraph at lines 643--643
+Overfull \hbox (49.25797pt too wide) in paragraph at lines 645--645
 [] 
  []
 
@@ -327,13 +327,13 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 3026 strings out of 493630
- 35339 string characters out of 3143346
- 97723 words of memory out of 3000000
- 6285 multiletter control sequences out of 15000+200000
+ 3028 strings out of 493630
+ 35351 string characters out of 3143346
+ 97735 words of memory out of 3000000
+ 6287 multiletter control sequences out of 15000+200000
  14288 words of font info for 53 fonts, out of 3000000 for 9000
  831 hyphenation exceptions out of 8191
  32i,17n,30p,1037b,243s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on ApproximationwithErrorEstimGeneralCase.dvi (23 pages, 102404 
+Output written on ApproximationwithErrorEstimGeneralCase.dvi (23 pages, 102528 
 bytes).
