@@ -458,14 +458,14 @@ Thus, the cost of solving the problem within error tolerance $\varepsilon$ for i
 
 Turning to the problem of solving functions in the cone $\cc_{\tau}$, the lower bound on the complexity becomes a bit more difficult to derive.  Note that condition \eqref{assumpfone} allows the fooling function $f_1$ to lie \emph{outside} this cone for $bn^q > \tau$.  Thus, when considering the cone of input functions, the fooling function must be modified as described below.
 
-It is assumed that there exist a function $f_0$ satisfying
+It is assumed that there exists a function $f_0$ with non-zero $\cg$-semi-norm lying in the interior of the cone $\cc_{\tau}$, i.e.,
 \begin{equation}
 \label{assumpfzero}
-\norm[\cg]{f_{0}} > 0, \qquad \norm[\cf]{f_{0}} \le \tau_0 \norm[\cg]{f_{0}}, \qquad \tau_0 < \tau,
+\norm[\cg]{f_{0}} > 0, \qquad \norm[\cf]{f_{0}} \le \tau_0 \norm[\cg]{f_{0}}, \qquad \tau_0 < \tau.
 \end{equation}
-where $\tau_0$ is some fixed number smaller than $\tau$.  Furthermore, suppose that for each $n>0$, and for all $\vL \in \Lambda^m$, satisfying $\$(\vL)\le n$, there exists $f_1$ as described above in \eqref{assumpfone}. Under these assumptions, one may show the following lower bound on the complexity of solving the problem $S$ for functions in the cone $\cc_{\tau}$.
+Furthermore, suppose that for each $n>0$, and for all $\vL \in \Lambda^m$, satisfying $\$(\vL)\le n$, there exists $f_1$ as described above in \eqref{assumpfone}. Under these assumptions, one may show the following lower bound on the complexity of solving the problem $S$ for functions in the cone $\cc_{\tau}$.
 
-\begin{theorem} \label{complowbd} Suppose that functions $f_{0}$ and $f_1$ can be found that satisfy conditions \eqref{assumpfone} and \eqref{assumpfzero}.  It then follows that the complexity of the problem, defined by \eqref{complexdef}, assuming infinite cost budget, over the cone of functions, $\cc_{\tau}$ 
+\begin{theorem} \label{complowbd} Suppose that functions $f_{0}$ and $f_1$ can be found that satisfy conditions \eqref{assumpfone} and \eqref{assumpfzero}.  It then follows that the complexity of the problem, defined by \eqref{complexdef}, assuming infinite cost budget, over the cone of functions $\cc_{\tau}$ is
 \begin{multline*}
 \comp(\varepsilon,\ca(\cc_{\tau},\ch,S,\Lambda),\infty,\sigma) \\
 \ge \min\left(\left(\frac{\sigma(\tau-\tau_0)}{2\varepsilon a (2\tau-\tau_0)}\right)^{1/p}, \left(\frac{\sigma(\tau-\tau_0)}{2\varepsilon a b}\right)^{1/(p+q)} \right).
@@ -504,11 +504,11 @@ Since $A$ is successful, $c_1$, as defined in \eqref{c0c1bumpdef}, must be no la
 This inequality then implies the conclusion of the theorem.   
 \end{proof}
 
-\begin{rem} Now suppose that the sequence of fixed-cost algorithms used to construct the adaptive, automatic Algorithm \ref{twostagedetalgo}, and the fooling functions in Theorem \ref{complowbd} have comparable powers, namely $p_1=p$ and $p_2=p+q$.  It then follows by comparing the upper bound on the cost in Theorem \ref{TwoStageDetermThm} to the lower bound above that Algorithm \ref{twostagedetalgo} is optimal. 
+\begin{rem} Now suppose that the sequence of fixed-cost algorithms used to construct the adaptive, automatic Algorithm \ref{twostagedetalgo}, and the fooling functions in Theorem \ref{complowbd} have comparable powers, namely $p_1=p$ and $p_2=p+q$.  It then follows by comparing the upper bound on the cost in Theorem \ref{TwoStageDetermThm} to the lower bound in Theorem \ref{complowbd} that Algorithm \ref{twostagedetalgo} is optimal. 
 \end{rem}
 
-\begin{rem} To derive a lower bound on the complexity of solving the problem over a ball in $\cf$ or $\cg$, rather than the cone, $\cc_{\tau}$, one does \emph{not} need the function $f_0$ to define the fooling functions.  Choosing $f_{\pm}$ as multiples of $f_1$ suffices.  
-\end{rem}
+%\begin{rem} To derive a lower bound on the complexity of solving the problem over a ball in $\cf$ or $\cg$, rather than the cone, $\cc_{\tau}$, one does \emph{not} need the function $f_0$ to define the fooling functions.  Choosing $f_{\pm}$ as multiples of $f_1$ suffices.  
+%\end{rem}
 
 \subsection{Two-Stage, Random Automatic Algorithms}
 It ma
