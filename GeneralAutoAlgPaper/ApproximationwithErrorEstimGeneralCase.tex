@@ -458,52 +458,48 @@ Thus, the cost of solving the problem within error tolerance $\varepsilon$ for i
 
 Turning to the problem of solving functions in the cone $\cc_{\tau}$, the lower bound on the complexity becomes a bit more difficult to derive.  Note that condition \eqref{assumpfone} allows the fooling function $f_1$ to lie \emph{outside} this cone for $bn^q > \tau$.  Thus, when considering the cone of input functions, the fooling function must be modified as described below.
 
-It is assumed that there exist a set of functions $\{f_{0,n}\}_{n>0}$ satisfying
-\begin{subequations} \label{assumpfzero}
-\begin{gather}
-\label{assumpbumpe}
-\norm[\cg]{f_{0,n}} = \frac{\sigma b n^q }{b n^q + \tau - \tau_0} =:c_{0,n}, \qquad \norm[\cf]{f_{0,n}} \le \tau_0 c_{0,n}\\
-\intertext{where $\tau_0$ is some fixed number smaller than $\tau$.  Furthermore, suppose that for each $n>0$, and for all $\vL \in \Lambda^m$, satisfying $\$(\vL)\le n$, there exists $f_1$ as described above in \eqref{assumpfone}, and also satisfying}
-\label{assumpbumpb}
-\norm[\cf]{f_{0,n} + c_1f_1} \le \tau_0 c_{0,n} + \abs{c_1} \norm[\cf]{f_1}  \quad \forall c_1 \in \reals, \\
-\label{assumpbumpc}
-c_{0,n} \le \norm[\cg]{f_{0,n} + c_1f_1} \le c_{0,n} + \abs{c_1} \norm[\cg]{f_1} \quad \forall c_1 \in \reals
-\end{gather}
-\end{subequations}
-Under these assumptions, one may show the following lower bound on the complexity of solving the problem $S$ for functions in the cone $\cc_{\tau}$.
+It is assumed that there exist a function $f_0$ satisfying
+\begin{equation}
+\label{assumpfzero}
+\norm[\cg]{f_{0}} > 0, \qquad \norm[\cf]{f_{0}} \le \tau_0 \norm[\cg]{f_{0}}, \qquad \tau_0 < \tau,
+\end{equation}
+where $\tau_0$ is some fixed number smaller than $\tau$.  Furthermore, suppose that for each $n>0$, and for all $\vL \in \Lambda^m$, satisfying $\$(\vL)\le n$, there exists $f_1$ as described above in \eqref{assumpfone}. Under these assumptions, one may show the following lower bound on the complexity of solving the problem $S$ for functions in the cone $\cc_{\tau}$.
 
-\begin{theorem} \label{complowbd} Suppose that functions $f_{0,n}$ and $f_1$ can be found that satisfy conditions \eqref{assumpfone} and \eqref{assumpfzero}.  It then follows that the complexity of the problem, defined by \eqref{complexdef}, assuming infinite cost budget, over the cone of functions, $\cc_{\tau}$ 
-\[
-\comp(\varepsilon,\ca(\cc_{\tau},\ch,S,\Lambda),\infty,\sigma) \ge \min\left(\left(\frac{\sigma}{2\varepsilon a}\right)^{1/p}, \left(\frac{\sigma(\tau-\tau_0)}{2\varepsilon a b}\right)^{1/(p+q)} \right).
-\]
+\begin{theorem} \label{complowbd} Suppose that functions $f_{0}$ and $f_1$ can be found that satisfy conditions \eqref{assumpfone} and \eqref{assumpfzero}.  It then follows that the complexity of the problem, defined by \eqref{complexdef}, assuming infinite cost budget, over the cone of functions, $\cc_{\tau}$ 
+\begin{multline*}
+\comp(\varepsilon,\ca(\cc_{\tau},\ch,S,\Lambda),\infty,\sigma) \\
+\ge \min\left(\left(\frac{\sigma(\tau-\tau_0)}{2\varepsilon a (2\tau-\tau_0)}\right)^{1/p}, \left(\frac{\sigma(\tau-\tau_0)}{2\varepsilon a b}\right)^{1/(p+q)} \right).
+\end{multline*}
 \end{theorem}
 
-\begin{proof} Let $A$ be a successful, possibly adaptive, algorithm.  Suppose that for an error tolerance of $\varepsilon$, and for all input functions $f$ with $\cg$-semi-norm no greater than $\sigma$ and lying in the cone  $\cc_{\tau}$, the cost of this algorithm is no greater than $n>0$.  Define two fooling functions, $f_{\pm}$, in terms of the $f_{0,n}$ and $f_1$ satisfying conditions \eqref{assumpfone} and \eqref{assumpfzero} as follows:
-\begin{equation} \label{c1bumpdef}
-f_{\pm} =f_{0,n} \pm c_1 f_1, \qquad \text{with } c_1= \frac{\sigma (\tau-\tau_0)}{\norm[\cg]{f_1} [b n^q + \tau - \tau_0]}.
-\end{equation}
+\begin{proof} Let $A$ be a successful, possibly adaptive, algorithm.  Suppose that for an error tolerance of $\varepsilon$, and for all input functions $f$ with $\cg$-semi-norm no greater than $\sigma$ and lying in the cone  $\cc_{\tau}$, the cost of this algorithm is no greater than $n>0$.  Define two fooling functions, $f_{\pm}$, in terms of the $f_{0}$ and $f_1$ satisfying conditions \eqref{assumpfone} and \eqref{assumpfzero} as follows:
+\begin{gather} 
+\nonumber
+f_{\pm} =c_0f_{0} \pm c_1 f_1, \\
+\label{c0c1bumpdef}
+\text{with} \quad c_0= \frac{\sigma(b n^q + \tau)}{\norm[\cg]{f_0} [b n^q + 2\tau - \tau_0]}, \quad c_1= \frac{\sigma (\tau-\tau_0)}{\norm[\cg]{f_1} [b n^q + 2\tau - \tau_0]}.
+\end{gather}
 These fooling functions must lie inside the cone $\cc_{\tau}$ because
 \begin{align*}
-\norm[\cf]{f_{\pm}} - \tau  \norm[\cg]{f_{\pm}} & \le \tau_0 c_{0,n} + c_1 \norm[\cf]{f_1} - \tau c_{0,n}
-&& \text{by \eqref{assumpbumpb},\eqref{assumpbumpc}} \\
-& \le c_1 b n^{q} \norm[\cg]{f_1} - (\tau - \tau_0) c_{0,n} && \text{by \eqref{assumpfone}} \\
-& = \frac{\sigma (\tau - \tau_0) [b n^q - b n^q ] }{b n^q + \tau - \tau_0} = 0 && \text{by \eqref{assumpbumpe}, \eqref{c1bumpdef}}.
+\norm[\cf]{f_{\pm}} - \tau  \norm[\cg]{f_{\pm}} & \le  c_{0}\norm[\cf]{f_0} + c_1 \norm[\cf]{f_1} - \tau (c_{0}\norm[\cg]{f_0} - c_1 \norm[\cg]{f_1}) \\
+&\qquad \qquad \qquad \qquad \qquad \qquad \text{by the triangle inequality} \\
+& \le c_1 (b n^{q}+\tau) \norm[\cg]{f_1} - (\tau - \tau_0) c_{0} \norm[\cg]{f_0} \qquad \text{by \eqref{assumpfone}, \eqref{assumpfzero}} \\
+& = 0 \qquad \qquad \text{by \eqref{c0c1bumpdef}}.
 \end{align*}
 Moreover, both fooling functions have $\cg$-semi-norms no greater than $\sigma$, since
-\begin{align*}
-\norm[\cg]{f_{\pm}} & \le c_{0,n} + c_1 \norm[\cg]{f_1}
-&& \text{by \eqref{assumpbumpb}} \\
-& = \frac{\sigma(b n^q + \tau- \tau_0) }{b n^q + \tau- \tau_0} =\sigma && \text{by \eqref{assumpbumpe}, \eqref{c1bumpdef}.}
-\end{align*}
+\begin{equation*}
+\norm[\cg]{f_{\pm}} \le c_{0} \norm[\cg]{f_0} + c_1 \norm[\cg]{f_1} =\sigma
+\qquad \text{by \eqref{c0c1bumpdef}.}
+\end{equation*}
 
 Following the argument earlier in this section, it is noted that the data used by the algorithm, $A$, is the same for both fooling functions, and consequently 
 \[
 \varepsilon  \ge  \max(\norm[\ch]{S(f_+)-A(f_+)},\norm[\ch]{S(f_-)-A(f_-)}) \ge c_1 \norm[\ch]{S(f_1)}=c_1.
 \]
-Since $A$ is successful, $c_1$, as defined in \eqref{c1bumpdef}, must be no larger than the error tolerance, which implies by \eqref{assumpfone} that 
+Since $A$ is successful, $c_1$, as defined in \eqref{c0c1bumpdef}, must be no larger than the error tolerance, which implies by \eqref{assumpfone} that 
 \begin{multline*}
-\frac{\sigma (\tau-\tau_0)}{\varepsilon} \le \frac{\sigma (\tau-\tau_0)}{c_1}  = \norm[\cg]{f_1} (b n^q + \tau-\tau_0) \\
-\le a n^{p} (b n^q + \tau-\tau_0) \le 2 a n^{p} \max( b n^{q}, \tau-\tau_0) 
+\frac{\sigma (\tau-\tau_0)}{\varepsilon} \le \frac{\sigma (\tau-\tau_0)}{c_1}  = \norm[\cg]{f_1} (b n^q + 2\tau-\tau_0) \\
+\le a n^{p} (b n^q + 2\tau-\tau_0) \le 2 a n^{p} \max( b n^{q}, 2\tau-\tau_0) 
 \end{multline*}
 This inequality then implies the conclusion of the theorem.   
 \end{proof}
