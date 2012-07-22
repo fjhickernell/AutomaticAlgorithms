@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=latex 2012.1.17)  11 JUL 2012 00:10
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=latex 2012.1.17)  21 JUL 2012 17:09
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -329,11 +329,11 @@ LaTeX Warning: There were multiply-defined labels.
 Here is how much of TeX's memory you used:
  3025 strings out of 493630
  35314 string characters out of 3143346
- 97702 words of memory out of 3000000
+ 97690 words of memory out of 3000000
  6284 multiletter control sequences out of 15000+200000
  14288 words of font info for 53 fonts, out of 3000000 for 9000
  831 hyphenation exceptions out of 8191
  32i,17n,30p,1037b,243s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on ApproximationwithErrorEstimGeneralCase.dvi (23 pages, 101696 
+Output written on ApproximationwithErrorEstimGeneralCase.dvi (23 pages, 101772 
 bytes).
