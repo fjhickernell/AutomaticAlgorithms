@@ -429,9 +429,9 @@ Lower complexity bounds are typically proved by constructing fooling functions. 
 Consider the Banach spaces $\cf$, $\cg$, $\ch$, and the \emph{linear} solution operator $S: \cg \to \ch$.  Let $\Lambda$ be the set of bounded linear functionals that can be used as data. Suppose that for any $n>0$, and for all $\vL \in \Lambda^m$, satisfying $\$(\vL)\le n$, there exists an $f_1 \in \cf$, depending on $n$ and the $L_i$, with solution norm one, zero data, and bounded $\cf$ and $\cg$ semi-norms, i.e.,
 \begin{equation} \label{assumpfone}
 \norm[\ch]{S(f_1)} = 1, \quad \vL(f_1)= \vzero, \quad
-\norm[\cg]{f_1} \le a n^{p}, \quad \norm[\cf]{f_1} \le b n^{q} \norm[\cg]{f_1}, 
+\norm[\cg]{f_1} \le g(n), \quad \norm[\cf]{f_1} \le \tg(n) \norm[\cg]{f_1}, 
 \end{equation}
-for some positive $p, q, a,$ and  $b$.  Since the data for the function $f_1$ are all zero, it follows that $A(f_1)=A(-f_1)$ for any algorithm, $A$, adaptive or not, that is based on the information .  Then, by the triangle inequality and \eqref{assumpfone} the error for one of the fooling functions $\pm f_1$ must be at least one:
+for some positive, non-decreasing functions $g$ and $\tg$ defined in $(0,\infty)$.  For example, one might have $g(n)=an^p$ and $\tg(n)=bn^q$ with positive $a, b, p$, and $q$.  Since the data for the function $f_1$ are all zero, it follows that $A(f_1)=A(-f_1)$ for any algorithm, $A$, adaptive or not, that is based on the information $\vL(f_1)$.  Then, by the triangle inequality and \eqref{assumpfone} the error for one of the fooling functions $\pm f_1$ must be at least one:
 \begin{align*}
 \MoveEqLeft{\max(\norm[\ch]{S(f_1)-A(f_1)},\norm[\ch]{S(-f_1)-A(-f_1)})} \\
 & = \max(\norm[\ch]{S(f_1)-A(f_1)},\norm[\ch]{-S(f_1)-A(f_1)})\\
@@ -443,18 +443,19 @@ Furthermore, applying \eqref{assumpfone}, for $\cj \in \{\cf,\cg\}$, it follows 
 \varepsilon & \ge \sup_{f \ne 0} \frac{\norm[\ch]{S(f)-A(f)}}{\norm[\cj]{f}} \\
 & \ge \frac{\max(\norm[\ch]{S(f_1)-A(f_1)},\norm[\ch]{S(-f_1)-A(-f_1)})}{\norm[\cj]{f_1}} \\
 & \ge \frac{1}{\norm[\cj]{f_1}} 
-\ge \begin{cases} a^{-1} n^{-p}, & \cj=\cg,\\
-(ab)^{-1} n^{-(p+q)}, & \cj=\cf
+\ge \begin{cases} \displaystyle \frac{1}{g(n)}, & \cj=\cg,\\[2ex]
+ \displaystyle  \frac{1}{g(n)\tg(n)}, & \cj=\cf.
 \end{cases}
 \end{align*}
 This implies lower bounds on the complexity of fixed-cost algorithms, as defined in \eqref{fixcostcomplex}:
 \[
 \comp(\varepsilon,\ca_{\fix}(\cj,\ch,S,\Lambda)) \ge
-\begin{cases} (a\varepsilon)^{-1/p}, & \cj=\cg,\\
-(ab\varepsilon)^{-1/(p+q)}, & \cj=\cf.
+\begin{cases} g^{-1}(\varepsilon^{-1}), & \cj=\cg,\\
+(g\tg)^{-1}(\varepsilon^{-1}), & \cj=\cf,
 \end{cases}
 \]
-Thus, the cost of solving the problem within error tolerance $\varepsilon$ for input functions in a $\cg$-semi-norm ball of radius $\sigma$ is at least $[\sigma/(a\varepsilon)]^{1/p}$ and for input functions in a $\cf$-semi-norm ball of radius $\sigma$ is at least $[\sigma/(ab\varepsilon)]^{1/(p+q)}$
+where $g^{-1}$ and $(g\tg)^{-1}$ denote the inverse functions of $g$ and $g\tg$, respectively.
+Thus, the cost of solving the problem within error tolerance $\varepsilon$ for input functions in a $\cg$-semi-norm ball of radius $\sigma$ is at least $g^{-1}(\sigma\varepsilon^{-1})$ and for input functions in a $\cf$-semi-norm ball of radius $\sigma$ is at least $(g\tg)^{-1}(\sigma\varepsilon^{-1})$
 
 Turning to the problem of solving functions in the cone $\cc_{\tau}$, the lower bound on the complexity becomes a bit more difficult to derive.  Note that condition \eqref{assumpfone} allows the fooling function $f_1$ to lie \emph{outside} this cone for $bn^q > \tau$.  Thus, when considering the cone of input functions, the fooling function must be modified as described below.
 
@@ -468,39 +469,46 @@ Furthermore, suppose that for each $n>0$, and for all $\vL \in \Lambda^m$, satis
 \begin{theorem} \label{complowbd} Suppose that functions $f_{0}$ and $f_1$ can be found that satisfy conditions \eqref{assumpfone} and \eqref{assumpfzero}.  It then follows that the complexity of the problem, defined by \eqref{complexdef}, assuming infinite cost budget, over the cone of functions $\cc_{\tau}$ is
 \begin{multline*}
 \comp(\varepsilon,\ca(\cc_{\tau},\ch,S,\Lambda),\infty,\sigma) \\
-\ge \min\left(\left(\frac{\sigma(\tau-\tau_0)}{2\varepsilon a (2\tau-\tau_0)}\right)^{1/p}, \left(\frac{\sigma(\tau-\tau_0)}{2\varepsilon a b}\right)^{1/(p+q)} \right).
+\ge \min\left(g^{-1}\left(\frac{\sigma(\tau-\tau_0)}{2(2\tau-\tau_0)\varepsilon}\right), (g\tg)^{-1}\left(\frac{\sigma\tau(\tau-\tau_0)}{2(2\tau-\tau_0)\varepsilon}\right) \right).
 \end{multline*}
 \end{theorem}
 
-\begin{proof} Let $A$ be a successful, possibly adaptive, algorithm.  Suppose that for an error tolerance of $\varepsilon$, and for all input functions $f$ with $\cg$-semi-norm no greater than $\sigma$ and lying in the cone  $\cc_{\tau}$, the cost of this algorithm is no greater than $n>0$.  Define two fooling functions, $f_{\pm}$, in terms of the $f_{0}$ and $f_1$ satisfying conditions \eqref{assumpfone} and \eqref{assumpfzero} as follows:
-\begin{gather} 
-\nonumber
-f_{\pm} =c_0f_{0} \pm c_1 f_1, \\
-\label{c0c1bumpdef}
-\text{with} \quad c_0= \frac{\sigma(b n^q + \tau)}{\norm[\cg]{f_0} [b n^q + 2\tau - \tau_0]}, \quad c_1= \frac{\sigma (\tau-\tau_0)}{\norm[\cg]{f_1} [b n^q + 2\tau - \tau_0]}.
-\end{gather}
+\begin{proof} Let $A$ be a successful, possibly adaptive, algorithm.  Suppose that for an error tolerance of $\varepsilon$, and for all input functions $f$ with $\cg$-semi-norm no greater than $\sigma$ and lying in the cone  $\cc_{\tau}$, the cost of this algorithm is no greater than $n>0$.  Given an error tolerance, $\varepsilon$ and a $\sigma >0$, let $f_0$ be a function satisfying \eqref{assumpfzero} and choose 
+\begin{subequations}\label{c0c1bumpdef}
+\begin{equation} 
+\label{c0bumpdef}
+c_0 = \frac{\sigma\tau}{\norm[\cg]{f_0} (2\tau - \tau_0)}.
+\end{equation} 
+Provide the algorithm $A$ with the input function $c_0f_0$, and let $\vL(f_0)$ be the data vector extracted by $A$ to obtain the estimate $A(c_0f_0)$. Let $n=\$(\vL)$, and define two fooling functions, $f_{\pm}=c_0f_{0} \pm c_1 f_1$, in terms of the $f_{0}$ and $f_1$ satisfying conditions \eqref{assumpfone} with $c_1$ satisfying
+\begin{equation} 
+\label{c1bumpdef}
+c_1= \frac{(\tau-\tau_0)c_0\norm[\cg]{f_0}}{\norm[\cg]{f_1} [\tg(n) + \tau]} = \frac{\sigma \tau (\tau-\tau_0)}{\norm[\cg]{f_1}(2\tau - \tau_0) [\tg(n) + \tau]}.
+\end{equation}
+\end{subequations}
 These fooling functions must lie inside the cone $\cc_{\tau}$ because
 \begin{align*}
 \norm[\cf]{f_{\pm}} - \tau  \norm[\cg]{f_{\pm}} & \le  c_{0}\norm[\cf]{f_0} + c_1 \norm[\cf]{f_1} - \tau (c_{0}\norm[\cg]{f_0} - c_1 \norm[\cg]{f_1}) \\
 &\qquad \qquad \qquad \qquad \qquad \qquad \text{by the triangle inequality} \\
-& \le c_1 (b n^{q}+\tau) \norm[\cg]{f_1} - (\tau - \tau_0) c_{0} \norm[\cg]{f_0} \qquad \text{by \eqref{assumpfone}, \eqref{assumpfzero}} \\
+& \le c_1 [\tg(n)+\tau] \norm[\cg]{f_1} - (\tau - \tau_0) c_{0} \norm[\cg]{f_0} \qquad \text{by \eqref{assumpfone}, \eqref{assumpfzero}} \\
 & = 0 \qquad \qquad \text{by \eqref{c0c1bumpdef}}.
 \end{align*}
 Moreover, both fooling functions have $\cg$-semi-norms no greater than $\sigma$, since
-\begin{equation*}
-\norm[\cg]{f_{\pm}} \le c_{0} \norm[\cg]{f_0} + c_1 \norm[\cg]{f_1} =\sigma
-\qquad \text{by \eqref{c0c1bumpdef}.}
-\end{equation*}
+\begin{align*}
+\norm[\cg]{f_{\pm}} &\le c_{0} \norm[\cg]{f_0} + c_1 \norm[\cg]{f_1} \\
+& = \frac{\sigma \tau}{2\tau - \tau_0}\left[1 + \frac{\tau-\tau_0}{\tg(n) + \tau} \right] \qquad \text{by \eqref{c0c1bumpdef}}\\
+&\le \frac{\sigma\tau}{2\tau - \tau_0}\left[1 + \frac{\tau-\tau_0}{\tau} \right] = \sigma.
+\end{align*}
 
-Following the argument earlier in this section, it is noted that the data used by the algorithm, $A$, is the same for both fooling functions, and consequently 
+Following the argument earlier in this section, it is noted that the data used by algorithm $A$ for both fooling functions is the same, i.e., $\vL(f_{\pm})=\vL(c_0f_0)$ and  $A(f_{\pm})=A(c_0f_0)$, and consequently by the same argument used above, 
 \[
 \varepsilon  \ge  \max(\norm[\ch]{S(f_+)-A(f_+)},\norm[\ch]{S(f_-)-A(f_-)}) \ge c_1 \norm[\ch]{S(f_1)}=c_1.
 \]
 Since $A$ is successful, $c_1$, as defined in \eqref{c0c1bumpdef}, must be no larger than the error tolerance, which implies by \eqref{assumpfone} that 
-\begin{multline*}
-\frac{\sigma (\tau-\tau_0)}{\varepsilon} \le \frac{\sigma (\tau-\tau_0)}{c_1}  = \norm[\cg]{f_1} (b n^q + 2\tau-\tau_0) \\
-\le a n^{p} (b n^q + 2\tau-\tau_0) \le 2 a n^{p} \max( b n^{q}, 2\tau-\tau_0) 
-\end{multline*}
+\begin{align*}
+\frac{\sigma \tau(\tau-\tau_0)}{\varepsilon} & \le \frac{\sigma \tau(\tau-\tau_0)}{c_1}  = \norm[\cg]{f_1} (2\tau - \tau_0) [\tg(n) + \tau] \\
+&\le (2\tau - \tau_0) g(n) [\tg(n) + \tau)] \\
+&\le 2 (2\tau - \tau_0) g(n)\max( \tg(n), \tau).
+\end{align*}
 This inequality then implies the conclusion of the theorem.   
 \end{proof}
 
