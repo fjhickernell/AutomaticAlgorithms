@@ -438,13 +438,13 @@ Furthermore, suppose that for each $n>0$, and for all $\vL \in \Lambda^m$, satis
 \end{multline*}
 \end{theorem}
 
-\begin{proof} Let $A$ be a successful, possibly adaptive, algorithm.  Suppose that for an error tolerance of $\varepsilon$, and for all input functions $f$ with $\cg$-semi-norm no greater than $\sigma$ and lying in the cone  $\cc_{\tau}$, the cost of this algorithm is no greater than $n>0$.  Given an error tolerance, $\varepsilon$ and a $\sigma >0$, let $f_0$ be a function satisfying \eqref{assumpfzero} and choose 
+\begin{proof} Let $A$ be a successful, possibly adaptive, algorithm for all functions lying in the cone $\cc_{\tau}$.  Given an error tolerance, $\varepsilon$, and a positive $\sigma$, let $f_0$ be a function satisfying \eqref{assumpfzero} and choose 
 \begin{subequations}\label{c0c1bumpdef}
 \begin{equation} 
 \label{c0bumpdef}
 c_0 = \frac{\sigma\tau}{\norm[\cg]{f_0} (2\tau - \tau_0)}.
 \end{equation} 
-Provide the algorithm $A$ with the input function $c_0f_0$, and let $\vL(f_0)$ be the data vector extracted by $A$ to obtain the estimate $A(c_0f_0)$. Let $n=\$(\vL)$, and define two fooling functions, $f_{\pm}=c_0f_{0} \pm c_1 f_1$, in terms of the $f_{0}$ and $f_1$ satisfying conditions \eqref{assumpfone} with $c_1$ satisfying
+Provide the algorithm $A$ with the input function $c_0f_0$, and let $\vL(f_0)$ be the data vector extracted by $A$ to obtain the estimate $A(c_0f_0)$. Let $n=\$(\vL)$ denote the cost of this algorithm for the function $c_0f_0$, and define two fooling functions, $f_{\pm}=c_0f_{0} \pm c_1 f_1$, in terms of the $f_{0}$ and $f_1$ satisfying conditions \eqref{assumpfone} with $c_1$ satisfying
 \begin{equation} 
 \label{c1bumpdef}
 c_1= \frac{(\tau-\tau_0)c_0\norm[\cg]{f_0}}{\norm[\cg]{f_1} [\tg(n) + \tau]} = \frac{\sigma \tau (\tau-\tau_0)}{\norm[\cg]{f_1}(2\tau - \tau_0) [\tg(n) + \tau]}.
@@ -464,17 +464,17 @@ Moreover, both fooling functions have $\cg$-semi-norms no greater than $\sigma$,
 &\le \frac{\sigma\tau}{2\tau - \tau_0}\left[1 + \frac{\tau-\tau_0}{\tau} \right] = \sigma.
 \end{align*}
 
-Following the argument earlier in this section, it is noted that the data used by algorithm $A$ for both fooling functions is the same, i.e., $\vL(f_{\pm})=\vL(c_0f_0)$ and  $A(f_{\pm})=A(c_0f_0)$, and consequently by the same argument used above, 
+Following the argument earlier in this section, it is noted that the data used by algorithm $A$ for both fooling functions is the same, i.e., $\vL(f_{\pm})=\vL(c_0f_0)$, and so $A(f_{\pm})=A(c_0f_0)$.  Consequently, by the same argument used above, 
 \[
 \varepsilon  \ge  \max(\norm[\ch]{S(f_+)-A(f_+)},\norm[\ch]{S(f_-)-A(f_-)}) \ge c_1 \norm[\ch]{S(f_1)}=c_1.
 \]
-Since $A$ is successful, $c_1$, as defined in \eqref{c0c1bumpdef}, must be no larger than the error tolerance, which implies by \eqref{assumpfone} that 
+Since $A$ is successful for these two fooling functions, $c_1$, as defined in \eqref{c0c1bumpdef}, must be no larger than the error tolerance, which implies by \eqref{assumpfone} that 
 \begin{align*}
 \frac{\sigma \tau(\tau-\tau_0)}{\varepsilon} & \le \frac{\sigma \tau(\tau-\tau_0)}{c_1}  = \norm[\cg]{f_1} (2\tau - \tau_0) [\tg(n) + \tau] \\
 &\le (2\tau - \tau_0) g(n) [\tg(n) + \tau)] \\
 &\le 2 (2\tau - \tau_0) g(n)\max( \tg(n), \tau).
 \end{align*}
-This inequality then implies the conclusion of the theorem.   
+Since $A$ is an arbitrary successful algorithm, this inequality provides a lower bound on the cost, $n$, that any such algorithm requires.  This then implies the lower bound on the complexity of the problem.   
 \end{proof}
 
 \begin{rem} Now suppose that the sequence of nonadaptive algorithms used to construct the adaptive, automatic Algorithm \ref{twostagedetalgo}, and the fooling functions in Theorem \ref{complowbd} have comparable powers, namely $p_1=p$ and $p_2=p+q$.  It then follows by comparing the upper bound on the cost in Theorem \ref{TwoStageDetermThm} to the lower bound in Theorem \ref{complowbd} that Algorithm \ref{twostagedetalgo} is optimal. 
