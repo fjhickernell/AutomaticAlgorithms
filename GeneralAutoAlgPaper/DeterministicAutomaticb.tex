@@ -265,7 +265,10 @@ Noting that $\norm[\cf]{f} \le \tau \norm[\cg]{f}$ for all $f$ in the cone $\cc_
 \begin{equation*}
 \frac{G(f)}{1 + \tau \err_{-}(G,\cf,\reals_+,\norm[\cg]{\cdot})} \le \norm[\cg]{f} \le \frac{G(f)}{1 - \tau \err_{+}(G,\cf,\reals_+,\norm[\cg]{\cdot})} \qquad \forall f \in \cc_{\tau}.
 \end{equation*}
-The upper bound assumes that  $\err_{+}(G,\cf,\reals,\norm[\cg]{\cdot}) < 1/\tau$.
+The upper bound assumes that  
+\begin{equation} \label{Gtaucond}
+\err_{+}(G,\cf,\reals,\norm[\cg]{\cdot}) < 1/\tau
+\end{equation}
 \end{lem}
 
 \subsection{Two-Stage, Automatic Algorithms}
@@ -275,15 +278,14 @@ Computing an approximate solution to the problem $S: \cc_{\tau} \to \ch$, e.g., 
 %\err(A_n,\cg,\ch,S) \le C_{1} n^{-p_1}, \qquad \err(A_n,\cf,\ch,S) \le C_{2} n^{-p_2}, 
 \err(A_n,\cg,\ch,S) \le h(n), \qquad \err(A_n,\cf,\ch,S) \le \tildeh(n), 
 \end{equation}
-for some positive constants $C_1$, $C_2$, $p_1$, and $p_2$.  Since $\cf$ is a subspace of $\cg$, the exponents $p_1$ and $p_2$ may be different.  The definitions of these errors in \eqref{errdefworst} then implies upper bounds on the error of $A_n(f)$ in terms of the $\cg$-semi-norm of $f$:
+for some functions $h$ and $\tildeh$.  The definitions of these errors in \eqref{errdefworst} then implies upper bounds on the error of $A_n(f)$ in terms of the $\cg$-semi-norm of $f$:
 \begin{align} \nonumber
 \norm[\ch]{S(f) -  A_n(f)} &\le \min(\err(A_n,\cg,\ch,S)\norm[\cg]{f},\err(A_n,\cf,\ch,S)\norm[\cf]{f}) \\
 \label{Anerrbound}
-&\le \frac{\min(C_1,C_2\tau n^{p_1-p_2})\norm[\cg]{f}}{n^{p_1}} \qquad \forall f \in \cc_{\tau}.
+&\le \min(h(n),\tau \tildeh(n))\norm[\cg]{f} \qquad \forall f \in \cc_{\tau}.
 \end{align}
 
-\begin{algo} \label{twostagedetalgo} {\bf (Automatic, Adaptive, Two-Stage).} Let $\cf$, $\cg$, and $\ch$ be Banach spaces as described above, let $S$ be the solution operator, let $\varepsilon$ be a positive error tolerance, and let $N_{\max}$ be the maximum cost allowed.  Let $\tau$ be a fixed positive number, and let $G \in \ca_{\fix}(\cf,\reals_+,\norm[\cg]{\cdot},\Lambda)$ be an algorithm as described in Lemma \ref{Gnormlem} with 
-$\err_{+}(G,\cf,\reals,\norm[\cg]{\cdot}) < 1/\tau.$
+\begin{algo} \label{twostagedetalgo} {\bf (Automatic, Adaptive, Two-Stage).} Let $\cf$, $\cg$, and $\ch$ be Banach spaces as described above, let $S$ be the solution operator, let $\varepsilon$ be a positive error tolerance, and let $N_{\max}$ be the maximum cost allowed.  Let $\tau$ be a fixed positive number, and let $G \in \ca_{\fix}(\cf,\reals_+,\norm[\cg]{\cdot},\Lambda)$ be an algorithm as described in Lemma \ref{Gnormlem} and satisfying  \eqref{Gtaucond}.
 Moreover, let  $\{A_n\}_{n \in \ci}$, $A_n  \in \ca_{\fix}(\cg,\ch,S,\Lambda)$, be a sequence of algorithms as described in  \eqref{algseqdef} and \eqref{algseqerrbd}.  Given an input function $f$, do the following:
 
 \begin{description} 
@@ -294,14 +296,14 @@ Moreover, let  $\{A_n\}_{n \in \ci}$, $A_n  \in \ca_{\fix}(\cg,\ch,S,\Lambda)$, 
 \end{equation}
 Then $\fC G(f)$ provides a reliable upper bound on $\norm[\cg]{f}$.  
 
-\item [Stage 2.\ Estimate {$S(f)$}.] Choose the sample size need to approximate $S(f)$, namely,
-\[
-N= \min\left\{ n \in \ci : n \ge \min\left( \left[\frac{C_1 \fC G(f)}{\varepsilon}\right]^{1/p_1}, \left[\frac{C_2 \tau \fC G(f)}{\varepsilon}\right]^{1/p_2} \right ) \right\}.
-\]
-If $N \le N_{\max}-N_G$, then $S(f)$ may be approximated within the desired error tolerance and within the cost budget.  Set the warning flag to false, $W=0$. Otherwise, recompute $N$ to be within budget, $N = \tN_{\max} := \max\{N \in \ci : N\le N_{\max} -  N_G\}$, and set the warning flag to true, $W=1$.  Compute $A_N(f)$ as the approximation to $S(f)$.
+\item [Stage 2.\ Estimate {$S(f)$}.] Choose the sample size need to approximate $S(f)$, namely, $N_A=N_{\text{min}}(\varepsilon/(\fC G(f)))$, where 
+\begin{equation} \label{Nmindef}
+N_{\text{min}}(a)= \min\left\{ n \in \ci : \min(h(n),\tau \tildeh(n)) \le a \right\}, \quad a \in (0,\infty).
+\end{equation}
+If $N_A \le N_{\max}-N_G$, then $S(f)$ may be approximated within the desired error tolerance and within the cost budget.  Set the warning flag to false, $W=0$. Otherwise, recompute $N_A$ to be within budget, $N_A = \tN_{\max} := \max\{n \in \ci : n\le N_{\max} -  N_G\}$, and set the warning flag to true, $W=1$.  Compute $A_{N_A}(f)$ as the approximation to $S(f)$.
 \end{description}
 
-Return the result $(A_N(f),W)$, at a cost of $N_G+N$.  
+Return the result $(A_{N_A}(f),W)$, at a total cost of $N_G+N_A$.  
 \end{algo}
 
 
@@ -311,14 +313,17 @@ Return the result $(A_N(f),W)$, at a cost of $N_G+N$.
 \fc =1 + \tau \err_{-}(G,\cf,\reals_+,\norm[\cg]{\cdot})  \ge 1.
 \end{equation}
 Let $\cc_\tau$ be the cone of functions defined in \eqref{conedef} whose $\cf$-semi-norms are no larger than $\tau$ times their $\cg$-semi-norms.  Let
-\begin{equation} \label{nicefdef}
-\cn = \left \{ f \in \cc_\tau : \norm[\cg]{f} \le \frac{\varepsilon \tN_{\max}^{p_1}}{\fC \fc} \max\left( \frac{1}{C_1}, \frac{\tN_{\max}^{p_2-p_1}}{C_2 \tau} \right ) \right\}
+\begin{align} 
+\nonumber
+\cn &= \left \{ f \in \cc_\tau : N_{\min}\left(\frac{\varepsilon}{\fC \fc \norm[\cg]{f}} \right) \le \tN_{\max} \right\} \\
+\label{nicefdef}
+&= \left \{ f \in \cc_\tau : \norm[\cg]{f} \le \frac{\varepsilon}{\fC \fc \min(h(\tN_{\max}),\tau \tildeh(\tN_{\max}))} \right\}
+\end{align}
+be a subset of the cone $\cc_\tau$ that lies inside a $\cg$-semi-norm ball of rather large radius (since $\min(h(\tN_{\max}),\tau \tildeh(\tN_{\max}))$ is assumed to be tiny).  Then it follows that Algorithm \ref{twostagedetalgo} is successful for all functions in this set of \emph{nice} functions $\cn$,  i.e.,  $\success(A,W,\cn,\varepsilon,N_{\max}) = 1$.  Moreover, the cost of this algorithm is bounded above in terms of the $\cg$-semi-norm of the input function as follows:
+\begin{equation} \label{auto2stagedetcost}
+\cost(A,\cn,\varepsilon,N_{\max},\sigma)
+\le N_G+ N_{\min}\left(\frac{\varepsilon}{\fC \fc \sigma} \right).
 \end{equation}
-be a subset of the cone $\cc_\tau$ that lies inside a $\cg$-semi-norm ball of rather large radius.  Then it follows that Algorithm \ref{twostagedetalgo} is successful for all functions in this set of \emph{nice} functions $\cn$,  i.e.,  $\success(A,W,\cn,\varepsilon,N_{\max}) = 1$.  Moreover, the cost of this algorithm is bounded above in terms of the $\cg$-semi-norm of the input function as follows:
-\begin{multline} \label{auto2stagedetcost}
-\cost(A,\cn,\varepsilon,N_{\max},\sigma) \\
-\le N_G+ \min\left\{ n \in \ci : n \ge \min\left( \left[\frac{C_1 \fC \fc \sigma }{\varepsilon}\right]^{1/p_1}, \left[\frac{C_2 \tau \fC \fc \sigma}{\varepsilon}\right]^{1/p_2} \right ) \right\}.
-\end{multline}
 The upper bound on the cost of this specific algorithm provides an upper bound on the complexity of the problem, $\comp(\varepsilon,\ca(\cn,\ch,S,\Lambda),N_{\max},\sigma)$.  If the sequence of algorithms $\{A_n\}_{n \in \ci}$, $A_n \in\ca_{\fix}(\cg,\ch,S,\Lambda)$  is nearly optimal for the problems $(\cg,\ch,S,\Lambda)$ and $(\cf,\ch,S,\Lambda)$ as defined in \eqref{nearoptdef}, then Algorithm \ref{twostagedetalgo} does not incur a significant penalty for not knowing $\norm[\cg]{f}$ a priori, i.e., for all $p>0$,
 \begin{equation} \label{penalty}
 \sup_{0 < \varepsilon/\sigma \le 1} \frac{\cost(A,\cn,\varepsilon,\infty,\sigma)} {\comp(\varepsilon/\sigma,\ca_{\fix}(\cj,\ch,S,\Lambda))} \left(\frac{\varepsilon}{\sigma}\right)^p <\infty, \qquad \cj \in \{\cf,\cg\}.
@@ -327,13 +332,9 @@ The upper bound on the cost of this specific algorithm provides an upper bound o
 
 \begin{proof} The definition of $\fC$ in \eqref{norminflate} implies that the true $\cg$-semi-norm of $f$ is bounded above by $\fC G(f)$ according to Lemma \ref{Gnormlem}.  The upper bound on the error of the sequence of algorithms $\{A_n\}_{n \in \ci}$ in \eqref{Anerrbound} then implies that 
 \[
-\norm[\ch]{S(f) -  A_n(f)} \le \frac{\min(C_1,C_2\tau n^{p_1-p_2})\fC G(f)}{n^{p_1}} \qquad \forall f \in \cc_{\tau}.
+\norm[\ch]{S(f) -  A_n(f)} \le \min(h(n),\tau \tildeh(n)) \fC G(f) \qquad \forall f \in \cc_{\tau}.
 \]
-This upper bound may be made no greater than the error tolerance, $\varepsilon$, by choosing the algorithm cost, $n$, to satisfy
-\[
-n \ge \min\left( \left[\frac{C_1 \fC G(f)}{\varepsilon}\right]^{1/p_1}, \left[\frac{C_2 \tau \fC G(f)}{\varepsilon}\right]^{1/p_2} \right ) .
-\]
-Stage 2.\ of Algorithm \ref{twostagedetalgo} chooses the algorithm with the smallest such cost, provided that it can be done within the maximum cost budget.  In this case, the algorithm is successful, as claimed in the theorem.
+This error upper bound may be made no greater than the error tolerance, $\varepsilon$, by choosing the algorithm cost, $n$, to satisfy the condition in Stage 2. of Algorithm \ref{twostagedetalgo}, provided that this can be done within the maximum cost budget.  In this case, the algorithm is successful, as claimed in the theorem.
 
 To ensure that the algorithm does not attempt to overrun the cost budget, one must limit the $\cg$-semi-norm of the input function.  The definition of  $\fc$ in \eqref{normdeflate} implies that $G(f) \le \fc\norm[\cg]{f}$ according to Lemma \ref{Gnormlem}. This means that for any function, $f$, with actual $\cg$-semi-norm $\sigma=\norm[\cg]{f}$, the upper bound on its $\cg$-semi-norm computed via Lemma \ref{Gnormlem} is no greater than $\fC \fc \sigma$.  Thus, after using $N_G$ samples to estimate $\norm[\cg]{f}$, functions in $\cn$ as defined in \eqref{nicefdef} never need more than $N_{\max} - N_G$ additional samples to estimate $S(f)$ with the desired accuracy.  This establishes that Algorithm \ref{twostagedetalgo} must be successful for all $f \in \cn$.  It furthermore establishes an upper bound on the cost of the algorithm as given in \eqref{auto2stagedetcost}.
 
@@ -352,16 +353,20 @@ There are a several remarks that may facilitate understanding of this result.
 \begin{enumerate}
 \renewcommand{\labelenumi}{\roman{enumi}.}
 \item An algorithm, $G$, to approximate the semi-norm in the larger space,  $\norm[\cg]{\cdot}$,  must be identified and its error must be bounded.
-\item Both the powers, $p_1$ and $p_2$, and the leading constants, $C_1$ and $C_2$, for the sequence of nonadaptive algorithms, $\{A_n\}_{n \in \ci}$, must be computed explicitly for the the automatic algorithm to be defined.
+\item Both the error functions $h$ and $\tildeh$, for the sequence of nonadaptive algorithms, $\{A_n\}_{n \in \ci}$, must be computed explicitly for the the automatic algorithm to be defined.  
 \item The near optimality of this sequence of nonadaptive algorithms must be verified to ensure that there is no significant penalty for not having an a priori upper bound on $\norm[\cg]{f}$.
 \end{enumerate}
-Sections ??? provide concrete examples where these conditions are checked.
+Sections \ref{integsec} and \ref{approxsec} provide concrete examples where these conditions are checked.
 \end{rem}
 
-\begin{rem} If $C_2$ and/or $p_2$ are unknown, then one may take $C_2=\infty$, and the algorithm still satisfies the error tolerance with a cost upper bound given in \eqref{auto2stagedetcost}.  The optimality result in \eqref{penalty} then only holds for $\cg$, and not $\cf$.  The analogy holds if $C_1$ and/or $p_1$ are unknown.  However, at least one pair, $(C_1,p_1)$ or $(C_2,p_2)$, must be known for this theorem to have a meaningful result.
+\begin{rem} If $\tildeh$ is unknown, then one may take $\tildeh=\infty$, and the algorithm still satisfies the error tolerance with a cost upper bound given in \eqref{auto2stagedetcost}.  The optimality result in \eqref{penalty} then only holds for $\cg$, and not $\cf$.  The analogy holds if $h$ is unknown.  However, at least one of these two functions $h$ or $\tildeh$, must be known for this theorem to have a meaningful result.
 \end{rem}
 
 \begin{rem} The cost of Algorithm \ref{twostagedetalgo}, as given by \eqref{auto2stagedetcost}, depends on $\sigma$, which is essentially the $\cg$-semi-norm of the input function, $f$.  Thus, if $\sigma$ is smaller, the cost will correspondingly be smaller.  Moreover, $\sigma$ is not an input parameter for the algorithm.  Rather the algorithm reliably estimates $\norm[\cg]{f}$, and then adjusts the number of samples used (the cost) accordingly.
+\end{rem}
+
+\begin{rem}
+The definition of the set of algorithms for which the Algorithm \ref{twostagedetalgo} is guaranteed to work, $\cn$, depends somewhat on $\norm[\cg]{f}$, but only because of the practical constraint of a cost budget of $N_{\max}$.  This dependence disappears if one lifts this constraint by taking $N_{\max} \to \infty$.  The primary constraint determining the success of the algorithm is that $f \in \cc_{\tau}$.
 \end{rem}
 
 \begin{rem} Instead of choosing $\tau$ as an input parameter for Algorithm \ref{twostagedetalgo}, one may alternatively choose the inflation factor $\fC >1$.  This then implies that 
@@ -371,7 +376,23 @@ Sections ??? provide concrete examples where these conditions are checked.
 which is equivalent to \eqref{norminflate}.
 \end{rem}
 
-\begin{rem} Suppose that the sequence of nonadaptive algorithms, 
+\begin{rem} It is observed in the examples of Sections \ref{integsec} and \ref{approxsec} that for the sequence of algorithms $\{A_n\}_{n \in \ci}$
+\begin{equation}
+\tau \tildeh(n) \le h(n) \quad \forall n \in \ci.
+\end{equation}
+or equivalently, $\min(h(n),\tau \tildeh(n))=\tau\tildeh(n)$.  This then simplifies Algorithm \ref{twostagedetalgo} in the computation of the sample size for $A$ in \eqref{Nmindef} and also in Theorem \ref{TwoStageDetermThm} in the definition of $\cn$ in \eqref{nicefdef} and the upper bound on the cost in \eqref{auto2stagedetcost}. 
+\end{rem}
+
+
+\subsection{Embedded Nonadaptive Algorithms $\{A_n\}_{n \in \ci}$}
+
+Suppose that the sequence of nonadaptive algorithms, 
+\[
+\{A_n\}_{n \in \ci} = \{A_{n_1}, A_{n_2}, \ldots \}, 
+\]
+are \emph{embedded}, i.e., $A_{n_{i+1}}$ uses all of the data used by $A_{n_{i}}$ for $i=1, 2, \ldots$.  An example would be a sequence of trapezoidal rules for integration that uses a power of two trapezoids for increasing powers. Furthermore, it is supposed that the data used by $G$, the algorithm used to estimate the $\cg$-semi-norm of $f$, is the same data used by $A_{n_1}$, and so $n_1=N_G$.  Then the total cost of Algorithm \ref{twostagedetalgo} can be reduced; it is simply $N_A$, as given in Stage 2, instead of $N_G+N_A$.  Moreover, $\tN_{\max}$ may then be taken to be $N_{\max}$, and the cost bound of the automatic algorithm in \eqref{auto2stagedetcost} does not need the term $N_G$.
+
+\begin{rem} Again suppose that $\{A_n\}_{n \in \ci}$ is an embedded sequence of algorithms and that the sequence of nonadaptive algorithms and that the data used by the $A_{n_i}$ can also b $G$, the algorithm used to estimate the $\cg$-semi-norm of $f$, is the same data used by $A_{n_1}$
 \[
 \{A_n\}_{n \in \ci} = \{A_{n_1}, A_{n_2}, \ldots \}, 
 \]
