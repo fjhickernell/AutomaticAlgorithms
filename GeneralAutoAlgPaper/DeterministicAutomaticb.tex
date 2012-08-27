@@ -370,7 +370,7 @@ The definition of the set of algorithms for which the Algorithm \ref{twostagedet
 \end{rem}
 
 \begin{rem} Instead of choosing $\tau$ as an input parameter for Algorithm \ref{twostagedetalgo}, one may alternatively choose the inflation factor $\fC >1$.  This then implies that 
-\begin{equation}
+\begin{equation} \label{taufromnC}
 \tau = \left(1 - \frac{1}{\fC}\right)\frac{1}{\err_{+}(G,\cf,\reals_+,\norm[\cg]{\cdot})},
 \end{equation}
 which is equivalent to \eqref{norminflate}.
@@ -390,30 +390,27 @@ Suppose that the sequence of nonadaptive algorithms,
 \[
 \{A_n\}_{n \in \ci} = \{A_{n_1}, A_{n_2}, \ldots \}, 
 \]
-are \emph{embedded}, i.e., $A_{n_{i+1}}$ uses all of the data used by $A_{n_{i}}$ for $i=1, 2, \ldots$.  An example would be a sequence of trapezoidal rules for integration that uses a power of two trapezoids for increasing powers. Furthermore, it is supposed that the data used by $G$, the algorithm used to estimate the $\cg$-semi-norm of $f$, is the same data used by $A_{n_1}$, and so $n_1=N_G$.  Then the total cost of Algorithm \ref{twostagedetalgo} can be reduced; it is simply $N_A$, as given in Stage 2, instead of $N_G+N_A$.  Moreover, $\tN_{\max}$ may then be taken to be $N_{\max}$, and the cost bound of the automatic algorithm in \eqref{auto2stagedetcost} does not need the term $N_G$.
+are \emph{embedded}, i.e., $A_{n_{i+1}}$ uses all of the data used by $A_{n_{i}}$ for $i=1, 2, \ldots$.  An example would be a sequence of composite trapezoidal rules for integration that uses a number of trapezoids that is an increasing power of two. Furthermore, it is supposed that the data used by $G$, the algorithm used to estimate the $\cg$-semi-norm of $f$, is the same data used by $A_{n_1}$, and so $n_1=N_G$.  Then the total cost of Algorithm \ref{twostagedetalgo} can be reduced; it is simply $N_A$, as given in Stage 2, instead of $N_G+N_A$.  Moreover, $\tN_{\max}$ may then be taken to be $N_{\max}$, and the cost bound of the automatic algorithm in \eqref{auto2stagedetcost} does not need the term $N_G$.
 
-\begin{rem} Again suppose that $\{A_n\}_{n \in \ci}$ is an embedded sequence of algorithms and that the sequence of nonadaptive algorithms and that the data used by the $A_{n_i}$ can also b $G$, the algorithm used to estimate the $\cg$-semi-norm of $f$, is the same data used by $A_{n_1}$
-\[
-\{A_n\}_{n \in \ci} = \{A_{n_1}, A_{n_2}, \ldots \}, 
-\]
-are \emph{embedded}, i.e., $A_{n_{i+1}}$ uses all of the data used by $A_{n_{i}}$ for $i=1, 2, \ldots$.  Furthermore, suppose that the data used by $G$, the algorithm used to estimate the $\cg$-semi-norm of $f$, is the same data used by $A_{n_1}$, and so $n_1=N_G$.  Then total cost of Algorithm \ref{twostagedetalgo} can be reduced; it is simply $N$, as given in Stage 2, instead of $N+N_G$.  Moreover, $\tN_{\max}$ may then be taken to be $N_{\max}$, and the cost bound of the automatic algorithm in \eqref{auto2stagedetcost} does not need the term $N_G$.
-\end{rem}
 
-\begin{rem} Assuming embedded algorithms, $\{A_n\}_{n \in \ci}$, satisfying the conditions of the previous remark, and assuming that for every $n \in \ci$, there exists an algorithm $G_n$ that estimates $\norm[\cg]{\cdot}$, one may modify the two-stage Algorithm \ref{twostagedetalgo} to become a multi-stage algorithm.  Starting with $i=1$, 
+Again suppose that $\{A_n\}_{n \in \ci}$ consists of algorithms, but some of which are embedded in others.  An example would be all possible composite trapezoidal rules for integration that use trapezoids of equal widths. Suppose also that for each $A_n$ that solves the problem of interest, there is an algorithm $G_n$ using the same data as $A_n$, which approximates $\norm[\cg]{\cdot}$, the $\cg$-semi-norm of the input function.  One may modify the two-stage Algorithm \ref{twostagedetalgo} to become a multi-stage algorithm. 
 
+\begin{algo} \label{multistagealgo}  Starting with some initial $n_1$ and $\tau$ satisfying $\tau \le 1/ \err_{+}(G_{n_1},\cf,\reals_+,\norm[\cg]{\cdot})$, and some input function $f \in \cf$, set $i=1$.
 \begin{description}
 
-\item [Stage 1.] Compute $G_{n_i}(f)$ as in Stage 1, and then $\fC_{i}$ as in \eqref{norminflate}.  
+\item [Stage 1. Estimate $\| f \| _{\cg}$.] Compute $G_{n_i}(f)$ and then $\fC_{i} \le \infty$ as in \eqref{norminflate}, based on $G_{n_i}$.  
 
-\item [Stage 2.] Check whether $n_i$ is large enough to satisfy the error tolerance, i.e., 
+\item [Stage 2. Check for Convergence.] Check whether $n_i$ is large enough to satisfy the error tolerance, i.e., 
 \[
-\frac{\min(C_1,C_2\tau n_i^{p_1-p_2})\fC_i G_{n_i}(f)}{n_i^{p_1}} \le \varepsilon.
+\min(h(n_i),\tau \tildeh(n_i))\fC_i G_{n_i}(f) \le \varepsilon.
 \]
-If this is true, then set $W=0$.  Otherwise, if this inequality fails to hold and $n_{i+1} > N_{\max}$, then set the $W=1$.  In both cases, return $(A_{n_i}(f),W)$ and terminate the algorithm.  If the error tolerance is not yet satisfied, and $n_{i+1} \le N_{\max}$, then increment $i$ by one and return to Stage 1.
-\end{description}
+If this is true, then set $W=0$, return $(A_{n_i}(f),W)$ and terminate the algorithm.
 
-This multi-stage algorithm, where Stages 1 and 2 are repeated until the error tolerance is reached, has the advantage that the $ G_{n_i}(f)$, the estimates of $\norm[\cg]{f}$ should generally improve as $i$ increases.  This means that the final sample size may not need to be so large as in the two-stage algorithm.
-\end{rem}
+\item[Compute $n_{i+1}$.]  Otherwise, if this inequality fails to hold, compute $\fc_i$ according to \eqref{normdeflate} using $G_i$. Since $\norm[\cg]{f} \ge G_i(f)/\fc_i$, one needs at to spend at least $N_{\min}(\varepsilon \fc_i/G_i(f))$ in effort.  Choose $n_{i+1}$ as the smallest number exceeding $n_i$ and not less than $N_{\min}(\varepsilon \fc_i/G_i(f))$ such that $A_{n_{i}}$ is embedded in $A_{n_{i+1}}$. If $n_{i+1} \le N_{\max}$, replace $i$ by $i+1$, and go back to the first step.  
+
+Otherwise, if $n_{i+1} > N_{\max}$, choose $n_{i+1}$ to be the largest number not exceeding $N_{\max}$ such that $A_{n_{i}}$ is embedded in $A_{n_{i+1}}$, and set the $W=1$. Return $(A_{n_{i+1}}(f),W)$ and terminate the algorithm.
+\end{description}  
+\end{algo}
 
 \subsection{Lower Complexity Bounds for the Algorithms}
 Lower complexity bounds are typically proved by constructing fooling functions.  First, a lower bound is derived for the complexity of problems defined on $\cf$- and $\cg$-semi-norm balls of input functions.  This technique is generally known \cite{???}.  Then it is shown how to extend this idea for the cone $\cc_{\tau}$.  
