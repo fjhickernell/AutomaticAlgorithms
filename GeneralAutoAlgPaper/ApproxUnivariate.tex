@@ -1,139 +1,225 @@
-Yuhan Ding needs to fix this section as soon as she can.
 
-Let $\ch$ be the space of continuous functions on $[0,1]$ with $\cl_{\infty}$ first derivatives.  Suppose one wants to approximate functions in $\ch$ based on function values.  The goal is to make the $\cl_{\infty}$ error small, i.e., to find an algorithm, $A$ for which $\norm[\infty]{f - A(f)} \le \varepsilon$.  A non-adaptive algorithm is described and analyzed first, however, as described in the introduction it is successful only for functions whose size is known.  Next an adaptive algorithm is constructed from the non-adaptive one.  A measure of guile is defined, and functions with moderate guile are guaranteed to be well-approximated by the non-adpative algorithm.
+In this part, we consider the function recovery $S(f)=f$ and $\ch=\cl_{\infty}.$
+Then $\norm[\ch]{S(f)-A(f)}=\norm[\infty]{f-A(f)}.$
+Let $\cg \subset C^{1}[0,1]$ with finite $\cl_{\infty}$ first derivatives, i.e. $\norm[\cg]{f}=\norm[\infty]{f'}.$
+Let $\cf \subset C^{1}[0,1].$ And $\forall f \in \cf,$
+ $$\|f\|_{\cf}=\sup\limits_{x,t \in [0,1]}\frac{|f'(x)-f'(t)|}{|x-t|^{s}},$$ where $s \in (0,1]$ is a fixed number.
 
-\subsection{Non-Adaptive Algorithms} As a start, consider the algorithm that produces a piecwise constant approximation using function values at $n+1$ equally spaced data sites, $\left\{x_i = \frac{i}{n}\right\}_{i=0}^n$:
-\begin{equation} \label{appxbuildblock}
-\tA_n(f) = 1_{\left[0,\frac{1}{2n}\right)}(x) \, f(0) + \sum_{i=1}^{n-1} 1_{\left[\frac{2i-1}{2n},\frac{2i+1}{2n}\right)}(x) \, f\left(x_i\right) + 1_{\left[\frac{2n-1}{2n},1\right]}(x) \, f(1).
+
+Given $\tau>0$, then by the \eqref{conedef}, we have $\cc_{\tau} \subset \cf$ as
+\begin{equation}\label{ctapprox}
+\cc_{\tau}=\{f \in  C^{1}[0,1] : \forall x,t \in [0,1], |f'(x)-f'(t)|\leq \tau|x-t|^{s} \|f'\|_{\infty} \}.
 \end{equation}
-This algorithm assigns as the value $\tA_n(f)(x)$ the value of $f\left(x_i\right)$ corresponding to the data site, $x_i$, nearest $x$.  The algorithm $\tA_n$ is used to construct an adaptive algorithm to be described later.  Note that the cost of this algorithm is $n+1$, not $n$.  Although this algorithm is slightly sub-optimal for fixed sample size, 
 
-Define the size of a function as the $\cl_{\infty}$ norm of its first derivative, i.e., $\size(f) = \norm[\infty]{f'}$. Furthermore, as in the previous section, define the ball of functions $\cb_{\sigma} :=\{f \in \ch : \norm[\infty]{f'} \le \sigma\}$.
+Suppose one wants to approximate functions in $\cc_{\tau}$ based on function values.  The goal is to make the $\cl_{\infty}$ error small, i.e., to find an algorithm, $A$ for which $\norm[\infty]{f-A(f)} \le \varepsilon$.
 
-\begin{theorem} \label{stdappxthm}  The problem of approximating functions of bounded size has complexity
-\[
-\comp(\varepsilon,\cb_{\sigma},\Lambda^{\std}) = \left \lceil \frac{\sigma}{2\varepsilon} \right \rceil.
-\]
-The algorithm defined in \eqref{appxbuildblock} is nearly optimal, in the sense that it satisfies the error tolerance with only one additional function evaluation than is optimal:
-\[
-\sup_{f \in \cb_{\sigma}} \norm[\infty]{f - \tA_{\lceil\sigma/(2\varepsilon)\rceil}(f)} \le \varepsilon, \qquad \cost(\tA_{\lceil\sigma/(2\varepsilon)\rceil},\cb_{\sigma}) = \left \lceil \frac{\sigma}{2\varepsilon} \right \rceil + 1.
-\]
-\end{theorem}
-\begin{proof}  For any function $f$ lying in the ball $\cb_\sigma$, and any $x \in [0,1)$, let $x_i$ be the data site nearest $x$, and so $\abs{x-x_i} \le 1/(2\lceil\sigma/(2\varepsilon)\rceil) \le \varepsilon/\sigma$ and $\tA_{\lceil\sigma/(2\varepsilon)\rceil}(f)(x)=f(x_i)$. It then follows that
-\begin{equation*}
-\abs{f(x) - \tA_{\lceil\sigma/(2\varepsilon)\rceil}(f)(x)}=\abs{f(x) - f(x_i)} = \abs{\int_{x_i}^x f'(t) \, \dif t} \le \norm[\infty]{f'} \abs{x-x_i} \le  \sigma \frac{\varepsilon}{\sigma} = \varepsilon.
-\end{equation*}
-This implies that $\tA_{\lceil\sigma/(2\varepsilon)\rceil}$ that attains the error tolerance with  $\left \lceil \frac{\sigma}{2\varepsilon} \right \rceil + 1$ function evaluations.  A similar argument using an algorithm based on function evaluations at $x_i=(2i-1)/n,\ i=1, \ldots, n$ can be used to show that $\comp(\varepsilon,\cb_{\sigma},\Lambda^{\std}) \le \left \lceil \frac{\sigma}{2\varepsilon} \right \rceil$.
+Here we use piecewise linear interpolation to approximate. Thus $\forall f \in \cc_{\tau},$ consider the sequence of algorithms $\{A_n\}_{n \in \ci},$ where
+$\ci=\{2,3,\dots\}$
+ and given the data $f\left(\frac{i-1}{m}\right), i=1, \ldots,m+1,$ where $\cost(A_{n})=n=m+1.$
 
-To prove a lower bound, one considers \emph{any} (possibly adaptive) algorithm $A$ using $n\le \left \lceil \frac{\sigma}{2\varepsilon} \right \rceil - 1$ function evaluations.  The proof proceeds by constructing a fooling function, $f^* \in \cb_\sigma$ for which $\norm[\infty]{f^* - A(f^*)} > \varepsilon$.  Let $A$ be any such algorithm.  Since the algorithm may be adaptive, the choice of the point, $\xi_i$, where the fooling function, $f^*$, is evaluated, may depend on $(x_1,f^*(\xi_1)), \ldots, (\xi_{i-1},f^*(\xi_{i-1}))$, for $i=2, \ldots, n$. By fiat, the fooling function is constructed to vanish at all data sites, $\xi_i$.  The fooling function is a translated and scaled bump.  Define a standard triangular bump on $\reals$ as 
-\begin{equation} \label{trianglebump}
-\psi(x) : = \max(1-\abs{x},0) = \begin{cases}0, & \abs{x} > 1, \\
-1-\abs{x}, & \abs{x} \le 1,
-\end{cases}
-\end{equation}
-and note that $\norm[\infty]{\psi} = \norm[\infty]{\psi'}=1$.  Given the algorithm $A$ with data sites $\xi_1, \ldots, \xi_n$, there exists at least one point $\xi_0 \in [0,1)$ with $\min_{1 \le i \le n} \abs{\xi_i -\xi_0} \ge 1/(2n)$.  Then define the fooling function by 
-\[
-f^*: x \mapsto \frac{\sigma}{2n}\psi(2n(x-\xi_0)).
-\]
-By definition, $\pm f^*(\xi_i)=0$ for $i=1, \ldots, n$, and $\norm[\infty]{\pm{f^*}'} = \sigma$, so $\pm f^* \in \cb_\sigma$.   Moreover, $\pm f^*(\xi_i)= \pm \sigma/(2n)$.  Since the two functions $\pm f^*$ provide the same data to algorithm $A$, it follows that $A(f)(\xi_0)=A(-f)(\xi_0)$.  The triangle inequality and the strict upper bound on $n$ then imply that the approximation error must be greater than the desired tolerance.
+For$\frac{i-1}{m} \leq x \leq \frac{i}{m}, \ i=1, \ldots, m,$ define $A_{n}(f)$
+$$A_{n}(f)(x)=f\left(\frac{i-1}{m}\right)(i-mx)+f\left(\frac{i}{m}\right)(mx-i+1).$$
+
+
+\subsection{Upper Bound}
+
+Here we denote
+$$f[x,y]:=\frac{f(x)-f(y)}{x-y}.$$
+Then we can have other ways to represent $A_{n}(f)(x).$ For $\frac{i-1}{m} \leq x \leq \frac{i}{m}, \ i=1, \ldots, m.$
+
+$$A_{n}(f)(x)=f\left(\frac{i-1}{m}\right)+f\left[\frac{i-1}{m},\frac{i}{m}\right]\left(x-\frac{i-1}{m}\right),$$
+ $$A_{n}(f)(x)=f\left(\frac{i}{m}\right)+f\left[\frac{i-1}{m},\frac{i}{m}\right]\left(x-\frac{i}{m}\right),$$
+
+Similar as $A_{n}(f)(x),$ $\forall i=1,\ldots,m, \forall x \in [0,1]$we can also have
+ $$f(x)=f\left(\frac{i-1}{m}\right)+f\left[\frac{i-1}{m},x\right]\left(x-\frac{i-1}{m}\right),$$
+  $$f(x)=f\left(\frac{i}{m}\right)+f\left[\frac{i}{m},x\right]\left(x-\frac{i-1}{m}\right).$$
+
+ Note that for all $x,y \in [0,1]$ distinct, we have
+ $$|f(x)-f(y)|=\left|\int_{x}^{y}f'(t)dt\right|\leq \left|\int_{x}^{y}\left|f'(t)\right|dt\right|
+ \leq |x-y|\|f'\|_{\infty}.$$
+ Therefore we have $|f[x,y]|\leq \|f'\|_{\infty}.$
+
+  Then for all $x \in \left[\frac{i-1}{m},\frac{i}{m}\right]$ we have
+  \begin{align*}
+  f(x)
+%  &  \leq \min\left(f\left(\frac{i-1}{m}\right)+\|f'\|_{\infty}\left(x-\frac{i-1}{m}\right),f\left(\frac{i}{m}\right)-\|f'\|_{\infty}\left(x-\frac{i}{m}\right)\right)\\
+  & \leq \left\{\begin{matrix}
+  f\left(\frac{i-1}{m}\right)+\|f'\|_{\infty}\left(x-\frac{i-1}{m}\right) & \frac{i-1}{m} \leq x \leq \frac{i-1+j^{*}}{m} \\
+  f\left(\frac{i}{m}\right)-\|f'\|_{\infty}\left(x-\frac{i}{m}\right) & \frac{i-1+j^{*}}{m} \leq x \leq \frac{i}{m}
+  \end{matrix},\right.
+  \end{align*}
+where $0 \leq j^{*} \leq 1$ is defined by
+$$f\left(\frac{i-1}{m}\right)+\|f'\|_{\infty}\frac{j^{*}}{m}=f\left(\frac{i}{m}\right)-\|f'\|_{\infty}\left(-1+j^{*}\right)
+\Rightarrow j^{*}=\frac{1}{2}\left[1+\frac{f\left[\frac{i-1}{m},\frac{i}{m}\right]}{\|f'\|_{\infty}}\right].$$
+Then we have
 \begin{align*}
-\sup_{f \in \cb} \norm[\infty]{f - A(f)} 
-&\ge \max\left(\norm[\infty]{f^* - A(f^*)},\norm[\infty]{-f^* - A(- f^*)}\right) \\ 
-& \ge \max\left(\abs{f^*(\xi_0) - A(f)(\xi_0)},\abs{-f^*(\xi_0) - A(-f^*)(\xi_0)}\right) \\
-& \ge \frac{1}{2} \left [ \abs{f(\xi_0) - A(f^*)(\xi_0)} + \abs{f^*(\xi_0)+ A(-f^*)(\xi_0)} \right ]\\
-& \ge \frac{1}{2} \abs{f^*(\xi_0) - A(f^*)(\xi_0) + f^*(\xi_0) + A(-f^*)(\xi_0)}\\
-& = \abs{f^*(\xi_0)} = \frac{\sigma}{2n} \ge \frac{\sigma}{2 \left(\left \lceil \frac{\sigma}{2\varepsilon} \right \rceil - 1\right)} > \varepsilon. 
+f\left(\frac{i-1+j^{*}}{m}\right)-A_{m}(f)\left(\frac{i-1+j^{*}}{m}\right) &
+\leq \left(\|f'\|_{\infty}-f\left[\frac{i-1}{m},\frac{i}{m}\right]\right)\frac{j^{*}}{m}\\
+& =\left(\|f'\|_{\infty}-f\left[\frac{i-1}{m},\frac{i}{m}\right]\right)\frac{1}{2m}\left[1+\frac{f\left[\frac{i-1}{m},\frac{i}{m}\right]}{\|f'\|_{\infty}}\right]\\
+& =\frac{\|f'\|_{\infty}}{2m}\left[1-\left(\frac{f\left[\frac{i-1}{m},\frac{i}{m}\right]}{\|f'\|_{\infty}}\right)^{2}\right]\leq \frac{\|f'\|_{\infty}}{2m}
 \end{align*}
-Thus, $\comp(\varepsilon,\cb_{\sigma},\Lambda^{\std}) > \left \lceil \frac{\sigma}{2\varepsilon} \right \rceil -1$, which completes the proof.
-\end{proof}
 
-\subsection{Adaptive Algorithms}
-
-The complexity result in Theorem \ref{stdappxthm} requires knowledg of the size of the function to be approximated, i.e, $\size(f) = \norm[\infty]{f'}$.  This is typically not known in advance, however, it can be approximated from the data. Given the data sites $0, 1/n, \dots, 1$, and the corresponding function values, one may estimate $\size(f)$ in terms of divided differences:
-\begin{equation}
-\hsigma_n(f)= \max_{i=1, \ldots, n} n\abs{f(i/n)-f((i-1)/n)}.
+Similarly, we can obtain that for $x \in [0,1]$
+\begin{equation}\label{errorg}\norm[\infty]{f-A_{n}(f)} \leq \frac{\|f'\|_{\infty}}{2m} \Rightarrow \err(A_n,\cg,\ch,S) \leq \frac{1}{2}(n-1)^{-1},
 \end{equation}
-Note that $\hsigma_n(f)$ never overestimates $\size(f)$.  The quality of this estimate depends on how much $f'$ changes over a short distance.  This motivates the following definition of guile:
-\begin{equation}
-\guile(f):= \frac{\norm[\infty]{f''}}{\norm[\infty]{f'}} = \frac{\norm[\infty]{f''}}{\size(f)},
-\end{equation}
-with the convention that constant functions have zero guile.  The guile of a function is the size of its second derivative relative to the size of its first derivative.  This guile remains unchanged when the function is multiplied by any nonzero constant.
+which means
+$$C_{1}=\frac{1}{2},p_{1}=1.$$
 
-A function with small guile has a size that is well approximated by $\hsigma_n$.  Suppose that $\zeta$ is some point satisfying $\abs{f'(\zeta)} = \norm[\infty]{f'}$ and that $(i-1)/n \le \zeta < i/n$.  It then follows that $f(i/n)-f((i-1)/n) = f'(\eta)/n$ for some $\eta$ between $(i-1)/n$ and $i/n$.  Thus,
+Now looking another way for $\frac{i-1}{m} \leq x \leq \frac{i-\frac{1}{2}}{m}$
+$$\left|f(x)-A_{n}(f)(x)\right|=\left|f\left[\frac{i-1}{m},x\right]\left(x-\frac{i-1}{m}\right)-f\left[\frac{i-1}{m},\frac{i}{m}\right]\right|\left(x-\frac{i-1}{m}\right).$$
+Then by Mean Value theorem, we can find $\xi \in \left(\frac{i-1}{m},x\right), \ \zeta \in \left(\frac{i-1}{m},\frac{i}{m}\right),$ such that
+$$f'(\xi)=f\left[\frac{i-1}{m},x\right],f'(\zeta)=f\left[\frac{i-1}{m},\frac{i}{m}\right].$$
+Let $x=\frac{i-1+j}{m}, \ 0 \leq j \leq \frac{1}{2}.$ Then we can have
 \begin{align*}
-\norm[\infty]{f'} &= \abs{f'(\zeta)} = \abs{f'(\eta) + \int_{\eta}^{\zeta} f''(x) \, \dif x} \le \abs{f'(\eta)} + \abs{\int_{\eta}^{\zeta} f''(x) \, \dif x} \\
-& \le \hsigma_n(f) + \abs{\zeta - \eta} \norm[\infty]{f''} \le \hsigma_n(f) + \frac{\guile(f) \norm[\infty]{f'}}{n}, \\
-\norm[\infty]{f'} & \le \frac{\hsigma_n(f)}{1 - \guile(f)/n}.
+\left|f(x)-A_{n}(f)(x)\right|&=\frac{j}{m}|f'(\xi)-f'(\zeta)| \leq \frac{|\xi-\zeta|^{s}}{2m}\left(\frac{|f'(\xi)-f'(\zeta)|}{|\xi-\zeta|^{s}}\right)  \\
+ & \leq \frac{1}{2m^{1+s}}\left(\frac{|f'(\xi)-f'(\zeta)|}{|\xi-\zeta|^{s}}\right)
 \end{align*}
-Letting $\cn_{\tau} = \{ f \in \ch : \guile(f) \le \tau\}$ now carves out a subset of $\ch$ which includes functions of arbitrarily size, but for which that size can be easily bounded empirically as
-\begin{equation} \label{sizebd}
-\size(f) \le \frac{\hsigma_n(f)}{1 - \tau/n} \qquad \forall f \in \cn_{\tau}.
+
+Similarly, for $\frac{i-\frac{1}{2}}{m} \leq x \leq \frac{i}{m},$ we can have same results.
+Thus, we obtain that
+$$\left|f(x)-A_{n}(f)(x)\right|\leq \frac{1}{2m^{1+s}}\sup\limits_{x,t \in [0,1]}\frac{|f'(x)-f'(t)|}{|x-t|^{s}}.$$
+
+Hence, we can obtain that for $x \in [0,1]$
+\begin{equation}\label{errorf}\norm[\infty]{f-A_{n}(f)} \leq  \frac{1}{2m^{1+s}}\norm[\cf]{f} \Rightarrow \err(A_n,\cf,\ch,S) \leq \frac{1}{2}(n-1)^{-(1+s)},
 \end{equation}
-This then suggests the following adaptive algorithm that is guaranteed to approximate functions in $\cn_{\tau}$ within a tolerance of $\varepsilon$.
+which means $$C_{2}=\frac{1}{2} , \ p_{2}=1+s.$$
 
+%Combine eq.(\ref{errorg}) and eq.(\ref{errorf}), we have the same result as in eq. (\ref{Anerrbound}).
+%$$\norm[\ch]{S(f) -  A_n(f)} \le \frac{\min(C_1,C_2\tau n^{p_1-p_2})\norm[\cg]{f}}{n^{p_1}} \qquad \forall f \in \cc_{\tau}.$$
 
-\begin{algo} \label{adapappxalgo} Given positive numbers $\varepsilon$ and $\tau$, let $n_1=\lceil \tau \rceil +1$, and $j=1$. 
-\begin{enumerate}
-\renewcommand{\labelenumi}{Step \arabic{enumi}.} 
-\item Let $n=n_12^{j-1}$.  Evaluate $\hsigma_{n}(f)$.
-\item If 
+Fix the algorithm $G_n,$ which $\cost(G_n)=n,$
+suppose the data sites $0, 1/m, \dots, 1$ where $m=n-1,$ and the corresponding function values. one may estimate $\norm[\infty]{f'}$ in terms of divided differences:
+\begin{equation}
+G_{n}(f)= \max_{i=1, \ldots, m} m\abs{f(i/m)-f((i-1)/m)}.
+\end{equation}
+Note that $G_n(f)$ never overestimates $\norm[\cg]{f}$. Thus, we have
+$$\err_{-}(G_n,\cf,\reals_{+},\norm[\cg]{\cdot})=0.$$
+ Suppose that $\zeta$ is some point satisfying $\abs{f'(\zeta)} = \norm[\infty]{f'}$ and
+that $(i-1)/m \le \zeta < i/m$.  It then follows that $f(i/m)-f((i-1)/m) = f'(\eta)/m$ for some $\eta$ between $(i-1)/m$ and $i/m$.  Thus,
+\begin{align*}
+\norm[\infty]{f'} &= \abs{f'(\zeta)}\leq \abs{f'(\eta)} + \abs{f'(\eta)-f'(\zeta) }  \le G_{n}(f) + \abs{ \eta-\zeta}^{s}\sup\limits_{x,t \in [0,1]}\frac{|f'(x)-f'(t)|}{|x-t|^{s}}\nonumber\\
+& \leq  G_n(f) + \frac{1}{m^{s}} \sup\limits_{x,t \in [0,1]}\frac{|f'(x)-f'(t)|}{|x-t|^{s}}\nonumber\\
+&\Rightarrow \err_{+}(G_n,\cf,\reals_{+},\norm[\cg]{\cdot}) =\frac{1}{(n-1)^{s}}
+\end{align*}
+Hence, we have
+$$\err_{-}(G_n,\cf,\reals_{+},\norm[\cg]{\cdot})=0, \ \err_{+}(G_n,\cf,\reals_{+},\norm[\cg]{\cdot}) =\frac{1}{(n-1)^{s}}.
+$$
+
+Then by Algorithm \ref{twostagedetalgo}, we have the following algorithm
+\begin{algo} \label{adpatalgo}
+%{\bf (Automatic, Adaptive, Two-Stage, Deterministic).}
+ Let $\varepsilon$ be a positive error tolerance, and let $N_{\max}$ be the maximum cost allowed.  Let $\tau$ be a fixed positive number and
+ let $A_{n}$ is defined as above. Let $n_{0}= \tau+2,$ and $j=1.$ Given an input function $f$, do the following:
+
+\begin{description}
+\item[Stage 1.\ Estimate {$\norm[\infty]{f'}$}.] Let $n=n_{0}2^{j-1}.$ Compute $A_n(f)$ at a cost of $n_{0} = \cost(A_n)$.   Define the inflation factor
+$$
+\fC =\frac{1}{1 - \tau (n-1)^{-s}} \ge 1.
+$$
+Then $\fC A_{n}(f)$ provides a reliable upper bound on $\norm[\infty]{f'}$.
+
+\item [Stage 2.\ Estimate {$f$}.] Choose the sample size need to approximate $f$, namely, check whether $n$ is large enough to satisfy the error tolerance, i.e.,
 \[
-\frac{\hsigma_n(f)}{2(n - \tau)} \le 
-\varepsilon,
+\frac{\min(1,\tau (n-1)^{-s})\fC A_{n}(f)}{2n} \le \varepsilon.
 \]
-then output $A_{\varepsilon}(f) = \tA_{n}(f)$ as the approximation.  Else, let $j=j+1$ and to to Step 1.
-\end{enumerate}
+If this is true, then set $W=0$ .  Otherwise, if this inequality fails to hold and $n > N_{\max}$, then set the $W=1$.  In both cases, return $(A_{n}(f),W)$ and terminate the algorithm.  If the error tolerance is not yet satisfied, and $n \le N_{\max}$, then increment $i$ by one and return to Stage 1.
+
+\end{description}
+
 \end{algo}
 
-\begin{theorem} \label{adapappxthm}  \emph{Nice} functions may be well approximated at a reasonable cost by $A_{\varepsilon}$, the adaptive Algorithm \ref{adapappxalgo}.  In particular,
-\begin{gather*}
-\sup_{f \in \cn_{\tau}} \norm[\infty]{f - A_{\varepsilon}(f)} \le \varepsilon, \\
-\left \lceil \frac{\sigma}{2\varepsilon} \right \rceil \le \comp(\varepsilon,\cn_{\tau},\sigma) \le \cost(A_{\varepsilon},\cn_{\tau},\sigma) \le 2 \lceil \tau \rceil + \max\left(2,\frac{\sigma}{\varepsilon} \right) + 1.
-\end{gather*}
+However, we can find if $\fC =\frac{1}{1 - \tau (n-1)^{-s}} \ge 1,$ then $\tau (n-1)^{-s}) <1.$
+Thus we only need \[
+\frac{\tau (n-1)^{-s}\fC A_{n}(f)}{2(n-1)} \le \varepsilon.
+\]
+
+
+\begin{theorem}   Let  $\varepsilon$, $N_{\max}$, $\tN_{\max}$, $\fC$, and $\tau$ be given as described in Algorithm \ref{adpatalgo},  Let
+\begin{equation} \label{normdeflate}
+\fc =1 + \tau \err_{-}(G,\cf,\reals_+,\norm[\cg]{\cdot}) =1.
+\end{equation}
+Let $\cc_\tau$ be the cone of functions defined in \eqref{ctapprox}.  Let
+\begin{equation} \label{nicefdef}
+\cn = \left \{ f \in \cc_\tau : \norm[\infty]{f'} \le \varepsilon \tN_{\max}(1 - \tau (n_0-1)^{-s}) \max\left( 2, \frac{2\tN_{\max}^{s}}{\tau} \right ) \right\}
+\end{equation}
+be a subset of the cone $\cc_\tau.$  Then it follows that Algorithm \ref{adpatalgo} is successful for all functions in this set of \emph{nice} functions $\cn$,  i.e.,  $\success(A,W,\cn,\varepsilon,N_{\max}) = 1$.  Moreover, the cost of this algorithm is bounded above in terms of the $\norm[\infty]{f'}$ of the input function as follows:
+\begin{multline} \label{auto2stagedetcost}
+\cost(A,\cn,\varepsilon,N_{\max},\sigma) \\
+\le  \min\left\{ n \in \ci : n \ge \min\left( \frac{\sigma}{2\varepsilon(1 - \tau/(n_{0}-1)^{s})} , \left(\frac{\sigma\tau}{2\varepsilon(1 - \tau/(n_{0}-1)^{s})}\right)^{\frac{1}{1+s}}\right)  \right\}
+\end{multline} where $\sigma=\norm[\infty]{f'}.$
+
+%The upper bound on the cost of this specific algorithm provides an upper bound on the complexity of the problem, $\comp(\varepsilon,\ca(\cn,\ch,S,\Lambda),N_{\max},\sigma)$.  If the sequence of algorithms $\{A_n\}_{n \in \ci}$, $A_n \in\ca_{\fix}(\cg,\ch,S,\Lambda)$  is nearly optimal for the problems $(\cg,\ch,S,\Lambda)$ and $(\cf,\ch,S,\Lambda)$ as defined in \eqref{nearoptdef}, then Algorithm \ref{twostagedetalgo} does not incur a significant penalty for not knowing $\norm[\cg]{f}$ a priori, i.e., for all $p>0$,
+%\begin{equation} \label{penalty}
+%\sup_{0 < \varepsilon/\sigma \le 1} \frac{\cost(A,\cn,\varepsilon,\infty,\sigma)} {\comp(\varepsilon/\sigma,\ca_{\fix}(\cj,\ch,S,\Lambda))} \left(\frac{\varepsilon}{\sigma}\right)^p <\infty, \qquad \cj \in \{\cf,\cg\}.
+%\end{equation}
 \end{theorem}
-\begin{proof}  For any nice function $f$ lying in $\cn_\tau$, its size is bounded above by $\hsigma_n(f)/(1-\tau/n)$ according to \eqref{sizebd}.  Furthermore, by the proof of Theorem \ref{stdappxthm} it follows that 
-\[
-\norm[\infty]{f - \tA_n(f)} \le \frac{\size(f)}{2n} \le \frac{\hsigma_n(f)}{2(n-\tau)}.
-\]
-Thus, when the stopping criterion in Step 2 is satisfied, the resulting approximation is within the desired tolerance.
 
-The algorithm terminates for the first positive integer $j$ satisfying the inequality in Step 2.  Since $\hsigma(f)$ never overestimates $\size(f)$ for all $f \in \ch$, this means that
-\begin{align*}
-n \ge \tau + \frac{\hsigma_n(f)}{2 \varepsilon} 
-& \Longleftarrow (\lceil \tau \rceil + 1 ) 2^{j-1} = n_1 2^{j-1} = n \ge \lceil \tau \rceil + \frac{\size(f)}{2 \varepsilon} \\
-& \Longleftarrow j \ge 2 +  \log_2\left(\frac{\lceil \tau \rceil + \frac{\size(f)}{2 \varepsilon}} {\lceil \tau \rceil + 1} \right) \\
-& \Longleftarrow n \ge 2 \lceil \tau \rceil + \max\left(2,\frac{\size(f)}{\varepsilon} \right).
-\end{align*}
-This establishes an upper bound on the cost of the algorithm.
-
-The proof of the lower bound is similar to that in Theorem \ref{stdappxthm}. Consider \emph{any} (possibly adaptive) algorithm $A$ using $n\le \left \lceil \frac{\sigma}{2\varepsilon} \right \rceil - 1$ function evaluations. 
-A fooling function $f^* \in \cn_\tau$ is constructed to vanish at all data sites, $\xi_i$.  Unlike Theorem  \ref{stdappxthm}, the fooling function must be continuously differentiable.  The bump function in Theorem \ref{stdappxthm} is replaced by 
-\begin{equation} \label{contbump}
-\phi(x) : = [\max(0,1-x^2)]^2 = \begin{cases}(1-x^2)^2, & \abs{x} \le 1, \\
-0, & \abs{x} > 1,
-\end{cases}
-\end{equation}
-which has first and second derivatives
-\begin{equation} \label{contbump}
-\phi'(x) = \begin{cases} -4x(1-x^2), & \abs{x} \le 1, \\
-0, & \abs{x} > 1,
-\end{cases} \qquad 
-\phi''(x) = \begin{cases} -4(1-3x^2), & \abs{x} \le 1, \\
-0, & \abs{x} > 1,
-\end{cases}
-\end{equation}
-and note that $\norm[\infty]{\phi} = 1$, $\norm[\infty]{\phi'}=8/(3 \sqrt{3})$, and $\norm[\infty]{\phi''}=8$.  Given the algorithm $A$ with data sites $\xi_1, \ldots, \xi_n$, there exists at least one point $\xi_0 \in [0,1)$ with $\min_{1 \le i \le n} \abs{\xi_i -\xi_0} \ge 1/(2n)$.  Then define the fooling function by 
-\[
-f^*: x \mapsto \frac{\sigma}{2n}\psi(2n(x-\xi_0)).
-\]
-By definition, $\pm f^*(\xi_i)=0$ for $i=1, \ldots, n$, and $\norm[\infty]{\pm{f^*}'} = \sigma$, so $\pm f^* \in \cb_\sigma$.   Moreover, $\pm f^*(\xi_i)= \pm \sigma/(2n)$.  Since the two functions $\pm f^*$ provide the same data to algorithm $A$, it follows that $A(f)(\xi_0)=A(-f)(\xi_0)$.  The triangle inequality and the strict upper bound on $n$ then imply that the approximation error must be greater than the desired tolerance.
-\begin{align*}
-\sup_{f \in \cb} \norm[\infty]{f - A(f)} 
-&\ge \max\left(\norm[\infty]{f^* - A(f^*)},\norm[\infty]{-f^* - A(- f^*)}\right) \\ 
-& \ge \max\left(\abs{f^*(\xi_0) - A(f)(\xi_0)},\abs{-f^*(\xi_0) - A(-f^*)(\xi_0)}\right) \\
-& \ge \frac{1}{2} \left [ \abs{f(\xi_0) - A(f^*)(\xi_0)} + \abs{f^*(\xi_0)+ A(-f^*)(\xi_0)} \right ]\\
-& \ge \frac{1}{2} \abs{f^*(\xi_0) - A(f^*)(\xi_0) + f^*(\xi_0) + A(-f^*)(\xi_0)}\\
-& = \abs{f^*(\xi_0)} = \frac{\sigma}{2n} \ge \frac{\sigma}{2 \left(\left \lceil \frac{\sigma}{2\varepsilon} \right \rceil - 1\right)} > \varepsilon. 
-\end{align*}
-Thus, $\comp(\varepsilon,\cb_{\sigma},\Lambda^{\std}) > \left \lceil \frac{\sigma}{2\varepsilon} \right \rceil -1$, which completes the proof.
+\begin{proof}
+Applied Theorem \ref{TwoStageDetermThm}, then we can have the above result.
 \end{proof}
+
+%\begin{theorem} \label{adapappxthm}  \emph{Nice} functions may be well approximated at a reasonable cost by $A_{\varepsilon}$, the adaptive Algorithm \ref{adapappxalgo}.  In particular,
+%\begin{align*}
+%\sup_{f \in \cn_{\tau}} \norm[\infty]{f - A_{\varepsilon}(f)} & \le \varepsilon, \\
+%\min\left\{\left\lceil  \left(\frac{(3-s)^{\frac{1-s}{2}}}{32(1-s)^{\frac{1-s}{2}}}\frac{\sigma\tau}{\varepsilon}\right)^{\frac{1}{1+s}}  \right\rceil-1, \left\lceil \frac{3\sqrt{3}\sigma}{16\varepsilon}\right\rceil-1 \right\} & \leq \comp(\varepsilon,\mathcal{N}_{s,\tau},\sigma)  \\
+%\le \cost(A_{\varepsilon},\cn_{\tau},\sigma) & \le  \left\lceil \min\left( \frac{\sigma}{2\varepsilon(1 - \tau/n_{0}^{s})} , \left(\frac{\sigma\tau}{2\varepsilon(1 - \tau/n_{0}^{s})}\right)^{\frac{1}{1+s}}\right) \right\rceil.
+%\end{align*}
+%\end{theorem}
+%\begin{proof}
+%For any nice function $f$ lying in $\mathcal{N}_{s,\tau},$ we can have
+%$$\|f-A_{\varepsilon}(f)\|_{\infty}\leq \min\left\{ \frac{\hsigma_{n_{0}}(f)}{2n(1 - \tau/n_{0}^{s})} , \frac{\tau\hsigma_{n_{0}}(f)}{2n^{1+s}(1 - \tau/n_{0}^{s})} \right\}.$$
+%Thus, when the stopping criterion in Step 2 is satisfied, the resulting approximation is within
+%the desired tolerance.
+%
+%The algorithm terminates for the first positive integer $j$ satisfying the inequality in Step
+%2. Since $\hat{\sigma}(f)$ never overestimates size$(f)$ for all $f \in H,$ this means that
+%\begin{align*}
+% & n \ge \left\lceil \min\left( \frac{\hsigma}{2\varepsilon(1 - \tau/n_{0}^{s})} , \left(\frac{\tau\hsigma}{2\varepsilon(1 - \tau/n_{0}^{s})}\right)^{\frac{1}{1+s}}\right) \right\rceil\\
+%   \Rightarrow & n \ge  \left\lceil \min\left( \frac{\hsigma_{n_{0}}(f)}{2\varepsilon(1 - \tau/n_{0}^{s})} , \left(\frac{\tau\hsigma_{n_{0}}(f)}{2\varepsilon(1 - \tau/n_{0}^{s})}\right)^{\frac{1}{1+s}}\right) \right\rceil\\
+%\Rightarrow &  \min\left\{ \frac{\hsigma_{n_{0}}(f)}{2n(1 - \tau/n_{0}^{s})} , \frac{\tau\hsigma_{n_{0}}(f)}{2n^{1+s}(1 - \tau/n_{0}^{s})} \right\}   \leq \varepsilon.
+%\end{align*}
+%This establishes an upper bound on the cost of the algorithm.\\
+
+
+\subsection{Lower Bound}
+Next, we will derive the lower bound.
+
+Suppose that for any $n>0,$ for any algorithm which cost is less than $n.$
+We want to build fooling function at all data sites $\xi_{i}, \ i=1,\ldots,n.$
+There exists at least one $i$ such that $\xi_{i+1}-\xi_{i}\ge\frac{1}{n+1}.$
+Then we can define $f_{1}$
+$$f_{1}(x):=\left\{\begin{matrix}
+A_{1}(x-\xi_{j})^{2}(x-\xi_{j+1})^{2} & \xi_{j}< x \leq \xi_{j+1},\\
+0 & \text{otherwise},
+\end{matrix}\right.,$$
+where $A_{1} \ge 0.$
+
+As we need $\norm[\infty]{f_1}=1,$ we can have $A_{1}=\frac{16}{(\xi_{i+1}-\xi_{i})^4}.$
+Then we can obtain
+$$\norm[\infty]{f'_1}=\frac{16}{3\sqrt{3}(\xi_{j+1}-\xi_{j})}\leq \frac{16}{3\sqrt{3}}(n+1).$$
+\begin{align*}\max_{x,t}\frac{|f'_1(x)-f'_1(t)|}{|x-t|^{s}}&=\frac{32(1-s)^{\frac{1-s}{2}}}{(3-s)^{\frac{3-s}{2}}(\xi_{j+1}-\xi_{j})^{s+1}}
+=\frac{6\sqrt{3}(1-s)^{\frac{1-s}{2}}}{(3-s)^{\frac{3-s}{2}}(\xi_{j+1}-\xi_{j})^{s}}\norm[\infty]{f'_1}\\
+ & \leq \frac{6\sqrt{3}(1-s)^{\frac{1-s}{2}}}{(3-s)^{\frac{3-s}{2}}}(n+1)^s\norm[\infty]{f'_1}.
+ \end{align*}
+ where $(1-s)^{\frac{1-s}{2}}=1$ if $s=1.$
+Thus, we have
+$$g(n)=\frac{16}{3\sqrt{3}}(n+1), \ \tg(n)=\frac{6\sqrt{3}(1-s)^{\frac{1-s}{2}}}{(3-s)^{\frac{3-s}{2}}}(n+1)^s.$$
+
+Let $f_0=x.$ Then we have
+$$\norm[\infty]{f'_0}=1, \norm[\cf]{f_0}=0 \Rightarrow \tau_0=0.$$
+
+\begin{theorem} \label{complowbdappr} Suppose that functions $f_{0}$ and $f_1$ can be found that satisfy conditions \eqref{assumpfone} and \eqref{assumpfzero}.  It then follows that the complexity of the problem, defined by \eqref{complexdef}, assuming infinite cost budget, over the cone of functions $\cc_{\tau}$ is
+\begin{multline*}
+\comp(\varepsilon,\ca(\cc_{\tau},\ch,S,\Lambda),\infty,\sigma) \\
+\ge \min\left(\frac{3\sqrt{3}\sigma}{64 \varepsilon}-1, \left(\frac{\sigma\tau(3-s)^{\frac{3-s}{2}}}{128\varepsilon(1-s)^{\frac{1-s}{2}}}\right)^{\frac{1}{1+s}}-1 \right).
+\end{multline*}
+\end{theorem}
+
+\begin{proof}
+$g(n), \ \tg(n)$ and $\tau_0$ is obtained above, then by Theorem \ref{complowbd}
+we can have the above results.
+\end{proof}
+
+
+
+
