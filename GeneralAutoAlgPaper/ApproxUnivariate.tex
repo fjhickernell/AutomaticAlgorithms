@@ -63,7 +63,7 @@ Similarly, we can obtain that for $x \in [0,1]$
 \begin{equation}\label{errorg}\norm[\infty]{f-A_{n}(f)} \leq \frac{\|f'\|_{\infty}}{2m} \Rightarrow \err(A_n,\cg,\ch,S) \leq \frac{1}{2}(n-1)^{-1},
 \end{equation}
 which means
-$$C_{1}=\frac{1}{2},p_{1}=1.$$
+$$h(n)=\frac{1}{2}(n-1)^{-1}.$$
 
 Now looking another way for $\frac{i-1}{m} \leq x \leq \frac{i-\frac{1}{2}}{m}$
 $$\left|f(x)-A_{n}(f)(x)\right|=\left|f\left[\frac{i-1}{m},x\right]\left(x-\frac{i-1}{m}\right)-f\left[\frac{i-1}{m},\frac{i}{m}\right]\right|\left(x-\frac{i-1}{m}\right).$$
@@ -82,7 +82,7 @@ $$\left|f(x)-A_{n}(f)(x)\right|\leq \frac{1}{2m^{1+s}}\sup\limits_{x,t \in [0,1]
 Hence, we can obtain that for $x \in [0,1]$
 \begin{equation}\label{errorf}\norm[\infty]{f-A_{n}(f)} \leq  \frac{1}{2m^{1+s}}\norm[\cf]{f} \Rightarrow \err(A_n,\cf,\ch,S) \leq \frac{1}{2}(n-1)^{-(1+s)},
 \end{equation}
-which means $$C_{2}=\frac{1}{2} , \ p_{2}=1+s.$$
+which means $$\tilde{h}(n)=\frac{1}{2}(n-1)^{-(1+s)}.$$
 
 %Combine eq.(\ref{errorg}) and eq.(\ref{errorf}), we have the same result as in eq. (\ref{Anerrbound}).
 %$$\norm[\ch]{S(f) -  A_n(f)} \le \frac{\min(C_1,C_2\tau n^{p_1-p_2})\norm[\cg]{f}}{n^{p_1}} \qquad \forall f \in \cc_{\tau}.$$
@@ -135,15 +135,15 @@ Thus we only need \[
 
 
 \begin{theorem}   Let  $\varepsilon$, $N_{\max}$, $\tN_{\max}$, $\fC$, and $\tau$ be given as described in Algorithm \ref{adpatalgo},  Let
-\begin{equation} \label{normdeflate}
+$$
 \fc =1 + \tau \err_{-}(G,\cf,\reals_+,\norm[\cg]{\cdot}) =1.
-\end{equation}
+$$
 Let $\cc_\tau$ be the cone of functions defined in \eqref{ctapprox}.  Let
-\begin{equation} \label{nicefdef}
+$$
 \cn = \left \{ f \in \cc_\tau : \norm[\infty]{f'} \le \varepsilon \tN_{\max}(1 - \tau (n_0-1)^{-s}) \max\left( 2, \frac{2\tN_{\max}^{s}}{\tau} \right ) \right\}
-\end{equation}
+$$
 be a subset of the cone $\cc_\tau.$  Then it follows that Algorithm \ref{adpatalgo} is successful for all functions in this set of \emph{nice} functions $\cn$,  i.e.,  $\success(A,W,\cn,\varepsilon,N_{\max}) = 1$.  Moreover, the cost of this algorithm is bounded above in terms of the $\norm[\infty]{f'}$ of the input function as follows:
-\begin{multline} \label{auto2stagedetcost}
+\begin{multline}
 \cost(A,\cn,\varepsilon,N_{\max},\sigma) \\
 \le  \min\left\{ n \in \ci : n \ge \min\left( \frac{\sigma}{2\varepsilon(1 - \tau/(n_{0}-1)^{s})} , \left(\frac{\sigma\tau}{2\varepsilon(1 - \tau/(n_{0}-1)^{s})}\right)^{\frac{1}{1+s}}\right)  \right\}
 \end{multline} where $\sigma=\norm[\infty]{f'}.$
