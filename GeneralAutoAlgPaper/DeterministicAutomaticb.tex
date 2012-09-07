@@ -582,7 +582,7 @@ Since $A$ is an arbitrary successful algorithm, this inequality provides a lower
 
 \section{Approximation of One-Dimensional Integrals} \label{integsec}
 
-\input{IntegUnivariate.tex}
+\input{univariate_integration.tex}
 
 \section{$\cl_{\infty}$ Approximation of Univariate Functions} \label{approxsec}
 
@@ -617,11 +617,11 @@ There are results dating to ???? stating that
 
 \subsection{Why Cones?}
 
-One may wonder why the error analysis for automatic algorithms is performed for input functions lying in cones, $\cc_{\tau}$, of the form \eqref{conedef}.  Automatic algorithms proceed by estimating, perhaps conservatively, the error for a particular approximation and then increasing the number of function data until that error estimate falls below the tolerance.  These error estimates are constructed in such a way that if the error can be estimated reliably for $f$, then it can also be reliably estimated for $cf$, where $c$ is any real number.  Thus, if an algorithm is successful for the input function $f$, then it is also successful for the input $cf$, where $c$ is any real number.  Any set that contains $cf$ if it contains $f$ is by definition a cone.  
+There are good reasons why the error analysis for automatic algorithms is performed for input functions lying in cones, $\cc_{\tau}$, of the form \eqref{conedef}.  Automatic algorithms proceed by estimating, perhaps conservatively, the error for a particular approximation and then increasing the number of function data until that error estimate does not exceed the error tolerance.  These error estimates are constructed in such a way that if they are reliable for $f$, then they are also reliable for $cf$, where $c$ is any real number.  Thus, if an algorithm is successful for the input function $f$, then it is also successful for the input $cf$, where $c$ is any real number.  Any set that contains $cf$ if it contains $f$ is by definition a cone.  
 
+One might wonder whether the definition of the cone $\cc_{\tau}$ in \eqref{conedef} is too strict.  Ignoring the cost budget, an alternative could be to define $\cc_{\text{success}}$ as the cone of all input functions for which the automatic algorithm successfully approximates the solution within the error tolerance.  Clearly $\cc_{\text{success}}$ contains $\cc_{\tau}$, and quite likely $\cc_{\text{success}}$ also contains functions not in $\cc_{\tau}$.  However, the definition of $\cc_{\text{success}}$ does not provide any insight into the  kind of input functions that the automatic algorithm can successfully handle.  Moreover, given the lower bounds that one may derive, it can be shown in many cases, including those in Sections \ref{integsec} and \ref{approxsec}, that the cost of the automatic algorithm is within a constant multiple of the cost of the best algorithm for $\cc_{\tau}$.
 
-Of course one could dThis is because if the error can be estimated reliably for $f$, then it can also be reliably esit 
-
+How to choose $\tau$
 
 \section{Further Work} \label{furthersec}
 
