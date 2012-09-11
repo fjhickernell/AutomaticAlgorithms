@@ -53,19 +53,23 @@
 
 \begin{frontmatter}
 
-\title{The Complexity of Deterministic Automatic Algorithms}
+\title{The Complexity of Deterministic Guaranteed Automatic Algorithms}
 \author{Yuhan Ding}
 \author{Nicholas Clancy}
 \author{Caleb Hamilton}
 \author{Fred J. Hickernell}
 \author{Yizhi Zhang}
 \address{Room E1-208, Department of Applied Mathematics, Illinois Institute of Technology,\\ 10 W.\ 32$^{\text{nd}}$ St., Chicago, IL 60616}
-\begin{abstract}
+\begin{abstract} There are a quite a few automatic numerical algorithms that are widely used in practice.  By automatic, it is meant that the user provides an error tolerance, $\varepsilon$, and the algorithm attempts to provide an approximate solution that is no more than a distance of  $\varepsilon$ from the true solution.  Furthermore, this solution is provided at a reasonable computational cost.  Unfortunately, many of these automatic algorithms lack rigorous guarantees, i.e., sufficient conditions on the input function that ensure that the algorithm is successful. 
+
+This article establishes a framework for providing rigorous guarantees for automatic algorithms.  These algorithms adaptively determine the sample size necessary to guarantee that the error tolerance is met.  Upper bounds on their cost are provided (Theorem \ref{TwoStageDetermThm} and \ref{MultiStageThm}), and lower bounds on the complexity of the problem are derived (Theorem \ref{complowbd}). Examples of these general theorems are illustrated for numerical integration and function recovery.  The key observation is that the error analysis should be done for \emph{cones} of input functions rather than balls. The existing literature contains certain cautions about the usefulness and reliability of automatic algorithms.  The theory presented here violates the assumptions on which those concerns are based, rendering them moot.
 \end{abstract}
 
 \begin{keyword}
+adaptive \sep cones \sep function recovery \sep integration \sep quadrature
 %% keywords here, in the form: keyword \sep keyword
 
+\MSC[2010] 65D05 \sep 65D30 \sep 65G20
 %% MSC codes here, in the form: \MSC code \sep code
 %% or \MSC[2008] code \sep code (2000 is the default)
 
@@ -667,12 +671,21 @@ The automatic algorithms presented here do rely on the parameter $\tau$, the wid
 
 \section{Further Work} \label{furthersec}
 
-Other problems
+The results presented here suggest a number of other interesting open problems that need to be addressed.  Here is a summary.
 
-More sophisticated algorithms
+\begin{itemize}
 
-Local adaption
+\item The univariate integration and function approximation algorithms in Sections \ref{integsec} and \ref{approxsec} have low order convergence.  Guaranteed automatic algorithms with higher ordre convergence rates for smoother input functions are needed.  These might be based on higher degree piecewise polynomial approximations.
 
+\item There are other types of problems, e.g., differential equation initial value problems and nonlinear optimization, which fit the general framework presented here.  These problems also have automatic algorithms, but without guarantees.  It would be helpful to develop guaranteed automatic algorithms in these other areas.
+
+\item The algorithms developed here are \emph{globally adaptive}, in the sense that the function data determines the sample size, but not the kinds of data collected or the locations of the sample points, which depend only on the sample size.  Some existing automatic algorithms are \emph{locally adaptive} in that they collect more data in regions of special interest, say where the function has a spike.  Such algorithms need guarantees lie the ones that are provided here for globally adaptive algorithms.  The right kinds of spaces $\cg$ and $\cf$, and their semi-norms, need to be identified that are appropriate for locally adaptive algorithms.
+
+\item For some numerical problems the error bound of the non-adaptive algorithm involves a $\cg$- or $\cf$-semi-norm that is very hard to approximate because of its complexity.  An example is multivariate quadrature using quasi-Monte Carlo algorithms, where the error depends on the \emph{variation} of the integrand.  The definition of the variation may vary somewhat with the definition of $\cg$ or $\cf$, but it is essentially some norm of a mixed partial derivative of the integrand.  To obtain guaranteed automatic algorithms one must either find an efficient way to approximate the variation of the function or find other suitable conservative estimates for the error that can be reliably obtained from the function data.  
+
+\item This article considers only the worst case error of deterministic algorithms.  There are many random algorithms, and they must be analyzed by somewhat different methods.  A guaranteed Monte Carlo algorithm for estimating the mean of a random variable, which includes multivariate integration as a special case, has been proposed by \cite{HicEtal14a}.
+
+\end{itemize}
 
 
 \bibliographystyle{model1b-num-names.bst}
