@@ -1,0 +1,79 @@
+
+\newcommand{\R}{\mathbb{R}}
+In the following cases, we focus on approximation of upper bounds for truncation errors. The approximation is about the integral $S(f)=\int_{0}^{1}f(x)dx$ and $\ch=\R$. In the investigation of the truncation error of approximate integration, we usually treat the error:
+$$E=E(f)=\left|\int_{0}^{1}f(x)dx-\ca(f)\right|$$
+%-\sum_{i=0}^{n}f(x_i)\right|$$
+as a linear functional defined over a certain class of functions.Moreover, consider using the composite trapezoidal rule, we approximate the integral piece by piece:
+$\int_{0}^{1}f(x)dx\approx\sum_{i=0}^{n-1}\int_{x_{i}}^{x_{i+1}}f(x)dx,$ so the error of each term can be written as $E_i(f)=|\int_{x_{i}}^{x_{x+1}}f(x)dx-f(x_i)|$.
+
+Let $\cg\in C^{1}[0,1]$ be a space which all integrands' first derivative are absolutely integrable, i.e. $\|f\|_{\cg}=\|f'\|_{1}$, and $\cf\subset C^{1}[0,1]$ be a space which all integrands' second derivative are absolutely integrable, i.e. $\|f\|_{\cf}=\|f''\|_{1}$.
+
+Given $\tau > 0$, we have the conic space $\mathfrak{C}_{\tau} \subset \cf$ as $$\mathfrak{C}_{\tau}=\{f\in C^{1}[0,1]:\forall x,t \in[0,1], |f'{x}-f'(t)|\leq\tau|x-t|\|f'\|_1\}.$$
+
+Suppose one wants to approxiamte the integration of functions in $\mathfrak{C}_{\tau}$ based on function values, the goal is to make the $\mathcal{L}_1$ error small, i.e. to find an algorithm $\mathcal{A}$, for which $|\int_{0}^{1}f(x)dx-\mathcal{A}(f)|\leq \varepsilon$.
+\subsection{Upper Bounds}
+By the fundamental theorem in calculus, if we consider the integral $\int_{0}^{1}f(x)dx$,
+\begin{align*}
+  \int_{0}^{1}f(x)dx&=(x-1/2)f(x)\left|\right._{0}^{1}-\int_{0}^{1}(x-1/2)f'(x)dx,\\
+  &=\frac{1}{2}[f(1)+f(0)]-\{[\frac{(x-1/2)^2}{2}-\frac{1}{8}]f'(x)\left|_{0}^{1}\right.\}+\int_{0}^{1}[\frac{(x-1/2)^2}{2}-\frac{1}{8}]f''(x)dx,\\
+  &=\frac{1}{2}[f(1)+f(0)]+\frac{1}{2}\int_{0}^{1}x(x-1)f''(x)dx,\\
+  &=\frac{1}{2}[f(1)+f(0)]-\frac{1}{2}\int_{0}^{1}x(1-x)f''(x)dx.
+\end{align*}
+\begin{align*}
+  |\int_{0}^{1}f(x)dx-\frac{1}{2}[f(1)+f(0)]|&=|-\frac{1}{2}\int_{0}^{1}x(1-x)f''(x)dx|,\\
+  &\leq\frac{1}{2}\sup_x|x(1-x)|\|f''\|_1,\\
+  &=\frac{1}{8}\|f''\|_1.
+\end{align*}
+
+So
+\begin{align*}
+  \left|\int_{0}^{1}f(x)dx-T_n(f)\right|&=\left|\sum_{i=1}^{n}\{\int_{x_{i-1}}^{x_i}f(x)dx-\frac{f(x_i)+f(x_{i-1})}{2}\}\right|,\\
+  &=\left|\frac{1}{n}\sum_{i=1}^{n}\{\int_{0}^{1}g_i(t)-\frac{g_i(0)+g_i(1)}{2}\}\right|,\\
+  &\leq\frac{1}{n}\sum_{i=1}^{n}\frac{1}{8}\|g''_i\|_1,\\
+  &=\frac{1}{8n^2}\|f''\|_1.
+\end{align*}
+
+Furthermore, by the Peano's theorem, the error with respect to the first derivative can be represented as:
+
+$$\left|\int_{0}^{1}f(x)dx-T_n(f)\right|\leq\frac{1}{2n}\|f'\|_{1}.$$
+
+In our case, set $\|f'\|_{1}<\sigma$, also $\frac{\|f''\|_{1}}{\|f'\|_{1}}\leq\tau$, from the derivation above, we have that
+\begin{align*}
+  E(f(x)) &\leq \frac{1}{2n}\|f'\|_{1},\\
+  E(f(x)) &\leq \frac{1}{8n^2}\|f''\|_{1}.
+\end{align*}
+So, let $\hat{\sigma_n}=\sup_i\left|\frac{f(x_{i+1})-f(x_i)}{1/n}\right|$,
+\begin{align*}
+  E(f) &\leq \min\left\{\frac{\|f'\|_{1}}{2n},\frac{\|f''\|_{1}}{8n^2}\right\},\\
+  &\leq \min\left\{\frac{1}{2n},\frac{\tau}{8n^2}\right\}\|f'\|_{1},\\
+  &= \min(1,\frac{\tau}{4n})\frac{\|f'\|_{1}}{2n},\\
+  &\leq \frac{\tau\|f'\|_{1}}{8n^2}, \quad (n\geq \tau \Rightarrow \frac{\tau}{4n}<1),\\
+  &\leq \frac{\tau\hat{\sigma_n}}{8n^2(1-\tau/n)}.
+\end{align*}
+
+
+We can then derive the automatic algorithm.
+\begin{algo} \label{twostagedetalgo} {\bf (Automatic, Adaptive, Two-Stage).} 
+
+\begin{description}
+
+\item[Stage 1.\ Estimate {$\|\cdot\|_{\cg}$}.] First compute $G(f)$ at a cost of $N_{G} = \cost(G)$.   Define the inflation factor
+\begin{equation}\label{norminflate}
+\mathfrak{C} =\left\lceil\frac{\sqrt{\frac{\tau \hat{\sigma}_{N_G}}{\varepsilon(1 - \tau/ N_G)}}}{N_{G}}\right\rceil \ge 1. \text{need 2 fix}
+\end{equation}
+Then $\mathfrak{C} G(f)$ provides a reliable upper bound on $\|f\|_{\cg}$.
+
+\item [Stage 2.\ Estimate {$S(f)$}.] Choose the sample size need to approximate $S(f)$, namely,
+\[
+N \geq \left(\frac{\tau \hat{\sigma}_{N_G}}{12\varepsilon(1-\tau/N_G)}\right)^{\frac{1}{2}} \text{need 2 fix}
+\]
+If $N \le N_{\max}-N_G$, then $S(f)$ may be approximated within the desired error tolerance and within the cost budget.  Set the warning flag to false, $W=0$. Otherwise, recompute $N$ to be within budget, $N = \tN_{\max} := \max\{N \in \ci : N\le N_{\max} -  N_G\}$, and set the warning flag to true, $W=1$.  Compute $A_N(f)$ as the approximation to $S(f)$.
+\end{description}
+\end{algo}
+
+
+\subsection{Lower Bounds}
+Now we consider the lower bound. We define the fooling function as $f_{\pm}=c_0f_0\pm c_1f_1$. Let $f_0=x$, then $\|f_0\|_{\mathcal{G}}=\|f'_0\|_1=1>0$, $\|f_0\|_{\mathcal{F}}=\|f''_0\|_1=0=\tau_0*1$. It satisfies (23) in the paper.
+
+Moreover, let $f_1(x)=\frac{30(x-l^2)(x-u)^2}{(u-l)^5}$ when $l \leq x \leq u$, where $u-l\geq\frac{1}{n+1}$ and $f_1(x)=0$ anywhere else. Then, $\int_{0}^{1}f_1(x)dx=1$, namely $\|S(f_1)\|_{\mathcal{H}}$. Also $\|f_1\|_{\mathcal{G}}=\|f'_{1}\|_1=\frac{15}{4(u-l)}\leq \frac{15}{4}(n+1)=g(n)$ and $\|f_1\|_{\mathcal{F}}=\|f''_{1}\|_1=\frac{40}{\sqrt{3}(u-l)^2}\leq \frac{40}{\sqrt{3}}(n+1)^2=\frac{32}{3\sqrt{3}}(n+1)g(n)=\tilde{g}(n)g(n)$. Condition (22) is satisfied. We can easil get that $g^{-1}(n)=\frac{4}{15}x-1$ and $(\tilde{g}(g))^{-1}(x)=\sqrt{\frac{\sqrt{3}}{40}x}-1$. So according to the Theorem 3 in the paper, $$\text{comp}\geq \min\left(\frac{4}{15}(\frac{\sigma}{4\varepsilon})-1,\sqrt{\frac{\sqrt{3}}{40}\frac{\sigma\tau}{4\varepsilon}}-1\right)\geq\min\left(\frac{4}{15}(\frac{\sigma}{4\varepsilon}),\sqrt{\frac{\sqrt{3}}{40}\frac{\sigma\tau}{4\varepsilon}}\right)-1$$
+
