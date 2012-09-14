@@ -15,7 +15,7 @@ Suppose one wants to approximate functions in $\cc_{\tau}$ based on function val
 
 Here we use piecewise linear interpolation to approximate. Thus $\forall f \in \cc_{\tau},$ consider the sequence of algorithms $\{A_n\}_{n \in \ci},$ where
 $\ci=\{2,3,\dots\}$
- and given the data $f\left(\frac{i-1}{m}\right), i=1, \ldots,m+1,$ where $\cost(A_{n})=n=m+1.$
+ and given the data $f\left(\frac{i}{m}\right), i=0, \ldots,m,$ where $\cost(A_{n})=n=m+1.$
 
 For$\frac{i-1}{m} \leq x \leq \frac{i}{m}, \ i=1, \ldots, m,$ define $A_{n}(f)$
 $$A_{n}(f)(x)=f\left(\frac{i-1}{m}\right)(i-mx)+f\left(\frac{i}{m}\right)(mx-i+1).$$
@@ -23,21 +23,39 @@ $$A_{n}(f)(x)=f\left(\frac{i-1}{m}\right)(i-mx)+f\left(\frac{i}{m}\right)(mx-i+1
 
 \subsection{Upper Bound}
 
+
+Fix the algorithm $G_n,$ which $\cost(G_n)=n,$
+suppose the data sites $0, 1/m, \dots, 1$ where $m=n-1,$ and the corresponding function values. one may estimate $\norm[\infty]{f'}$ in terms of divided differences:
+\begin{equation}
+G_{n}(f)= \max_{i=1, \ldots, m} m\abs{f(i/m)-f((i-1)/m)}.
+\end{equation}
+Note that $G_n(f)$ never overestimates $\norm[\cg]{f}$. Thus, we have
+$$\err_{-}(G_n,\cf,\reals_{+},\norm[\cg]{\cdot})=0.$$
+ Suppose that $\zeta$ is some point satisfying $\abs{f'(\zeta)} = \norm[\infty]{f'}$ and
+that $(i-1)/m \le \zeta < i/m$.  It then follows that $f(i/m)-f((i-1)/m) = f'(\eta)/m$ for some $\eta$ between $(i-1)/m$ and $i/m$.  Thus,
+\begin{align*}
+\norm[\infty]{f'} &= \abs{f'(\zeta)}\leq \abs{f'(\eta)} + \abs{f'(\eta)-f'(\zeta) }  \le G_{n}(f) + \abs{ \eta-\zeta}^{s}\sup\limits_{x,t \in [0,1]}\frac{|f'(x)-f'(t)|}{|x-t|^{s}}\nonumber\\
+& \leq  G_n(f) + \frac{1}{m^{s}} \sup\limits_{x,t \in [0,1]}\frac{|f'(x)-f'(t)|}{|x-t|^{s}}\nonumber\\
+&\Rightarrow \err_{+}(G_n,\cf,\reals_{+},\norm[\cg]{\cdot}) =\frac{1}{(n-1)^{s}}
+\end{align*}
+Hence, we have
+$$\err_{-}(G_n,\cf,\reals_{+},\norm[\cg]{\cdot})=0, \ \err_{+}(G_n,\cf,\reals_{+},\norm[\cg]{\cdot}) =\frac{1}{(n-1)^{s}}.
+$$
+
 Here we denote
 $$f[x,y]:=\frac{f(x)-f(y)}{x-y}.$$
-Then we can have other ways to represent $A_{n}(f)(x).$ For $\frac{i-1}{m} \leq x \leq \frac{i}{m}, \ i=1, \ldots, m.$
-
-$$A_{n}(f)(x)=f\left(\frac{i-1}{m}\right)+f\left[\frac{i-1}{m},\frac{i}{m}\right]\left(x-\frac{i-1}{m}\right),$$
- $$A_{n}(f)(x)=f\left(\frac{i}{m}\right)+f\left[\frac{i-1}{m},\frac{i}{m}\right]\left(x-\frac{i}{m}\right),$$
-
-Similar as $A_{n}(f)(x),$ $\forall i=1,\ldots,m, \forall x \in [0,1]$we can also have
- $$f(x)=f\left(\frac{i-1}{m}\right)+f\left[\frac{i-1}{m},x\right]\left(x-\frac{i-1}{m}\right),$$
-  $$f(x)=f\left(\frac{i}{m}\right)+f\left[\frac{i}{m},x\right]\left(x-\frac{i-1}{m}\right).$$
 
  Note that for all $x,y \in [0,1]$ distinct, we have
  $$|f(x)-f(y)|=\left|\int_{x}^{y}f'(t)dt\right|\leq \left|\int_{x}^{y}\left|f'(t)\right|dt\right|
  \leq |x-y|\|f'\|_{\infty}.$$
  Therefore we have $|f[x,y]|\leq \|f'\|_{\infty}.$
+ 
+Then we can have two different ways to represent $A_{n}(f)(x)$ and $f(x).$ 
+
+$\forall i=1,\ldots,m, \forall x \in [0,1]$we can also have
+ $$f(x)=f\left(\frac{i-1}{m}\right)+f\left[\frac{i-1}{m},x\right]\left(x-\frac{i-1}{m}\right)=f\left(\frac{i}{m}\right)+f\left[\frac{i}{m},x\right]\left(x-\frac{i}{m}\right).$$
+
+
 
   Then for all $x \in \left[\frac{i-1}{m},\frac{i}{m}\right]$ we have
   \begin{align*}
@@ -51,12 +69,17 @@ Similar as $A_{n}(f)(x),$ $\forall i=1,\ldots,m, \forall x \in [0,1]$we can also
 where $0 \leq j^{*} \leq 1$ is defined by
 $$f\left(\frac{i-1}{m}\right)+\|f'\|_{\infty}\frac{j^{*}}{m}=f\left(\frac{i}{m}\right)-\|f'\|_{\infty}\left(-1+j^{*}\right)
 \Rightarrow j^{*}=\frac{1}{2}\left[1+\frac{f\left[\frac{i-1}{m},\frac{i}{m}\right]}{\|f'\|_{\infty}}\right].$$
+For $\frac{i-1}{m} \leq x \leq \frac{i}{m}, \ i=1, \ldots, m.$
+
+$$A_{n}(f)(x)=f\left(\frac{i-1}{m}\right)+f\left[\frac{i-1}{m},\frac{i}{m}\right]\left(x-\frac{i-1}{m}\right).$$
 Then we have
 \begin{align*}
-f\left(\frac{i-1+j^{*}}{m}\right)-A_{m}(f)\left(\frac{i-1+j^{*}}{m}\right) &
-\leq \left(\|f'\|_{\infty}-f\left[\frac{i-1}{m},\frac{i}{m}\right]\right)\frac{j^{*}}{m}\\
-& =\left(\|f'\|_{\infty}-f\left[\frac{i-1}{m},\frac{i}{m}\right]\right)\frac{1}{2m}\left[1+\frac{f\left[\frac{i-1}{m},\frac{i}{m}\right]}{\|f'\|_{\infty}}\right]\\
-& =\frac{\|f'\|_{\infty}}{2m}\left[1-\left(\frac{f\left[\frac{i-1}{m},\frac{i}{m}\right]}{\|f'\|_{\infty}}\right)^{2}\right]\leq \frac{\|f'\|_{\infty}}{2m}
+f\left(\frac{i-1+j^{*}}{m}\right)-A_{n}(f)\left(\frac{i-1+j^{*}}{m}\right) 
+%&
+%\leq \left(\|f'\|_{\infty}-f\left[\frac{i-1}{m},\frac{i}{m}\right]\right)\frac{j^{*}}{m}\\
+%& =\left(\|f'\|_{\infty}-f\left[\frac{i-1}{m},\frac{i}{m}\right]\right)\frac{1}{2m}\left[1+\frac{f\left[\frac{i-1}{m},\frac{i}{m}\right]}{\|f'\|_{\infty}}\right]\\
+%& 
+=\frac{\|f'\|_{\infty}}{2m}\left[1-\left(\frac{f\left[\frac{i-1}{m},\frac{i}{m}\right]}{\|f'\|_{\infty}}\right)^{2}\right]\leq \frac{\|f'\|_{\infty}}{2m}
 \end{align*}
 
 Similarly, we can obtain that for $x \in [0,1]$
@@ -66,7 +89,7 @@ which means
 $$h(n)=\frac{1}{2}(n-1)^{-1}.$$
 
 Now looking another way for $\frac{i-1}{m} \leq x \leq \frac{i-\frac{1}{2}}{m}$
-$$\left|f(x)-A_{n}(f)(x)\right|=\left|f\left[\frac{i-1}{m},x\right]\left(x-\frac{i-1}{m}\right)-f\left[\frac{i-1}{m},\frac{i}{m}\right]\right|\left(x-\frac{i-1}{m}\right).$$
+$$\left|f(x)-A_{n}(f)(x)\right|=\left|f\left[\frac{i-1}{m},x\right]\left(x-\frac{i-1}{m}\right)-f\left[\frac{i-1}{m},\frac{i}{m}\right]\left(x-\frac{i-1}{m}\right)\right|.$$
 Then by Mean Value theorem, we can find $\xi \in \left(\frac{i-1}{m},x\right), \ \zeta \in \left(\frac{i-1}{m},\frac{i}{m}\right),$ such that
 $$f'(\xi)=f\left[\frac{i-1}{m},x\right],f'(\zeta)=f\left[\frac{i-1}{m},\frac{i}{m}\right].$$
 Let $x=\frac{i-1+j}{m}, \ 0 \leq j \leq \frac{1}{2}.$ Then we can have
@@ -87,66 +110,75 @@ which means $$\tilde{h}(n)=\frac{1}{2}(n-1)^{-(1+s)}.$$
 %Combine eq.(\ref{errorg}) and eq.(\ref{errorf}), we have the same result as in eq. (\ref{Anerrbound}).
 %$$\norm[\ch]{S(f) -  A_n(f)} \le \frac{\min(C_1,C_2\tau n^{p_1-p_2})\norm[\cg]{f}}{n^{p_1}} \qquad \forall f \in \cc_{\tau}.$$
 
-Fix the algorithm $G_n,$ which $\cost(G_n)=n,$
-suppose the data sites $0, 1/m, \dots, 1$ where $m=n-1,$ and the corresponding function values. one may estimate $\norm[\infty]{f'}$ in terms of divided differences:
-\begin{equation}
-G_{n}(f)= \max_{i=1, \ldots, m} m\abs{f(i/m)-f((i-1)/m)}.
-\end{equation}
-Note that $G_n(f)$ never overestimates $\norm[\cg]{f}$. Thus, we have
-$$\err_{-}(G_n,\cf,\reals_{+},\norm[\cg]{\cdot})=0.$$
- Suppose that $\zeta$ is some point satisfying $\abs{f'(\zeta)} = \norm[\infty]{f'}$ and
-that $(i-1)/m \le \zeta < i/m$.  It then follows that $f(i/m)-f((i-1)/m) = f'(\eta)/m$ for some $\eta$ between $(i-1)/m$ and $i/m$.  Thus,
-\begin{align*}
-\norm[\infty]{f'} &= \abs{f'(\zeta)}\leq \abs{f'(\eta)} + \abs{f'(\eta)-f'(\zeta) }  \le G_{n}(f) + \abs{ \eta-\zeta}^{s}\sup\limits_{x,t \in [0,1]}\frac{|f'(x)-f'(t)|}{|x-t|^{s}}\nonumber\\
-& \leq  G_n(f) + \frac{1}{m^{s}} \sup\limits_{x,t \in [0,1]}\frac{|f'(x)-f'(t)|}{|x-t|^{s}}\nonumber\\
-&\Rightarrow \err_{+}(G_n,\cf,\reals_{+},\norm[\cg]{\cdot}) =\frac{1}{(n-1)^{s}}
-\end{align*}
-Hence, we have
-$$\err_{-}(G_n,\cf,\reals_{+},\norm[\cg]{\cdot})=0, \ \err_{+}(G_n,\cf,\reals_{+},\norm[\cg]{\cdot}) =\frac{1}{(n-1)^{s}}.
-$$
 
 Then by Algorithm \ref{twostagedetalgo}, we have the following algorithm
 \begin{algo} \label{adpatalgo}
-%{\bf (Automatic, Adaptive, Two-Stage, Deterministic).}
+{\bf (Automatic, Adaptive, Two-Stage, Deterministic).}
  Let $\varepsilon$ be a positive error tolerance, and let $N_{\max}$ be the maximum cost allowed.  Let $\tau$ be a fixed positive number and
- let $A_{n}$ is defined as above. Let $n_{0}= \tau+2,$ and $j=1.$ Given an input function $f$, do the following:
+ let $A_{n}$ is defined as above. Let $n_{0}$ be a number larger than $\tau+2.$ Given an input function $f$, do the following:
 
 \begin{description}
-\item[Stage 1.\ Estimate {$\norm[\infty]{f'}$}.] Let $n=n_{0}2^{j-1}.$ Compute $A_n(f)$ at a cost of $n_{0} = \cost(A_n)$.   Define the inflation factor
+\item[Stage 1.\ Estimate {$\norm[\infty]{f'}$}.] Compute $G_{n_{0}}(f)$ at a cost of $n_{0} = \cost(A_{n_{0}})$.   Define the inflation factor
 $$
-\fC =\frac{1}{1 - \tau (n-1)^{-s}} \ge 1.
+\fC =\frac{1}{1 - \tau (n_{0}-1)^{-s}} \ge 1.
 $$
-Then $\fC A_{n}(f)$ provides a reliable upper bound on $\norm[\infty]{f'}$.
+Then $\fC G_{n_{0}}(f)$ provides a reliable upper bound on $\norm[\infty]{f'}$.
 
-\item [Stage 2.\ Estimate {$f$}.] Choose the sample size need to approximate $f$, namely, check whether $n$ is large enough to satisfy the error tolerance, i.e.,
+\item [Stage 2.\ Estimate {$f$}.] Choose the sample size need to approximate $f$, namely, check whether $N$ is large enough to satisfy the error tolerance, i.e.,
 \[
-\frac{\min(1,\tau (n-1)^{-s})\fC A_{n}(f)}{2n} \le \varepsilon.
+\frac{\min(1,\tau (N-1)^{-s})\fC G_{n_{0}}(f)}{2N} \le \varepsilon.
 \]
-If this is true, then set $W=0$ .  Otherwise, if this inequality fails to hold and $n > N_{\max}$, then set the $W=1$.  In both cases, return $(A_{n}(f),W)$ and terminate the algorithm.  If the error tolerance is not yet satisfied, and $n \le N_{\max}$, then increment $i$ by one and return to Stage 1.
+If $N \le N_{\max}-n_0$, then $f$ may be approximated within the desired error tolerance and within the cost budget.  Set the warning flag to false, $W=0$. Otherwise, recompute $N$ to be within budget, $N = \tN_{\max} := \max\{N \in \ci : N\le N_{\max} -  N_G\}$, and set the warning flag to true, $W=1$.  Compute $A_N(f)$ as the approximation to $f$.
 
 \end{description}
 
 \end{algo}
 
-However, we can find if $\fC =\frac{1}{1 - \tau (n-1)^{-s}} \ge 1,$ then $\tau (n-1)^{-s}) <1.$
-Thus we only need \[
-\frac{\tau (n-1)^{-s}\fC A_{n}(f)}{2(n-1)} \le \varepsilon.
+However, we can find if $\fC =\frac{1}{1 - \tau (n-1)^{-s}} \ge 1,$ then $\tau (n-1)^{-s} <1.$
+Thus we only need to find $N$ such that  \[
+\frac{\tau (N-1)^{-s}\fC G_{n_{0}}(f)}{2(N-1)} \le \varepsilon.
 \]
 
+As mentioned in Remark 5 of Theorem $\ref{TwoStageDetermThm},$ we can consider to choose $\fC \ge 1$ firstly.
+If we fix $\fC,$ then we have the expression of $n.$
+\begin{algo} 
+{\bf (Automatic, Adaptive, Multi-Stage, Deterministic).}
+ Let $\varepsilon$ be a positive error tolerance, and let $N_{\max}$ be the maximum cost allowed.  Let $\tau$ be a fixed positive number and
+ let $A_{n}$ is defined as above. Let $\fC$ be a number larger than $1.$ Then we have $n_{0}=\left(\frac{\tau \fC}{\fC-1}\right)^{\frac{1}{s}}+1.$ Given an input function $f$, do the following:
 
+\begin{description}
+\item[Stage 1.\ Estimate {$\norm[\infty]{f'}$}.] Let $n_{j}=n_{0}2^{j-1}.$ Compute $G_{n_{0}}(f)$ at a cost of $n_{0} = \cost(A_{n_{0}})$.   
+
+\item [Stage 2.\ Estimate {$f$}.] Choose the sample size need to approximate $f$, namely, check whether $n_{j}$ is large enough to satisfy the error tolerance, i.e.,
+\[
+\frac{\min(1,\tau (n_{j}-1)^{-s})\fC G_{n_{0}}(f)}{2n_{j}} \le \varepsilon.
+\]
+If this is true, then set $W=0$ .  Otherwise, if this inequality fails to hold and $n_{j} > N_{\max}$, then set the $W=1$.  In both cases, return $(G_{n_{0}}(f),W)$ and terminate the algorithm.  If the error tolerance is not yet satisfied, and $n \le N_{\max}$, then increment $i$ by one and return to Stage 1.
+
+\end{description}
+
+\end{algo}
+
+Then we can have the complexity of the upper bound.
 \begin{theorem}   Let  $\varepsilon$, $N_{\max}$, $\tN_{\max}$, $\fC$, and $\tau$ be given as described in Algorithm \ref{adpatalgo},  Let
-$$
+\begin{equation} \label{normdeflate}
 \fc =1 + \tau \err_{-}(G,\cf,\reals_+,\norm[\cg]{\cdot}) =1.
-$$
+\end{equation}
 Let $\cc_\tau$ be the cone of functions defined in \eqref{ctapprox}.  Let
-$$
+\begin{equation} \label{nicefdef}
 \cn = \left \{ f \in \cc_\tau : \norm[\infty]{f'} \le \varepsilon \tN_{\max}(1 - \tau (n_0-1)^{-s}) \max\left( 2, \frac{2\tN_{\max}^{s}}{\tau} \right ) \right\}
-$$
+\end{equation}
 be a subset of the cone $\cc_\tau.$  Then it follows that Algorithm \ref{adpatalgo} is successful for all functions in this set of \emph{nice} functions $\cn$,  i.e.,  $\success(A,W,\cn,\varepsilon,N_{\max}) = 1$.  Moreover, the cost of this algorithm is bounded above in terms of the $\norm[\infty]{f'}$ of the input function as follows:
-\begin{multline}
+\begin{multline} 
 \cost(A,\cn,\varepsilon,N_{\max},\sigma) \\
 \le  \min\left\{ n \in \ci : n \ge \min\left( \frac{\sigma}{2\varepsilon(1 - \tau/(n_{0}-1)^{s})} , \left(\frac{\sigma\tau}{2\varepsilon(1 - \tau/(n_{0}-1)^{s})}\right)^{\frac{1}{1+s}}\right)  \right\}
 \end{multline} where $\sigma=\norm[\infty]{f'}.$
+In particular, we just need 
+\begin{multline}
+\cost(A,\cn,\varepsilon,N_{\max},\sigma) \\
+\le  \min\left\{ n \in \ci : n \ge  \left(\frac{\sigma\tau}{2\varepsilon(1 - \tau/(n_{0}-1)^{s})}\right)^{\frac{1}{1+s}}  \right\}.
+\end{multline} 
+
 
 %The upper bound on the cost of this specific algorithm provides an upper bound on the complexity of the problem, $\comp(\varepsilon,\ca(\cn,\ch,S,\Lambda),N_{\max},\sigma)$.  If the sequence of algorithms $\{A_n\}_{n \in \ci}$, $A_n \in\ca_{\fix}(\cg,\ch,S,\Lambda)$  is nearly optimal for the problems $(\cg,\ch,S,\Lambda)$ and $(\cf,\ch,S,\Lambda)$ as defined in \eqref{nearoptdef}, then Algorithm \ref{twostagedetalgo} does not incur a significant penalty for not knowing $\norm[\cg]{f}$ a priori, i.e., for all $p>0$,
 %\begin{equation} \label{penalty}
@@ -157,6 +189,8 @@ be a subset of the cone $\cc_\tau.$  Then it follows that Algorithm \ref{adpatal
 \begin{proof}
 Applied Theorem \ref{TwoStageDetermThm}, then we can have the above result.
 \end{proof}
+
+
 
 %\begin{theorem} \label{adapappxthm}  \emph{Nice} functions may be well approximated at a reasonable cost by $A_{\varepsilon}$, the adaptive Algorithm \ref{adapappxalgo}.  In particular,
 %\begin{align*}
