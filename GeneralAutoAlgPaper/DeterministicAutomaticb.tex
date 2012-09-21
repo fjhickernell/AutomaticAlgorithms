@@ -1,34 +1,14 @@
-\documentclass[final]{elsarticle}
+\documentclass[]{elsarticle}
 \setlength{\marginparwidth}{0.5in}
 \usepackage{amsmath,amssymb,amsthm,natbib,mathtools,graphicx}
 \input FJHDef.tex
 
-\newcommand{\sphere}{\mathbb{S}}
-%\newcommand{\cc}{\mathcal{C}}
-\newcommand{\cq}{\mathcal{Q}}
-\newcommand{\bbW}{\mathbb{W}}
-%\newcommand{\tP}{\widetilde{P}}
-\newcommand{\bg}{{\bf g}}
-\newcommand{\bu}{{\bf u}}
-\newcommand{\bbu}{\bar{\bf u}}
-\newcommand{\bv}{{\bf v}}
-\newcommand{\bbv}{\bar{\bf v}}
-\newcommand{\bw}{{\bf w}}
-\newcommand{\bbw}{\bar{\bf w}}
-\newcommand{\hv}{\hat{v}}
-\DeclareMathOperator{\MSE}{MSE}
-\DeclareMathOperator{\RMSE}{RMSE}
-\DeclareMathOperator{\rnd}{rnd}
-\DeclareMathOperator{\abso}{abs}
-\DeclareMathOperator{\rel}{rel}
-\DeclareMathOperator{\nor}{nor}
-\DeclareMathOperator{\err}{err}
 \DeclareMathOperator{\lin}{lin}
-%\DeclareMathOperator{\std}{std}
-\DeclareMathOperator{\prob}{prob}
-\DeclareMathOperator{\trunc}{trc}
-\DeclareMathOperator{\third}{third}
-%\DeclareMathOperator{\fourth}{fourth}
+\DeclareMathOperator{\up}{up}
+\DeclareMathOperator{\lo}{lo}
+\DeclareMathOperator{\fix}{non}
+\DeclareMathOperator{\err}{err}
+
 \newtheorem{theorem}{Theorem}
 \newtheorem{prop}[theorem]{Proposition}
 \newtheorem{lem}{Lemma}
@@ -38,23 +18,15 @@
 %\newtheorem{assump}{Assumption}
 \theoremstyle{remark}
 \newtheorem{rem}{Remark}
-\DeclareMathOperator{\sMC}{sMC}
-\DeclareMathOperator{\aMC}{aMC}
-\DeclareMathOperator{\size}{size}
-\DeclareMathOperator{\guile}{guile}
-\DeclareMathOperator{\scale}{scale}
-\DeclareMathOperator{\fix}{non}
-\DeclareMathOperator{\up}{up}
-\DeclareMathOperator{\lo}{lo}
 
-\journal{Journal of Complexity}
+
 
 \begin{document}
 
 \begin{frontmatter}
 
-\title{The Complexity of Deterministic Guaranteed Automatic Algorithms}
-\author{Yuhan Ding}
+\title{Quasi-Monte Carlo Error Estimation via Fast Transforms}
+\author{F}
 \author{Nicholas Clancy}
 \author{Caleb Hamilton}
 \author{Fred J. Hickernell}

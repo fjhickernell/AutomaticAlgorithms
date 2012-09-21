@@ -1,16 +1,13 @@
 
 \newcommand{\R}{\mathbb{R}}
 In the following cases, we focus on approximation of upper bounds for truncation errors. The approximation is about the integral $S(f)=\int_{0}^{1}f(x)dx$ and $\ch=\R$. In the investigation of the truncation error of approximate integration, we usually treat the error:
-$$E=E(f)=\left|\int_{0}^{1}f(x)dx-\ca(f)\right|$$
-%-\sum_{i=0}^{n}f(x_i)\right|$$
-as a linear functional defined over a certain class of functions.Moreover, consider using the composite trapezoidal rule, we approximate the integral piece by piece:
-$\int_{0}^{1}f(x)dx\approx\sum_{i=0}^{n-1}\int_{x_{i}}^{x_{i+1}}f(x)dx,$ so the error of each term can be written as $E_i(f)=|\int_{x_{i}}^{x_{x+1}}f(x)dx-f(x_i)|$.
+$$E=E(f)=\left|\int_{0}^{1}f(x)dx-A(f)\right|$$
+as a linear functional defined over a certain class of functions. Moreover, consider using the composite trapezoidal rule, we approximate the integral piece by piece:
+$\int_{0}^{1}f(x)dx\approx\sum_{i=0}^{n-1}\int_{x_{i}}^{x_{i+1}}f(x)dx$, $0=x_0<x_1<\cdots<x_n=1$, so the error of each term can be written as $E_i(f)=|\int_{x_{i}}^{x_{x+1}}f(x)dx-f(x_i)|$.
 
-Let $\cg\in C^{1}[0,1]$ be a space which all integrands' first derivative are absolutely integrable, i.e. $\|f\|_{\cg}=\|f'\|_{1}$, and $\cf\subset C^{1}[0,1]$ be a space which all integrands' second derivative are absolutely integrable, i.e. $\|f\|_{\cf}=\|f''\|_{1}$.
+Let $\cg$ be the Sobolev space $W^{1,1}_{[0,1]}=\{f\in C^1[0,1]: \|f'\|_1<\infty\}$ i.e. $\|f\|_{\cg}=\|f'\|_{1}$, and $\cf$ be the Sobolev space $W^{2,1}_{[0,1]}=\{f\in C^1[0,1]: \|f''\|_1<\infty\}$ i.e. $\|f\|_{\cf}=\|f''\|_{1}$. Given $\tau > 0$, we have the conic space $\mathfrak{C}_{\tau} \subset \cf$ as $$\mathfrak{C}_{\tau}=\{f\in W^{2,1}_{[0,1]}:\|f''\|_1\leq\tau\|f'\|_1\}.$$
 
-Given $\tau > 0$, we have the conic space $\mathfrak{C}_{\tau} \subset \cf$ as $$\mathfrak{C}_{\tau}=\{f\in C^{1}[0,1]:\forall x,t \in[0,1], |f'{x}-f'(t)|\leq\tau|x-t|\|f'\|_1\}.$$
-
-Suppose one wants to approxiamte the integration of functions in $\mathfrak{C}_{\tau}$ based on function values, the goal is to make the $\mathcal{L}_1$ error small, i.e. to find an algorithm $\mathcal{A}$, for which $|\int_{0}^{1}f(x)dx-\mathcal{A}(f)|\leq \varepsilon$.
+Suppose one wants to approxiamte the integration of functions in $\mathfrak{C}_{\tau}$ based on function values, the goal is to make the $\mathcal{L}_1$ error small, i.e. to find an algorithm $\mathcal{A}$, for which $|\int_{0}^{1}f(x)dx-A(f)|\leq \varepsilon$.
 \subsection{Upper Bounds}
 By the fundamental theorem in calculus, if we consider the integral $\int_{0}^{1}f(x)dx$,
 \begin{align*}
@@ -35,14 +32,15 @@ So
 
 Furthermore, by the Peano's theorem, the error with respect to the first derivative can be represented as:
 
-$$\left|\int_{0}^{1}f(x)dx-T_n(f)\right|\leq\frac{1}{2n}\|f'\|_{1}.$$
+$$\left|\int_{0}^{1}f(x)dx-A(f)\right|\leq\frac{1}{2n}\|f'\|_{1}.$$
 
 In our case, set $\|f'\|_{1}<\sigma$, also $\frac{\|f''\|_{1}}{\|f'\|_{1}}\leq\tau$, from the derivation above, we have that
 \begin{align*}
-  E(f(x)) &\leq \frac{1}{2n}\|f'\|_{1},\\
-  E(f(x)) &\leq \frac{1}{8n^2}\|f''\|_{1}.
+  E=E(f)=\left|\int_{0}^{1}f(x)dx-A(f)\right|\leq\begin{cases} \displaystyle \frac{1}{2n}\|f'\|_1, & \forall f\in\cg,\\[2ex]
+ \displaystyle  \frac{1}{8n^2}\|f'\|_1, & \forall f \in \cf.
+\end{cases}
 \end{align*}
-So, let $\hat{\sigma_n}=\sup_i\left|\frac{f(x_{i+1})-f(x_i)}{1/n}\right|$,
+Furthermore, if we let $\hat{\sigma_n}=\sup_i\left|\frac{f(x_{i+1})-f(x_i)}{1/n}\right|$,
 \begin{align*}
   E(f) &\leq \min\left\{\frac{\|f'\|_{1}}{2n},\frac{\|f''\|_{1}}{8n^2}\right\},\\
   &\leq \min\left\{\frac{1}{2n},\frac{\tau}{8n^2}\right\}\|f'\|_{1},\\
@@ -50,10 +48,9 @@ So, let $\hat{\sigma_n}=\sup_i\left|\frac{f(x_{i+1})-f(x_i)}{1/n}\right|$,
   &\leq \frac{\tau\|f'\|_{1}}{8n^2}, \quad (n\geq \tau \Rightarrow \frac{\tau}{4n}<1),\\
   &\leq \frac{\tau\hat{\sigma_n}}{8n^2(1-\tau/n)}.
 \end{align*}
+It is shown that in the specific case, the worst error in $\cf$ will be always smaller than the one in $\cg$. Therefore, the best worst error will be $\frac{1}{8n^2}\|f'\|_1$.
 
-
-We can then derive the automatic algorithm.
-\begin{algo} \label{twostagedetalgo} {\bf (Automatic, Adaptive, Two-Stage).} 
+\begin{algo} \label{twostagedetalgo} {\bf (Automatic, Adaptive, Two-Stage).}
 
 \begin{description}
 

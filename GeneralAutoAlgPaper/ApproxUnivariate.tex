@@ -49,8 +49,8 @@ $$f[x,y]:=\frac{f(x)-f(y)}{x-y}.$$
  $$|f(x)-f(y)|=\left|\int_{x}^{y}f'(t)dt\right|\leq \left|\int_{x}^{y}\left|f'(t)\right|dt\right|
  \leq |x-y|\|f'\|_{\infty}.$$
  Therefore we have $|f[x,y]|\leq \|f'\|_{\infty}.$
- 
-Then we can have two different ways to represent $A_{n}(f)(x)$ and $f(x).$ 
+
+Then we can have two different ways to represent $f(x).$
 
 $\forall i=1,\ldots,m, \forall x \in [0,1]$we can also have
  $$f(x)=f\left(\frac{i-1}{m}\right)+f\left[\frac{i-1}{m},x\right]\left(x-\frac{i-1}{m}\right)=f\left(\frac{i}{m}\right)+f\left[\frac{i}{m},x\right]\left(x-\frac{i}{m}\right).$$
@@ -74,11 +74,11 @@ For $\frac{i-1}{m} \leq x \leq \frac{i}{m}, \ i=1, \ldots, m.$
 $$A_{n}(f)(x)=f\left(\frac{i-1}{m}\right)+f\left[\frac{i-1}{m},\frac{i}{m}\right]\left(x-\frac{i-1}{m}\right).$$
 Then we have
 \begin{align*}
-f\left(\frac{i-1+j^{*}}{m}\right)-A_{n}(f)\left(\frac{i-1+j^{*}}{m}\right) 
+f\left(\frac{i-1+j^{*}}{m}\right)-A_{n}(f)\left(\frac{i-1+j^{*}}{m}\right)
 %&
 %\leq \left(\|f'\|_{\infty}-f\left[\frac{i-1}{m},\frac{i}{m}\right]\right)\frac{j^{*}}{m}\\
 %& =\left(\|f'\|_{\infty}-f\left[\frac{i-1}{m},\frac{i}{m}\right]\right)\frac{1}{2m}\left[1+\frac{f\left[\frac{i-1}{m},\frac{i}{m}\right]}{\|f'\|_{\infty}}\right]\\
-%& 
+%&
 =\frac{\|f'\|_{\infty}}{2m}\left[1-\left(\frac{f\left[\frac{i-1}{m},\frac{i}{m}\right]}{\|f'\|_{\infty}}\right)^{2}\right]\leq \frac{\|f'\|_{\infty}}{2m}
 \end{align*}
 
@@ -139,45 +139,25 @@ Thus we only need to find $N$ such that  \[
 \frac{\tau (N-1)^{-s}\fC G_{n_{0}}(f)}{2(N-1)} \le \varepsilon.
 \]
 
-As mentioned in Remark 5 of Theorem $\ref{TwoStageDetermThm},$ we can consider to choose $\fC \ge 1$ firstly.
-If we fix $\fC,$ then we have the expression of $n.$
-\begin{algo} 
-{\bf (Automatic, Adaptive, Multi-Stage, Deterministic).}
- Let $\varepsilon$ be a positive error tolerance, and let $N_{\max}$ be the maximum cost allowed.  Let $\tau$ be a fixed positive number and
- let $A_{n}$ is defined as above. Let $\fC$ be a number larger than $1.$ Then we have $n_{0}=\left(\frac{\tau \fC}{\fC-1}\right)^{\frac{1}{s}}+1.$ Given an input function $f$, do the following:
-
-\begin{description}
-\item[Stage 1.\ Estimate {$\norm[\infty]{f'}$}.] Let $n_{j}=n_{0}2^{j-1}.$ Compute $G_{n_{0}}(f)$ at a cost of $n_{0} = \cost(A_{n_{0}})$.   
-
-\item [Stage 2.\ Estimate {$f$}.] Choose the sample size need to approximate $f$, namely, check whether $n_{j}$ is large enough to satisfy the error tolerance, i.e.,
-\[
-\frac{\min(1,\tau (n_{j}-1)^{-s})\fC G_{n_{0}}(f)}{2n_{j}} \le \varepsilon.
-\]
-If this is true, then set $W=0$ .  Otherwise, if this inequality fails to hold and $n_{j} > N_{\max}$, then set the $W=1$.  In both cases, return $(G_{n_{0}}(f),W)$ and terminate the algorithm.  If the error tolerance is not yet satisfied, and $n \le N_{\max}$, then increment $i$ by one and return to Stage 1.
-
-\end{description}
-
-\end{algo}
-
 Then we can have the complexity of the upper bound.
 \begin{theorem}   Let  $\varepsilon$, $N_{\max}$, $\tN_{\max}$, $\fC$, and $\tau$ be given as described in Algorithm \ref{adpatalgo},  Let
-\begin{equation} \label{normdeflate}
+$$
 \fc =1 + \tau \err_{-}(G,\cf,\reals_+,\norm[\cg]{\cdot}) =1.
-\end{equation}
+$$
 Let $\cc_\tau$ be the cone of functions defined in \eqref{ctapprox}.  Let
 \begin{equation} \label{nicefdef}
 \cn = \left \{ f \in \cc_\tau : \norm[\infty]{f'} \le \varepsilon \tN_{\max}(1 - \tau (n_0-1)^{-s}) \max\left( 2, \frac{2\tN_{\max}^{s}}{\tau} \right ) \right\}
 \end{equation}
 be a subset of the cone $\cc_\tau.$  Then it follows that Algorithm \ref{adpatalgo} is successful for all functions in this set of \emph{nice} functions $\cn$,  i.e.,  $\success(A,W,\cn,\varepsilon,N_{\max}) = 1$.  Moreover, the cost of this algorithm is bounded above in terms of the $\norm[\infty]{f'}$ of the input function as follows:
-\begin{multline} 
+\begin{multline}
 \cost(A,\cn,\varepsilon,N_{\max},\sigma) \\
 \le  \min\left\{ n \in \ci : n \ge \min\left( \frac{\sigma}{2\varepsilon(1 - \tau/(n_{0}-1)^{s})} , \left(\frac{\sigma\tau}{2\varepsilon(1 - \tau/(n_{0}-1)^{s})}\right)^{\frac{1}{1+s}}\right)  \right\}
 \end{multline} where $\sigma=\norm[\infty]{f'}.$
-In particular, we just need 
+In particular, we just need
 \begin{multline}
 \cost(A,\cn,\varepsilon,N_{\max},\sigma) \\
 \le  \min\left\{ n \in \ci : n \ge  \left(\frac{\sigma\tau}{2\varepsilon(1 - \tau/(n_{0}-1)^{s})}\right)^{\frac{1}{1+s}}  \right\}.
-\end{multline} 
+\end{multline}
 
 
 %The upper bound on the cost of this specific algorithm provides an upper bound on the complexity of the problem, $\comp(\varepsilon,\ca(\cn,\ch,S,\Lambda),N_{\max},\sigma)$.  If the sequence of algorithms $\{A_n\}_{n \in \ci}$, $A_n \in\ca_{\fix}(\cg,\ch,S,\Lambda)$  is nearly optimal for the problems $(\cg,\ch,S,\Lambda)$ and $(\cf,\ch,S,\Lambda)$ as defined in \eqref{nearoptdef}, then Algorithm \ref{twostagedetalgo} does not incur a significant penalty for not knowing $\norm[\cg]{f}$ a priori, i.e., for all $p>0$,
@@ -189,6 +169,28 @@ In particular, we just need
 \begin{proof}
 Applied Theorem \ref{TwoStageDetermThm}, then we can have the above result.
 \end{proof}
+
+
+If we consider about the embedded algorithms, by Algorithm $\ref{multistagealgo},$ we obtain
+\begin{algo}
+
+\begin{description}
+
+\item [Stage 1. Estimate $\| f \| _{\cg}$.] Compute $G_{n_i}(f)$ and $\fC_{n_i} \le \infty$ as defined in \eqref{frakCn}.
+
+\item [Stage 2. Check for Convergence.] Check whether $n_i$ is large enough to satisfy the error tolerance, i.e.,
+\begin{equation} \label{multistageconv}
+\frac{1}{2}(n_i-1)^{-(1+s)}\fC_{n_i} G_{n_i}(f) \le \varepsilon.
+\end{equation}
+If this is true, then set $W=0$, return $(A_{n_i}(f),W)$ and terminate the algorithm.
+
+\item[Stage 3. Compute $n_{i+1}$.]  Otherwise, if the inequality above fails to hold, compute $\fc_{n_i}$ according to \eqref{frakCn} using $G_{n_i}$. As we know, here $\fc_{n_i}=1.$
+Choose $n_{i+1}$ as the smallest number exceeding $n_i$ and not less than $N_{A}(\varepsilon /G_{n_i}(f))$ such that $A_{n_{i}}$ is embedded in $A_{n_{i+1}}$. If $n_{i+1} \le N_{\max}$, increment $i$ by $1$, and return to Stage 1.
+
+Otherwise, if $n_{i+1} > N_{\max}$, choose $n_{i+1}$ to be the largest number not exceeding $N_{\max}$ such that $A_{n_{i}}$ is embedded in $A_{n_{i+1}}$, and set the $W=1$. Return $(A_{n_{i+1}}(f),W)$ and terminate the algorithm.
+\end{description}
+
+\end{algo}
 
 
 
