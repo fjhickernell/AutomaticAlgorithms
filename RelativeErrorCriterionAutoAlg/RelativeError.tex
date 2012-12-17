@@ -53,9 +53,9 @@ The criterion used for the automatica algorithms in \cite{HicEtal14b} is an \emp
 \begin{equation} \label{abserrcrit}
 \norm[\ch]{S(f)-A(f)} \le \varepsilon_a.
 \end{equation}
-This is done through a sequence of non-adaptive algorithms, $A_n$, with cost $n$.  For each $n$ one can compute from only data the quantity $\hvareps_n$, a reliable upper bound on $\norm[\ch]{S(f)-A(f)}$, i.e.,
+This is done through a sequence of non-adaptive algorithms, $A_n$, with cost $n$.  For each $n$ one can compute from only data the quantity $\hvareps_n$, a reliable upper bound on $\norm[\ch]{S(f)-A_n(f)}$, i.e.,
 \begin{equation} \label{hatvareps}
-\norm[\ch]{S(f)-A(f)} \le \hvareps_n.
+\norm[\ch]{S(f)-A_n(f)} \le \hvareps_n.
 \end{equation}
 The automatic algorithms in \cite{HicEtal14b} uses a sequence of $A_n$ with $n$ increasing until $\hvareps_n \le \varepsilon_a$.
 
@@ -105,7 +105,7 @@ Suppose one has a reliable pointwise upper bound on the error of a non-adaptive 
 \end{equation}
 Here, $\hvareps_n(\vy)$ might be independent of $\vy$. Furthermore, suppose that $A_n(f)(\vy)$ can be evaluated from the data.
 
-\begin{prop} Suppose that $\theta_r \varepsilon_r \le 1$.  If error bound \eqref{hatvareps} holds, then the point-wise generalized error criterion \eqref{localgenerrcrit} also holds, provided that
+\begin{prop} Suppose that $\theta \varepsilon_r \le 1$.  If error bound \eqref{hatvareps} holds, then the point-wise generalized error criterion \eqref{localgenerrcrit} also holds, provided that
 \begin{gather*}
 \hvareps_n(\vy) \le (1-\theta) \varepsilon_a + \theta \varepsilon_r \max(\hvareps_n(\vy), \abs{A_n(f)(\vy)}), \\
 \tA_n(f)(\vy) = A_n(f)(\vy) - \theta \varepsilon_r \sign(A_n(f)(\vy)) \min(\hvareps_n(\vy), \abs{A_n(f)(\vy)}).
