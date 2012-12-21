@@ -1,49 +1,54 @@
-
 \newcommand{\R}{\mathbb{R}}
+
 In the following cases, we focus on approximation of upper bounds for truncation errors. The input function is in Sobolev space:
 \begin{align*}
-  \cf&=W^{2,1}_{[0,1]}=\{f\in C^1[0,1]: \|f''\|_1<\infty\}, \text{ and }\\
-  \cg&=W^{1,1}_{[0,1]}=\{f\in C^1[0,1]: \|f'\|_1<\infty\}
+  \cf&=W^{2,1}=W^{2,1}[0,1]=\{f\in C^1[0,1]: \|f''\|_1<\infty\}, \text{ and }\\
+  \cg&=W^{1,1}=W^{1,1}[0,1]=\{f\in C^1[0,1]: \|f'\|_1<\infty\},
 \end{align*}
-which have the semi-norm $\|f\|_{\cf}=\|f''\|_{1}$ and $\|f\|_{\cg}=\|f'\|_{1}$ respectively. The space of outputs $\ch$ is the real space $\R$. Given $\tau > 0$, we have the conic space $\mathfrak{C}_{\tau} \subset \cf$ as $$\mathfrak{C}_{\tau}=\{f\in W^{2,1}_{[0,1]}:\|f''\|_1\leq\tau\|f'\|_1\}.$$
+which have the semi-norm $\|f\|_{\cf}=\|f''\|_{1}$ and $\|f\|_{\cg}=\|f'\|_{1}$ respectively. The space of outputs $\ch$ is the real space $\R$. Given $\tau > 0$, we have the cone $\mathfrak{C}_{\tau} \subset \cf$ defined as $$\mathfrak{C}_{\tau}=\{f\in W^{2,1}:\|f''\|_1\leq\tau\|f'\|_1\}.$$
 
-Define the solution operator $S$ as $S(f)=\int_{0}^{1}f(x)dx$. Consider using the trapezoidal rule as the algorithms $A_n$ which are going to use to approximate the integral. Suppose one wants to approximate the integration of functions in $\mathfrak{C}_{\tau}$ based on function values, the goal is to make the $\mathcal{L}_1$ error small, i.e. to find an algorithm $\mathcal{A}$, for which $|\int_{0}^{1}f(x)dx-A(f)|\leq \varepsilon$.
+Define the solution operator $S$ as $S(f)=\int_{0}^{1}f(x)dx$. Consider using the trapezoidal rule as the algorithms $A_n$ which are going to use to approximate the integral. Suppose one wants to approximate the integration of functions in $\mathfrak{C}_{\tau}$ based on function values, the goal is to make the error small, i.e. to find an algorithm A, for which $|\int_{0}^{1}f(x)dx-A(f)|\leq \varepsilon$.
 
 \subsection{Upper Bounds}
-Given the upper bound error function $h(n)=\frac{1}{2n}$, $\tilde{h}(n)=\frac{1}{8n^2}$. For those two non-decreasing functions, the upper bounds on the error of $A_n(f)$ in terms of the $\cg$-semi-norm of $f$ is:
+ Fix the algorithm $A_n$ with cost$(A_n)=n$. Suppose that the data sites $x_0,x_1,\cdots, x_{n-1}$ and the corresponding function values. One may estimate $\|f'\|_1$ in the following way: $$G_n(f)=\sup_{i\in\{0,\cdots,n-1\}}\left|\frac{f(x_{i+1})-f(x_{i})}{1/(n-1)}\right|.$$ According to the results from [book1], [book2], the upper bound error function can be expressed as $h(n)=1/[2(n-1)]$, $\tilde{h}(n)=1/[8(n-1)^2]$. For those two non-decreasing functions, the upper bounds on the error of $A_n(f)$ in terms of the $\cg$-semi-norm of $f$ is:
 \begin{align*}
-  \left\|S(f)-A_n(f)\right\|_{\ch}& \leq \min(h(n),\tilde{h}(n))\|f\|_{\cg}, \quad \forall f \in \mathfrak{C}_{\tau}\\
-  &= \min(1,\frac{\tau}{4n})\frac{\|f'\|_{1}}{2n},\\
-  &\leq \frac{\tau\|f'\|_{1}}{8n^2}, \quad (n\geq \tau \Rightarrow \frac{\tau}{4n}<1).
+  \left|\int_{0}^{1}f(x)dx-A_n(f)\right|& \leq \min(h(n),\tilde{h}(n))\|f\|_{\cg}, \quad \forall f \in \mathfrak{C}_{\tau}\\
+  &= \min\left(1,\frac{\tau}{4(n-1)}\right)\frac{\|f'\|_{1}}{2(n-1)},\\
+  &\leq \frac{\tau\|f'\|_{1}}{8(n-1)^2}, \quad (n\geq \tau \Rightarrow \frac{\tau}{4(n-1)}<1).
 \end{align*}
 
+It is shown that in the specific case, the worst error in $W^{2,1}$ will be always smaller than the one in $W^{1,1}$. Therefore, the best worst error will be $\|f'\|_1/[8(n-1)^2]$.
 
-It is shown that in the specific case, the worst error in $\cf$ will be always smaller than the one in $\cg$. Therefore, the best worst error will be $\frac{1}{8n^2}\|f'\|_1$.
+\begin{algo} \label{algintegration}
+\begin{description} Let $\varepsilon$ be the positive error tolerance, $N_{\text{max}}$ be the maximum cost budget. Let $\tau$ be a fixed positive constant and the sequence of algorithms $\{A_n\}_{n\in \mathcal{I}}$, $\{G_n\}_{n\in \mathcal{I}}$ be described above.Set $i=1$, let $n_1$ be the smallest number in $\mathcal{I}$ such that $1/(n-1)\leq1/\tau$. Then do the following:
 
-\begin{algo} \label{twostagedetalgo} {\bf (Automatic, Adaptive, Two-Stage).}
+\item[Stage 1.\ Estimate {$\|f''\|_{1}$}.] First compute $G_{n_i}(f)$
 
-\begin{description}
+\item[Stage 2. Check for convergence.] Check whether $n_i$ is large enough to satisfy the error tolerance, i.e.
+    \begin{align*}
+      \frac{\tau}{8(n-1)^2}G_{n_i}(f)\leq \varepsilon.
+    \end{align*}
+    If this is true, then set $W=0$, return $(A_{n_i}(f),W)$ and terminate the algorithm. If this is not true, go to Stage 3.
 
-\item[Stage 1.\ Estimate {$\|\cdot\|_{\cg}$}.] First compute $G(f)$ at a cost of $N_{G} = \cost(G)$.   Define the inflation factor
-\begin{equation}\label{norminflate}
-\mathfrak{C} =\left\lceil\frac{\sqrt{\frac{\tau \hat{\sigma}_{N_G}}{\varepsilon(1 - \tau/ N_G)}}}{N_{G}}\right\rceil \ge 1.
-\end{equation}
-Then $\mathfrak{C} G(f)$ provides a reliable upper bound on $\|f\|_{\cg}$.
-
-\item [Stage 2.\ Estimate {$S(f)$}.] Choose the sample size need to approximate $S(f)$, namely,
-\[
-N \geq \left(\frac{\tau \hat{\sigma}_{N_G}}{12\varepsilon(1-\tau/N_G)}\right)^{\frac{1}{2}}
-\]
-If $N \le N_{\max}-N_G$, then $S(f)$ may be approximated within the desired error tolerance and within the cost budget.  Set the warning flag to false, $W=0$. Otherwise, recompute $N$ to be within budget, $N = \tN_{\max} := \max\{N \in \ci : N\le N_{\max} -  N_G\}$, and set the warning flag to true, $W=1$.  Compute $A_N(f)$ as the approximation to $S(f)$.
+\item[Stage 3. Compute $n_{i+1}$.] Choose $n_{i+1}$ as the smallest number exceeding $n_i$ and not less than $N_A(\varepsilon/G_{n_i}(f))$ such that $A_n$ is embedded in $A_{n+1}$. That is
+    \begin{align*}
+      n_{i+1}=(n_i-1)\left\lceil\frac{\sqrt{\frac{\tau G_{n}(f)}{\varepsilon(1 - \tau/ N_G)}}}{N_{G}-1}\right\rceil+1.
+    \end{align*}
+    If $n_{i+1}\leq N{\text{max}}$, increment $i$ by 1, and return to Stage 1. Otherwise, if $n_{i+1}> N{\text{max}}$, choose $n_{i+1}$ be the largest number not exceeding $N{\text{max}}$ such that $A_n$ is embedded in $A_{n+1}$ and set $W=1$. Return $(A_{n_{i+1}}(f),W)$ and terminate the algorithm.
 \end{description}
 \end{algo}
 
-
-
-
 \subsection{Lower Bounds}
-Now we consider the lower bound. We define the fooling function as $f_{\pm}=c_0f_0\pm c_1f_1$. Let $f_0=x$, then $\|f_0\|_{\mathcal{G}}=\|f'_0\|_1=1>0$, $\|f_0\|_{\mathcal{F}}=\|f''_0\|_1=0=\tau_0*1$. It satisfies (23) in the paper.
+Now we consider the lower bound. We define the fooling function as $f_{\pm}=c_0f_0\pm c_1f_1$. The first piece of the fooling function is defined by $f_0=x$. In this case,
+\begin{align*}
+    \|f_0\|_{W^{1,1}}=\|f'_0\|_1=1,\\
+    \|f_0\|_{W^{2,1}}=\|f''_0\|_1=0=\tau_0.
+\end{align*}
 
-Moreover, let $f_1(x)=\frac{30(x-l^2)(x-u)^2}{(u-l)^5}$ when $l \leq x \leq u$, where $u-l\geq\frac{1}{n+1}$ and $f_1(x)=0$ anywhere else. Then, $\int_{0}^{1}f_1(x)dx=1$, namely $\|S(f_1)\|_{\mathcal{H}}$. Also $\|f_1\|_{\mathcal{G}}=\|f'_{1}\|_1=\frac{15}{4(u-l)}\leq \frac{15}{4}(n+1)=g(n)$ and $\|f_1\|_{\mathcal{F}}=\|f''_{1}\|_1=\frac{40}{\sqrt{3}(u-l)^2}\leq \frac{40}{\sqrt{3}}(n+1)^2=\frac{32}{3\sqrt{3}}(n+1)g(n)=\tilde{g}(n)g(n)$. Condition (22) is satisfied. We can easily get that $g^{-1}(n)=\frac{4}{15}x-1$ and $(\tilde{g}(g))^{-1}(x)=\sqrt{\frac{\sqrt{3}}{40}x}-1$. So according to the Theorem 3 in the paper, $$\text{comp}\geq \min\left(\frac{4}{15}(\frac{\sigma}{4\varepsilon})-1,\sqrt{\frac{\sqrt{3}}{40}\frac{\sigma\tau}{4\varepsilon}}-1\right)\geq\min\left(\frac{4}{15}(\frac{\sigma}{4\varepsilon}),\sqrt{\frac{\sqrt{3}}{40}\frac{\sigma\tau}{4\varepsilon}}\right)-1$$
-So the lower bounds on the error of $A_n(f)$ in terms of the $\cg$-semi-norm of $f$ is:
-$$\left\|S(f)-A_n(f)\right\|_{\ch} \geq \min\left(\frac{1}{15(n+1)},\frac{\sqrt{3}\tau}{160(n+1)^2}\right)\|f'\|_{1}.$$
+The second part depends on the sample points. Given any $n$ sample points $\{\xi_i\}_{i=1}^{n}$ between $0$ and $1$ such that $0=\xi_0\leq \xi_1<\cdots<\xi_n\leq \xi_{n+1}=1$, let $l$ and $u$ be the two consecutive points with maximum distance between them, i.e. $\exists j\in \{1,2,\cdots,n-1\}$ such that $l=\xi_j, u=\xi_{j+1}$ and $u-l=\max_{1\leq i\leq n}(\xi_{i+1}-\xi_i)$. Then let
+$$f_1(x)=\frac{30(x-l^2)(x-u)^2}{(u-l)^5}, \quad l\leq x\leq u.$$ and $f_1(x)=0$ otherwise. Note that $\|S(f_1)\|_{W^{1,1}}=int_{0}^{1}f_1(x)dx=1.$
+\begin{align*}
+  \|f_1\|_{W^{1,1}}&=\|f'_{1}\|_1=\frac{15}{4(u-l)}\leq \frac{15}{4}(n+1)=g(n),\\
+  |f_1\|_{W^{2,1}}&=\|f''_{1}\|_1=\frac{40}{\sqrt{3}(u-l)^2}\leq \frac{40}{\sqrt{3}}(n+1)^2=\frac{32}{3\sqrt{3}}(n+1)g(n)=\tilde{g}(n)g(n).
+\end{align*}
+We can easily get that $g^{-1}(n)=\frac{4}{15}x-1$ and $(\tilde{g}(g))^{-1}(x)=\sqrt{\frac{\sqrt{3}}{40}x}-1$. So according to the Theorem 3 in the paper, $$\text{comp}\geq \min\left(\frac{4}{15}(\frac{\sigma}{4\varepsilon})-1,\sqrt{\frac{\sqrt{3}}{40}\frac{\sigma\tau}{4\varepsilon}}-1\right)\geq\min\left(\frac{\sigma}{15\varepsilon},\sqrt{\frac{\sqrt{3}\sigma\tau}{160\varepsilon}}\right)-1$$

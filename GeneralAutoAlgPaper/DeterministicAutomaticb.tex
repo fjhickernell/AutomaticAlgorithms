@@ -33,7 +33,7 @@
 \author{Fred J. Hickernell}
 \author{Yizhi Zhang}
 \address{Room E1-208, Department of Applied Mathematics, Illinois Institute of Technology,\\ 10 W.\ 32$^{\text{nd}}$ St., Chicago, IL 60616}
-\begin{abstract} Quite a few automatic numerical algorithms are widely used in practice.  ``Automatic'' means that the algorithm attempts to provide an approximate solution that differs from the true solution by no more than a user-specified tolerance, $\varepsilon$. Furthermore, the computational cost of providing the approximate solution is reasonably small and depends on the difficulty of the problem.  Unfortunately, many automatic algorithms lack rigorous guarantees, i.e., sufficient conditions on the input function that ensure the success of the algorithm. 
+\begin{abstract} Automatic numerical algorithms are widely used in practice.  An algorithm that is automatic attempts to provide an approximate solution that differs from the true solution by no more than a user-specified tolerance, $\varepsilon$. Furthermore, the computational effort is determined adaptively by the algorithm to match the difficulty of the problem.  Unfortunately, many automatic algorithms lack rigorous guarantees, i.e., sufficient conditions on the input function that ensure the success of the algorithm. 
 
 This article establishes a framework for providing rigorous guarantees for automatic algorithms. Sufficient conditions for success and upper bounds on the computational cost are provided in Theorems \ref{TwoStageDetermThm} and \ref{MultiStageThm}, and lower bounds on the complexity of the problem are given in Theorem \ref{complowbd}. Examples of these general theorems are illustrated for univariate numerical integration and function recovery.  The key observation is that the error analysis should be done for \emph{cones} of input functions rather than balls. The existing literature contains certain cautions about the usefulness and reliability of automatic algorithms.  The theory presented here does not share the assumptions on which those concerns are based, rendering them moot.
 \end{abstract}
@@ -55,17 +55,17 @@ Numerical algorithms for many elementary and special functions reliably provide 
 \[
 {\tt cos, sin, exp, log, airy, besselj, gamma, gammainc, ellipj, erf, erfinv,}
 \] 
-automatically use the number of terms in a polynomial, rational or other approximation needed to provide the corresponding function value with $15$ significant digit accuracy. The only exceptions are atypical cases of round-off error, e.g., 
+automatically use the right number of terms in a polynomial, rational or other suitable expansion needed to provide the corresponding function value with $15$ significant digit accuracy. The only exceptions are atypical cases of round-off error, e.g., 
 \[
 {\tt cos(1e47*pi)= -5.432862626006405e-01},
 \]
 whereas the correct answer is {\tt 1}.
 
-For more complex numerical problems, such as integration and function recovery, it is desirable to have algorithms that require a minimum of user-tuning.  Namely, one would like algorithms that are
+For more complex numerical problems, such as integration and function recovery, it is desirable to have algorithms that require a minimum of user tuning.  Namely, one would like algorithms that are
 \begin{description}
-\item[Guaranteed]---  the answers are provided have an error no greater than the user-specified error tolerance, $\varepsilon$.
-\item[Automatic]--- the number of function data required is determined \emph{adaptively}, based on $\varepsilon$ and the difficulty of the problem.
-\item[Optimal]--- the computational cost is no greater than a constant multiple times the computational cost of the best algorithm possible given $\varepsilon$ and the problem difficulty.
+\item[Guaranteed]---  answers are provided with an error no greater than the user-specified \emph{error tolerance}, $\varepsilon$.
+\item[Automatic]--- the computational cost for a given input is determined \emph{adaptively}, based on $\varepsilon$ and on the difficulty of the problem (size of the input function) \emph{as inferred from data}.
+\item[Optimal]--- the computational cost as a function of the user-specified $\varepsilon$ and the unknown problem difficulty is no greater than a constant multiple times that of the best algorithm possible \emph{even if the problem difficulty were known a priori}.
 \end{description}
 This article presents a general framework for constructing such algorithms and also provides two concrete examples.
 
@@ -75,26 +75,39 @@ Most existing theory starts with a Banach space, $\cf$, of input functions defin
 \sup_{f \in \cb_{\sigma}} \norm[\ch]{S(f)-A(f)} \le \varepsilon, \qquad 
 \cb_\sigma=\{ f \in \cf : \norm[\cf]{f} \le \sigma\}.
 \end{equation}
-Here it is necessarily assumed that the algorithm is exact if the semi-norm of the input function vanishes, i.e., $S(f)=A(f)$ if $\norm[\cf]{f}=0$.  Furthermore, the computational cost of the algorithm, $\cost(A)$, which may correspond to the number of function data needed, is bounded in terms of $\varepsilon$ and the radius of the ball.  Typically, this relationship looks as follows:
-\begin{equation}
+Here it is necessarily assumed that the algorithm is exact if the semi-norm of the input function vanishes, i.e., $S(f)=A(f)$ if $\norm[\cf]{f}=0$.  Furthermore, the computational cost of the algorithm, $\cost(A)$, which typically corresponds to the number of function data needed, is bounded in terms of $\varepsilon$ and the radius of the ball, e.g.,
+\begin{equation} \label{costupbd}
 \cost(A)\le C_{\up}\left(\frac{\sigma}{\varepsilon}\right)^{p}.
 \end{equation}
 \end{subequations}
 Algorithm $A$ is said to be optimal if any algorithm satisfying the error criterion above must have a cost of at least $\Order((\sigma/\varepsilon)^{p})$.
 
-A practical drawback of the analysis summarized above is that the definition of the algorithm, at least as far as its cost is concerned, depends on knowing a priori an upper bound on $\norm[\cf]{f}$, which can be considered the difficulty of the problem.  The algorithm needs the radius of the ball, $\sigma$, as an input. Moreover, the cost of such an algorithm is fixed and depends on $\sigma$. 
+A practical drawback of the analysis summarized above is that the definition of the algorithm, at least as far as its cost is concerned, depends on knowing a priori an upper bound on $\norm[\cf]{f}$.  This norm of the input function may be thought of as the \emph{difficulty of the problem}.  The algorithm needs the radius of the ball, $\sigma$, as an input. Moreover, the cost of such an algorithm is fixed and depends on $\sigma$. 
 
-Automatic algorithms try to estimate $\norm[\cf]{f}$, so that the computational cost can be adjusted to fit the difficulty of the problem. This is the approach taken here.  Some automatic algorithms approximate $\norm[\cf]{f}$ heuristically or provide an estimate which converges asymptotically as the number of function values tends to infinity.  What is needed is a rigorous upper bound on $\norm[\cf]{f}$.  
+Automatic algorithms try to estimate $\norm[\cf]{f}$, so that the computational cost can be adjusted accordingly. This is the approach taken here.  Some automatic algorithms approximate $\norm[\cf]{f}$ heuristically or provide an estimate which converges asymptotically as the number of function values tends to infinity.  The aim here is to find from data a \emph{rigorous} upper bound on $\norm[\cf]{f}$.  
 
-This article shows how to obtain such an upper bound for functions lying in a \emph{cone} instead of a ball.  Suppose that $\cg$ is some superspace of $\cf$ with a weaker semi-norm, and define the cone
+This article shows how to obtain such an upper bound for functions lying in a \emph{cone} instead of a ball.  Let $\cg$ be some superspace of $\cf$ with a weaker semi-norm, and define the cone
 \begin{equation} \label{conedef}
 \cc_{\tau}=\{f \in \cf : \norm[\cf]{f} \le \tau \norm[\cg]{f} \}.
 \end{equation}
+The argument to obtain an approximate solution to the problem with a reliable error estimate from data proceeds as follows:
+\begin{itemize}
+\item Since the $\cg$-semi-norm is weaker than the $\cf$-semi-norm, it can be approximated by some algorithm $G(f)$, with $\norm[\cg]{f}-G(f) \le C_1\norm[\cf]{f}$ for some known $C_1$.
 
+\item The definition of the cone in \eqref{conedef} implies that $\norm[\cg]{f} \le G(f)/(1 - \tau C_1)$, provided that $\tau< C_1$.
 
-One concrete example of the approach presented here is that of example of computing the integral $\int_0^1 f(x) \, \dif x$ for all integrands whose second derivatives are absolutely integrable, i.e., $\norm[\cf]{f}=\norm[1]{f''}$.  The trapezoidal rule computes an approximation with error no greater than $\varepsilon$ using $\Order(\sqrt{\norm[1]{f''}/\varepsilon})$ function values.  However, except for relatively simple integrands this norm of the second derivative, $\norm[1]{f''}$, is not available.  After evaluating $f$, at a number of points in $[0,1]$, one may estimate the norm of the first derivative, $\norm[1]{f'}$, by the corresponding norm of the piecewise linear spline for $f$, and the error of approximating $\norm[1]{f'}$ this way can be bounded rigorously in terms of $\norm[1]{f''}$.  If one chooses a $\tau > 1$ and assumes that $\norm[1]{f''} \le \tau \norm[1]{f'}$  (a cone condition), then the reliable numerical estimate of $\norm[1]{f'}$ can be used as a surrogate for $\norm[1]{f''}$.  This leads to a guaranteed, automatic (adaptive) algorithm for approximating the integral to the desired accuracy.  This example is presented in detail in Section \ref{integsec}.
+\item Applying the cone condition again,  $\norm[\cf]{f} \le \tau G(f)/(1 - \tau C_1)$.
 
-This article proceeds from the abstract to the concrete.  Section \ref{probdefsec} lays out the problems to be solved, including how to define the cost of an adaptive, automatic algorithm and the computational complexity of a problem.  The problem definition here allows for a maximum computational cost budget to be imposed so that one never needs to wait an arbitrarily large time for the answer.  Section \ref{genthmsec} describes the automatic algorithms in detail and provides proofs of their success for cones of input functions.  Their cost is derived in terms of an unknown, but estimated semi-norm of the input function.  Lower bounds on the complexity of the problem are derived using fooling functions.  Section \ref{integsec} illustrates these theorems for the univariate integration problem.  Section \ref{approxsec}  considers function approximation.  Common concerns about automatic and adaptive algorithms are answered in Section \ref{overcomesec}. The article ends with several suggestions for future work.
+\item This data-driven upper bound on $\norm[\cf]{f}$ can be used with \eqref{costupbd} to guarantee that the error tolerance will be met with 
+\[
+\cost(A)\le C_{\up}\left(\frac{\tau G(f)}{\varepsilon(1 - \tau C_1)}\right)^{p}.
+\]
+
+\end{itemize} 
+
+Section \ref{integsec} presents the concrete example of this approach for the problem of computing the integral $\int_0^1 f(x) \, \dif x$ for all integrands whose second derivatives are absolutely integrable, i.e., $\norm[\cf]{f}=\norm[1]{f''}$.  The trapezoidal rule computes an approximation with error no greater than $\varepsilon$ using $\Order(\sqrt{\norm[1]{f''}/\varepsilon})$ function values.  However, except for relatively simple integrands, $\norm[1]{f''}$ is unknown in practice.  One may estimate $\norm[1]{f'}$ by the one-norm of the derivative of the piecewise linear spline for $f$, and the error of approximating $\norm[1]{f'}$ in this way can be bounded rigorously in terms of $\norm[1]{f''}$.  If one chooses a $\tau > 1$ and assumes that $\norm[1]{f''} \le \tau \norm[1]{f'}$  (the cone condition), then the reliable numerical upper bound on $\norm[1]{f'}$ can be used as a surrogate for $\norm[1]{f''}$.  This leads to a guaranteed, automatic (adaptive) algorithm for approximating the integral to the desired accuracy.
+
+This article proceeds from the abstract to the concrete.  Section \ref{probdefsec} lays out the problems to be solved, including how to define the cost of an adaptive, automatic algorithm and the computational complexity of a problem.  The problem definition here allows for a maximum computational cost budget to be imposed so that one never needs to wait an arbitrarily large time for the answer.  Section \ref{genthmsec} describes the automatic algorithms in detail and provides proofs of their success for cones of input functions.  Their cost is derived in terms of the unknown, but estimated, $\cg$-semi-norm of the input function.  Lower bounds on the complexity of the problem are derived using fooling functions.  Section \ref{integsec} illustrates these theorems for the univariate integration problem.  Section \ref{approxsec}  considers function approximation.  Common concerns about automatic and adaptive algorithms are answered in Section \ref{overcomesec}. The article ends with several suggestions for future work.
 
 \section{General Problem Definition} \label{probdefsec}
 
@@ -237,11 +250,7 @@ where $\cf_0=\{f \in \cf : \norm[\cf]{f}=0\}$ is a finite dimensional subspace o
 \end{equation}
 \end{subequations}
 
-Given $\tau>0$, let $\cc_{\tau} \subset \cf$ denote a \emph{cone} of functions whose $\cf$-semi-norms are no greater than $\tau$ times their $\cg$-semi-norms:
-\begin{equation} \label{conedef}
-\cc_{\tau}=\{f \in \cf : \norm[\cf]{f} \le \tau \norm[\cg]{f} \}.
-\end{equation}
-For any $f \in \cc_{\tau}$ both $\norm[\cf]{f}$ and $\norm[\cg]{f}$ must be finite, but they can be arbitrarily large.  There is no need to assume an upper bound on their sizes, but it is possible to obtain reliable upper bounds for both $\norm[\cf]{f}$ and $\norm[\cg]{f}$ by sampling $f$.  An upper bound on $\norm[\cg]{f}$ for $f \in \cc_{\tau}$ can be computed in terms of the data $\vL(f)=(L_1(f), \ldots, L_m(f))$ because $\norm[\cf]{\cdot}$ is a stronger semi-norm than $\norm[\cg]{\cdot}$ in the sense of \eqref{Fspacecondstrong}, and because $\norm[\cf]{f}$ is no larger than a multiple of $\norm[\cg]{f}$ (see Lemma \ref{Gnormlem} below). This upper bound on $\norm[\cg]{f}$ then automatically implies an upper bound on $\norm[\cf]{f}$ from the definition of the cone. These reliable bounds on both $\norm[\cf]{f}$ and $\norm[\cg]{f}$ may be used to obtain a bound on the error of the algorithm for estimating $S(f)$  (see Theorem \ref{TwoStageDetermThm} below).
+Given $\tau>0$, let $\cc_{\tau} \subset \cf$ denote a \emph{cone} of functions whose $\cf$-semi-norms are no greater than $\tau$ times their $\cg$-semi-norms, as defined in \eqref{conedef}.  For any $f \in \cc_{\tau}$ both $\norm[\cf]{f}$ and $\norm[\cg]{f}$ must be finite, but they can be arbitrarily large.  There is no need to assume an upper bound on their sizes, but it is possible to obtain reliable upper bounds for both $\norm[\cf]{f}$ and $\norm[\cg]{f}$ by sampling $f$.  An upper bound on $\norm[\cg]{f}$ for $f \in \cc_{\tau}$ can be computed in terms of the data $\vL(f)=(L_1(f), \ldots, L_m(f))$ because $\norm[\cf]{\cdot}$ is a stronger semi-norm than $\norm[\cg]{\cdot}$ in the sense of \eqref{Fspacecondstrong}, and because $\norm[\cf]{f}$ is no larger than a multiple of $\norm[\cg]{f}$ (see Lemma \ref{Gnormlem} below). This upper bound on $\norm[\cg]{f}$ then automatically implies an upper bound on $\norm[\cf]{f}$ from the definition of the cone. These reliable bounds on both $\norm[\cf]{f}$ and $\norm[\cg]{f}$ may be used to obtain a bound on the error of the algorithm for estimating $S(f)$  (see Theorem \ref{TwoStageDetermThm} below).
 
 \subsection{Results that One Wishes to Prove}  The previous subsections define the problem to be approximated and the notation describing the difficulty of the problem and the efficiency of the algorithms.  This subsection summarizes the results that are proved in general in the next section and illustrated for specific cases in the following sections.
 
