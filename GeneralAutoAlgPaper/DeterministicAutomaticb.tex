@@ -67,7 +67,7 @@ For more complex numerical problems, such as integration and function recovery, 
 \item[Automatic]--- the computational cost for a given input is determined \emph{adaptively}, based on $\varepsilon$ and on the difficulty of the problem (size of the input function) \emph{as inferred from data}.
 \item[Optimal]--- the computational cost as a function of the user-specified $\varepsilon$ and the unknown problem difficulty is no greater than a constant multiple times that of the best algorithm possible \emph{even if the problem difficulty were known a priori}.
 \end{description}
-This article presents a general framework for constructing such algorithms and also provides two concrete examples.
+This article presents a general framework for constructing such algorithms and also provides two concrete examples, namely, univariate integration and univariate function recovery.
 
 Most existing theory starts with a Banach space, $\cf$, of input functions defined on some set $\cx$, and having a semi-norm, $\norm[\cf]{\cdot}$.  The definition of $(\cf,\norm[\cf]{\cdot})$ contains assumptions about smoothness, periodicity or other qualities of the input functions.  The mathematical problem of interest is defined by a \emph{solution operator} $S:\cf \to \ch$, where $\ch$ is some other Banach space with its norm $\norm[\ch]{\cdot}$.  For integration, $\ch=\reals$, and for function approximation, $\ch$ is some superset of $\cf$, for example, $\cl_{\infty}(\cx)$. Given this set-up, one may often find an algorithm, $A$, that provides an approximate solution differing from the true solution by no  more than $\varepsilon$, provided that the input functions lie inside a {\em ball}, i.e., 
 \begin{subequations} \label{traditionerr}
