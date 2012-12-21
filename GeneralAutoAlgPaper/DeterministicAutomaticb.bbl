@@ -1,20 +1,28 @@
-\def\Ignore#1{}\def\notesupp#1{}\def\Ignore#1{}\def\notesupp#1{}\def\Ignore#1{}\def\notesupp#1{}\def\Ignore#1{}\def\notesupp#1{}\def\Ignore#1{}\def\notesupp#1{}\def\Ignore#1{}\def\notesupp#1{}\def\Ignore#1{}\def\notesupp#1{}\def\Ignore#1{}\def\notesupp#1{}\def\Ignore#1{}\def\notesupp#1{}
-\begin{thebibliography}{15}
+\def\Ignore#1{}\def\notesupp#1{}\def\Ignore#1{}\def\notesupp#1{}\def\Ignore#1{}\def\notesupp#1{}\def\Ignore#1{}\def\notesupp#1{}\def\Ignore#1{}\def\notesupp#1{}\def\Ignore#1{}\def\notesupp#1{}
+\begin{thebibliography}{16}
 \expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
 \providecommand{\bibinfo}[2]{#2}
 \ifx\xfnm\relax \def\xfnm[#1]{\unskip,\space#1}\fi
+%Type = Book
+\bibitem[{Gautschi(1997)}]{walter}
+\bibinfo{author}{W.~Gautschi}, \bibinfo{title}{Numerical Analysis: An
+  Introduction}, \bibinfo{publisher}{Birkh\"auser}, \bibinfo{address}{Boston},
+  \bibinfo{year}{1997}.
 %Type = Manual
 \bibitem[{Hale et~al.(2012)Hale, Trefethen and Driscoll}]{TrefEtal12}
 \bibinfo{author}{N.~Hale}, \bibinfo{author}{L.N. Trefethen},
   \bibinfo{author}{T.A. Driscoll}, \bibinfo{title}{Chebfun Version 4},
   \bibinfo{year}{2012}.
-%Type = Misc
-\bibitem[{Hickernell et~al.(2012)Hickernell, Jiang, Liu and Owen}]{HicEtal14a}
+%Type = Inproceedings
+\bibitem[{Hickernell et~al.(2014)Hickernell, Jiang, Liu and Owen}]{HicEtal14a}
 \bibinfo{author}{F.J. Hickernell}, \bibinfo{author}{L.~Jiang},
   \bibinfo{author}{Y.~Liu}, \bibinfo{author}{A.B. Owen},
   \bibinfo{title}{Guaranteed conservative fixed width confidence intervals via
-  {M}onte {C}arlo sampling}, \bibinfo{year}{2012}. \bibinfo{note}{Submitted for
-  publication}.
+  {M}onte {C}arlo sampling}, in: \bibinfo{editor}{J.~Dick},
+  \bibinfo{editor}{F.Y. Kuo}, \bibinfo{editor}{G.W. Peters},
+  \bibinfo{editor}{I.H. Sloan} (Eds.), \bibinfo{booktitle}{{M}onte {C}arlo and
+  Quasi-{M}onte {C}arlo Methods 2012}, \bibinfo{publisher}{Springer-Verlag,
+  Berlin}, \bibinfo{year}{2014}. \bibinfo{note}{To appear}.
 %Type = Article
 \bibitem[{Hickernell et~al.(2010)Hickernell, M\"uller-Gronbach, Niu and
   Ritter}]{HicMGRitNiu09a}
