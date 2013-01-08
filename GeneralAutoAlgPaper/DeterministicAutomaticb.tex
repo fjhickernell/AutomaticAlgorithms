@@ -327,18 +327,20 @@ This section provides rather general theorems about the complexity of automatic 
 
 \subsection{Bounding the $\cg$-Semi-Norm}
 
-As mentioned in Section \ref{conesubsec} automatic algorithms require a reliable upper bound on $\norm[\cg]{f}$ for all $f$ in the cone $\cc_{\tau}$. This can be obtained using a non-adaptive algorithm $G \in \ca_{\fix}(\cf,\reals_+,\norm[\cg]{\cdot},\Lambda)$, provided that one has error bounds, $\err_{\pm}(G,\cf,\reals_+,\norm[\cg]{\cdot})$, as defined in $\eqref{errpmdefworst}$.  These upper and lower error bounds imply 
-\begin{gather*}
-\err_{-}(G,\cf,\reals_{+},\norm[\cg]{\cdot}) = \sup_{f \ne 0} \frac{G(f)-\norm[\cg]{f}}{\norm[\cf]{f}} \\
-\err_{+}(G,\cf,\reals_{+},\norm[\cg]{\cdot}) = \sup_{f \ne 0} \frac{\norm[\cg]{f}-G(f)}{\norm[\cf]{f}}.
-\end{gather*}
+As mentioned in Section \ref{conesubsec} automatic algorithms require reliable upper bounds on $\norm[\cg]{f}$ for all $f$ in the cone $\cc_{\tau}$. These can be obtained using non-adaptive algorithm $G_n \in \ca_{\fix}(\cf,\reals_+,\norm[\cg]{\cdot},\Lambda)$, where $n=\cost(G_n)$, provided that one has explicit upper bounds on the errors of these algorithms.  Namely, there should be non-increasing functions $h_{\cg\pm}$ defined on some subset of the non-negative numbers such that
+\begin{subequations}\label{Gerrbds}
+\begin{gather}
+\err_{-}(G_n,\cf,\reals_{+},\norm[\cg]{\cdot}) = \sup_{f \ne 0} \frac{G_n(f)-\norm[\cg]{f}}{\norm[\cf]{f}} \le h_{\cg -}(n) \\
+\err_{+}(G_n,\cf,\reals_{+},\norm[\cg]{\cdot}) = \sup_{f \ne 0} \frac{\norm[\cg]{f}-G_n(f)}{\norm[\cf]{f}} \le h_{\cg +}(n).
+\end{gather}
+\end{subequations}
 Noting that $\norm[\cf]{f} \le \tau \norm[\cg]{f}$ for all $f$ in the cone $\cc_{\tau}$ implies the lemma below. 
 
-\begin{lem} \label{Gnormlem} Any nonadaptive algorithm $G_n \in \ca_{\fix}(\cf,\reals_+,\norm[\cg]{\cdot},\Lambda)$ with cost $n=\cost(G_n)$ and two sided error bounds $\err_{\pm}(G_n,\cf,\reals_{+},\norm[\cg]{\cdot}) \le h_{\cg\pm}(n)$ yields an approximation to the $\cg$-semi-norm of functions in the cone $\cc_{\tau}$ with the following upper and lower error bounds:
+\begin{lem} \label{Gnormlem} Any nonadaptive algorithm $G_n \in \ca_{\fix}(\cf,\reals_+,\norm[\cg]{\cdot},\Lambda)$ with cost $n=\cost(G_n)$ and two sided error bounds as in \eqref{Gerrbds} yields an approximation to the $\cg$-semi-norm of functions in the cone $\cc_{\tau}$ with the following upper and lower error bounds:
 \begin{equation} \label{twosidedGineq}
 \frac{G_n(f)}{\fc_n} \le \norm[\cg]{f} \le \fC_n G_n(f) \qquad \forall f \in \cc_{\tau}.
 \end{equation}
-where the deflation factor, $\fc_n$, and the inflation factor, $\fC_n$ are defined as follows:
+where the deflation factor, $1/\fc_n$, and the inflation factor, $\fC_n$ are defined as follows:
 \begin{gather} \label{normdeflate}
 \fc_n =1 + \tau h_{\cg -}(n)  \ge 1 \\
 \label{norminflate}
@@ -350,7 +352,6 @@ where the deflation factor, $\fc_n$, and the inflation factor, $\fC_n$ are defin
 
 Computing an approximate solution to the problem $S: \cc_{\tau} \to \ch$, e.g., integration or function approximation, depends on non-adaptive algorithms. Suppose that there is a sequence of such of algorithms, $\{A_n\}_{n \in \ci}$, with $A_n  \in \ca_{\fix}(\cg,\ch,S,\Lambda)$, indexed by their cost as defined in \eqref{algseqdef}, and for which upper error bounds are known for both the spaces $\cg$ and $\cf$:
 \begin{equation}\label{algseqerrbd}
-%\err(A_n,\cg,\ch,S) \le C_{1} n^{-p_1}, \qquad \err(A_n,\cf,\ch,S) \le C_{2} n^{-p_2}, 
 \err(A_n,\cg,\ch,S) \le \tildeh(n), \qquad \err(A_n,\cf,\ch,S) \le h(n), 
 \end{equation}
 for some \emph{non-increasing} functions $\tildeh$ and $h$.  The definitions of these errors in \eqref{errdefworst} then implies upper bounds on the error of $A_n(f)$ in terms of the $\cg$-semi-norm of $f$:
@@ -442,16 +443,31 @@ The definition of the set of algorithms for which the Algorithm \ref{twostagedet
 
 \begin{rem} Instead of choosing $\tau$ as an input parameter for Algorithm \ref{twostagedetalgo}, one may alternatively choose the inflation factor $\fC >1$.  This then implies that 
 \begin{equation} \label{taufromnC}
-\tau = \left(1 - \frac{1}{\fC}\right)\frac{1}{\err_{+}(G_{n_G},\cf,\reals_+,\norm[\cg]{\cdot})},
+\tau = \left(1 - \frac{1}{\fC}\right)\frac{1}{h_{\cg+}(n_G)},
 \end{equation}
 which is equivalent to \eqref{norminflate}.
 \end{rem}
 
 \begin{rem} It is observed in the examples of Sections \ref{integsec} and \ref{approxsec} that for the sequence of algorithms $\{A_n\}_{n \in \ci}$
-\begin{equation}
-\tau \tildeh(n) \le h(n) \quad \forall n \in \ci.
+\begin{equation} \label{hbest}
+\tau h(n) \le \tildeh(n) \quad \forall n \in \ci.
 \end{equation}
-or equivalently, $\min(h(n),\tau \tildeh(n))=\tau\tildeh(n)$.  This then simplifies Algorithm \ref{twostagedetalgo} in the computation of the sample size for $A$ in \eqref{Nmindef} and also in Theorem \ref{TwoStageDetermThm} in the definition of $\cn$ in \eqref{nicefdef} and the upper bound on the cost in \eqref{auto2stagedetcost}. 
+or equivalently, $\min(\tildeh(n),\tau h(n))=\tau h(n)$.  This then simplifies Algorithm \ref{twostagedetalgo} in the computation of the sample size for $A$ in \eqref{Nmindef} and also in Theorem \ref{TwoStageDetermThm} in the definition of $\cn$ in \eqref{nicefdef} and the upper bound on the cost in \eqref{auto2stagedetcost}. 
+
+A sufficient condition for \eqref{hbest} is
+\begin{equation} \label{hbestverb}
+h(n) \le \tildeh(n) h_{\cg+}(n) \quad \forall n \in \ci,
+\end{equation}
+since the Algorithms \ref{twostagedetalgo} and \ref{multistagealgo} both require that $h_{\cg+}(n) < 1/\tau$, and since $h$ is a non-increasing function.   Another 
+sufficient condition for \eqref{hbest} is finding some sequence of functions $\{f^*_n \in \cf\}_{n \in \ci}$ with non-zero $\cf$- and $\cg$-semi-norms such that 
+\begin{equation} \label{hbestverc}
+h(n) \le \frac{\norm[\ch]{S(f^*_n)-A_n(f_n^*)}}{\norm[\cg]{f_n^*}} \frac{\norm[\cg]{f^*_n}-G_n(f^*_n)}{\norm[\cf]{f^*_n}}   \quad \forall n \in \ci,
+\end{equation}
+since the right hand side above is no greater than the right hand side in \eqref{hbestverb}. An advantage of \eqref{hbestverc} is that one does not need to find $\tildeh$ explicitly. Finally, in the case where the data used for $G_n$ and $A_n$ are the same, and where the $f^*_n$ are constructed such that all their data all vanish, then the sufficient condition above reduces to 
+\begin{equation} \label{hbestverd}
+h(n) = \frac{\norm[\ch]{S(f^*_n)}}{\norm[\cf]{f^*_n}}   \quad \forall n \in \ci.
+\end{equation}
+The inequality now becomes an equality because the left hand side cannot be smaller than the right hand side by the definition of $h$.
 \end{rem}
 
 
@@ -461,7 +477,7 @@ Suppose that the sequence of nonadaptive algorithms,
 \[
 \{A_n\}_{n \in \ci} = \{A_{n_1}, A_{n_2}, \ldots \}, 
 \]
-are \emph{embedded}, i.e., $A_{n_{i+1}}$ uses all of the data used by $A_{n_{i}}$ for $i=1, 2, \ldots$.  An example would be a sequence of composite trapezoidal rules for integration that uses a number of trapezoids that is an increasing power of two. Furthermore, it is supposed that the data used by $G$, the algorithm used to estimate the $\cg$-semi-norm of $f$, is the same data used by $A_{n_1}$, and so $n_1=n_G$.  Then the total cost of Algorithm \ref{twostagedetalgo} can be reduced; it is simply $n_A$, as given in Stage 2, instead of $n_G+n_A$.  Moreover, $\tN_{\max}$ may then be taken to be $N_{\max}$, and the cost bound of the automatic algorithm in \eqref{auto2stagedetcost} does not need the term $n_G$.
+are \emph{embedded}, i.e., $A_{n_{i+1}}$ uses all of the data used by $A_{n_{i}}$ for $i=1, 2, \ldots$.  An example would be a sequence of composite trapezoidal rules for integration where the number of trapezoids is a power of two. Furthermore, it is supposed that the data used by $G$, the algorithm used to estimate the $\cg$-semi-norm of $f$, is the same data used by $A_{n_1}$, and so $n_1=n_G$.  Then the total cost of Algorithm \ref{twostagedetalgo} can be reduced; it is simply $n_A$, as given in Stage 2, instead of $n_G+n_A$.  Moreover, $\tN_{\max}$ may then be taken to be $N_{\max}$, and the cost bound of the automatic algorithm in \eqref{auto2stagedetcost} does not need the term $n_G$.
 
 Again suppose that $\{A_n\}_{n \in \ci}$, $A_n  \in \ca_{\fix}(\cg,\ch,S,\Lambda)$, consists of algorithms as described in  \eqref{algseqdef} and \eqref{algseqerrbd}, but some of which are embedded in others.  Specifically, suppose that for some fixed $r > 1$, for all $n \in \ci$, there exists at least one $\tn \in \ci$ with $n < \tn \le rn$, such that the data for $A_n$ is embedded in the data for $A_{\tn}$.  An example would be all possible composite trapezoidal rules for integration that use trapezoids of equal widths. Suppose also that there exists a sequence of algorithms for approximating the $\cg$-sem-inorm, $\{G_n\}_{n \in \ci}$, $G_n  \in \ca_{\fix}(\cg,\reals_+,\norm[\cg]{\cdot},\Lambda)$, such that for each $n \in \ci$, $A_n$ and $G_n$ use exactly the same data. Moreover, define $\fc_n$ and $\fC_n$ in terms of $G_n$ as in \eqref{normdeflate} and \eqref{norminflate} for all $n \in \ci$.
 It is assumed that $\err_{\pm}(G_n,\cf,\reals_+,\norm[\cg]{\cdot})$ are non-increasing functions of $n$, which implies that $\fC_{n}$ and $\fc_n$ do not increase as $n$ increases. These embedded algorithms suggest the following iterative algorithm.
@@ -473,7 +489,7 @@ It is assumed that $\err_{\pm}(G_n,\cf,\reals_+,\norm[\cg]{\cdot})$ are non-incr
 
 \item [Stage 2. Check for Convergence.] Check whether $n_i$ is large enough to satisfy the error tolerance, i.e., 
 \begin{equation} \label{multistageconv}
-\min(h(n_i),\tau \tildeh(n_i))\fC_{n_i} G_{n_i}(f) \le \varepsilon.
+\min(\tildeh(n_i),\tau h(n_i))\fC_{n_i} G_{n_i}(f) \le \varepsilon.
 \end{equation}
 If this is true, then set $W$ to be false, return $(A_{n_i}(f),W)$ and terminate the algorithm.
 
@@ -487,14 +503,14 @@ This iterative algorithm is guaranteed to converge also, and its cost can be bou
 
 \begin{theorem}  \label{MultiStageThm}  Let  $\cf$, $\cg$, $\ch$, $\varepsilon$, $N_{\max}$, $\tau$, and $n_1$ be given as described in Algorithm \ref{multistagealgo}. Assume that $n_1 \le N_{\max}$. Let $r$ be the number described in the paragraph preceding that algorithm.  Define 
 \[
-\tN_A(a) = \min\left\{ n \in \ci : \min(h(n),\tau \tildeh(n))\fC_n\fc_n \le a \right\}, \quad a \in (0,\infty).
+\tN_A(a) = \min\left\{ n \in \ci : \min(\tildeh(n),\tau h(n))\fC_n\fc_n \le a \right\}, \quad a \in (0,\infty).
 \]
 Let $\cc_\tau$ be the cone of functions defined in \eqref{conedef} whose $\cf$-semi-norms are no larger than $\tau$ times their $\cg$-semi-norms.  Let
 \begin{align} 
 \nonumber
 \cn &= \left \{ f \in \cc_\tau :r\tN_{A}\left(\frac{\varepsilon}{\norm[\cg]{f}} \right) \le N_{\max} \right\} \\
 \label{nicefdefmulti}
-&= \left \{ f \in \cc_\tau : \norm[\cg]{f} \le \frac{\varepsilon}{\fC_{N_{\max}/r} \fc_{N_{\max}/r} \min(h(N_{\max}/r),\tau \tildeh(N_{\max}/r))} \right\}
+&= \left \{ f \in \cc_\tau : \norm[\cg]{f} \le \frac{\varepsilon}{\fC_{N_{\max}/r} \fc_{N_{\max}/r} \min(\tildeh(N_{\max}/r),\tau h(N_{\max}/r))} \right\}
 \end{align}
 be the nice subset of the cone $\cc_\tau$.  Then it follows that Algorithm \ref{multistagealgo} is successful for all functions in $\cn$,  i.e.,  $\success(A,W,\cn,\varepsilon,N_{\max}) = 1$.  Moreover, the cost of this algorithm is bounded above in terms of the $\cg$-semi-norm of the input function as follows:
 \begin{equation} \label{automultistagedetcost}
@@ -522,7 +538,7 @@ Here $j$ may be any positive integer.  The design of Algorithm \ref{multistageal
 First, consider possibility i) and recall inequality \eqref{twosidedGineq}.
 Since \eqref{multistageconv} is satisfied, it follows that $\norm[\ch]{S(f)-A_{n_j}(f)} \le \varepsilon$ by the same argument as given in the proof of Theorem \ref{TwoStageDetermThm}.  In this case the algorithm terminates without warning and the approximate value is within the required tolerance.
 
-If $j=1$, then the cost of the algorithm is $n_1$.  If $j>1$, then the convergence criterion was not satisfied for $i=j-1$. Thus, it follows that $n_{j-1} < \tN_A(\varepsilon/\norm[\cg]{f})$, since $h(n), \tildeh(n), \fC_n$, and $\fc_n$ all do not decrease as $n$ increases. 
+If $j=1$, then the cost of the algorithm is $n_1$.  If $j>1$, then the convergence criterion was not satisfied for $i=j-1$. Thus, it follows that $n_{j-1} < \tN_A(\varepsilon/\norm[\cg]{f})$, since $\tildeh(n), h(n), \fC_n$, and $\fc_n$ all do not decrease as $n$ increases. 
 If $n_{j-1} \ge N_{A}(\varepsilon \fc_{n_{j-1}}/G_{n_{j-1}}(f))$, then Stage 3 chooses $n_{j}$ to be the smallest element of $\ci$ that exceeds $n_{j-1}$ and for which $A_{n_{j-1}}$ is embedded in $A_{n_j}$.  By the definition of $r$ it follows that
 \begin{equation*}
 n_{j} \le r  n_{j-1} < r \tN_{A}(\varepsilon/\norm[\cg]{f}).
@@ -653,7 +669,7 @@ The next two sections illustrate the theorems of Section \ref{genthmsec} by look
 
 \item a set of non-adaptive algorithms, $\{A_n\}_{n \in \ci}$, which approximate $S$, are indexed by their cost, $n$, and have the property that some lower cost algorithms are embedded in higher cost algorithms,
 
-\item the upper bound error functions, $h$ and $\tildeh$, defined in \eqref{algseqerrbd}, 
+\item the upper bound error functions, $\tildeh$ and h, defined in \eqref{algseqerrbd}, 
 
 \item a set of non-adaptive algorithms, $\{G_n\}_{n \in \ci}$, which approximate $\norm[\cg]{\cdot}$, such that $G_n$ uses the same function data as $A_n$,
 
