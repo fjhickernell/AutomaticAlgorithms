@@ -34,9 +34,9 @@
 \author{Fred J. Hickernell}
 \author{Yizhi Zhang}
 \address{Room E1-208, Department of Applied Mathematics, Illinois Institute of Technology,\\ 10 W.\ 32$^{\text{nd}}$ St., Chicago, IL 60616}
-\begin{abstract} Automatic numerical algorithms are widely used in practice.  An algorithm that is automatic attempts to provide an approximate solution that differs from the true solution by no more than a user-specified tolerance, $\varepsilon$. Furthermore, the computational effort is determined adaptively by the algorithm to match the difficulty of the problem.  Unfortunately, many automatic algorithms lack rigorous guarantees, i.e., sufficient conditions on the input function that ensure the success of the algorithm. 
+\begin{abstract} Automatic numerical algorithms are widely used in practice.  An algorithm that is automatic attempts to provide an approximate solution that differs from the true solution by no more than a user-specified tolerance, $\varepsilon$. Furthermore, the computational effort is typically determined adaptively by the algorithm to match the difficulty of the problem.  Unfortunately, most automatic algorithms lack rigorous guarantees, i.e., sufficient conditions on the input function that ensure the success of the algorithm. 
 
-This article establishes a framework for providing rigorous guarantees for automatic algorithms. Sufficient conditions for success and upper bounds on the computational cost are provided in Theorems \ref{TwoStageDetermThm} and \ref{MultiStageThm}, and lower bounds on the complexity of the problem are given in Theorem \ref{complowbd}. Examples of these general theorems are illustrated for univariate numerical integration and function recovery.  The key observation is that the error analysis should be done for \emph{cones} of input functions rather than balls. The existing literature contains certain cautions about the usefulness and reliability of automatic algorithms.  The theory presented here does not share the assumptions on which those concerns are based, rendering them moot.
+This article establishes a framework for providing rigorous guarantees for automatic, adaptive algorithms. Sufficient conditions for success and upper bounds on the computational cost are provided in Theorems \ref{TwoStageDetermThm} and \ref{MultiStageThm}, and lower bounds on the complexity of the problem are given in Theorem \ref{complowbd}. Examples of these general theorems are illustrated for univariate numerical integration and function recovery.  The key observation is that the error analysis should be done for \emph{cones} of input functions rather than balls. The existing literature contains certain cautions about the usefulness and reliability of automatic algorithms.  The theory presented here does not share the assumptions on which those concerns are based, rendering them irrelevant.
 \end{abstract}
 
 \begin{keyword}
@@ -52,7 +52,7 @@ adaptive \sep cones \sep function recovery \sep integration \sep quadrature
 
 \section{Introduction}
 
-Numerical algorithms for many elementary and special functions reliably provide answers to machine precision without user tuning.  For example, the MATLAB \cite{MAT7.12} algorithms
+Numerical algorithms for evaluating many elementary and special functions reliably provide answers to machine precision with minimal user input.  For example, the MATLAB \cite{MAT7.12} algorithms
 \[
 {\tt cos, sin, exp, log, airy, besselj, gamma, gammainc, ellipj, erf, erfinv,}
 \] 
@@ -62,19 +62,19 @@ automatically use the right number of terms in a polynomial, rational or other s
 \]
 whereas the correct answer is {\tt 1}.
 
-For more complex numerical problems, such as integration and function recovery, it is desirable to have algorithms that require a minimum of user tuning.  Namely, one would like to have algorithms that are
+For more complex numerical problems, such as integration and function recovery, we would also like to have algorithms that require minimal user input to obtain the desired answer.  Namely, we want algorithms with the following properties:
 \begin{description}
 \item[Guaranteed]---  answers are provided with an error no greater than the user-specified \emph{error tolerance}, $\varepsilon$.
-\item[Automatic]--- the computational cost is determined without user intervention based on $\varepsilon$.
-\item[Adaptive]--- the computational cost for a given input is also determined based on the difficulty of the problem (size of the input function) \emph{as inferred from data, not specified a priori}.
+\item[Automatic]--- the computational effort required is determined without user intervention based on $\varepsilon$.
+\item[Adaptive]--- the computational effort for a given input function is also determined based on the difficulty of the problem (size of the input function) \emph{as inferred from function data, not specified a priori}.
 \item[Optimal]--- the computational cost as a function of the user-specified $\varepsilon$ and the unknown problem difficulty is no greater than a constant multiple times that of the best algorithm possible \emph{even if the problem difficulty were known a priori}.
 \item[Tunable]--- parmeters defining the algorithm can be adjusted to change the algorithm's robustness, the maximum allowable computational cost budget, etc.
 \end{description}
-The checklist in Figure \ref{fig:checklist} provides an overview of how algorithms currently in use and those proposed here compare for these fiver criteria.  This article presents a general framework for constructing  algorithms that satisfy all of the above criteria and also provides two concrete examples, namely, univariate integration via the composite trapezoidal rule and univariate function recovery via linear splines.
+The checklist in Figure \ref{fig:checklist} provides an overview of how algorithms currently in use and those proposed here compare for these five criteria.  This article presents a general framework for constructing algorithms that satisfy all of the above criteria.  We also present two concrete examples, namely, univariate integration via the composite trapezoidal rule and univariate function recovery via linear splines.
 
-Automatic quadrature algorithms such as MATLAB's {\tt quad} and {\tt quadgk} \cite{MAT7.12} and those in the NAG Library \cite{NAG23} work well often in practice, but they do not have theoretical guarantees of success.  The Chebfun toolbox in MATLAB \cite{TrefEtal12}, which approximates functions by Chebyshev polynomial expansions also works weel for many cases, but has no guarantees.  All of these algorithms do have the advantage of adjusting the computational effort based on function data, i.e, they are adaptive.  The degree to which they are tunable varies.
+Automatic quadrature algorithms such as MATLAB's {\tt quad} and {\tt quadgk} \cite{MAT7.12} and those in the NAG Library \cite{NAG23} often work well in practice, but they do not have theoretical guarantees of success.  The Chebfun toolbox in MATLAB \cite{TrefEtal12}, which approximates functions by Chebyshev polynomial expansions also works well for many cases, but has no guarantees.  All of these algorithms are adaptive.  The degree to which they are tunable varies.
 
-\begin{figure}[h]
+\begin{figure}[ht]
 \centering 
 \begin{tabular}{r>{\centering}b{2.8cm}>{\centering}b{2.8cm}>{\centering}b{2.8cm}}
 & MATLAB, NAG, and Chebfun
@@ -90,10 +90,10 @@ Tunable & ? & \ding{51} & \ding{51}
 \caption{Check list of desired features for an algorithm. \label{fig:checklist}}
 \end{figure}
 
-Most existing theory for numerical problems of interes starts with a Banach space, $\cf$, of input functions defined on some set $\cx$, and having a semi-norm, $\norm[\cf]{\cdot}$.  The definition of $(\cf,\norm[\cf]{\cdot})$ contains assumptions about smoothness, periodicity or other qualities of the input functions.  The mathematical problem of interest is defined by a \emph{solution operator} $S:\cf \to \ch$, where $\ch$ is some other Banach space with its norm $\norm[\ch]{\cdot}$.  For integration, $\ch=\reals$, and for function approximation, $\ch$ is some superset of $\cf$, for example, $\cl_{\infty}(\cx)$. Given this set-up, one may often find an algorithm, $A_n$, with computational cost $n$, that provides an approximate solution whose error is bounded as follows:
+Most existing theory for numerical problems of interest starts with a Banach space, $\cf$, of input functions defined on some set $\cx$, and having a semi-norm, $\norm[\cf]{\cdot}$.  The definition of $(\cf,\norm[\cf]{\cdot})$ contains assumptions about smoothness, periodicity or other qualities of the input functions.  The mathematical problem of interest is defined by a \emph{solution operator} $S:\cf \to \ch$, where $\ch$ is some other Banach space with its norm $\norm[\ch]{\cdot}$.  For integration, $\ch=\reals$, and for function approximation, $\ch$ is some superset of $\cf$, for example, $\cl_{\infty}(\cx)$. Given this set-up, one may often find an algorithm, $A_n$, with computational cost $n$, that provides an approximate solution whose error is bounded as follows:
 \begin{subequations} \label{traditionerr}
 \begin{equation}
-\norm[\ch]{S(f)-A_n(f)} \le \frac{C_{\up} \norm[\cf]{f}}{n^p}, \quad n \in \naturals.
+\norm[\ch]{S(f)-A_n(f)} \le \frac{C_{\up} \norm[\cf]{f}}{n^p}, \quad n \in \naturals,
 \end{equation}
 where $C_{\up}$ and $p$ are some known constants.  Here it is necessarily assumed that the algorithm is exact if the semi-norm of the input function vanishes, i.e., $S(f)=A(f)$ if $\norm[\cf]{f}=0$.  This allows one to compute an approximation that differs from the true solution by no  more than $\varepsilon$, provided that the input functions lie inside a {\em ball}, i.e., 
 \begin{gather}
@@ -103,7 +103,9 @@ where $C_{\up}$ and $p$ are some known constants.  Here it is necessarily assume
 n=\cost(A_n) = \left \lceil \left(\frac{C_{\up}\sigma}{\varepsilon}\right)^{1/p} \right \rceil.
 \end{gather}
 \end{subequations}
-Furthermore, the computational cost of the algorithm, $\cost(A_n)$, which typically corresponds to the number of function data needed, is bounded in terms of $\varepsilon$ and the radius of the ball, $\sigma$.  
+Furthermore, there is a simple formula for the computational cost required to meet the error tolerance $\varepsilon$ for all functions in the ball of radius $\sigma$
+
+Figure \ref{fig:NonadaptAlgo} provides a diagram of an automatic algorithm based on these ideas.  It is guaranteed.  It is optimal if any algorithm satisfying the error criterion above must have a cost of at least $\Order((\sigma/\varepsilon)^{1/p})$.  However, this algorithm is not adaptive.  The computational cost does not depend on function data, but is determined purely by $\varepsilon$ and $\sigma$.  
 
 \begin{figure}[h]
 \centering
@@ -126,11 +128,9 @@ cost $\displaystyle \asymp \left(\frac{\sigma}{\varepsilon}\right)^{1/p}$}};
 \caption{Diagram of a guaranteed, non-adaptive algorithm. \label{fig:NonadaptAlgo}}
 \end{figure}
 
-Figure \ref{fig:NonadaptAlgo} provides a diagram of an automatic algorithm based on these ideas.  It is guaranteed.  It is optimal if any algorithm satisfying the error criterion above must have a cost of at least $\Order((\sigma/\varepsilon)^{1/p})$.  However, this algorithm is not adaptive.  The computational cost does not depend on function data, but is determined purely by $\varepsilon$ and $\sigma$.  
+This lack of adaptivity is tied to the need to provide as input, $\sigma$, a known upper bound on $\norm[\cf]{f}$.  The norm $\norm[\cf]{f}$ might be called the \emph{difficulty of the problem}.  In practice, it is difficult to know a priori how large $\norm[\cf]{f}$ is, so the requirement of $\sigma$ is a practical drawback of the algorithm in Figure \ref{fig:NonadaptAlgo}.  Moreover, since the computational cost of such this algorithm depends on $\sigma$, not $\norm[\cf]{f}$, it not decrease if $\norm[\cf]{f}$ is drastically smaller than $\sigma$.  
 
-This lack of adaptivity is coupled to the need to provide as input, $\sigma$, a known upper bound on $\norm[\cf]{f}$, which might be called the \emph{difficulty of the problem}.  In practice, it is not easy to know a priori how large $\norm[\cf]{f}$ is, so the requirement of $\sigma$ is a practical drawback of the algorithm in Figure \ref{fig:NonadaptAlgo}.  Moreover, since the computational cost of such this algorithm is tied to $\sigma$, it not decrease if $\norm[\cf]{f}$ is drastically smaller than $\sigma$, which is quite possible in practice.  
-
-Adaptive automatics algorithms try to estimate $\norm[\cf]{f}$, so that the computational cost can be adjusted accordingly. This is the approach taken here.  Many automatic algorithms approximate $\norm[\cf]{f}$ heuristically or rely on an error estimate which converges asymptotically as the number of function values tends to infinity.  Such algorithms are not guaranteed to provide the answer to within the specified error tolerance.  The aim here is to construct from data a \emph{rigorous} upper bound on $\norm[\cf]{f}$.  
+Adaptive automatics algorithms try to estimate or bound $\norm[\cf]{f}$, so that the computational cost can be adjusted accordingly. This is the approach taken here.  Many automatic algorithms approximate $\norm[\cf]{f}$ heuristically or rely on an estimate of $\norm[\ch]{S(f)-A_n(f)}$ which converges asymptotically as $n \to \infty$.  Such algorithms are not guaranteed to provide the answer to within the specified error tolerance.  The aim here is to construct from data a \emph{rigorous} upper bound on $\norm[\cf]{f}$.  
 
 The key idea is to consider functions lying in a \emph{cone} instead of a ball.  Let $\cg$ be some superspace of $\cf$ with a weaker semi-norm, and define the cone
 \begin{equation} \label{conedef}
@@ -140,7 +140,7 @@ In essence, functions inside the cone may have large norms, but their $\cg$-semi
 \begin{itemize}
 \item Since the $\cg$-semi-norm is weaker than the $\cf$-semi-norm, it can be approximated by some algorithm $G(f)$, with $0\le \norm[\cg]{f}-G(f) \le C_1\norm[\cf]{f}$ for some known $C_1$.
 
-\item The definition of the cone in \eqref{conedef} implies that $\norm[\cg]{f} \le G(f)/(1 - \tau C_1)$, provided that $C_1 < 1/\tau$.
+\item The definition of the cone in \eqref{conedef} implies that $\norm[\cg]{f} \le G(f)/(1 - \tau C_1)$, provided that $C_1 < 1/\tau$.  This later condition is satisfied by choosing $G$ to have small enough error to begin with.
 
 \item Applying the cone condition again leads to an upper bound on the $\cf$-semi-norm:  $\norm[\cf]{f} \le \tau G(f)/(1 - \tau C_1)$.
 
@@ -486,11 +486,11 @@ sufficient condition for \eqref{hbest} is finding some sequence of functions $\{
 \begin{equation} \label{hbestverc}
 h(n) \le \frac{\norm[\ch]{S(f^*_n)-A_n(f_n^*)}}{\norm[\cg]{f_n^*}} \frac{\norm[\cg]{f^*_n}-G_n(f^*_n)}{\norm[\cf]{f^*_n}}   \quad \forall n \in \ci,
 \end{equation}
-since the right hand side above is no greater than the right hand side in \eqref{hbestverb}. An advantage of \eqref{hbestverc} is that one does not need to find $\tildeh$ explicitly. Finally, in the case where the data used for $G_n$ and $A_n$ are the same, and where the $f^*_n$ are constructed such that all their data all vanish, then the sufficient condition above reduces to 
+since the right hand side above is no greater than the right hand side in \eqref{hbestverb}. An advantage of \eqref{hbestverc} is that one does not need to find $\tildeh$ explicitly. Finally, suppose that one can construct sequence of functions $\{f^*_n \in \cf\}_{n \in \ci}$ \emph{with all vanishing data} for both the algorithms $A_n$ and $G_n$ that attains the upper bound on the error of $A_n$ with respect to the $\cf$-semi-norm, i.e.,
 \begin{equation} \label{hbestverd}
 h(n) = \frac{\norm[\ch]{S(f^*_n)}}{\norm[\cf]{f^*_n}}   \quad \forall n \in \ci.
 \end{equation}
-The inequality now becomes an equality because the left hand side cannot be smaller than the right hand side by the definition of $h$.
+Then this sequence automatically satisfies \eqref{hbestverc}, which then implies \eqref{hbest}.
 \end{rem}
 
 
