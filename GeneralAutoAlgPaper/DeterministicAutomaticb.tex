@@ -74,7 +74,7 @@ The checklist in Figure \ref{fig:checklist} provides an overview of how algorith
 
 Automatic quadrature algorithms such as MATLAB's {\tt quad} and {\tt quadgk} \cite{MAT7.12} and those in the NAG Library \cite{NAG23} work well often in practice, but they do not have theoretical guarantees of success.  The Chebfun toolbox in MATLAB \cite{TrefEtal12}, which approximates functions by Chebyshev polynomial expansions also works weel for many cases, but has no guarantees.  All of these algorithms do have the advantage of adjusting the computational effort based on function data, i.e, they are adaptive.  The degree to which they are tunable varies.
 
-\begin{figure}
+\begin{figure}[h]
 \centering 
 \begin{tabular}{r>{\centering}b{2.8cm}>{\centering}b{2.8cm}>{\centering}b{2.8cm}}
 & MATLAB, NAG, and Chebfun
@@ -105,7 +105,7 @@ n=\cost(A_n) = \left \lceil \left(\frac{C_{\up}\sigma}{\varepsilon}\right)^{1/p}
 \end{subequations}
 Furthermore, the computational cost of the algorithm, $\cost(A_n)$, which typically corresponds to the number of function data needed, is bounded in terms of $\varepsilon$ and the radius of the ball, $\sigma$.  
 
-\begin{figure}
+\begin{figure}[h]
 \centering
 \begin{tikzpicture}
 [auto,
@@ -158,7 +158,7 @@ n=\cost(A_n)\le \left \lceil\left(\frac{ C_{\up}\tau \norm[\cg]{f}}{\varepsilon(
 
 Figure \ref{fig:AdaptAlgo} is a diagram of the automatic algorithm just outlined.  As one can see, the computational cost varies with $\norm[\cg]{f}$ as one might expect, but $\norm[\cg]{f}$ is not an input to the algorithm.  Moreover, $\norm[\cg]{f}$, which can be estimated directly, acts as a surrogate for $\norm[\cf]{f}$.
 
-\begin{figure}
+\begin{figure}[h]
 \centering
 \begin{tikzpicture}
 [auto,
@@ -350,11 +350,11 @@ This section provides rather general theorems about the complexity of automatic 
 
 \subsection{Bounding the $\cg$-Semi-Norm}
 
-As mentioned in Section \ref{conesubsec} automatic algorithms require reliable upper bounds on $\norm[\cg]{f}$ for all $f$ in the cone $\cc_{\tau}$. These can be obtained using non-adaptive algorithm $G_n \in \ca_{\fix}(\cf,\reals_+,\norm[\cg]{\cdot},\Lambda)$, where $n=\cost(G_n)$, provided that one has explicit upper bounds on the errors of these algorithms.  Namely, there should be non-increasing functions $h_{\cg\pm}$ defined on some subset of the non-negative numbers such that
+As mentioned in Section \ref{conesubsec} automatic algorithms require reliable upper bounds on $\norm[\cg]{f}$ for all $f$ in the cone $\cc_{\tau}$. These can be obtained using non-adaptive algorithm $G_n \in \ca_{\fix}(\cf,\reals_+,\norm[\cg]{\cdot},\Lambda)$, where $n=\cost(G_n)$, provided that one has explicit upper bounds on the errors of these algorithms.  Namely, there should be non-increasing functions $h_{\pm}$ defined on some subset of the non-negative numbers such that
 \begin{subequations}\label{Gerrbds}
 \begin{gather}
-\err_{-}(G_n,\cf,\reals_{+},\norm[\cg]{\cdot}) = \sup_{f \ne 0} \frac{G_n(f)-\norm[\cg]{f}}{\norm[\cf]{f}} \le h_{\cg -}(n) \\
-\err_{+}(G_n,\cf,\reals_{+},\norm[\cg]{\cdot}) = \sup_{f \ne 0} \frac{\norm[\cg]{f}-G_n(f)}{\norm[\cf]{f}} \le h_{\cg +}(n).
+\err_{-}(G_n,\cf,\reals_{+},\norm[\cg]{\cdot}) = \sup_{f \ne 0} \frac{G_n(f)-\norm[\cg]{f}}{\norm[\cf]{f}} \le h_{ -}(n) \\
+\err_{+}(G_n,\cf,\reals_{+},\norm[\cg]{\cdot}) = \sup_{f \ne 0} \frac{\norm[\cg]{f}-G_n(f)}{\norm[\cf]{f}} \le h_{ +}(n).
 \end{gather}
 \end{subequations}
 Noting that $\norm[\cf]{f} \le \tau \norm[\cg]{f}$ for all $f$ in the cone $\cc_{\tau}$ implies the lemma below. 
@@ -365,9 +365,9 @@ Noting that $\norm[\cf]{f} \le \tau \norm[\cg]{f}$ for all $f$ in the cone $\cc_
 \end{equation}
 where the deflation factor, $1/\fc_n$, and the inflation factor, $\fC_n$ are defined as follows:
 \begin{gather} \label{normdeflate}
-\fc_n =1 + \tau h_{\cg -}(n)  \ge 1 \\
+\fc_n =1 + \tau h_{ -}(n)  \ge 1 \\
 \label{norminflate}
-\fC_n =\frac{1}{1 - \tau h_{\cg +}(n)} \ge 1, \qquad \text{assuming } h_{\cg +}(n) < 1/\tau.
+\fC_n =\frac{1}{1 - \tau h_{ +}(n)} \ge 1, \qquad \text{assuming } h_{ +}(n) < 1/\tau.
 \end{gather}
 \end{lem}
 
@@ -384,7 +384,7 @@ for some \emph{non-increasing} functions $\tildeh$ and $h$.  The definitions of 
 &\le \min(\tildeh(n),\tau h(n))\norm[\cg]{f} \qquad \forall f \in \cc_{\tau}.
 \end{align}
 
-\begin{algo} \label{twostagedetalgo} {\bf (Automatic, Adaptive, Two-Stage).} Let $\cf$, $\cg$, and $\ch$ be Banach spaces as described above, let $S$ be the solution operator, let $\varepsilon$ be a positive error tolerance, and let $N_{\max}$ be the maximum cost allowed.  Let $\tau$ be a fixed positive number, and let $G_{n_G} \in \ca_{\fix}(\cf,\reals_+,\norm[\cg]{\cdot},\Lambda)$ be an algorithm as described in Lemma \ref{Gnormlem} with cost $n_G$ satisfying $h_{\cg+}(n_G) < 1/\tau$.
+\begin{algo} \label{twostagedetalgo} {\bf (Automatic, Adaptive, Two-Stage).} Let $\cf$, $\cg$, and $\ch$ be Banach spaces as described above, let $S$ be the solution operator, let $\varepsilon$ be a positive error tolerance, and let $N_{\max}$ be the maximum cost allowed.  Let $\tau$ be a fixed positive number, and let $G_{n_G} \in \ca_{\fix}(\cf,\reals_+,\norm[\cg]{\cdot},\Lambda)$ be an algorithm as described in Lemma \ref{Gnormlem} with cost $n_G$ satisfying $h_{+}(n_G) < 1/\tau$.
 Moreover, let  $\{A_n\}_{n \in \ci}$, $A_n  \in \ca_{\fix}(\cg,\ch,S,\Lambda)$, be a sequence of algorithms as described in  \eqref{algseqdef} and \eqref{algseqerrbd}.  Given an input function $f$, do the following:
 
 \begin{description} 
@@ -466,7 +466,7 @@ The definition of the set of algorithms for which the Algorithm \ref{twostagedet
 
 \begin{rem} Instead of choosing $\tau$ as an input parameter for Algorithm \ref{twostagedetalgo}, one may alternatively choose the inflation factor $\fC >1$.  This then implies that 
 \begin{equation} \label{taufromnC}
-\tau = \left(1 - \frac{1}{\fC}\right)\frac{1}{h_{\cg+}(n_G)},
+\tau = \left(1 - \frac{1}{\fC}\right)\frac{1}{h_{+}(n_G)},
 \end{equation}
 which is equivalent to \eqref{norminflate}.
 \end{rem}
@@ -479,9 +479,9 @@ or equivalently, $\min(\tildeh(n),\tau h(n))=\tau h(n)$.  This then simplifies A
 
 A sufficient condition for \eqref{hbest} is
 \begin{equation} \label{hbestverb}
-h(n) \le \tildeh(n) h_{\cg+}(n) \quad \forall n \in \ci,
+h(n) \le \tildeh(n) h_{+}(n) \quad \forall n \in \ci,
 \end{equation}
-since the Algorithms \ref{twostagedetalgo} and \ref{multistagealgo} both require that $h_{\cg+}(n) < 1/\tau$, and since $h$ is a non-increasing function.   Another 
+since the Algorithms \ref{twostagedetalgo} and \ref{multistagealgo} both require that $h_{+}(n) < 1/\tau$, and since $h$ is a non-increasing function.   Another 
 sufficient condition for \eqref{hbest} is finding some sequence of functions $\{f^*_n \in \cf\}_{n \in \ci}$ with non-zero $\cf$- and $\cg$-semi-norms such that 
 \begin{equation} \label{hbestverc}
 h(n) \le \frac{\norm[\ch]{S(f^*_n)-A_n(f_n^*)}}{\norm[\cg]{f_n^*}} \frac{\norm[\cg]{f^*_n}-G_n(f^*_n)}{\norm[\cf]{f^*_n}}   \quad \forall n \in \ci,
@@ -494,7 +494,7 @@ The inequality now becomes an equality because the left hand side cannot be smal
 \end{rem}
 
 
-\subsection{Embedded Nonadaptive Algorithms $\{A_n\}_{n \in \ci}$}
+\subsection{Automatic Algorithms Based on Embedded Algorithms $\{A_n\}_{n \in \ci}$}
 
 Suppose that the sequence of nonadaptive algorithms, 
 \[
@@ -505,7 +505,7 @@ are \emph{embedded}, i.e., $A_{n_{i+1}}$ uses all of the data used by $A_{n_{i}}
 Again suppose that $\{A_n\}_{n \in \ci}$, $A_n  \in \ca_{\fix}(\cg,\ch,S,\Lambda)$, consists of algorithms as described in  \eqref{algseqdef} and \eqref{algseqerrbd}, but some of which are embedded in others.  Specifically, suppose that for some fixed $r > 1$, for all $n \in \ci$, there exists at least one $\tn \in \ci$ with $n < \tn \le rn$, such that the data for $A_n$ is embedded in the data for $A_{\tn}$.  An example would be all possible composite trapezoidal rules for integration that use trapezoids of equal widths. Suppose also that there exists a sequence of algorithms for approximating the $\cg$-sem-inorm, $\{G_n\}_{n \in \ci}$, $G_n  \in \ca_{\fix}(\cg,\reals_+,\norm[\cg]{\cdot},\Lambda)$, such that for each $n \in \ci$, $A_n$ and $G_n$ use exactly the same data. Moreover, define $\fc_n$ and $\fC_n$ in terms of $G_n$ as in \eqref{normdeflate} and \eqref{norminflate} for all $n \in \ci$.
 It is assumed that $\err_{\pm}(G_n,\cf,\reals_+,\norm[\cg]{\cdot})$ are non-increasing functions of $n$, which implies that $\fC_{n}$ and $\fc_n$ do not increase as $n$ increases. These embedded algorithms suggest the following iterative algorithm.
 
-\begin{algo} \label{multistagealgo}  Let the Banach spaces $\cf$, $\cg$, and $\ch$, the solution operator $S$, and the error tolerance $\varepsilon$, the maximum cost budget $N_{\max}$, and the positive constant $\tau$ be as described in Algorithm \ref{twostagedetalgo}. Let the sequences of algorithms, $\{A_n\}_{n \in \ci}$ and  $\{G_n\}_{n \in \ci}$ be as described above.  Set $i=1$.  Let $n_1$ be the smallest number in $n \in \ci$ satisfying $\err_+(G_n,\cf,\norm[\cg]{\cdot},\reals_+) \le 1/\tau$. For any input function $f \in \cf$, do the following:
+\begin{algo} \label{multistagealgo}  Let the Banach spaces $\cf$, $\cg$, and $\ch$, the solution operator $S$, and the error tolerance $\varepsilon$, the maximum cost budget $N_{\max}$, and the positive constant $\tau$ be as described in Algorithm \ref{twostagedetalgo}. Let the sequences of algorithms, $\{A_n\}_{n \in \ci}$ and  $\{G_n\}_{n \in \ci}$ be as described above.  Set $i=1$.  Let $n_1$ be the smallest number $n \in \ci$ satisfying $h_+(n) < 1/\tau$. For any input function $f \in \cf$, do the following:
 \begin{description}
 
 \item [Stage 1. Estimate $\| f \| _{\cg}$.] Compute $G_{n_i}(f)$ and $\fC_{n_i} \le \infty$ as defined in \eqref{norminflate}.  

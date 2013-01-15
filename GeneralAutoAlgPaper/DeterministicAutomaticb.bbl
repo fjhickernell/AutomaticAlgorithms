@@ -1,8 +1,15 @@
 \def\Ignore#1{}\def\notesupp#1{}\def\Ignore#1{}\def\notesupp#1{}\def\Ignore#1{}\def\notesupp#1{}\def\Ignore#1{}\def\notesupp#1{}\def\Ignore#1{}\def\notesupp#1{}\def\Ignore#1{}\def\notesupp#1{}
-\begin{thebibliography}{20}
+\begin{thebibliography}{21}
 \expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
 \providecommand{\bibinfo}[2]{#2}
 \ifx\xfnm\relax \def\xfnm[#1]{\unskip,\space#1}\fi
+%Type = Book
+\bibitem[{Brass and Petras(2011)}]{BraPet11a}
+\bibinfo{author}{H.~Brass}, \bibinfo{author}{K.~Petras},
+  \bibinfo{title}{Quadrature theory: the theory of numerical integration on a
+  compact interval}, \bibinfo{publisher}{American Mathematical Society},
+  \bibinfo{address}{Rhode Island}, \bibinfo{edition}{first} edition,
+  \bibinfo{year}{2011}.
 %Type = Book
 \bibitem[{Burden and Faires(2010)}]{BurFai10}
 \bibinfo{author}{R.L. Burden}, \bibinfo{author}{J.D. Faires},
