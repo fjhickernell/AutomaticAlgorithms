@@ -9,15 +9,11 @@ Given $\tau>0$, then by the \eqref{conedef}, we have $\cc_{\tau} \subset \cf$ as
 \cc_{\tau}=\{f \in  \mathcal{W}^{2,\infty}[0,1] : \norm[\infty]{f''}\leq \tau\norm[\infty]{f'}\},
 \end{equation}
 
-Suppose one wants to approximate functions in $\cc_{\tau}$ based on function values.  The goal is to find an algorithm, $A$ for which $$\norm[\infty]{f-A(f)} \le \varepsilon.$$
-
-Here we use piecewise linear interpolation to approximate. Thus $\forall f \in \cc_{\tau},$ consider the sequence of algorithms $\{A_n\}_{n \in \ci},$ where
+Suppose one wants to approximate functions in $\cc_{\tau}$ based on function values.  The goal is to find an algorithm, $A$ for which $\norm[\infty]{f-A(f)} \le \varepsilon.$ Here we use piecewise linear interpolation to approximate. Thus $\forall f \in \cc_{\tau},$ consider the sequence of algorithms $\{A_n\}_{n \in \ci},$ where
 $\ci=\{2,3,\dots\}$
  and given the data $f(x_i),$ where $ x_i=\frac{i}{n-1}, i=0, \ldots,n-1,$ and $\cost(A_{n})=n.$
-
 For $x_{i-1} \leq x \leq x_i, \ i=1, \ldots, n-1,$ define $A_{n}(f)$
 $$A_{n}(f)(x)=f(x_{i-1})+\frac{x-x_{i-1}}{x_i-x_{i-1}}\left(f(x_i)-f(x_{i-1})\right).$$
-
 
 \subsection{Upper Bound}
 
@@ -41,15 +37,13 @@ $$A_{n}(f)(x)=f(x_{i-1})+\frac{x-x_{i-1}}{x_i-x_{i-1}}\left(f(x_i)-f(x_{i-1})\ri
 %\end{align*}
 
 
-
 Given the data sites $x_i=(i-1)/(n-1)$, $i=0, \ldots, n$, let the $\cl_\infty$ norm of the $f'$ be approximated by
 \begin{equation}\label{estfirstderiv}
 G_n(f) = (n-1) \sup_{i=1, \ldots, n-1} \abs{f(x_{i+1})-f(x_i)}
 \end{equation}
 
 Note that $G_n(f)$ never overestimates $\norm[\infty]{f'}$. Thus, we have
-$$\err_{-}(G_n,\cf,\reals_{+},\norm[\cg]{\cdot})=0.$$
-
+$h_{-}(n)=0.$
 For any $x \in [x_{i}, x_{i+1}]$, note that
 \begin{align*}
 \MoveEqLeft{\abs{f'(x)} - (n-1) \abs{f(x_{i+1})-f(x_i)}} \\
@@ -61,16 +55,9 @@ For any $x \in [x_{i}, x_{i+1}]$, note that
 \end{align*}
 Furthermore, this inequality is tight if $f''$ is constant second derivative and $f'$ does not change sign over $[x_{i}, x_{i+1}]$, and $x=x_i$ or $x_{i+1}$.  Applying the above argument for $i=0, \ldots, n-1$ implies that
 \[
-\norm[\infty]{f'} - G_n(f) \le \frac{\norm[\infty]{f''}}{2(n-1)}
+\norm[\infty]{f'} - G_n(f) \le \frac{\norm[\infty]{f''}}{2(n-1)} \Rightarrow h_{+}(n)=\frac{1}{2(n-1)}
 \]
 with equality holding when has a constant second derivative and its first derivative does not change sign over $[0,1]$.
-
-Hence, we have
-%$$\err_{-}(G_n,\cf,\reals_{+},\norm[\cg]{\cdot})=0, \ \err_{+}(G_n,\cf,\reals_{+},\norm[\cg]{\cdot}) =\frac{1}{(n-1)^{s}}.
-%$$
-$$\err_{-}(G_n,\cf,\reals_{+},\norm[\cg]{\cdot})=0, \ \err_{+}(G_n,\cf,\reals_{+},\norm[\cg]{\cdot}) =\frac{1}{2(n-1)}.
-$$
-
 Then by \eqref{normdeflate} and \eqref{norminflate}, we can obtain
 \begin{equation}\label{inflaapprox}
 \fc_n=1, \ \   \fC_n =\frac{1}{1 - \tau /(2(n-1))}.
@@ -80,14 +67,14 @@ Here we use divided difference. Denote
 $$f[x,y]:=\frac{f(y)-f(x)}{y-x},f[x,y,z]:=\frac{f[y,z]-f[x,y]}{z-x}.$$
 Note that for all $x,y \in [0,1]$ distinct, we have
  $$|f(y)-f(x)|=\left|\int_{x}^{y}f'(t)dt\right| \leq |y-x|\|f'\|_{\infty}.$$
- Therefore we have $|f[x,y]|\leq \|f'\|_{\infty}.$\\
+ Therefore we have $|f[x,y]|\leq \|f'\|_{\infty}.$ 
 For $x_{i-1} \leq x \leq x_i, \ i=1, \ldots, n-1,$ we  can rewrite
-$$A_{n}(f)(x)=f\left(x_{i-1}\right)+f\left[x_{i-1},x_{i}\right]\left(x-x_{i-1}\right).$$
+$A_{n}(f)(x)=f\left(x_{i-1}\right)+f\left[x_{i-1},x_{i}\right]\left(x-x_{i-1}\right).$
 Then by Eq(2.67) in \cite{walter}, we have
-$$
+$
 f(x)-A_{n}(f)(x)
 =f\left[x_{i-1},x_{i},x\right]\cdot (x-x_{i-1})(x-x_i).
-$$
+$
 As we can rewrite
 $$|f\left[x_{i-1},x_{i},x\right]|=\left|\frac{f[x_{i},x]-f[x_{i-1},x]}{x_i-x_{i-1}}\right|\leq2(n-1)\norm[\infty]{f'}.$$
 And as $x \in \left[x_{i-1},x_{i} \right],$ thus we have
@@ -97,26 +84,23 @@ $$
 |f(x)-A_{n}(f)(x)|\leq \frac{1}{4(n-1)^2}\cdot 2(n-1)\norm[\infty]{f'}=\frac{1}{2(n-1)}\norm[\infty]{f'}.
 $$
 Similarly, we can obtain that for $x \in [0,1]$
-$$\norm[\infty]{f-A_{n}(f)} \leq \frac{\|f'\|_{\infty}}{2(n-1)} \Rightarrow \err(A_n,\cg,\ch,S) \leq \frac{1}{2}(n-1)^{-1} \Rightarrow h(n)=\frac{1}{2}(n-1)^{-1}.$$
+$$\norm[\infty]{f-A_{n}(f)} \leq \frac{\|f'\|_{\infty}}{2(n-1)} \Rightarrow \err(A_n,\cg,\ch,S) \leq \frac{1}{2}(n-1)^{-1} \Rightarrow \tilde{h}(n)=\frac{1}{2}(n-1)^{-1}.$$
 
 On the other hand, by Eq(2.68) in \cite{walter},
 we know
-$f\left[x_{i-1},x_{i},x\right]=\frac{1}{2}f''(\xi),$ where $\xi \in [x_{i-1},x_{i}]$
+$f\left[x_{i-1},x_{i},x\right]=\frac{1}{2}f''(\xi),$ where $\xi \in [x_{i-1},x_{i}].$
 Then we know
-$$
-|f\left[x_{i-1},x_{i},x\right] |\leq \frac{1}{2}\|f''\|_{\infty}.$$
-
+$
+|f\left[x_{i-1},x_{i},x\right] |\leq \frac{1}{2}\|f''\|_{\infty}.$
 And as $x \in \left[x_{i-1},x_{i} \right],$ thus we have
 $\left|(x-x_{i-1})(x-x_{i})\right| \leq \frac{1}{4(n-1)^2}.$
-
 Then,
 $$
 |f(x)-A_{n}(f)(x)|\leq \frac{1}{4(n-1)^2}\frac{\norm[\infty]{f''}}{2}=\frac{1}{8(n-1)^2}\norm[\infty]{f''}.
 $$
-
 Hence, we can obtain that for $\forall x \in [0,1]$
 $$\norm[\infty]{f-A_{n}(f)} \leq  \frac{1}{8(n-1)^{2}}\norm[\infty]{f''} \Rightarrow \err(A_n,\cf,\ch,S) \leq \frac{1}{8}(n-1)^{-2}
-\Rightarrow \tilde{h}(n)=\frac{1}{8}(n-1)^{-2}.$$
+\Rightarrow h(n)=\frac{1}{8}(n-1)^{-2}.$$
 
 
 %Combine eq.(\ref{errorg}) and eq.(\ref{errorf}), we have the same result as in eq. (\ref{Anerrbound}).
@@ -146,9 +130,9 @@ $$\norm[\infty]{f-A_{n}(f)} \leq  \frac{1}{8(n-1)^{2}}\norm[\infty]{f''} \Righta
 %
 %\end{algo}
 
-However, we can find if $\fC =\frac{1}{1 - \tau /(2(n-1))} \ge 1,$ then $\tau (n-1)^{-1} <2,$ which means $ \tau\tilde{h}(n)< h(n).$
+And we can find  $h(n) \leq \tilde{h}(n) h_{+}(n), \forall n \in \mathcal{I},$ then $ \tau h(n)< \tilde{h}(n) \ \forall n \in \mathcal{I}.$
 Thus we only need to find $n$ such that  \[
-\frac{\tau \fC G_{n}(f)}{8(n-1)^2} \le \varepsilon.
+\frac{\tau \fC_n G_{n}(f)}{8(n-1)^2} \le \varepsilon.
 \]
 
 If we consider about the embedded algorithms, by Algorithm $\ref{multistagealgo},$ we obtain
@@ -161,7 +145,7 @@ Compute $G_{n_i}(f)$ in \eqref{estfirstderiv} and $\fC_n$ in \eqref{inflaapprox}
 \item [Stage 2. Check for Convergence.]
  Check whether $n_i$ is large enough to satisfy the error tolerance, i.e.,
 $$
-\frac{\tau \fC_n G_{n_i}(f)}{8(n-1)^2} \le \varepsilon.
+\frac{\tau \fC_{n_i} G_{n_i}(f)}{8(n_i-1)^2} \le \varepsilon.
 $$
 If this is true, then set $W$ to be false, return $(A_{n_i}(f),W)$ and terminate the algorithm.
 
@@ -185,13 +169,13 @@ Define
 \]
 Let $\cc_\tau$ be the cone of functions defined in \eqref{taudef}.  Let
 $$
-\cn = \left \{ f \in \cc_\tau :r\tN_{A}\left(\frac{\varepsilon}{\norm[\cg]{f}} \right) \le N_{\max} \right\}
-= \left \{ f \in \cc_\tau : \norm[\cg]{f} \le \frac{8(N_{\max}/r-1)^2 \varepsilon }{\tau \fC_{N_{\max}/r}  } \right\}
+\cn = \left \{ f \in \cc_\tau :r\tN_{A}\left(\frac{\varepsilon}{\sigma} \right) \le N_{\max} \right\}
+= \left \{ f \in \cc_\tau : \sigma \le \frac{8(N_{\max}/r-1)^2 \varepsilon }{\tau \fC_{N_{\max}/r}  } \right\}
 $$
 be the nice subset of the cone $\cc_\tau$.  Then it follows that Algorithm \ref{multistageapproalgo} is successful for all functions in $\cn$,  i.e.,  $\success(A,W,\cn,\varepsilon,N_{\max}) = 1$.  Moreover, the cost of this algorithm is bounded above in terms of the $\norm[\infty]{f'}$ of the input function as follows:
 \begin{multline}
 \cost(A,\cn,\varepsilon,N_{\max},\sigma) \\
-\le  \min\left\{ n \in \ci : n \ge \left(\frac{\sigma\tau}{8\varepsilon(1 - \tau/(2(n_{0}-1)))}\right)^{\frac{1}{2}} +1\right\}
+\le  \min\left\{ n \in \ci : n \ge \left(\frac{\sigma\tau}{8\varepsilon(1 - \tau/(2(n_{1}-1)))}\right)^{\frac{1}{2}} +1\right\}
 \end{multline} where $\sigma=\norm[\infty]{f'}.$
 %The upper bound on the cost of this specific algorithm provides an upper bound on the complexity of the problem, $\comp(\varepsilon,\ca(\cn,\ch,S,\Lambda),N_{\max},\sigma)$.  If the sequence of algorithms $\{A_n\}_{n \in \ci}$, $A_n \in\ca_{\fix}(\cg,\ch,S,\Lambda)$  is nearly optimal for the problems $(\cg,\ch,S,\Lambda)$ and $(\cf,\ch,S,\Lambda)$ as defined in \eqref{nearoptdef}, then Algorithm \ref{twostagedetalgo} does not incur a significant penalty for not knowing $\norm[\cg]{f}$ a priori, i.e., for all $p>0$,
 %\begin{equation} \label{penalty}
@@ -207,9 +191,7 @@ Applied Theorem \ref{MultiStageThm}, then we can have the above result.
 
 
 \subsection{Lower Bound}
-Next, we will derive the lower bound.
-
-Suppose that for any $n>0,$ for any algorithm which cost is less than $n.$
+Next, we will derive the lower bound. Suppose that for any $n>0,$ for any algorithm which cost is less than $n.$
 We want to build fooling function at all data sites $\xi_{i}, \ i=0,\ldots,n-1.$
 There exists at least one $i$ such that $\xi_{i+1}-\xi_{i}\ge\frac{1}{n-1}.$
 Then we can define $f_{1}$
@@ -217,20 +199,16 @@ $$f_{1}(x):=\left\{\begin{matrix}
 A_{1}(x-\xi_{j})^{2}(x-\xi_{j+1})^{2} & \xi_{j}< x \leq \xi_{j+1},\\
 0 & \text{otherwise},
 \end{matrix}\right.,$$
-where $A_{1} \ge 0.$
-
-As we need $\norm[\infty]{f_1}=1,$ we can have $A_{1}=\frac{16}{(\xi_{i+1}-\xi_{i})^4}.$
+where $A_{1} \ge 0.$ As we need $\norm[\infty]{f_1}=1,$ we can have $A_{1}=\frac{16}{(\xi_{i+1}-\xi_{i})^4}.$
 Then we can obtain
-$$\norm[\infty]{f'_1}=\frac{16}{3\sqrt{3}(\xi_{j+1}-\xi_{j})}\leq \frac{16}{3\sqrt{3}}(n-1).$$
-$$\norm[\infty]{f''_1}=\frac{16}{(\xi_{j+1}-\xi_{j})^2}
+\begin{align*}
+\norm[\infty]{f'_1}&=\frac{16}{3\sqrt{3}(\xi_{j+1}-\xi_{j})}\leq \frac{16}{3\sqrt{3}}(n-1) \Rightarrow g(n)=\frac{16}{3\sqrt{3}}(n-1).\\
+\norm[\infty]{f''_1}&=\frac{16}{(\xi_{j+1}-\xi_{j})^2}
 =\frac{3\sqrt{3}}{(\xi_{j+1}-\xi_{j})}\norm[\infty]{f'_1}
- \leq 3\sqrt{3}(n-1)\norm[\infty]{f'_1}.
-$$
-Thus, we have
-$$g(n)=\frac{16}{3\sqrt{3}}(n-1), \ \tg(n)=3\sqrt{3}(n-1).$$
+ \leq 3\sqrt{3}(n-1)\norm[\infty]{f'_1}\Rightarrow \tg(n)=3\sqrt{3}(n-1).
+\end{align*}
 
-Let $f_0=x.$ Then we have
-$$\norm[\infty]{f'_0}=1, \norm[\infty]{f''_0}=0 \Rightarrow \tau_0=0.$$
+Let $f_0=x.$ Then we have $\norm[\infty]{f'_0}=1, \norm[\infty]{f''_0}=0 \Rightarrow \tau_0=0.$
 
 \begin{theorem} \label{complowbdappr} Suppose that functions $f_{0}$ and $f_1$ can be found that satisfy conditions \eqref{assumpfone} and \eqref{assumpfzero}.  It then follows that the complexity of the problem, defined by \eqref{complexdef}, assuming infinite cost budget, over the cone of functions $\cc_{\tau}$ is
 $$
@@ -247,31 +225,26 @@ we can have the above results.
 \subsection{Numerical Example}
 
 We want to testify the success rate for our algorithm. So we
-choose test function $$f(x)=e^{-(a(x-\mu))^2},$$
+choose test function $f(x)=e^{-(a(x-\mu))^2},$
 where $\mu \sim U[0,1]$ and $\log_{10} a \sim U[0,4].$
 And $\mu \sim U[0,1]$ means $\mu$ is uniform on [0,1].
-
 Also for this kind of function, if we have large $a$, we can approximate the function hardly
-because the function has a sharper bump.
-
-And we know
+because the function has a sharper bump. And we know
 $$\norm[\infty]{f'}=\sqrt{\frac{2}{e}} a, \ \norm[\infty]{f''}=2a^2.$$
-
 If $f \in \cc_{\tau}$ then we should have
 $$a \leq \frac{\tau}{\sqrt{2e}} \Rightarrow \text{Expected Success Rate }= \frac{1}{4}\ln\left(\frac{\tau}{\sqrt{2}}\right) -\frac{1}{8}.$$
 
 We use $\tau = 10, 25 , 100$ separately to test $10000$ times with
 $\varepsilon = 1e-7$ to obtain the observed success rate.
-\begin{table}[H]
-\begin{tabular}{|c |c |c| c |}
-\hline
+\begin{table}[h]
+\centering
+\begin{tabular}{cccc}
 $\tau$ &  10 & 25 & 100\\
-\hline
+\toprule 
 Expected Success Rate &  $\leq 16 \%$ &  $\leq 26 \%$  & $\leq 41 \%$ \\
-  \hline
 Observed Success Rate & 25$\%$ &  34$\%$  & 49$\%$ \\
-\hline
 \end{tabular}
+\caption{ Comparison between expected and observed success rate}
 \end{table}
 
 From the above table, we can find our algorithm works very well, as the observed
