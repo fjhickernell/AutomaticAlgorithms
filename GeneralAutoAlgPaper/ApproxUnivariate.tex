@@ -2,9 +2,8 @@
 In this part, we consider the function recovery $S(f)=f$ and $\ch=\cl_{\infty}.$
 Then $\norm[\ch]{S(f)-A(f)}=\norm[\infty]{f-A(f)}.$
 Let $\cg \subset \mathcal{W}^{1,\infty}[0,1]$ and $\cf \subset \mathcal{W}^{2,\infty}[0,1],$ where
-$$\mathcal{W}^{k,\infty}[0,1]=\left\{u \in \cl_{\infty}[0,1]:D^\alpha u \in \cl_\infty[0,1], \forall |\alpha| \leq k \right\}.$$
-
-Given $\tau>0$, then by the \eqref{conedef}, we have $\cc_{\tau} \subset \cf$ as
+$\mathcal{W}^{k,\infty}[0,1]=\left\{u \in \cl_{\infty}[0,1]:D^\alpha u \in \cl_\infty[0,1], \forall |\alpha| \leq k \right\}.$
+Given $\tau>0$, then by \eqref{conedef}, we have $\cc_{\tau} \subset \cf$ as
 \begin{equation}\label{taudef}
 \cc_{\tau}=\{f \in  \mathcal{W}^{2,\infty}[0,1] : \norm[\infty]{f''}\leq \tau\norm[\infty]{f'}\},
 \end{equation}
@@ -67,7 +66,7 @@ Here we use divided difference. Denote
 $$f[x,y]:=\frac{f(y)-f(x)}{y-x},f[x,y,z]:=\frac{f[y,z]-f[x,y]}{z-x}.$$
 Note that for all $x,y \in [0,1]$ distinct, we have
  $$|f(y)-f(x)|=\left|\int_{x}^{y}f'(t)dt\right| \leq |y-x|\|f'\|_{\infty}.$$
- Therefore we have $|f[x,y]|\leq \|f'\|_{\infty}.$ 
+ Therefore we have $|f[x,y]|\leq \|f'\|_{\infty}.$
 For $x_{i-1} \leq x \leq x_i, \ i=1, \ldots, n-1,$ we  can rewrite
 $A_{n}(f)(x)=f\left(x_{i-1}\right)+f\left[x_{i-1},x_{i}\right]\left(x-x_{i-1}\right).$
 Then by Eq(2.67) in \cite{walter}, we have
@@ -75,14 +74,12 @@ $
 f(x)-A_{n}(f)(x)
 =f\left[x_{i-1},x_{i},x\right]\cdot (x-x_{i-1})(x-x_i).
 $
-As we can rewrite
-$$|f\left[x_{i-1},x_{i},x\right]|=\left|\frac{f[x_{i},x]-f[x_{i-1},x]}{x_i-x_{i-1}}\right|\leq2(n-1)\norm[\infty]{f'}.$$
-And as $x \in \left[x_{i-1},x_{i} \right],$ thus we have
+And we have
 $\left|(x-x_{i-1})(x-x_{i})\right| \leq \frac{1}{4(n-1)^2}.$
-Then,
-$$
-|f(x)-A_{n}(f)(x)|\leq \frac{1}{4(n-1)^2}\cdot 2(n-1)\norm[\infty]{f'}=\frac{1}{2(n-1)}\norm[\infty]{f'}.
-$$
+On the one hand, we can rewrite
+\begin{align*}&|f\left[x_{i-1},x_{i},x\right]|=\left|\frac{f[x_{i},x]-f[x_{i-1},x]}{x_i-x_{i-1}}\right|\leq2(n-1)\norm[\infty]{f'}.\\
+\Rightarrow & |f(x)-A_{n}(f)(x)|\leq \frac{1}{4(n-1)^2}\cdot 2(n-1)\norm[\infty]{f'}=\frac{\norm[\infty]{f'}}{2(n-1)}.
+\end{align*}
 Similarly, we can obtain that for $x \in [0,1]$
 $$\norm[\infty]{f-A_{n}(f)} \leq \frac{\|f'\|_{\infty}}{2(n-1)} \Rightarrow \err(A_n,\cg,\ch,S) \leq \frac{1}{2}(n-1)^{-1} \Rightarrow \tilde{h}(n)=\frac{1}{2}(n-1)^{-1}.$$
 
@@ -91,15 +88,13 @@ we know
 $f\left[x_{i-1},x_{i},x\right]=\frac{1}{2}f''(\xi),$ where $\xi \in [x_{i-1},x_{i}].$
 Then we know
 $
-|f\left[x_{i-1},x_{i},x\right] |\leq \frac{1}{2}\|f''\|_{\infty}.$
-And as $x \in \left[x_{i-1},x_{i} \right],$ thus we have
-$\left|(x-x_{i-1})(x-x_{i})\right| \leq \frac{1}{4(n-1)^2}.$
-Then,
+|f\left[x_{i-1},x_{i},x\right] |\leq \frac{\norm[\infty]{f''}}{2}.$
+Thus,
 $$
-|f(x)-A_{n}(f)(x)|\leq \frac{1}{4(n-1)^2}\frac{\norm[\infty]{f''}}{2}=\frac{1}{8(n-1)^2}\norm[\infty]{f''}.
+|f(x)-A_{n}(f)(x)|\leq \frac{1}{4(n-1)^2}\frac{\norm[\infty]{f''}}{2}=\frac{\norm[\infty]{f''}}{8(n-1)^2}.
 $$
 Hence, we can obtain that for $\forall x \in [0,1]$
-$$\norm[\infty]{f-A_{n}(f)} \leq  \frac{1}{8(n-1)^{2}}\norm[\infty]{f''} \Rightarrow \err(A_n,\cf,\ch,S) \leq \frac{1}{8}(n-1)^{-2}
+$$\norm[\infty]{f-A_{n}(f)} \leq  \frac{\norm[\infty]{f''}}{8(n-1)^{2}} \Rightarrow \err(A_n,\cf,\ch,S) \leq \frac{1}{8}(n-1)^{-2}
 \Rightarrow h(n)=\frac{1}{8}(n-1)^{-2}.$$
 
 
@@ -230,17 +225,16 @@ where $\mu \sim U[0,1]$ and $\log_{10} a \sim U[0,4].$
 And $\mu \sim U[0,1]$ means $\mu$ is uniform on [0,1].
 Also for this kind of function, if we have large $a$, we can approximate the function hardly
 because the function has a sharper bump. And we know
-$$\norm[\infty]{f'}=\sqrt{\frac{2}{e}} a, \ \norm[\infty]{f''}=2a^2.$$
+$\norm[\infty]{f'}=a\sqrt{2/e}, \ \norm[\infty]{f''}=2a^2.$
 If $f \in \cc_{\tau}$ then we should have
-$$a \leq \frac{\tau}{\sqrt{2e}} \Rightarrow \text{Expected Success Rate }= \frac{1}{4}\ln\left(\frac{\tau}{\sqrt{2}}\right) -\frac{1}{8}.$$
-
-We use $\tau = 10, 25 , 100$ separately to test $10000$ times with
+$a \leq \tau/\sqrt{2e}.$ Which means Expected Success Rate should be $\frac{1}{4}\log_{10}(\tau/\sqrt{2e}).$
+Here we use $\tau = 10, 25 , 100$ separately to test $10000$ times with
 $\varepsilon = 1e-7$ to obtain the observed success rate.
 \begin{table}[h]
 \centering
 \begin{tabular}{cccc}
 $\tau$ &  10 & 25 & 100\\
-\toprule 
+\toprule
 Expected Success Rate &  $\leq 16 \%$ &  $\leq 26 \%$  & $\leq 41 \%$ \\
 Observed Success Rate & 25$\%$ &  34$\%$  & 49$\%$ \\
 \end{tabular}
