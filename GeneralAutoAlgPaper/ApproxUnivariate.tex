@@ -10,9 +10,9 @@ Given $\tau>0$, then by \eqref{conedef}, we have $\cc_{\tau} \subset \cf$ as
 
 Suppose one wants to approximate functions in $\cc_{\tau}$ based on function values.  The goal is to find an algorithm, $A$ for which $\norm[\infty]{f-A(f)} \le \varepsilon.$ Here we use piecewise linear interpolation to approximate. Thus $\forall f \in \cc_{\tau},$ consider the sequence of algorithms $\{A_n\}_{n \in \ci},$ where
 $\ci=\{2,3,\dots\}$
- and given the data $f(x_i),$ where $ x_i=\frac{i}{n-1}, i=0, \ldots,n-1,$ and $\cost(A_{n})=n.$
-For $x_{i-1} \leq x \leq x_i, \ i=1, \ldots, n-1,$ define $A_{n}(f)$
-$$A_{n}(f)(x)=f(x_{i-1})+\frac{x-x_{i-1}}{x_i-x_{i-1}}\left(f(x_i)-f(x_{i-1})\right).$$
+ and given the data $f(x_i),$ where $ x_i=i/(n-1), i=0, \ldots,n-1,$ and $\cost(A_{n})=n.$
+For $x_i \leq x \leq x_{i+1}, \ i=0, \ldots, n-2,$ define $A_{n}(f)$
+$$A_{n}(f)(x)=f(x_{i})+\frac{x-x_i}{x_{i+1}-x_i}\left(f(x_{i+1})-f(x_i)\right).$$
 
 \subsection{Upper Bound}
 
@@ -36,7 +36,7 @@ $$A_{n}(f)(x)=f(x_{i-1})+\frac{x-x_{i-1}}{x_i-x_{i-1}}\left(f(x_i)-f(x_{i-1})\ri
 %\end{align*}
 
 
-Given the data sites $x_i=(i-1)/(n-1)$, $i=0, \ldots, n$, let the $\cl_\infty$ norm of the $f'$ be approximated by
+Given the data sites $x_i=i/(n-1)$, $i=0, \ldots, n-2$, let the $\cl_\infty$ norm of the $f'$ be approximated by
 \begin{equation}\label{estfirstderiv}
 G_n(f) = (n-1) \sup_{i=1, \ldots, n-1} \abs{f(x_{i+1})-f(x_i)}
 \end{equation}
@@ -75,27 +75,26 @@ f(x)-A_{n}(f)(x)
 =f\left[x_{i-1},x_{i},x\right]\cdot (x-x_{i-1})(x-x_i).
 $
 And we have
-$\left|(x-x_{i-1})(x-x_{i})\right| \leq \frac{1}{4(n-1)^2}.$
+$\left|(x-x_{i-1})(x-x_{i})\right| \leq 1/(4(n-1)^2).$
 On the one hand, we can rewrite
 \begin{align*}&|f\left[x_{i-1},x_{i},x\right]|=\left|\frac{f[x_{i},x]-f[x_{i-1},x]}{x_i-x_{i-1}}\right|\leq2(n-1)\norm[\infty]{f'}.\\
 \Rightarrow & |f(x)-A_{n}(f)(x)|\leq \frac{1}{4(n-1)^2}\cdot 2(n-1)\norm[\infty]{f'}=\frac{\norm[\infty]{f'}}{2(n-1)}.
 \end{align*}
 Similarly, we can obtain that for $x \in [0,1]$
-$$\norm[\infty]{f-A_{n}(f)} \leq \frac{\|f'\|_{\infty}}{2(n-1)} \Rightarrow \err(A_n,\cg,\ch,S) \leq \frac{1}{2}(n-1)^{-1} \Rightarrow \tilde{h}(n)=\frac{1}{2}(n-1)^{-1}.$$
+$$\norm[\infty]{f-A_{n}(f)} \leq \frac{\|f'\|_{\infty}}{2(n-1)} \Rightarrow \tilde{h}(n)=\frac{1}{2}(n-1)^{-1}.$$
 
 On the other hand, by Eq(2.68) in \cite{walter},
 we know
 $f\left[x_{i-1},x_{i},x\right]=\frac{1}{2}f''(\xi),$ where $\xi \in [x_{i-1},x_{i}].$
 Then we know
 $
-|f\left[x_{i-1},x_{i},x\right] |\leq \frac{\norm[\infty]{f''}}{2}.$
+|f\left[x_{i-1},x_{i},x\right] |\leq \frac{1}{2}\norm[\infty]{f''}.$
 Thus,
 $$
 |f(x)-A_{n}(f)(x)|\leq \frac{1}{4(n-1)^2}\frac{\norm[\infty]{f''}}{2}=\frac{\norm[\infty]{f''}}{8(n-1)^2}.
 $$
 Hence, we can obtain that for $\forall x \in [0,1]$
-$$\norm[\infty]{f-A_{n}(f)} \leq  \frac{\norm[\infty]{f''}}{8(n-1)^{2}} \Rightarrow \err(A_n,\cf,\ch,S) \leq \frac{1}{8}(n-1)^{-2}
-\Rightarrow h(n)=\frac{1}{8}(n-1)^{-2}.$$
+$$\norm[\infty]{f-A_{n}(f)} \leq  \frac{\norm[\infty]{f''}}{8(n-1)^{2}} \Rightarrow h(n)=\frac{1}{8}(n-1)^{-2}.$$
 
 
 %Combine eq.(\ref{errorg}) and eq.(\ref{errorf}), we have the same result as in eq. (\ref{Anerrbound}).
@@ -153,8 +152,6 @@ Otherwise, if $n_{i+1} > N_{\max}$, choose $n_{i+1}$ to be the largest number no
 \end{description}
 \end{algo}
 
-
-Then we can have the complexity of the upper bound.
 \begin{theorem}   Let  $\varepsilon$, $N_{\max}$, $\tau$ and $n_1$ be given as described in Algorithm \ref{multistageapproalgo}.
 Assume that $n_1 \le N_{\max}$. Let $r$ be the number described in the paragraph preceding that algorithm.
 Let $\cc_\tau$ be the cone of functions defined in \eqref{taudef}.
@@ -188,7 +185,7 @@ Applied Theorem \ref{MultiStageThm}, then we can have the above result.
 \subsection{Lower Bound}
 Next, we will derive the lower bound. Suppose that for any $n>0,$ for any algorithm which cost is less than $n.$
 We want to build fooling function at all data sites $\xi_{i}, \ i=0,\ldots,n-1.$
-There exists at least one $i$ such that $\xi_{i+1}-\xi_{i}\ge\frac{1}{n-1}.$
+There exists at least one $i$ such that $\xi_{i+1}-\xi_{i}\ge 1/(n-1).$
 Then we can define $f_{1}$
 $$f_{1}(x):=\left\{\begin{matrix}
 A_{1}(x-\xi_{j})^{2}(x-\xi_{j+1})^{2} & \xi_{j}< x \leq \xi_{j+1},\\
@@ -199,7 +196,7 @@ Then we can obtain
 \begin{align*}
 \norm[\infty]{f'_1}&=\frac{16}{3\sqrt{3}(\xi_{j+1}-\xi_{j})}\leq \frac{16}{3\sqrt{3}}(n-1) \Rightarrow g(n)=\frac{16}{3\sqrt{3}}(n-1).\\
 \norm[\infty]{f''_1}&=\frac{16}{(\xi_{j+1}-\xi_{j})^2}
-=\frac{3\sqrt{3}}{(\xi_{j+1}-\xi_{j})}\norm[\infty]{f'_1}
+=\frac{3\sqrt{3}\norm[\infty]{f'_1}}{(\xi_{j+1}-\xi_{j})}
  \leq 3\sqrt{3}(n-1)\norm[\infty]{f'_1}\Rightarrow \tg(n)=3\sqrt{3}(n-1).
 \end{align*}
 
@@ -227,7 +224,7 @@ Also for this kind of function, if we have large $a$, we can approximate the fun
 because the function has a sharper bump. And we know
 $\norm[\infty]{f'}=a\sqrt{2/e}, \ \norm[\infty]{f''}=2a^2.$
 If $f \in \cc_{\tau}$ then we should have
-$a \leq \tau/\sqrt{2e}.$ Which means Expected Success Rate should be $\frac{1}{4}\log_{10}(\tau/\sqrt{2e}).$
+$a \leq \tau/\sqrt{2e}.$ Which means Expected Success Rate should be $\log_{10}(\tau/\sqrt{2e})/4.$
 Here we use $\tau = 10, 25 , 100$ separately to test $10000$ times with
 $\varepsilon = 1e-7$ to obtain the observed success rate.
 \begin{table}[h]
