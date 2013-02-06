@@ -5,15 +5,18 @@ In the following cases, we focus on approximation of upper bounds for truncation
   \cf&=W^{2,1}=W^{2,1}[0,1]=\{f\in C^1[0,1]: \|f''\|_1<\infty\}, \text{ and }\\
   \cg&=W^{1,1}=W^{1,1}[0,1]=\{f\in C^1[0,1]: \|f'\|_1<\infty\},
 \end{align*}
-which have the semi-norm $\|f\|_{\cf}=\|f''\|_{1}$ and $\|f\|_{\cg}=\|f'\|_{1}$ respectively. The space of outputs $\ch$ is the real space $\R$. Given $\tau > 0$, we have the cone $\mathfrak{C}_{\tau} \subset \cf$ defined as $$\mathfrak{C}_{\tau}=\{f\in W^{2,1}:\|f''\|_1\leq\tau\|f'\|_1\}.$$
+which have the semi-norm $\|f\|_{\cf}=\|f''\|_{1}$ and $\|f\|_{\cg}=\|f'\|_{1}$ respectively. The space of outputs $\ch$ is the real space $\R$. Given $\tau > 0$, we have the cone $\mathfrak{C}_{\tau} \subset \cf$ defined as
+\begin{align}\label{coneinteg}
+\mathfrak{C}_{\tau}=\{f\in W^{2,1}:\|f''\|_1\leq\tau\|f'\|_1\}.
+\end{align}
 
 To approximate the integrations of functions in the cone based on the function values, Define the solution operator $S$ as $S(f)=\int_{0}^{1}f(x)dx$. The goal is to make the error small, i.e. to find an algorithm A, for which $|\int_{0}^{1}f(x)dx-A(f)|\leq \varepsilon$.
 
 We use the trapezoidal rule to approximate the integral. Consider a sequence of algorithms $\{A_n\}_{n\in \mathcal{I}}$, where $\mathcal{I}=\{2,3,\cdots\}$ with cost$(A_n)=n$, given the data $f(x_i)$, where $x_i=(i-1)/(n-1), i=1,\cdots,n$ are uniformly distributed between $[0,1]$, define $A_n(f)$ as: \begin{align*}
-    A_{n}(f)&=\frac{1}{2n}\sum_{i=1}^{n}(f(x_{i+1})+f(x_i)),\\
-    &=\frac{1}{2n}[f(x_1)+2f(x_2)+\cdots+2f(x_{n-1})+f(x_n)].
+    A_{n}(f)%&=\frac{1}{2n}\sum_{i=1}^{n}(f(x_{i+1})+f(x_i)),\\
+    =\frac{1}{2n}[f(x_1)+2f(x_2)+\cdots+2f(x_{n-1})+f(x_n)].
 \end{align*}
-According to (7.14) and (7.15) from \cite{BraPet11a}, the upper bound error function can be expressed as $h(n)=1/[2(n-1)]$, $\tilde{h}(n)=1/[8(n-1)^2]$.
+According to (7.14) and (7.15) from \cite{BraPet}, the upper bound error function can be expressed as $\tilde{h}(n)=1/[2(n-1)]$, $h(n)=1/[8(n-1)^2]$.
 %The approximation is about the integral $S(f)=\int_{0}^{1}f(x)dx$ and $\ch=\R$. In the investigation of the truncation error of approximate integration, we usually treat the error:
 %$$E=E(f)=\left|\int_{0}^{1}f(x)dx-A(f)\right|$$
 %as a linear functional defined over a certain class of functions. Moreover, consider using the composite trapezoidal rule, we approximate the integral piece by piece:
@@ -23,45 +26,77 @@ According to (7.14) and (7.15) from \cite{BraPet11a}, the upper bound error func
 %
 %Suppose one wants to approxiamte the integration of functions in $\mathfrak{C}_{\tau}$ based on function values, the goal is to make the $\mathcal{L}_1$ error small, i.e. to find an algorithm $\mathcal{A}$, for which $|\int_{0}^{1}f(x)dx-A(f)|\leq \varepsilon$.
 \subsection{Upper Bounds}
- Fix the algorithm, trapezoidal rule, $A_n$, with cost$(A_n)=n$. Suppose that the data sites $x_0,x_1,\cdots, x_{n-1}$ and the corresponding function values. One may estimate $\|f'\|_1$ in the following way: $$G_n(f)=\sum_{i=0}^{n-1}\left|f(x_{i+1})-f(x_{i})\right|.$$ Consider \eqref{twosidedGineq}, in this case, the deflation factor, $\mathfrak{c}_n$, and the inflation factor, $\mathfrak{C}_n$ are defined as follows:
-\begin{gather*}
+ Fix the algorithm, trapezoidal rule, $A_n$, with cost$(A_n)=n$. Suppose that the data sites $x_0,x_1,\cdots, x_{n-1}$ and the corresponding function values. One may estimate $\|f'\|_1$ in the following way:
+ \begin{align}\label{1direst}
+    G_n(f)=\sum_{i=0}^{n-1}\left|f(x_{i+1})-f(x_{i})\right|.
+ \end{align} Note that $G_{n}(f)$ never overestimates $\|f'\|_{1}$, so $h_{\cg_{-}}(n)=0$. Consider \eqref{twosidedGineq}, in this case, the deflation factor, $\mathfrak{c}_n$, and the inflation factor, $\mathfrak{C}_n$,
+ ??
+So the deflation factor and inflation factor are as follows:
+\begin{gather}\label{factor}
 \mathfrak{c}_n =1 \\%+ \tau \text{err}_{-}(G_n,\cf,\R_+,\|\cdot\|_{\cg})  \ge 1 \\
-\mathfrak{C}_n =\frac{1}{1 - \tau (n-1)} \ge 1.
-\end{gather*}
+\mathfrak{C}_n =\frac{1}{1 - 2(n-1)} \ge 1.
+\end{gather}
 
-The upper bound implies that $\tau < n-1.$ Thus it is shown that in the specific case, the worst error in $W^{2,1}$ will be always smaller than the one in $W^{1,1}$, namely, $\tau \tildeh(n)\leq h(n)$. Then for those two non-decreasing functions, $h(n)$ and $\tau \tildeh(n)$ the upper bounds on the error of $A_n(f)$ in terms of the $\cg$-semi-norm of $f$ is:
-\begin{align*}
-  \left|\int_{0}^{1}f(x)dx-A_n(f)\right|& \leq \min(h(n),\tau\tilde{h}(n))\|f\|_{\cg}, \quad \forall f \in \mathfrak{C}_{\tau}\\
-  &= \min\left(1,\frac{\tau}{4(n-1)}\right)\frac{\|f'\|_{1}}{2(n-1)},\\
-  &\leq \frac{\tau\|f'\|_{1}}{8(n-1)^2},\\
-  &\leq \frac{\tau\mathfrak{C}_n G_n(f)}{8(n-1)^2}\leq\varepsilon.
-\end{align*}
+We can find that if $h(n) \leq \tilde{h}(n) h_{+}(n), \forall n \in \mathcal{I},$ then $ \tau h(n)< \tilde{h}(n) \ \forall n \in \mathcal{I}.$
+Thus we only need to find $n$ such that  \[
+\frac{\tau \fC_n G_{n}(f)}{8(n-1)^2} \le \varepsilon.
+\]
+ %$\tau < n-1.$ Thus it is shown that in the specific case, the worst error in $W^{2,1}$ will be always smaller than the one in $W^{1,1}$, namely, $\tau \tildeh(n)\leq h(n)$. Then for those two non-decreasing functions, $h(n)$ and $\tau \tildeh(n)$ the upper bounds on the error of $A_n(f)$ in terms of the $\cg$-semi-norm of $f$ is:
+%\begin{align*}
+%  \left|\int_{0}^{1}f(x)dx-A_n(f)\right|& \leq \min(h(n),\tau\tilde{h}(n))\|f\|_{\cg}, \quad \forall f \in \mathfrak{C}_{\tau}\\
+%  &= \min\left(1,\frac{\tau}{4(n-1)}\right)\frac{\|f'\|_{1}}{2(n-1)},\\
+%  &\leq \frac{\tau\|f'\|_{1}}{8(n-1)^2},\\
+%  &\leq \frac{\tau\mathfrak{C}_n G_n(f)}{8(n-1)^2}\leq\varepsilon.
+%\end{align*}
 %  &\leq \frac{\tau\hat{\sigma_n}}{8n^2(1-\tau/n)}.
 %\end{align*}
- \begin{theorem}
-   Let $\varepsilon$, $\mathfrak{C}_n$, and $\tau$ be given. Let $\mathcal{C}_{\tau}$ be the cone of functions defined above. The cost of the algorithm is bounded above in terms of $\|f'\|_{1}$ of the input function as follows:
-   $$\text{cost}(A,\varepsilon,\sigma)\leq\min\left\{n\in\mathcal{I}:n\geq\left(\frac{\sigma\tau}{8\varepsilon(1-\tau/(n-1))}\right)\right\}.$$
-   where $\sigma=\|f'\|_{1}.$
- \end{theorem}
-
-\begin{algo} \label{algintegration}
+If we consider the embedded algorithms, we will have the following:
+\begin{algo} \label{multistageintegalgo}
  Let $\varepsilon$ be the positive error tolerance, $N_{\text{max}}$ be the maximum cost budget. Let $\tau$ be a fixed positive constant and the sequence of algorithms $\{A_n\}_{n\in \mathcal{I}}$, $\{G_n\}_{n\in \mathcal{I}}$ be described above. Set $i=1$, let $n_1$ be the smallest number in $\mathcal{I}$ such that $\tau < n-1$. Then do the following:
 \begin{description}
-\item[Stage 1.\ Estimate {$\|f'\|_{1}$}.] First compute $G_{n_i}(f)$.
+\item[Stage 1.\ Estimate {$\|f'\|_{1}$}.] First compute $G_{n_i}(f)$ in \eqref{1direst} and $\fC_n$ in \eqref{factor}.
 
 \item[Stage 2. Check for convergence.] Check whether $n_i$ is large enough to satisfy the error tolerance, i.e.
     \begin{align*}
-      \frac{1}{8}\frac{\tau}{(n-1)^2-\tau(n_i-1)}G_{n_i}(f)\leq \varepsilon.
+      \frac{\tau \fC_{n_i} G_{n_i}(f)}{8(n_i-1)^2} \le \varepsilon.
     \end{align*}
     If this is true, then set $W=0$, return $(A_{n_i}(f),W)$ and terminate the algorithm. If this is not true, go to Stage 3.
 
 \item[Stage 3. Compute $n_{i+1}$.] Choose $n_{i+1}$ as the smallest number exceeding $n_i$ and not less than $N_A(\varepsilon/G_{n_i}(f))$ such that $A_n$ is embedded in $A_{n+1}$. That is
     \begin{align*}
-      n_{i+1}=(n_i-1)\left\lceil\frac{1}{n_{i}-1}\sqrt{\frac{\tau G_{n_i}(f)}{8\varepsilon(1 - \tau/ (n_i-1))}}\right\rceil+1.
+      n_{i+1}=(n_i-1)\left\lceil\frac{1}{n_{i}-1}\sqrt{\frac{\tau G_{n_i}(f)}{8\varepsilon}}\right\rceil+1.
     \end{align*}
     If $n_{i+1}\leq N{\text{max}}$, increment $i$ by 1, and return to Stage 1. Otherwise, if $n_{i+1}> N{\text{max}}$, choose $n_{i+1}$ be the largest number not exceeding $N{\text{max}}$ such that $A_n$ is embedded in $A_{n+1}$ and set $W=1$. Return $(A_{n_{i+1}}(f),W)$ and terminate the algorithm.
 \end{description}
 \end{algo}
+
+ \begin{theorem}
+
+Let  $\varepsilon$, $N_{\max}$, $\tau$ and $n_1$ be given as described in Algorithm \ref{multistageintegalgo}.
+Assume that $n_1 \le N_{\max}$. Let $r$ be the number described in the paragraph preceding that algorithm.
+Let $\cc_\tau$ be the cone of functions defined in \eqref{coneinteg}.
+Define
+\[
+\tN_A(a) = \min\left\{ n \in \ci : \frac{\tau \fC_n }{8(n-1)^2} \le a \right\}, \quad a \in (0,\infty).
+\]
+and
+$$
+\cn = \left \{ f \in \cc_\tau :r\tN_{A}\left(\frac{\varepsilon}{\sigma} \right) \le N_{\max} \right\}
+= \left \{ f \in \cc_\tau : \sigma \le \frac{8(N_{\max}/r-1)^2 \varepsilon }{\tau \fC_{N_{\max}/r}  } \right\}
+$$
+be the nice subset of the cone $\cc_\tau$.  Then it follows that Algorithm \ref{multistageintegalgo} is successful for all functions in $\cn$,  i.e.,  $\success(A,W,\cn,\varepsilon,N_{\max}) = 1$.  Moreover, the cost of this algorithm is bounded above in terms of the $\norm[\infty]{f'}$ of the input function as follows:
+\begin{multline}
+\cost(A,\cn,\varepsilon,N_{\max},\sigma) \\
+\le  \min\left\{ n \in \ci : n \ge \left(\frac{\sigma\tau}{8\varepsilon(1 - \tau/(2(n_{1}-1)))}\right)^{\frac{1}{2}} +1\right\}
+\end{multline} where $\sigma=\norm[\infty]{f'}.$
+   Let $\varepsilon$, $\mathfrak{C}_n$, and $\tau$ be given. Let $\mathcal{C}_{\tau}$ be the cone of functions defined above. The cost of the algorithm is bounded above in terms of $\|f'\|_{1}$ of the input function as follows:
+   $$\text{cost}(A,\varepsilon,\sigma)\leq\min\left\{n\in\mathcal{I}:n\geq\left(\frac{\sigma\tau}{8\varepsilon(1-\tau/(n-1))}\right)\right\}.$$
+   where $\sigma=\|f'\|_{1}.$
+ \end{theorem}
+
+\begin{proof}
+Applied Theorem \ref{MultiStageThm}, then we can have the above result.
+\end{proof}
 
 %By the fundamental theorem in calculus, if we consider the integral $\int_{0}^{1}f(x)dx$,
 %\begin{align*}
@@ -138,9 +173,9 @@ Note that
 \begin{align*}
     \|S(f_1)\|_{W^{1,1}}&=\int_{0}^{1}f_1(x)dx=1,\\
     \|f_1\|_{W^{1,1}}&=\|f'_{1}\|_1=\frac{15}{4(u-l)}\leq \frac{15}{4}(n+1)=g(n),\\
-    \|f_1\|_{W^{2,1}}&=\|f''_{1}\|_1=\frac{40}{\sqrt{3}(u-l)^2}\leq \frac{40}{\sqrt{3}}(n+1)^2=\frac{32}{3\sqrt{3}}(n+1)\|f_1'\|_1%=\tilde{g}(n)g(n).
+    \|f_1\|_{W^{2,1}}&=\|f''_{1}\|_1=\frac{40}{\sqrt{3}(u-l)^2}=\frac{32}{3\sqrt{3}(u-l)}\|f_1'\|_1\leq \frac{32}{3\sqrt{3}}(n+1)\|f_1'\|_1%=\tilde{g}(n)g(n).
 \end{align*}
-We can easily get that $g^{-1}(n)=\frac{4}{15}x-1$ and $(\tilde{g}g)^{-1}(x)=\sqrt{\frac{\sqrt{3}}{40}x}-1$. So according to Theorem \ref{MultiStageThm} in the paper, $$\text{comp}\geq \min\left(\frac{4}{15}(\frac{\sigma}{4\varepsilon})-1,\sqrt{\frac{\sqrt{3}}{40}\frac{\sigma\tau}{4\varepsilon}}-1\right)=\min\left(\frac{\sigma}{15\varepsilon},\sqrt{\frac{\sqrt{3}\sigma\tau}{160\varepsilon}}\right)-1$$
+We can easily get that $g^{-1}(n)=\frac{4}{15}x-1$ and $(\tilde{g}g)^{-1}(x)=\sqrt{\frac{\sqrt{3}}{40}x}-1$. So according to Theorem \ref{MultiStageThm} in the paper, $$\text{comp}\geq \min\left(\frac{4}{15}(\frac{\sigma}{4\varepsilon})+1,\sqrt{\frac{\sqrt{3}}{40}\frac{\sigma\tau}{4\varepsilon}}+1\right)=\min\left(\frac{\sigma}{15\varepsilon},\sqrt{\frac{\sqrt{3}\sigma\tau}{160\varepsilon}}\right)+1$$
 
 %Let $f_0=x$, then $\|f_0\|_{\mathcal{G}}=\|f'_0\|_1=1>0$, $\|f_0\|_{\mathcal{F}}=\|f''_0\|_1=0=\tau_0*1$. It satisfies (23) in the paper.
 %
@@ -148,4 +183,19 @@ We can easily get that $g^{-1}(n)=\frac{4}{15}x-1$ and $(\tilde{g}g)^{-1}(x)=\sq
 %So the lower bounds on the error of $A_n(f)$ in terms of the $\cg$-semi-norm of $f$ is:
 %$$\left\|S(f)-A_n(f)\right\|_{\ch} \geq \min\left(\frac{1}{15(n+1)},\frac{\sqrt{3}\tau}{160(n+1)^2}\right)\|f'\|_{1}.$$
 
+
+\begin{theorem} \label{complowbdinteg} Suppose that functions $f_{0}$ and $f_1$ can be found that satisfy conditions \eqref{assumpfone} and \eqref{assumpfzero}.  It then follows that the complexity of the problem, defined by \eqref{complexdef}, assuming infinite cost budget, over the cone of functions $\cc_{\tau}$ is
+$$
+\comp(\varepsilon,\ca(\cc_{\tau},\ch,S,\Lambda),\infty,\sigma)
+\ge \min\left(\frac{\sigma}{15\varepsilon},\sqrt{\frac{\sqrt{3}\sigma\tau}{160\varepsilon}}\right)+1.
+$$
+\end{theorem}
+
+\begin{proof}
+$g(n), \ \tg(n)$ and $\tau_0$ is obtained above, then by Theorem \ref{complowbd}
+we can have the above results.
+\end{proof}
+
+\subsection{Numerical Example}
+TBC
 %\bibliography{FJH22,FJHown22,yizhi} 
