@@ -108,11 +108,11 @@ Furthermore, there is a simple formula for the computational cost required to me
 
 Figure \ref{fig:NonadaptAlgo} provides a diagram of an automatic algorithm based on these ideas.  The parameter $\sigma$ is considered to be fixed initially by the user or algorithm designer, but then left unchanged each time the algorithm is called.  Once $\sigma$ is fixed, the algorithm only requires as input the error tolerance and a routine for evaluating the function at any point desired.  This algorithm is guaranteed.  It is optimal if any algorithm satisfying the error criterion above must have a cost of at least $\Order((\sigma/\varepsilon)^{1/p})$.  However, this algorithm is not adaptive.  The computational cost does not depend on function data, but is determined purely by the input $\varepsilon$ and the parameter $\sigma$.
 
-%\begin{figure}[h]
-%\centering
-%\begin{tikzpicture}
-%[auto,
-%block/.style ={rectangle, very thick, fill=black!10, align=center, rounded corners, minimum height=3em}]
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}
+[auto,
+block/.style ={rectangle, very thick, fill=black!10, align=center, rounded corners, minimum height=3em}]
 %[auto,
 %block/.style ={rectangle, very thick, fill=red!15, align=center, rounded corners, minimum height=3em}]
 
@@ -128,9 +128,9 @@ Figure \ref{fig:NonadaptAlgo} provides a diagram of an automatic algorithm based
 %\draw [>->,thick] (2.4,0.9) -- (2.9,0.6);
 %\draw [>->,thick] (2.4,-0.9) -- (2.9,-0.6);
 %\draw [>->,thick] (6.1,0) -- (6.6,0);
-%\end{tikzpicture}
-%\caption{Diagram of a guaranteed, non-adaptive algorithm. \label{fig:NonadaptAlgo}}
-%\end{figure}
+\end{tikzpicture}
+\caption{Diagram of a guaranteed, non-adaptive algorithm. \label{fig:NonadaptAlgo}}
+\end{figure}
 
 The norm $\norm[\cf]{f}$ may be thought of as the \emph{difficulty of the problem}.  In practice, it is difficult to know a priori how large $\norm[\cf]{f}$ is, so having to fix the parmeter $\sigma$ in advance is a practical drawback of the algorithm in Figure \ref{fig:NonadaptAlgo}.  Moreover, since the computational cost of this algorithm depends on $\sigma$, not $\norm[\cf]{f}$, the cost does not decrease if $\norm[\cf]{f}$ is drastically smaller than $\sigma$.
 
@@ -164,29 +164,29 @@ Given that there are functions for which $\norm[\cf]{f} = \tau \norm[\cg]{f}$, t
 \end{itemize}
 Figure \ref{fig:AdaptAlgo} is a diagram of the automatic algorithm just outlined.
 
-%\begin{figure}[h]
-%\centering
-%\begin{tikzpicture}
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}
+[auto,
+block/.style ={rectangle, very thick, fill=black!10, align=center, rounded corners, minimum height=3em}]
 %[auto,
-%block/.style ={rectangle, very thick, fill=black!10, align=center, rounded corners, minimum height=3em}]
-%%[auto,
-%%block/.style ={rectangle, very thick, fill=red!15, align=center, rounded corners, minimum height=3em}]
-%\draw (1.2,0.9) node[block, text width=2.4cm] {\parbox{2.4cm}{\centering{\bf Input}\\[0.5ex]
-%$\vx \mapsto f(\vx)$\\
-%$\varepsilon = $ tolerance}};
-%\draw (1.2,-1.2) node[block, text width=2.4cm] {\parbox{2.4cm}{\centering{\bf Parameters}\\[0.5ex]
-%$\tau$ such that $\norm[\cf]{f} \le \tau\norm[\cg]{f}$ \\[0.5ex] $N_{\max} = $ cost budget}};
-%\draw (4.9,0) node[block, draw=black, text width=3.2cm] {\parbox{3.2cm}{\centering{\bf Algorithm}\\[0.5ex] to compute $S(f)$ \\[1ex]
-%%\draw (5.1,0) node[block, draw=red, text width=3.2cm] {\parbox{3.2cm}{\centering{\bf Algorithm}\\[1ex] to compute $S(f)$ \\[1ex]
-%cost $\displaystyle \sim \left(\frac{\tau\norm[\cg]{f}}{\varepsilon}\right)^{1/p}$ }};
-%\draw (9.2,0) node[block, text width=3.6cm] {\parbox{3.6cm}{\centering{\bf Output}\\[0.5ex] $A(f) = $ approximation \\[0.5ex] $\norm[\ch]{S(f)-A(f)} \le \varepsilon$}};
-%\draw [>->,thick] (2.6,0.9) -- (3.1,0.6);
-%\draw [>->,thick] (2.6,-0.9) -- (3.1,-0.6);
-%%\draw [>->,thick] (2.6,0) -- (3.1,0);
-%\draw [>->,thick] (6.7,0) -- (7.2,0);
-%\end{tikzpicture}
-%\caption{Diagram of a guaranteed, adaptive, automatic algorithm. \label{fig:AdaptAlgo}}
-%\end{figure}
+%block/.style ={rectangle, very thick, fill=red!15, align=center, rounded corners, minimum height=3em}]
+\draw (1.2,0.9) node[block, text width=2.4cm] {\parbox{2.4cm}{\centering{\bf Input}\\[0.5ex]
+$\vx \mapsto f(\vx)$\\
+$\varepsilon = $ tolerance}};
+\draw (1.2,-1.2) node[block, text width=2.4cm] {\parbox{2.4cm}{\centering{\bf Parameters}\\[0.5ex]
+$\tau$ such that $\norm[\cf]{f} \le \tau\norm[\cg]{f}$ \\[0.5ex] $N_{\max} = $ cost budget}};
+\draw (4.9,0) node[block, draw=black, text width=3.2cm] {\parbox{3.2cm}{\centering{\bf Algorithm}\\[0.5ex] to compute $S(f)$ \\[1ex]
+%\draw (5.1,0) node[block, draw=red, text width=3.2cm] {\parbox{3.2cm}{\centering{\bf Algorithm}\\[1ex] to compute $S(f)$ \\[1ex]
+cost $\displaystyle \sim \left(\frac{\tau\norm[\cg]{f}}{\varepsilon}\right)^{1/p}$ }};
+\draw (9.2,0) node[block, text width=3.6cm] {\parbox{3.6cm}{\centering{\bf Output}\\[0.5ex] $A(f) = $ approximation \\[0.5ex] $\norm[\ch]{S(f)-A(f)} \le \varepsilon$}};
+\draw [>->,thick] (2.6,0.9) -- (3.1,0.6);
+\draw [>->,thick] (2.6,-0.9) -- (3.1,-0.6);
+%\draw [>->,thick] (2.6,0) -- (3.1,0);
+\draw [>->,thick] (6.7,0) -- (7.2,0);
+\end{tikzpicture}
+\caption{Diagram of a guaranteed, adaptive, automatic algorithm. \label{fig:AdaptAlgo}}
+\end{figure}
 
 Section \ref{integsec} presents a concrete example of this approach for the problem of computing the integral $\int_0^1 f(x) \, \dif x$ for all integrands whose second derivatives are absolutely integrable, i.e., $\norm[\cf]{f}=\norm[1]{f''}$.  The trapezoidal rule computes an approximation with error no greater than $\varepsilon$ using $\Theta(\sqrt{\norm[1]{f''}/\varepsilon})$ function values.  However, except for relatively simple integrands, $\norm[1]{f''}$ is unknown in practice.  One may estimate instead $\norm[1]{f'}$ by the one-norm of the derivative of the piecewise linear spline for $f$.  The error of approximating $\norm[1]{f'}$ in this way can be bounded rigorously in terms of $\norm[1]{f''}$.  Fixing the parameter $\tau > 1$, and assuming that $\norm[1]{f''} \le \tau \norm[1]{f'}$  (the cone condition), then the reliable numerical upper bound on $\norm[1]{f'}$ can be used as a surrogate for $\norm[1]{f''}$.  This leads to a guaranteed, automatic (adaptive) algorithm for approximating the integral to the desired accuracy.  Here $\tau$ represents a minimum sample size, and $1/\tau$ represents a length scale of for possible spikes that one is willing to ignore.
 
