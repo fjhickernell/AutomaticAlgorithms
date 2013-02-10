@@ -518,7 +518,9 @@ Suppose that the sequence of nonadaptive algorithms,
 \]
 are \emph{embedded}, i.e., $A_{n_{i+1}}$ uses all of the data used by $A_{n_{i}}$ for $i=1, 2, \ldots$.  An example would be a sequence of composite trapezoidal rules for integration where the number of trapezoids is a power of two. Furthermore, it is supposed that the data used by $G_{n_G}$, the algorithm used to estimate the $\cg$-semi-norm of $f$, is the same data used by $A_{n_1}$, and so $n_1=n_G$.  Then the total cost of Algorithm \ref{twostagedetalgo} can be reduced; it is simply $n_A$, as given in Stage 2, instead of $n_G+n_A$.  Moreover, $\tN_{\max}$ may then be taken to be $N_{\max}$, and the cost bound of the automatic algorithm in \eqref{auto2stagedetcost} does not need the term $n_G$.
 
-Again suppose that $\{A_n\}_{n \in \ci}$, $A_n  \in \ca_{\fix}(\cg,\ch,S,\Lambda)$, consists of algorithms as described in  \eqref{algseqdef} and \eqref{algseqerrbd}, but some of which are embedded in others.  Specifically, suppose that for some fixed $r > 1$, for all $n \in \ci$, there exists at least one $\tn \in \ci$ with $n < \tn \le rn$, such that the data for $A_n$ is embedded in the data for $A_{\tn}$.  An example would be all possible composite trapezoidal rules for integration that use trapezoids of equal widths. Suppose also that there exists a sequence of algorithms for approximating the $\cg$-sem-inorm, $\{G_n\}_{n \in \ci}$, $G_n  \in \ca_{\fix}(\cg,\reals_+,\norm[\cg]{\cdot},\Lambda)$, such that for each $n \in \ci$, $A_n$ and $G_n$ use exactly the same data.
+Again suppose that $\{A_n\}_{n \in \ci}$, $A_n  \in \ca_{\fix}(\cg,\ch,S,\Lambda)$, consists of algorithms as described in  \eqref{algseqdef} and \eqref{algseqerrbd}, but some of which are embedded in others.  An example would be all possible composite trapezoidal rules for integration that use trapezoids of equal widths.   Moreover, suppose that there exists some fixed $r > 1$ such that for all $n \in \ci$, there exists a $\tn \in \ci$ with $n < \tn \le rn$, such that the data for $A_n$ is embedded in the data for $A_{\tn}$. One may think of $r$ as the minimum cost multiple that one must incur when moving to the next more costly algorithm. For trapezoidal rules one has the number of trapezoids of the next algorithm, $\tn-1$, may be twice the number of trapezoids of the present algorithm, $n-1$, which implies that one may choose $r=2$.
+
+Suppose also that there exists a sequence of algorithms for approximating the $\cg$-semi-norm, $\{G_n\}_{n \in \ci}$, $G_n  \in \ca_{\fix}(\cg,\reals_+,\norm[\cg]{\cdot},\Lambda)$, such that for each $n \in \ci$, $A_n$ and $G_n$ use exactly the same data.
 Since $h_{\pm}$ are non-increasing functions, the quantities $\fC_{n}$ and $\fc_n$ do not increase as $n$ increases. These embedded algorithms suggest the following iterative algorithm.
 
 \begin{algo} \label{multistagealgo}  Let the Banach spaces $\cf$, $\cg$, and $\ch$, the solution operator $S$, and the error tolerance $\varepsilon$, the maximum cost budget $N_{\max}$, and the positive constant $\tau$ be as described in Algorithm \ref{twostagedetalgo}. Let the sequences of algorithms, $\{A_n\}_{n \in \ci}$ and  $\{G_n\}_{n \in \ci}$ be as described above.  Set $i=1$.  Let $n_1$ be the smallest number $n \in \ci$ satisfying $h_+(n) < 1/\tau$. For any input function $f \in \cf$, do the following:
@@ -644,11 +646,11 @@ Thus, the cost of solving the problem within error tolerance $\varepsilon$ for i
 \begin{prop} \label{optimalprop} Suppose that there exist non-adaptive algorithms $\{A_n\}_{n \in \ci}$, with $A_n  \in \ca_{\fix}(\cg,\ch,S,\Lambda)$, for which the upper error bounds satisfy \eqref{algseqerrbd}, for known $\tildeh$ and $h$.  If 
 \begin{subequations} \label{ghcond}
 \begin{equation}
-\sup_{m\ge 1} \inf\{r : rm \in \ci, \ \tg(m)\tildeh(rm) \le 1 \}  < \infty,
+\sup_{m\ge 1} \inf\{j : jm \in \ci, \ \tg(m)\tildeh(jm) \le 1 \}  < \infty,
 \end{equation}
 then these algorithms are optimal in the sense of \eqref{nearoptdef} for the problem defined on $\cg$. If
 \begin{equation}
-\sup_{m\ge 1} \inf\{r : rm \in \ci, \ g(m)\tg(m)h(rm) \le 1 \}  < \infty,
+\sup_{m\ge 1} \inf\{j : jm \in \ci, \ g(m)\tg(m)h(jm) \le 1 \}  < \infty,
 \end{equation}
 \end{subequations}
 then these algorithms are optimal for the problem defined on $\cf$.
@@ -659,7 +661,7 @@ then these algorithms are optimal for the problem defined on $\cf$.
 \MoveEqLeft{\sup_{0 < \varepsilon \le 1} \frac{\min\{n \in \ci : \err(A_n,\cg,\ch,S) \le \varepsilon\}}{\comp(\varepsilon,\ca_{\fix}(\cg,\ch,S,\Lambda))}} \\
 & \le \sup_{0 < \varepsilon \le 1} \frac{\min\{n \in \ci : \tildeh(n) \le \varepsilon\}} {\tg^{-1}(\varepsilon^{-1})} \\
 & \le \sup_{m \ge 1} \frac{\min\{n \in \ci : \tg(m) \tildeh(n) \le 1 \}} {m} \qquad (\varepsilon=\tg(m))\\
-& \le \sup_{m \ge 1} \frac{m \inf\{r : rm \in \ci, \ \tg(m)\tildeh(rm) \le 1 \} } {m} <\infty.
+& \le \sup_{m \ge 1} \frac{m \inf\{j : jm \in \ci, \ \tg(m)\tildeh(jm) \le 1 \} } {m} <\infty.
 \end{align*}
 The proof for $\cf$ follows similarly.
 \end{proof}
@@ -719,7 +721,7 @@ Since $A$ is successful for these two fooling functions, $c_1$, as defined in \e
 Since $A$ is an arbitrary successful algorithm, this inequality provides a lower bound on the cost, $n$, that any such algorithm requires.  This then implies the lower bound on the complexity of the problem.   
 \end{proof}
 
-Comparing the lower bound on the computational complexity in Theorem \ref{complowbd} to the upper bounds on the cost of the adaptive algorithms in Theorems \ref{TwoStageDetermThm} and \ref{MultiStageThm}, one can see that these adaptive algorithms are optimal for solving the problem for a cone of input functions if their non-adaptive building blocks are also optimal for solving the problem for balls of input functions.  The following corollary recognizes this fact.
+Comparing the lower bound on the computational complexity in Theorem \ref{complowbd} to the upper bounds on the cost of the adaptive algorithms in Theorems \ref{TwoStageDetermThm} and \ref{MultiStageThm}, one can see that these adaptive algorithms are optimal for solving the problem for a cone of input functions if their non-adaptive building blocks are also optimal for solving the problem for balls of input functions.
 
 \begin{cor} \label{optimcor}
 Suppose that the functions $g, \tg, h$, and $\tildeh$ satisfy the hypotheses of Proposition \ref{optimalprop}, i.e., conditions \eqref{ghcond}, which means that the non-adaptive algorithms are optimal for solving the problem on $\cf$- and $\cg$-balls of input functions.  It then follows that Algorithms \ref{twostagedetalgo} and \ref{multistagealgo} are both optimal for solving the  problem on the cone $\cc_{\tau}$.  
@@ -738,6 +740,8 @@ The next two sections illustrate the theorems of Section \ref{genthmsec} by look
 \item the solution operator, $S$,
 
 \item a set of non-adaptive algorithms, $\{A_n\}_{n \in \ci}$, which approximate $S$, are indexed by their cost, $n$, and have the property that some lower cost algorithms are embedded in higher cost algorithms,
+
+\item the minimum cost multiple, $r$, defined just before Algorithm \ref{multistagealgo},
 
 \item the upper bound error functions, $\tildeh$ and h, defined in \eqref{algseqerrbd}, 
 
