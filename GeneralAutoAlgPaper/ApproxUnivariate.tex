@@ -11,7 +11,7 @@ The spaces of functions to be recovered are the Sobolev spaces $\cg = \mathcal{W
 The basic non-adaptive algorithm used to approximate functions in the cone $\cc_{\tau}$ is linear interpolation on evenly spaced points.  Letting $\ci=\{2, 3, \ldots\}$ as in the previous section, the sequence of algorithms $\{A_n\}_{n \in \ci},$ is defined by
 \begin{gather*}
 x_i=\frac{i-1}{n-1}, \qquad i=1, \ldots, n, \\
-A_{n}(f)(x)=(n-1) \left[ f(x_{i})(x-x_i) +f(x_{i+1})(x_{i+1}-x) \right], \qquad x_i \leq x \leq x_{i+1}.
+A_{n}(f)(x)=(n-1) \left[ f(x_{i})(x_{i+1}-x) +f(x_{i+1})(x-x_i) \right], \qquad x_i \leq x \leq x_{i+1}.
 \end{gather*}
 The cost of $A_n$, is the number of function evaluations, $n$.  Using this same data one may approximate the $\cl_\infty$ norm of $f'$ by the algorithm
 \begin{equation}\label{estfirstderiv}
@@ -21,14 +21,14 @@ Since $A_n$, which uses $n-1$ line segments, is embedded in $A_{2n-1}$, which us
 
 \subsection{Adaptive Algorithm and Upper Bound on the Cost}
 
-Given the algorithms $G_n$ and $A_n$, we now turn to deriving the worst case error bounds, $h_{\pm}$ defined in \eqref{Gerrbds} and $\tildeh$ and $h$ defined in \eqref{algseqerrbd}.  For any $x \in [x_{i}, x_{i+1}]$, note that
+Given the algorithms $G_n$ and $A_n$, we now turn to deriving the worst case error bounds, $h_{\pm}$ defined in \eqref{Gerrbds} and $\tildeh$ and $h$ defined in \eqref{algseqerrbd}.  For $x_{i} \le x \le x_{i+1}$ note that the difference between $f'(x)$ and its linear spline approximation is bounded by
 \begin{align*}
 \MoveEqLeft{\abs{f'(x)} - (n-1) \abs{f(x_{i+1})-f(x_i)}} \\
  & \le \abs{f'(x) - (n-1)[f(x_{i+1})-f(x_i)]} \\
 &=\abs{ \int_{x_i}^{x_{i+1}} f''(t) [(n-1)(t-x_i) -  1_{[x,x_{i+1}]}(t)] \, \dif t} \\
 & \le \sup_{x_i \le t \le x_{i+1}} \abs{f''(t)} \int_{x_i}^{x_{i+1}} \abs{  (n-1)(t-x_i) -  1_{[x,x_{i+1}]}(t)} \, \dif t \\
 &=\sup_{x_i \le t \le x_{i+1}} \abs{f''(t)} \left \{\frac{1}{2(n-1)} - (x-x_i)[1-(n-1)(x-x_i)] \right\} \\
-&\le \frac{1}{2(n-1)}\sup_{x_i \le t \le x_{i+1}} \abs{f''(t)}
+&\le \frac{1}{2(n-1)}\sup_{x_i \le t \le x_{i+1}} \abs{f''(t)}.
 \end{align*}
 Furthermore, this inequality is tight if $f''$ is constant, $f'$ does not change sign over $[x_{i}, x_{i+1}]$, and $x=x_i$ or $x_{i+1}$.  Applying the above argument for $i=0, \ldots, n-1$ and noting that $G_n(f)$ never overestimates $\norm[\infty]{f'}$, we have the following two-sided inequality:
 \[
@@ -39,6 +39,23 @@ Thus, the error bounds on $G_n$ and the inflation and deflation factors defined 
  h_{-}(n)=0, \quad h_{+}(n)=\frac{1}{2(n-1)}, \qquad \fc_n=1, \quad   \fC_n =\frac{1}{1 - \tau /(2n-2)},
 \end{equation}
 provided that $n>1+\tau/2$.
+
+To derive the error bounds for $A_n(f)$, note that for $x_{i} \le x \le x_{i+1}$ the error can be bounded in terms of the norm of the first derivative as
+\begin{align*}
+\abs{f(x)-A_n (f)(x)} &= \abs{f(x) - (n-1) \left[f(x_{i})(x_{i+1}-x) +f(x_{i+1})(x-x_i) \right]}\\
+&= (n-1)\left \lvert (x_{i+1}-x) \int_{x_i}^x f'(t) \, \dif t - (x-x_i)  \int_x^{x_{i+1}} f'(t) \, \dif t\right \rvert \\
+&= 2 (n-1)(x-x_i)(x_{i+1}-x)\sup_{x_{i} \le x \le x_{i+1}}\abs{f'(x)} \\
+&\le \frac{\norm[\infty]{f'}}{2(n-1)}
+\end{align*}
+The error can also be bounded in terms of the norm of the second derivative as
+\begin{align*}
+\abs{f(x)-A_n(f)(x)} &= \abs{f(x) - (n-1) \left[f(x_{i})(x_{i+1}-x) +f(x_{i+1})(x-x_i) \right]}\\
+&= (n-1)\left \lvert \int_{x_i}^x f''(t)(t-x_i)(x_{i+1}-t) \, \dif t \right \rvert \\
+&= 2 (n-1)(x-x_i)(x_{i+1}-x)\sup_{x_{i} \le x \le x_{i+1}}\abs{f'} \\
+&\le \frac{\norm[\infty]{f'}}{2(n-1)}
+\end{align*}
+
+
 
 Here we use divided difference. Denote
 $$f[x,y]:=\frac{f(y)-f(x)}{y-x},f[x,y,z]:=\frac{f[y,z]-f[x,y]}{z-x}.$$
