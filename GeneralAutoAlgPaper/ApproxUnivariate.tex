@@ -1,49 +1,27 @@
 
-In this part, we consider the function recovery $S(f)=f$ and $\ch=\cl_{\infty}.$
-Then $\norm[\ch]{S(f)-A(f)}=\norm[\infty]{f-A(f)}.$
-Let $\cg \subset \mathcal{W}^{1,\infty}[0,1]$ and $\cf \subset \mathcal{W}^{2,\infty}[0,1],$ where
-$\mathcal{W}^{k,\infty}[0,1]=\left\{u \in \cl_{\infty}[0,1]:D^\alpha u \in \cl_\infty[0,1], \forall |\alpha| \leq k \right\}.$
-Given $\tau>0$, then by \eqref{conedef}, we have $\cc_{\tau} \subset \cf$ as
+Now we consider the problem of $\cl_{\infty}$ recovery of functions defined on $[0,1]$, i.e., 
+\[
+S(f)=f, \qquad \ch=\cl_{\infty}, \qquad \norm[\ch]{S(f)-A(f)}=\norm[\infty]{f-A(f)}.
+\]
+The spaces of functions to be recovered are the Sobolev spaces $\cg = \mathcal{W}^{1,\infty}$ and $\cf = \mathcal{W}^{2,\infty}$, where $\mathcal{W}^{k,\infty}$ was defined in \eqref{??}.  The cone of functions for which our adaptive algorithms will be shown to work well is defined as 
 \begin{equation}\label{taudef}
-\cc_{\tau}=\{f \in  \mathcal{W}^{2,\infty}[0,1] : \norm[\infty]{f''}\leq \tau\norm[\infty]{f'}\},
+\cc_{\tau}=\{f \in  \mathcal{W}^{2,\infty} : \norm[\infty]{f''}\leq \tau\norm[\infty]{f'}\}.
 \end{equation}
 
-Suppose one wants to approximate functions in $\cc_{\tau}$ based on function values.  The goal is to find an algorithm, $A$ for which $\norm[\infty]{f-A(f)} \le \varepsilon.$ Here we use piecewise linear interpolation to approximate. Thus $\forall f \in \cc_{\tau},$ consider the sequence of algorithms $\{A_n\}_{n \in \ci},$ where
-$\ci=\{2,3,\dots\}$
- and given the data $f(x_i),$ where $ x_i=i/(n-1), i=0, \ldots,n-1,$ and $\cost(A_{n})=n.$
-For $x_i \leq x \leq x_{i+1}, \ i=0, \ldots, n-2,$ define $A_{n}(f)$
-$$A_{n}(f)(x)=f(x_{i})+\frac{x-x_i}{x_{i+1}-x_i}\left(f(x_{i+1})-f(x_i)\right).$$
-
-\subsection{Upper Bound}
-
-%Fix the algorithm $A_n,$ which $\cost(A_n)=n,$
-%suppose the data sites $x_0, x_1, \dots, x_{n-1}$ and the corresponding function values. One may estimate $\norm[\infty]{f'}$ in terms of divided differences:
-%\begin{equation} \label{estfirstderiv}
-%G_{n}(f)= \max_{i=1, \ldots, n-1} (n-1)\abs{f(x_i)-f(x_{i-1})}.
-%\end{equation}
-
-% Suppose that $\zeta$ is some point satisfying $\abs{f'(\zeta)} = \norm[\infty]{f'}$ and
-%that $x_{i-1}\le \zeta < x_i$.  It then follows that $f(x_i)-f(x_{i-1}) = f'(\eta)/(n-1)$ for some $\eta$ between $x_{i-1}$ and $x_i$.  Thus,
-%%\begin{align*}
-%%\norm[\infty]{f'} &= \abs{f'(\zeta)}\leq \abs{f'(\eta)} + \abs{f'(\eta)-f'(\zeta) }  \le G_{n}(f) + \abs{ \eta-\zeta}^{s}\sup\limits_{x,t \in [0,1]}\frac{|f'(x)-f'(t)|}{|x-t|^{s}}\nonumber\\
-%%& \leq  G_n(f) + \frac{1}{m^{s}} \sup\limits_{x,t \in [0,1]}\frac{|f'(x)-f'(t)|}{|x-t|^{s}}\nonumber\\
-%%&\Rightarrow \err_{+}(G_n,\cf,\reals_{+},\norm[\cg]{\cdot}) =\frac{1}{(n-1)^{s}}
-%%\end{align*}
-%\begin{align*}
-%\norm[\infty]{f'} &= \abs{f'(\zeta)}\leq \abs{f'(\eta)} + \abs{f'(\eta)-f'(\zeta) }  \le G_{n}(f) + \abs{\int_\zeta^\eta f''(x)dx }\nonumber\\
-%& \leq  G_n(f) + \norm[\infty]{f''}|\eta-\zeta| \leq G_n(f)+ \frac{1}{n-1}\norm[\infty]{f''}\nonumber\\
-%&\Rightarrow \err_{+}(G_n,\cf,\reals_{+},\norm[\cg]{\cdot}) =\frac{1}{n-1}.
-%\end{align*}
-
-
-Given the data sites $x_i=i/(n-1)$, $i=0, \ldots, n-2$, let the $\cl_\infty$ norm of the $f'$ be approximated by
+The basic non-adaptive algorithm used to approximate functions in the cone $\cc_{\tau}$ is linear interpolation on evenly spaced points.  Letting $\ci=\{2, 3, \ldots\}$ as in the previous section, the sequence of algorithms $\{A_n\}_{n \in \ci},$ is defined by
+\begin{gather*}
+x_i=\frac{i-1}{n-1}, \qquad i=1, \ldots, n, \\
+A_{n}(f)(x)=(n-1) \left[ f(x_{i})(x-x_i) +f(x_{i+1})(x_{i+1}-x) \right], \qquad x_i \leq x \leq x_{i+1}.
+\end{gather*}
+The cost of $A_n$, is the number of function evaluations, $n$.  Using this same data one may approximate the $\cl_\infty$ norm of $f'$ by the algorithm
 \begin{equation}\label{estfirstderiv}
-G_n(f) = (n-1) \sup_{i=1, \ldots, n-1} \abs{f(x_{i+1})-f(x_i)}
+G_n(f) = (n-1) \sup_{i=1, \ldots, n-1} \abs{f(x_{i+1})-f(x_i)}.
 \end{equation}
+Since $A_n$, which uses $n-1$ line segments, is embedded in $A_{2n-1}$, which uses $2(n-1)$ line segments, the minimum cost multiple is $r=2$. 
 
-Note that $G_n(f)$ never overestimates $\norm[\infty]{f'}$. Thus, we have
-$h_{-}(n)=0.$
-For any $x \in [x_{i}, x_{i+1}]$, note that
+\subsection{Adaptive Algorithm and Upper Bound on the Cost}
+
+Given the algorithms $G_n$ and $A_n$, we now turn to deriving the worst case error bounds, $h_{\pm}$ defined in \eqref{Gerrbds} and $\tildeh$ and $h$ defined in \eqref{algseqerrbd}.  For any $x \in [x_{i}, x_{i+1}]$, note that
 \begin{align*}
 \MoveEqLeft{\abs{f'(x)} - (n-1) \abs{f(x_{i+1})-f(x_i)}} \\
  & \le \abs{f'(x) - (n-1)[f(x_{i+1})-f(x_i)]} \\
@@ -52,15 +30,15 @@ For any $x \in [x_{i}, x_{i+1}]$, note that
 &=\sup_{x_i \le t \le x_{i+1}} \abs{f''(t)} \left \{\frac{1}{2(n-1)} - (x-x_i)[1-(n-1)(x-x_i)] \right\} \\
 &\le \frac{1}{2(n-1)}\sup_{x_i \le t \le x_{i+1}} \abs{f''(t)}
 \end{align*}
-Furthermore, this inequality is tight if $f''$ is constant second derivative and $f'$ does not change sign over $[x_{i}, x_{i+1}]$, and $x=x_i$ or $x_{i+1}$.  Applying the above argument for $i=0, \ldots, n-1$ implies that
+Furthermore, this inequality is tight if $f''$ is constant, $f'$ does not change sign over $[x_{i}, x_{i+1}]$, and $x=x_i$ or $x_{i+1}$.  Applying the above argument for $i=0, \ldots, n-1$ and noting that $G_n(f)$ never overestimates $\norm[\infty]{f'}$, we have the following two-sided inequality:
 \[
-\norm[\infty]{f'} - G_n(f) \le \frac{\norm[\infty]{f''}}{2(n-1)} \Rightarrow h_{+}(n)=\frac{1}{2(n-1)}
+0 \le \norm[\infty]{f'} - G_n(f) \le \frac{\norm[\infty]{f''}}{2(n-1)}.
 \]
-with equality holding when has a constant second derivative and its first derivative does not change sign over $[0,1]$.
-Then by \eqref{normdeflate} and \eqref{norminflate}, we can obtain
+Thus, the error bounds on $G_n$ and the inflation and deflation factors defined in  \eqref{normdeflate} and \eqref{norminflate} may be taken to be
 \begin{equation}\label{inflaapprox}
-\fc_n=1, \ \   \fC_n =\frac{1}{1 - \tau /(2(n-1))}.
+ h_{-}(n)=0, \quad h_{+}(n)=\frac{1}{2(n-1)}, \qquad \fc_n=1, \quad   \fC_n =\frac{1}{1 - \tau /(2n-2)},
 \end{equation}
+provided that $n>1+\tau/2$.
 
 Here we use divided difference. Denote
 $$f[x,y]:=\frac{f(y)-f(x)}{y-x},f[x,y,z]:=\frac{f[y,z]-f[x,y]}{z-x}.$$
@@ -131,48 +109,40 @@ Thus we only need to find $n$ such that  \[
 
 If we consider about the embedded algorithms, by Algorithm $\ref{multistagealgo},$ we obtain
 \begin{algo} \label{multistageapproalgo}
-Let the error tolerance $\varepsilon$, the maximum cost budget $N_{\max}$, and the positive constant $\tau$ be as described in  \eqref{taudef}. Let the sequences of algorithms, $\{A_n\}_{n \in \ci}$ and  $\{G_n\}_{n \in \ci}$ be as described above.  Set $i=1$.  Let $n_1$ be the smallest number in $n \in \ci$ satisfying $\err_+(G_n,\cf,\norm[\cg]{\cdot},\reals_+) \le 1/\tau$. For any input function $f \in \cf$, do the following:
+Let the error tolerance $\varepsilon$, the maximum cost budget $N_{\max}$, and the cone constant $\tau$ be given inputs. Let the sequences of algorithms, $\{A_n\}_{n \in \ci}$ and  $\{G_n\}_{n \in \ci}$ be as described above.  Set $i=1$.  Let $n_1=\lceil (\tau+1)/2\rceil + 1$. For any input function $f \in \cf$, do the following:
 \begin{description}
 
 \item [Stage 1. Estimate {$\norm[\infty]{f'} $}.]
-Compute $G_{n_i}(f)$ in \eqref{estfirstderiv} and $\fC_n$ in \eqref{inflaapprox}.
+Compute $G_{n_i}(f)$ in \eqref{estfirstderiv} and $\fC_{n_i}$ in \eqref{inflaapprox}.
+
 \item [Stage 2. Check for Convergence.]
- Check whether $n_i$ is large enough to satisfy the error tolerance, i.e.,
+Check whether $n_i$ is large enough to satisfy the error tolerance, i.e.,
 $$
-\frac{\tau \fC_{n_i} G_{n_i}(f)}{8(n_i-1)^2} \le \varepsilon.
+G_{n_i}(f) \le \frac{4\varepsilon (n_i-1)(2n_i-2 -\tau)}{\tau} .
 $$
 If this is true, then set $W$ to be false, return $(A_{n_i}(f),W)$ and terminate the algorithm.
 
 
 \item[Stage 3. Compute $n_{i+1}$.]  Otherwise, if the inequality above fails to hold,
-choose $n_{i+1}$ as the smallest number exceeding $n_i$ and not less than $N_{A}(\varepsilon /G_{n_i}(f))$ such that $A_{n_{i}}$ is embedded in $A_{n_{i+1}}$. That is
-$$n_{i+1}-1=(n_i-1)\max\left\{\left\lceil\frac{1}{(n_i-1)}\left(\frac{\tau G_{n_i}(f)}{8\varepsilon}\right)^{\frac{1}{2}}\right\rceil,2\right\}.$$
+choose $n_{i+1}$ as the smallest number exceeding $n_i$ and not less than $N_{A}(\varepsilon /G_{n_i}(f))$ such that $A_{n_{i}}$ is embedded in $A_{n_{i+1}}$, i.e., 
+$$
+n_{i+1}=1+ (n_i-1)\max\left\{\left\lceil\frac{1}{(n_i-1)}\sqrt{\frac{\tau G_{n_i}(f)}{8\varepsilon}}\right\rceil,2\right\}.
+$$
  If $n_{i+1} \le N_{\max}$, increment $i$ by $1$, and return to Stage 1.\\
 Otherwise, if $n_{i+1} > N_{\max}$, choose $n_{i+1}$ to be the largest number not exceeding $N_{\max}$ such that $A_{n_{i}}$ is embedded in $A_{n_{i+1}}$, and set $W$ to be true. Return $(A_{n_{i+1}}(f),W)$ and terminate the algorithm.
 \end{description}
 \end{algo}
 
-\begin{theorem}   Let  $\varepsilon$, $N_{\max}$, $\tau$ and $n_1$ be given as described in Algorithm \ref{multistageapproalgo}.
-Assume that $n_1 \le N_{\max}$. Let $r$ be the number described in the paragraph preceding that algorithm.
-Let $\cc_\tau$ be the cone of functions defined in \eqref{taudef}.
-Define
-\[
-\tN_A(a) = \min\left\{ n \in \ci : \frac{\tau \fC_n }{8(n-1)^2} \le a \right\}, \quad a \in (0,\infty).
-\]
-Let $\cc_\tau$ be the cone of functions defined in \eqref{taudef}.  Let
+\begin{theorem}   Let  $\varepsilon$, $N_{\max}$, $\tau$ and $n_1$ be given as described in Algorithm \ref{multistageapproalgo}.  Assume that $n_1 \le N_{\max}$.  Let $\cc_\tau$ be the cone of functions defined in \eqref{taudef}.  Let
 $$
-\cn = \left \{ f \in \cc_\tau :r\tN_{A}\left(\frac{\varepsilon}{\sigma} \right) \le N_{\max} \right\}
-= \left \{ f \in \cc_\tau : \sigma \le \frac{8(N_{\max}/r-1)^2 \varepsilon }{\tau \fC_{N_{\max}/r}  } \right\}
+\cn
+= \left \{ f \in \cc_\tau : \norm[\infty]{f'} \le \frac{2\varepsilon (N_{\max}-2)(N_{\max}-2 -\tau)}{\tau} \right\}
 $$
-be the nice subset of the cone $\cc_\tau$.  Then it follows that Algorithm \ref{multistageapproalgo} is successful for all functions in $\cn$,  i.e.,  $\success(A,W,\cn,\varepsilon,N_{\max}) = 1$.  Moreover, the cost of this algorithm is bounded above in terms of the $\norm[\infty]{f'}$ of the input function as follows:
-\begin{multline}
-\cost(A,\cn,\varepsilon,N_{\max},\sigma) \\
-\le  \min\left\{ n \in \ci : n \ge \left(\frac{\sigma\tau}{8\varepsilon(1 - \tau/(2(n_{1}-1)))}\right)^{\frac{1}{2}} +1\right\}
-\end{multline} where $\sigma=\norm[\infty]{f'}.$
-%The upper bound on the cost of this specific algorithm provides an upper bound on the complexity of the problem, $\comp(\varepsilon,\ca(\cn,\ch,S,\Lambda),N_{\max},\sigma)$.  If the sequence of algorithms $\{A_n\}_{n \in \ci}$, $A_n \in\ca_{\fix}(\cg,\ch,S,\Lambda)$  is nearly optimal for the problems $(\cg,\ch,S,\Lambda)$ and $(\cf,\ch,S,\Lambda)$ as defined in \eqref{nearoptdef}, then Algorithm \ref{twostagedetalgo} does not incur a significant penalty for not knowing $\norm[\cg]{f}$ a priori, i.e., for all $p>0$,
-%\begin{equation} \label{penalty}
-%\sup_{0 < \varepsilon/\sigma \le 1} \frac{\cost(A,\cn,\varepsilon,\infty,\sigma)} {\comp(\varepsilon/\sigma,\ca_{\fix}(\cj,\ch,S,\Lambda))} \left(\frac{\varepsilon}{\sigma}\right)^p <\infty, \qquad \cj \in \{\cf,\cg\}.
-%\end{equation}
+be the nice subset of the cone $\cc_\tau$.  Then it follows that Algorithm \ref{multistageapproalgo} is successful for all functions in $\cn$,  i.e.,  $\success(A,W,\cn,\varepsilon,N_{\max}) = 1$.  Moreover, the cost of this algorithm is bounded above as follows:
+\begin{equation*}
+\cost(A,\cn,\varepsilon,N_{\max},\norm[\infty]{f'})
+\le 2 + 2 \left \lceil \sqrt{\frac{\tau \norm[\infty]{f'}}{8\varepsilon} + \frac{\tau^2 }{16}} + \frac{\tau}{4} \right\rceil.
+\end{equation*}
 \end{theorem}
 
 \begin{proof}

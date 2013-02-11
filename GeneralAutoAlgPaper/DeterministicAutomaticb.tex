@@ -430,10 +430,9 @@ Let $\cc_\tau$ be the cone of functions defined in \eqref{conedef} whose $\cf$-s
 \end{align}
 be a subset of the cone $\cc_\tau$ that lies inside a $\cg$-semi-norm ball of rather large radius (since $\min(\tildeh(\tN_{\max}),\tau h(\tN_{\max}))$ is assumed to be tiny).  Then it follows that Algorithm \ref{twostagedetalgo} is successful for all functions in this set of \emph{nice} functions $\cn$,  i.e.,  $\success(A,W,\cn,\varepsilon,N_{\max}) = 1$.  Moreover, the cost of this algorithm is bounded above in terms of the $\cg$-semi-norm of the input function as follows:
 \begin{equation} \label{auto2stagedetcost}
-\cost(A,\cn,\varepsilon,N_{\max},\sigma)
-\le n_G+ N_{A}\left(\frac{\varepsilon}{\fC \fc \sigma} \right).
+\cost(A,\cn,\varepsilon,N_{\max},\norm[\cg]{f})
+\le n_G+ N_{A}\left(\frac{\varepsilon}{\fC \fc \norm[\cg]{f}} \right).
 \end{equation}
-The upper bound on the cost of this specific algorithm provides an upper bound on the complexity of the problem, $\comp(\varepsilon,\ca(\cn,\ch,S,\Lambda),N_{\max},\sigma)$.  
 
 Consider the limit of infinite cost budget, i.e., $N_{\max} \to \infty$.  If the sequence of algorithms $\{A_n\}_{n \in \ci}$, $A_n \in\ca_{\fix}(\cg,\ch,S,\Lambda)$  is optimal for the problems $(\cg,\ch,S,\Lambda)$ and $(\cf,\ch,S,\Lambda)$ as defined in \eqref{nearoptdef}, then Algorithm \ref{twostagedetalgo} does not incur a significant penalty for not knowing $\norm[\cg]{f}$ a priori, i.e.,
 \begin{equation} \label{penalty}
@@ -555,10 +554,9 @@ Let $\cc_\tau$ be the cone of functions defined in \eqref{conedef} whose $\cf$-s
 \end{align}
 be the nice subset of the cone $\cc_\tau$.  Then it follows that Algorithm \ref{multistagealgo} is successful for all functions in $\cn$,  i.e.,  $\success(A,W,\cn,\varepsilon,N_{\max}) = 1$.  Moreover, the cost of this algorithm is bounded above in terms of the $\cg$-semi-norm of the input function as follows:
 \begin{equation} \label{automultistagedetcost}
-\cost(A,\cn,\varepsilon,N_{\max},\sigma)
-\le \max \left(n_1, r\tN_{A}\left(\frac{\varepsilon}{\sigma} \right) \right).
+\cost(A,\cn,\varepsilon,N_{\max},\norm[\cg]{f})
+\le \max \left(n_1, r\tN_{A}\left(\frac{\varepsilon}{\norm[\cg]{f}} \right) \right).
 \end{equation}
-The upper bound on the cost of this specific algorithm provides an upper bound on the complexity of the problem, $\comp(\varepsilon,\ca(\cn,\ch,S,\Lambda),N_{\max},\sigma)$.  
 
 Consider the limit of infinite cost budget, i.e., $N_{\max} \to \infty$.  If the sequence of algorithms $\{A_n\}_{n \in \ci}$, $A_n \in\ca_{\fix}(\cg,\ch,S,\Lambda)$  is optimal for the problems $(\cg,\ch,S,\Lambda)$ and $(\cf,\ch,S,\Lambda)$ as defined in \eqref{nearoptdef}, then Algorithm \ref{multistagealgo} does not incur a significant penalty for not knowing $\norm[\cg]{f}$ a priori, i.e.,
 \begin{equation*} \label{multistagepenalty}
