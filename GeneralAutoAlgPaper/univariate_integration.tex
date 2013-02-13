@@ -5,14 +5,14 @@ In the following cases, we focus on approximation of upper bound errors. The inp
   \cf&=W^{2,1}=W^{2,1}[0,1]=\{f\in C^1[0,1]: \|f''\|_1<\infty\}, \text{ and }\\
   \cg&=W^{1,1}=W^{1,1}[0,1]=\{f\in C^1[0,1]: \|f'\|_1<\infty\},
 \end{align*}
-which have the semi-norm $\|f\|_{\cf}=\|f''\|_{1}$ and $\|f\|_{\cg}=\|f'\|_{1}$ respectively. The space of outputs $\ch$ is the real space $\R$. Given $\tau > 0$, we have the cone $\mathfrak{C}_{\tau} \subset \cf$ defined as
+which has the semi-norm $\|f\|_{\cf}=\|f''\|_{1}$ and $\|f\|_{\cg}=\|f'\|_{1}$ respectively. The space of outputs $\ch$ is the real space $\R$. Given $\tau > 0$, we have the cone $\mathfrak{C}_{\tau} \subset \cf$ defined as
 \begin{align}\label{coneinteg}
-\mathfrak{C}_{\tau}=\{f\in W^{2,1}:\|f''\|_1\leq\tau\|f'\|_1\}.
+\cc_{\tau}=\{f\in W^{2,1}:\|f''\|_1\leq\tau\|f'\|_1\}.
 \end{align}
 
 To approximate the integrations of functions in the cone based on the function values, define the solution operator $S$ as $S(f)=\int_{0}^{1}f(x)dx$. The goal is to make the error small, i.e. to find an algorithm A, for which $|\int_{0}^{1}f(x)dx-A(f)|\leq \varepsilon$.
 
-We use the trapezoidal rule to approximate the integral. Consider a sequence of algorithms $\{A_n\}_{n\in \mathcal{I}}$, where $\mathcal{I}=\{2,3,\cdots\}$ with cost$(A_n)=n$, given the data $f(x_i)$, where $x_i=(i-1)/(n-1), i=1,\cdots,n$ are uniformly distributed between $[0,1]$, define $A_n(f)$ as: \begin{align*}
+We use the trapezoidal rule to approximate the integral. Consider a sequence of algorithms $\{A_n\}_{n\in \mathcal{I}}$, where $\mathcal{I}=\{2,3,\cdots\}$ with cost$(A_n)=n$, given the data $f(x_i)$, where $x_i=(i-1)/(n-1), i=1,\cdots,n$ are uniformly distributed between $[0,1]$ with corresponding function values, define $A_n(f)$ as: \begin{align*}
     A_{n}(f)%&=\frac{1}{2n}\sum_{i=1}^{n}(f(x_{i+1})+f(x_i)),\\
     =\frac{1}{2n}[f(x_1)+2f(x_2)+\cdots+2f(x_{n-1})+f(x_n)].
 \end{align*}
@@ -26,25 +26,46 @@ According to (7.14) and (7.15) from \cite{BraPet}, the upper bound error functio
 %
 %Suppose one wants to approxiamte the integration of functions in $\mathfrak{C}_{\tau}$ based on function values, the goal is to make the $\mathcal{L}_1$ error small, i.e. to find an algorithm $\mathcal{A}$, for which $|\int_{0}^{1}f(x)dx-A(f)|\leq \varepsilon$.
 \subsection{Upper Bounds}
- Fix the algorithm, trapezoidal rule, $A_n$, with cost$(A_n)=n$. Suppose that the data sites $x_0,x_1,\cdots, x_{n-1},x_{n}$ and the corresponding function values. One may estimate $\|f'\|_1$ in the following way:
+ Fix the algorithm, trapezoidal rule, $A_n$, with cost$(A_n)=n$. One may estimate $\|f'\|_1$ in the following way:
  \begin{align}\label{1direst}
     G_n(f)=\sum_{i=0}^{n-1}\left|f(x_{i+1})-f(x_{i})\right|.
- \end{align} Note that $G_{n}(f)$ never overestimates $\|f'\|_{1}$, so $h_{\cg_{-}}(n)=0$. Consider \eqref{twosidedGineq}, in this case, the deflation factor, $\mathfrak{c}_n=1$. When it comes to the inflation factor, $\mathfrak{C}_n$, since
+ \end{align} Note that $G_{n}(f)$ never overestimates $\|f'\|_{1}$, so $h_{\cg_{-}}(n)=0$. Consider \eqref{twosidedGineq}, in this case, the deflation factor, $\mathfrak{c}_n=1$. When it comes to the inflation factor, $\mathfrak{C}_n$, we consider that in the interval $(x_I,x_{x+1})$, we define the function $v(t,x)$ as
  \begin{align*}
-   &\|f\|_{\cg}-G_{n}(f)\\
-   =&\|f'\|_{1}-G_{n}(f),\\
-   =&\int_{x_{i}}^{x_{i+1}}|f'(x)|dx-|f(x_{x+1})-f(x_{i})|,\\
-   =&\int_{x_{i}}^{x_{i+1}}|f'(x)|dx-|(x_{i+1}-x_i)f'(\xi)|, \quad \text{ where $\xi\in(x_i,x_{i+1})$},\\
-   \leq & \int_{x_{i}}^{x_{i+1}}\left||f'(x)|-f'(\xi)\right|dx,\\
-   &???
+   v(t,x)=\begin{cases}  \displaystyle  x_i-t, & x_i\leq t\leq x,\\[2ex]
+ \displaystyle  t-x_{i+1}, & x< t \leq x_{i+1}.
+\end{cases}
  \end{align*}
-We have $h_{+}(n)=\frac{1}{2(n-1)}$. So the deflation factor and inflation factor are as follows:
+ Also that
+ \begin{align*}
+   \int_{x_i}^{x_{i+1}}|v(t,x)|dx=&\int_{x_i}^{t}|t-x_{i+1}|dx+\int_{t}^{x_{i+1}}|x_i-t|dx,\\
+   =&(t-x_i)|t-x_{i+1}|+(x_{i+1}-t)|x_i-t|,\\
+   =&2(t-x_i)(x_{i+1}-t).
+ \end{align*}
+ So,
+ \begin{align*}
+   f'(x)=&[f(x_{x+1})-f(x_{i})]+\int_{x_i}^{x_{i+1}}v(t,x)f''(t)dt,\\
+   \Rightarrow \int_{x_i}^{x_{i+1}}|f'(x)|dx \leq & |f(x_{i+1})-f(x_i)|+\int_{x_i}^{x_{i+1}}\int_{x_i}^{x_{i+1}}|v(t,x)||f''(t)|dtdx,\\
+   \leq & |f(x_{i+1})-f(x_i)|+\int_{x_i}^{x_{i+1}}2(t-x_i)(x_{i+1}-t)|f''(t)|dt,\\
+   \leq & |f(x_{i+1})-f(x_i)|+\|2(t-x_i)(x_{i+1}-t)\|_{\infty}\|f''(t)\|_{1},\\
+   \leq & |f(x_{i+1})-f(x_i)|+\frac{(x_{i+1}-x_{i})^2}{2}\|f''(t)\|_{1},\\
+   \leq & |f(x_{i+1})-f(x_i)|+\frac{1}{2(n-1)^2}\|f''(t)\|_{1}.\\
+ \end{align*}
+ Consider the interval $(0,1)$:
+ \begin{align*}
+   &\int_{0}^{1}|f'(x)|dx,\\
+   =&\sum_{i=1}^{n-1}\int_{x_i}^{x_{i+1}}|f'(x)|dx,\\
+   \leq & \sum_{i=1}^{n-1}[f(x_{x+1})-f(x_{i})]+\sum_{i=1}^{n-1}\frac{1}{2(n-1)^2}\|f''(t)\|_{1},\\
+   \leq & G_n(f)+\frac{1}{2(n-1)}\|f''(t)\|_{1}.\\
+ \end{align*}
+According to \eqref{Gerrbds}, we have $h_{+}(n)=\frac{1}{2(n-1)}$. So the deflation factor and inflation factor are as follows:
 \begin{gather}\label{factor}
 \mathfrak{c}_n =1 \\
 \mathfrak{C}_n =\frac{1}{1 - \tau/(2(n-1))} \geq 1.
 \end{gather}
 
-We can find that if $h(n) \leq \tilde{h}(n) h_{+}(n), \forall n \in \mathcal{I},$ then $ \tau h(n)< \tilde{h}(n) \ \forall n \in \mathcal{I}.$ Since $h(n)=\frac{1}{8(n-1)^2}\leq \frac{1}{4(n-1)^2}=\frac{1}{2(n-1)}\frac{1}{2(n-1)}=\tilde{h}(n) h_{+}(n)$, thus we only need to find $n$ such that  \[
+It is trivial to find that if $h(n) \leq \tilde{h}(n) h_{+}(n), \forall n \in \mathcal{I},$ then $ \tau h(n)< \tilde{h}(n) \ \forall n \in \mathcal{I}.$ %Since $h(n)=\frac{1}{8(n-1)^2}\leq \frac{1}{4(n-1)^2}=\frac{1}{2(n-1)}\frac{1}{2(n-1)}=\tilde{h}(n) h_{+}(n)$,
+Thus we only need to find $n$ such that
+\[
 \frac{\tau \fC_n G_{n}(f)}{8(n-1)^2} \le \varepsilon.
 \]
  %$\tau < n-1.$ Thus it is shown that in the specific case, the worst error in $W^{2,1}$ will be always smaller than the one in $W^{1,1}$, namely, $\tau \tildeh(n)\leq h(n)$. Then for those two non-decreasing functions, $h(n)$ and $\tau \tildeh(n)$ the upper bounds on the error of $A_n(f)$ in terms of the $\cg$-semi-norm of $f$ is:
@@ -203,5 +224,44 @@ we can have the above results.
 \end{proof}
 
 \subsection{Numerical Example}
-TBC
+Consider the test function $f(x)=e^{-(a(x-\mu))^2},$
+where $\mu \sim U[0,1]$ and $\log_{10} a \sim U[0,4].$
+And $\mu \sim U[0,1]$ means $\mu$ is uniformly distributed on [0,1].
+Also for this kind of function, if we have large $a$, we can approximate the function hardly
+because the function has a sharper bump. From the numerical results, we can find the success rate for our algorithm. Since $\norm[1]{f'}=??, \ \norm[1]{f''}=??.$
+If $f \in \cc_{\tau}$ then we should have
+$a \leq ??.$ Which means Expected Success Rate should be $??.$
+Here we use $\tau = 10, 25 , 100$ separately to test $10000$ times with
+$\varepsilon = 1e-7$ to obtain the observed success rate.
+\begin{table}[h]
+\centering
+\begin{tabular}{cccc}
+$\tau$ &  10 & 25 & 100\\
+\toprule
+Expected Success Rate &  $\leq ?? \%$ &  $\leq ?? \%$  & $\leq ?? \%$ \\
+Observed Success Rate & ??$\%$ &  ??$\%$  & ??$\%$ \\
+\end{tabular}
+\caption{ Comparison between expected and observed success rate}
+\end{table}
+
+From the above table, we can find our algorithm works very well, as the observed
+success rate is always larger than the expected success rate.
+%$\norm[1]{f'}=a\sqrt{2/e}, \ \norm[1]{f''}=2a^2.$
+%If $f \in \cc_{\tau}$ then we should have
+%$a \leq \tau/\sqrt{2e}.$ Which means Expected Success Rate should be $\log_{10}(\tau/\sqrt{2e})/4.$
+%Here we use $\tau = 10, 25 , 100$ separately to test $10000$ times with
+%$\varepsilon = 1e-7$ to obtain the observed success rate.
+%\begin{table}[h]
+%\centering
+%\begin{tabular}{cccc}
+%$\tau$ &  10 & 25 & 100\\
+%\toprule
+%Expected Success Rate &  $\leq 16 \%$ &  $\leq 26 \%$  & $\leq 41 \%$ \\
+%Observed Success Rate & 25$\%$ &  34$\%$  & 49$\%$ \\
+%\end{tabular}
+%\caption{ Comparison between expected and observed success rate}
+%\end{table}
+%
+%From the above table, we can find our algorithm works very well, as the observed
+%success rate is always larger than the expected success rate.
 %\bibliography{FJH22,FJHown22,yizhi} 
