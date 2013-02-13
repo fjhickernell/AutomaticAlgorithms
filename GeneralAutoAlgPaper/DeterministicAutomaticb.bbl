@@ -20,11 +20,6 @@
 \bibinfo{author}{W.~Gander}, \bibinfo{author}{W.~Gautschi},
   \bibinfo{title}{Adaptive quadrature --- revisited}, \bibinfo{journal}{BIT}
   \bibinfo{volume}{40} (\bibinfo{year}{2000}) \bibinfo{pages}{84--101}.
-%Type = Book
-\bibitem[{Gautschi(1997)}]{walter}
-\bibinfo{author}{W.~Gautschi}, \bibinfo{title}{Numerical Analysis: An
-  Introduction}, \bibinfo{publisher}{Birkh\"auser}, \bibinfo{address}{Boston},
-  \bibinfo{year}{1997}.
 %Type = Manual
 \bibitem[{Hale et~al.(2012)Hale, Trefethen and Driscoll}]{TrefEtal12}
 \bibinfo{author}{N.~Hale}, \bibinfo{author}{L.N. Trefethen},
@@ -104,6 +99,11 @@
   \bibinfo{author}{H.~Wo\'zniakowski}, \bibinfo{title}{Information-Based
   Complexity}, \bibinfo{publisher}{Academic Press}, \bibinfo{address}{Boston},
   \bibinfo{year}{1988}.
+%Type = Book
+\bibitem[{Traub and Werschulz(1998)}]{TraWer98}
+\bibinfo{author}{J.F. Traub}, \bibinfo{author}{A.G. Werschulz},
+  \bibinfo{title}{Complexity and Information}, \bibinfo{publisher}{Cambridge
+  University Press}, \bibinfo{address}{Cambridge}, \bibinfo{year}{1998}.
 %Type = Misc
 \bibitem[{Wasilkowski(2012)}]{Was13a}
 \bibinfo{author}{G.W. Wasilkowski}, \bibinfo{title}{Average case tractability
