@@ -9,10 +9,12 @@ The spaces of functions to be recovered are the Sobolev spaces $\cg = \mathcal{W
 \end{equation}
 
 The basic non-adaptive algorithm used to approximate functions in the cone $\cc_{\tau}$ is linear interpolation on evenly spaced points.  Letting $\ci=\{2, 3, \ldots\}$ as in the previous section, the sequence of algorithms $\{A_n\}_{n \in \ci},$ is defined by
-\begin{gather*}
+\begin{subequations} \label{linearspline}
+\begin{gather} 
 x_i=\frac{i-1}{n-1}, \qquad i=1, \ldots, n, \\
 A_{n}(f)(x)=(n-1) \left[ f(x_{i})(x_{i+1}-x) +f(x_{i+1})(x-x_i) \right], \qquad x_i \leq x \leq x_{i+1}.
-\end{gather*}
+\end{gather}
+\end{subequations}
 The cost of $A_n$, is the number of function evaluations, $n$.  Using this same data one may approximate the $\cl_\infty$ norm of $f'$ by the algorithm
 \begin{equation}\label{estfirstderiv}
 G_n(f) = (n-1) \sup_{i=1, \ldots, n-1} \abs{f(x_{i+1})-f(x_i)}.
@@ -26,11 +28,11 @@ Given the algorithms $G_n$ and $A_n$, we now turn to deriving the worst case err
 \MoveEqLeft{\abs{f'(x)} - (n-1) \abs{f(x_{i+1})-f(x_i)}} \\
  & \le \abs{f'(x) - (n-1)[f(x_{i+1})-f(x_i)]} \\
 &=\abs{ \int_{x_i}^{x_{i+1}} f''(t) [(n-1)(t-x_i) -  1_{[x,x_{i+1}]}(t)] \, \dif t} \\
-& \le \sup_{x_i \le t \le x_{i+1}} \abs{f''(t)} \int_{x_i}^{x_{i+1}} \abs{  (n-1)(t-x_i) -  1_{[x,x_{i+1}]}(t)} \, \dif t \\
-&=\sup_{x_i \le t \le x_{i+1}} \abs{f''(t)} \left \{\frac{1}{2(n-1)} - (x-x_i)[1-(n-1)(x-x_i)] \right\} \\
-&\le \frac{1}{2(n-1)}\sup_{x_i \le t \le x_{i+1}} \abs{f''(t)}.
+& \le \norm[\infty]{f''} \int_{x_i}^{x_{i+1}} \abs{  (n-1)(t-x_i) -  1_{[x,x_{i+1}]}(t)} \, \dif t \\
+&=\norm[\infty]{f''} \left \{\frac{1}{2(n-1)} - (x-x_i)[1-(n-1)(x-x_i)] \right\} \\
+&\le \frac{\norm[\infty]{f''}}{2(n-1)}.
 \end{align*}
-Furthermore, this inequality is tight if $f''$ is constant, $f'$ does not change sign over $[x_{i}, x_{i+1}]$, and $x=x_i$ or $x_{i+1}$.  Applying the above argument for $i=0, \ldots, n-1$ and noting that $G_n(f)$ never overestimates $\norm[\infty]{f'}$, we have the following two-sided inequality:
+Applying the above argument for $i=0, \ldots, n-1$ and noting that $G_n(f)$ never overestimates $\norm[\infty]{f'}$, we have the following two-sided inequality:
 \[
 0 \le \norm[\infty]{f'} - G_n(f) \le \frac{\norm[\infty]{f''}}{2(n-1)}.
 \]
@@ -40,91 +42,51 @@ Thus, the error bounds on $G_n$ and the inflation and deflation factors defined 
 \end{equation}
 provided that $n>1+\tau/2$.
 
-To derive the error bounds for $A_n(f)$, note that for $x_{i} \le x \le x_{i+1}$ the error can be bounded in terms of the norm of the first derivative as
+To derive the error bounds for $A_n(f)$, note that for $x_{i} \le x \le x_{i+1}$ the error can be bounded in terms of an integral involving $f'$, or,  using integration by parts, an integral involving $f''$:
 \begin{align*}
-\abs{f(x)-A_n (f)(x)} &= \abs{f(x) - (n-1) \left[f(x_{i})(x_{i+1}-x) +f(x_{i+1})(x-x_i) \right]}\\
+\MoveEqLeft{\abs{f(x)-A_n (f)(x)}}\\
+&= \abs{f(x) - (n-1) \left[f(x_{i})(x_{i+1}-x) +f(x_{i+1})(x-x_i) \right]}\\
 &= (n-1)\left \lvert (x_{i+1}-x) \int_{x_i}^x f'(t) \, \dif t - (x-x_i)  \int_x^{x_{i+1}} f'(t) \, \dif t\right \rvert \\
-&= 2 (n-1)(x-x_i)(x_{i+1}-x)\sup_{x_{i} \le x \le x_{i+1}}\abs{f'(x)} \\
-&\le \frac{\norm[\infty]{f'}}{2(n-1)}
+&= (n-1)\left \lvert (x_{i+1}-x) \int_{x_i}^x f''(t)(t-x_i) \, \dif t \right . \\
+&\qquad \qquad \left . + (x-x_i)  \int_x^{x_{i+1}} f''(t)(x_{i+1}-t) \, \dif t\right \rvert .
 \end{align*}
-The error can also be bounded in terms of the norm of the second derivative as
+The expression involving $f'$ yields the bound
 \begin{align*}
-\abs{f(x)-A_n(f)(x)} &= \abs{f(x) - (n-1) \left[f(x_{i})(x_{i+1}-x) +f(x_{i+1})(x-x_i) \right]}\\
-&= (n-1)\left \lvert \int_{x_i}^x f''(t)(t-x_i)(x_{i+1}-t) \, \dif t \right \rvert \\
-&= 2 (n-1)(x-x_i)(x_{i+1}-x)\sup_{x_{i} \le x \le x_{i+1}}\abs{f'} \\
-&\le \frac{\norm[\infty]{f'}}{2(n-1)}
+\abs{f(x)-A_n (f)(x)}
+&\le 2 (n-1)(x-x_i)(x_{i+1}-x)\norm[\infty]{f'} \\
+&\le \frac{\norm[\infty]{f'}}{2(n-1)},
 \end{align*}
-
-
-
-Here we use divided difference. Denote
-$$f[x,y]:=\frac{f(y)-f(x)}{y-x},f[x,y,z]:=\frac{f[y,z]-f[x,y]}{z-x}.$$
-Note that for all $x,y \in [0,1]$ distinct, we have
- $$|f(y)-f(x)|=\left|\int_{x}^{y}f'(t)dt\right| \leq |y-x|\|f'\|_{\infty}.$$
- Therefore we have $|f[x,y]|\leq \|f'\|_{\infty}.$
-For $x_{i-1} \leq x \leq x_i, \ i=1, \ldots, n-1,$ we  can rewrite
-$A_{n}(f)(x)=f\left(x_{i-1}\right)+f\left[x_{i-1},x_{i}\right]\left(x-x_{i-1}\right).$
-Then by Eq(2.67) in \cite{walter}, we have
-$
-f(x)-A_{n}(f)(x)
-=f\left[x_{i-1},x_{i},x\right]\cdot (x-x_{i-1})(x-x_i).
-$
-And we have
-$\left|(x-x_{i-1})(x-x_{i})\right| \leq 1/(4(n-1)^2).$
-On the one hand, we can rewrite
-\begin{align*}&|f\left[x_{i-1},x_{i},x\right]|=\left|\frac{f[x_{i},x]-f[x_{i-1},x]}{x_i-x_{i-1}}\right|\leq2(n-1)\norm[\infty]{f'}.\\
-\Rightarrow & |f(x)-A_{n}(f)(x)|\leq \frac{1}{4(n-1)^2}\cdot 2(n-1)\norm[\infty]{f'}=\frac{\norm[\infty]{f'}}{2(n-1)}.
+while the expression involving $f''$ yields the bound 
+\begin{align*}
+\abs{f(x)-A_n (f)(x)}
+&\le (n-1)\left[(x_{i+1}-x)\frac{(x-x_i)^2}{2} + (x-x_i)\frac{(x_{i+1}-x)^2}{2} \right ]\norm[\infty]{f''} \\
+&=\frac{(x-x_i)(x_{i+1}-x)}2 \norm[\infty]{f''} \le \frac{\norm[\infty]{f''}}{8(n-1)^2}.
 \end{align*}
-Similarly, we can obtain that for $x \in [0,1]$
-$$\norm[\infty]{f-A_{n}(f)} \leq \frac{\|f'\|_{\infty}}{2(n-1)} \Rightarrow \tilde{h}(n)=\frac{1}{2}(n-1)^{-1}.$$
+This implies that we may take
+\begin{equation}
+\tildeh(n) =  \frac{1}{2(n-1)}, \qquad h(n) =  \frac{1}{8(n-1)^2} \leq \frac{1}{4(n-1)^2} = \tilde{h}(n) h_{+}(n).
+\end{equation}
 
-On the other hand, by Eq(2.68) in \cite{walter},
-we know
-$f\left[x_{i-1},x_{i},x\right]=\frac{1}{2}f''(\xi),$ where $\xi \in [x_{i-1},x_{i}].$
-Then we know
-$
-|f\left[x_{i-1},x_{i},x\right] |\leq \frac{1}{2}\norm[\infty]{f''}.$
-Thus,
-$$
-|f(x)-A_{n}(f)(x)|\leq \frac{1}{4(n-1)^2}\frac{\norm[\infty]{f''}}{2}=\frac{\norm[\infty]{f''}}{8(n-1)^2}.
-$$
-Hence, we can obtain that for $\forall x \in [0,1]$
-$$\norm[\infty]{f-A_{n}(f)} \leq  \frac{\norm[\infty]{f''}}{8(n-1)^{2}} \Rightarrow h(n)=\frac{1}{8}(n-1)^{-2}.$$
-
-
-%Combine eq.(\ref{errorg}) and eq.(\ref{errorf}), we have the same result as in eq. (\ref{Anerrbound}).
-%$$\norm[\ch]{S(f) -  A_n(f)} \le \frac{\min(C_1,C_2\tau n^{p_1-p_2})\norm[\cg]{f}}{n^{p_1}} \qquad \forall f \in \cc_{\tau}.$$
-
-%
-%Then by Algorithm \ref{twostagedetalgo}, we have the following algorithm
-%\begin{algo} \label{adpatalgo}
-%{\bf (Automatic, Adaptive, Two-Stage, Deterministic).}
-% Let $\varepsilon$ be a positive error tolerance, and let $N_{\max}$ be the maximum cost allowed.  Let $\tau$ be a fixed positive number and
-% let $A_{n}$ is defined as above. Let $n_{0}$ be a number larger than $\tau+2.$ Given an input function $f$, do the following:
-%
-%\begin{description}
-%\item[Stage 1.\ Estimate {$\norm[\infty]{f'}$}.] Compute $G_{n_{0}}(f)$ at a cost of $n_{0} = \cost(A_{n_{0}})$.   Define the inflation factor
-%$$
-%\fC =\frac{1}{1 - \tau (n_{0}-1)^{-s}} \ge 1.
-%$$
-%Then $\fC G_{n_{0}}(f)$ provides a reliable upper bound on $\norm[\infty]{f'}$.
-%
-%\item [Stage 2.\ Estimate {$f$}.] Choose the sample size need to approximate $f$, namely, check whether $N$ is large enough to satisfy the error tolerance, i.e.,
-%\[
-%\frac{\min(1,\tau (N-1)^{-s})\fC G_{n_{0}}(f)}{2N} \le \varepsilon.
-%\]
-%If $N \le N_{\max}-n_0$, then $f$ may be approximated within the desired error tolerance and within the cost budget.  Set the warning flag to false, $W=0$. Otherwise, recompute $N$ to be within budget, $N = \tN_{\max} := \max\{N \in \ci : N\le N_{\max} -  N_G\}$, and set the warning flag to true, $W=1$.  Compute $A_N(f)$ as the approximation to $f$.
-%
-%\end{description}
-%
-%\end{algo}
-
-And we can find  $h(n) \leq \tilde{h}(n) h_{+}(n), \forall n \in \mathcal{I},$ then $ \tau h(n)< \tilde{h}(n) \ \forall n \in \mathcal{I}.$
-Thus we only need to find $n$ such that  \[
-\frac{\tau \fC_n G_{n}(f)}{8(n-1)^2} \le \varepsilon.
+By condition \eqref{hbestverb}, it follows that $\min(\tildeh(n),\tau h(n))=\tau h(n)$, which then simplifies some of the expressions in Algorithm \ref{multistageapproalgo} and Theorem \ref{MultiStageThm}.  Specifically, the left side of the inequality in \eqref{multistageconv} becomes
+\[
+\min(\tildeh(n_i),\tau h(n_i))\fC_{n_i} G_{n_i}(f) = \frac{\tau  G_{n_i}(f) } {4\varepsilon (n_i-1)(2n_i-2 -\tau)}.
 \]
+The function $N_A$ defined in \eqref{Nmindef} is 
+\[
+N_{A}(a)= \min\left\{ n \in \ci : \tau h(n) \le a \right\} = 1+ \left \lceil \sqrt{a/(8\tau)}\right \rceil.
+\]
+The denominator in the definition of the set of integrands $\cn$ in \eqref{nicefdefmulti} is 
+\[
+\fC_{N_{\max}/r} \fc_{N_{\max}/r} \min(\tildeh(N_{\max}/r),\tau h(N_{\max}/r)) = 
+\frac{\tau}{2 (N_{\max}-2)(N_{\max}-2 -\tau)}.
+\]
+The function $\tN_A$ defined in \eqref{tNmindef} is  
+\begin{align*} \label{tNmindef}
+\tN_A(a) &= \min\left\{ n \in \ci : \min(\tildeh(n),\tau h(n))\fC_n\fc_n \le a \right\} \\
+&= 1+ \left \lceil \sqrt{\frac{1}{8a} + \frac{\tau^2}{16}} +\frac{\tau}{4} \right \rceil \le 1+ \left \lceil\sqrt{\frac{1}{8a}} + \frac{\tau}{2} \right \rceil.
+\end{align*}
+With these preliminaries, Algorithm \ref{multistagealgo} and Theorem \ref{MultiStageThm} may be applied directly to  yield the following algorithm for function approximation and its guarantee.
 
-If we consider about the embedded algorithms, by Algorithm $\ref{multistagealgo},$ we obtain
 \begin{algo} \label{multistageapproalgo}
 Let the error tolerance $\varepsilon$, the maximum cost budget $N_{\max}$, and the cone constant $\tau$ be given inputs. Let the sequences of algorithms, $\{A_n\}_{n \in \ci}$ and  $\{G_n\}_{n \in \ci}$ be as described above.  Set $i=1$.  Let $n_1=\lceil (\tau+1)/2\rceil + 1$. For any input function $f \in \cf$, do the following:
 \begin{description}
@@ -141,7 +103,7 @@ If this is true, then set $W$ to be false, return $(A_{n_i}(f),W)$ and terminate
 
 
 \item[Stage 3. Compute $n_{i+1}$.]  Otherwise, if the inequality above fails to hold,
-choose $n_{i+1}$ as the smallest number exceeding $n_i$ and not less than $N_{A}(\varepsilon /G_{n_i}(f))$ such that $A_{n_{i}}$ is embedded in $A_{n_{i+1}}$, i.e., 
+choose
 $$
 n_{i+1}=1+ (n_i-1)\max\left\{\left\lceil\frac{1}{(n_i-1)}\sqrt{\frac{\tau G_{n_i}(f)}{8\varepsilon}}\right\rceil,2\right\}.
 $$
@@ -156,77 +118,64 @@ $$
 = \left \{ f \in \cc_\tau : \norm[\infty]{f'} \le \frac{2\varepsilon (N_{\max}-2)(N_{\max}-2 -\tau)}{\tau} \right\}
 $$
 be the nice subset of the cone $\cc_\tau$.  Then it follows that Algorithm \ref{multistageapproalgo} is successful for all functions in $\cn$,  i.e.,  $\success(A,W,\cn,\varepsilon,N_{\max}) = 1$.  Moreover, the cost of this algorithm is bounded above as follows:
-\begin{equation*}
+\begin{align*}
 \cost(A,\cn,\varepsilon,N_{\max},\norm[\infty]{f'})
-\le 2 + 2 \left \lceil \sqrt{\frac{\tau \norm[\infty]{f'}}{8\varepsilon} + \frac{\tau^2 }{16}} + \frac{\tau}{4} \right\rceil.
-\end{equation*}
+&\le 2+2 \left \lceil \sqrt{\frac{\tau \norm[\infty]{f'}}{8\varepsilon} + \frac{\tau^2 }{16}} + \frac{\tau}{4} \right\rceil \\
+&\le 2+2 \left \lceil\sqrt{\frac{\tau \norm[\infty]{f'}}{8\varepsilon}} + \frac{\tau}{2} \right \rceil.
+\end{align*}
 \end{theorem}
-
-\begin{proof}
-Applied Theorem \ref{MultiStageThm}, then we can have the above result.
-\end{proof}
-
-
 
 
 \subsection{Lower Bound}
-Next, we will derive the lower bound. Suppose that for any $n>0,$ for any algorithm which cost is less than $n.$
-We want to build fooling function at all data sites $\xi_{i}, \ i=0,\ldots,n-1.$
-There exists at least one $i$ such that $\xi_{i+1}-\xi_{i}\ge 1/(n-1).$
-Then we can define $f_{1}$
-$$f_{1}(x):=\left\{\begin{matrix}
-A_{1}(x-\xi_{j})^{2}(x-\xi_{j+1})^{2} & \xi_{j}< x \leq \xi_{j+1},\\
+Next, we derive a lower bound on the cost of approximating functions in the cone $\cc_{\tau}$ by constructing fooling functions. Following the arguments of Section \ref{LowBoundSec}, we choose  $f_0(x)=x.$ Then 
+\[
+\norm[\infty]{f'_0}=1, \qquad \norm[\infty]{f''_0}=0, \qquad \tau_0=0.
+\]
+For any $n =2, 3, \ldots$, suppose that the one has the data $L_i(f)=f(\xi_i)$, $i=1, \ldots, n$ for arbitrary $\xi_i$, where $0=\xi_0 \le \xi_1 < \cdots < \xi_n \le \xi_{n+1} = 1$.  There must be some $j=0, \ldots, n$ such that $\xi_{j+1} - \xi_j \ge 1/(n+1)$.  The function $f_{1}$, defined as 
+$$
+f_{1}(x):=\begin{cases} \displaystyle
+\frac{16(x-\xi_{j})^{2}(\xi_{j+1}-x)^{2}}{(\xi_{i+1}-\xi_{i})^4} & \xi_{j} \le x \leq \xi_{j+1},\\
 0 & \text{otherwise},
-\end{matrix}\right.,$$
-where $A_{1} \ge 0.$ As we need $\norm[\infty]{f_1}=1,$ we can have $A_{1}=\frac{16}{(\xi_{i+1}-\xi_{i})^4}.$
-Then we can obtain
+\end{cases}
+$$
+has $\norm[\infty]{f}=1$ and $f_1(\xi_i)=0$ for $i=0, \ldots, n+1$.  Moreover, the norms of the first and second derivatives of $f_1$ are
 \begin{align*}
-\norm[\infty]{f'_1}&=\frac{16}{3\sqrt{3}(\xi_{j+1}-\xi_{j})}\leq \frac{16}{3\sqrt{3}}(n-1) \Rightarrow g(n)=\frac{16}{3\sqrt{3}}(n-1).\\
+\norm[\infty]{f'_1}&=\frac{16}{3\sqrt{3}(\xi_{j+1}-\xi_{j})}\leq \tg(n),\\
 \norm[\infty]{f''_1}&=\frac{16}{(\xi_{j+1}-\xi_{j})^2}
 =\frac{3\sqrt{3}\norm[\infty]{f'_1}}{(\xi_{j+1}-\xi_{j})}
- \leq 3\sqrt{3}(n-1)\norm[\infty]{f'_1}\Rightarrow \tg(n)=3\sqrt{3}(n-1).
+ \leq g(n) \norm[\infty]{f'_1},
 \end{align*}
+where the inequality $\xi_{j+1} - \xi_j \ge 1/(n+1)$ is used to define $\tg$ and $g$ as
+\[
+\tg(n) = \frac{16(n+1)}{3\sqrt{3}}, \qquad g(n) = 3\sqrt{3}(n+1), \qquad (g\tg)(n) = 16(n+1)^2.
+\]
+Using these choices of $f_0$ and $f_1$, along with the corresponding $\tg$ and $g$ above, one may invoke Proposition \ref{optimalprop}, Theorem \ref{complowbd}, and Corollary \ref{optimcor} to obtain the following theorem.
 
-Let $f_0=x.$ Then we have $\norm[\infty]{f'_0}=1, \norm[\infty]{f''_0}=0 \Rightarrow \tau_0=0.$
-
-\begin{theorem} \label{complowbdappr} Suppose that functions $f_{0}$ and $f_1$ can be found that satisfy conditions \eqref{assumpfone} and \eqref{assumpfzero}.  It then follows that the complexity of the problem, defined by \eqref{complexdef}, assuming infinite cost budget, over the cone of functions $\cc_{\tau}$ is
-$$
-\comp(\varepsilon,\ca(\cc_{\tau},\ch,S,\Lambda),\infty,\sigma)
-\ge \min\left(\frac{3\sqrt{3}\sigma}{64 \varepsilon}+1, \left(\frac{\sigma\tau}{64\varepsilon}\right)^{2}+1 \right).
-$$
+\begin{theorem} \label{complowbdappr} The linear spline algorithm is optimal for $\cl_{\infty}$ approximation of functions in $\mathcal{W}^{1,\infty}$ and $\mathcal{W}^{2,\infty}$. Assuming an infinite cost budget, the complexity of the function recovery problem problem, over the cone of functions $\cc_{\tau}$ defined in \eqref{taudef} is
+\begin{align*}
+\comp(\varepsilon,\ca(\cc_{\tau},\ch,S,\Lambda),\infty,\norm[\infty]{f'})
+&\ge \min\left(\frac{3\sqrt{3}\norm[\infty]{f'}}{64 \varepsilon}, \sqrt{\frac{\tau\norm[\infty]{f'}}{64\varepsilon}} \right)-1\\
+& \sim \sqrt{\frac{\tau\norm[\infty]{f'}}{64\varepsilon}}  \quad\text{as } \frac{\norm[\infty]{f'}}{\varepsilon} \to \infty
+\end{align*}
+Moreover, Algorithm \ref{multistageapproalgo} is optimal for approximating functions in $\cc_{\tau}$.
 \end{theorem}
-
-\begin{proof}
-$g(n), \ \tg(n)$ and $\tau_0$ is obtained above, then by Theorem \ref{complowbd}
-we can have the above results.
-\end{proof}
 
 \subsection{Numerical Example}
 
-We want to testify the success rate for our algorithm. So we
-choose test function $f(x)=e^{-(a(x-\mu))^2},$
-where $\mu \sim U[0,1]$ and $\log_{10} a \sim U[0,4].$
-And $\mu \sim U[0,1]$ means $\mu$ is uniform on [0,1].
-Also for this kind of function, if we have large $a$, we can approximate the function hardly
-because the function has a sharper bump. And we know
-$\norm[\infty]{f'}=a\sqrt{2/e}, \ \norm[\infty]{f''}=2a^2.$
-If $f \in \cc_{\tau}$ then we should have
-$a \leq \tau/\sqrt{2e}.$ Which means Expected Success Rate should be $\log_{10}(\tau/\sqrt{2e})/4.$
-Here we use $\tau = 10, 25 , 100$ separately to test $10000$ times with
-$\varepsilon = 1e-7$ to obtain the observed success rate.
+To illustrate Algorithm \ref{multistageapproalgo} we 
+choose a family of test functions $f:x \mapsto \me^{-(a(x-\mu))^2},$
+where $\mu$ is distributed uniformly on $[0,1]$ and $\log_{10}(a)$ is distributed uniformly $[0,4]$.  When $a$ is large this function is very spiky and hard to approximate since the sampled function values may miss the spike.  Since $\norm[\infty]{f'}=a\sqrt{2/e}$ and $\norm[\infty]{f''}=2a^2$, the probability that $f \in \cc_{\tau}$ is $\log_{10}(\tau/\sqrt{2e})/4.$
+For $\tau = 10, 25 , 100$ we choose a sample of  $10000$ functions and an error tolerance of  $\varepsilon = 1e-7$.  The empirical probability that Algorithm \ref{multistageapproalgo} succeeds in returning an answer within the error tolerance is given in Table {approxnumerical}.  Our algorithm succeeds for all functions lying in the cone plus some others.  It is conservative, but not overly so.
 \begin{table}[h]
 \centering
 \begin{tabular}{cccc}
 $\tau$ &  10 & 25 & 100\\
 \toprule
-Expected Success Rate &  $\leq 16 \%$ &  $\leq 26 \%$  & $\leq 41 \%$ \\
+Probability of $f \in \cc_\tau$ &  $\leq 16 \%$ &  $\leq 26 \%$  & $\leq 41 \%$ \\
 Observed Success Rate & 25$\%$ &  34$\%$  & 49$\%$ \\
 \end{tabular}
-\caption{ Comparison between expected and observed success rate}
+\caption{Comparison between the probability of the input function lying in the cone and the empirical success rate of the algorithm.  \label{approxnumerical}}
 \end{table}
-
-From the above table, we can find our algorithm works very well, as the observed
-success rate is always larger than the expected success rate.\\
 
 
 
