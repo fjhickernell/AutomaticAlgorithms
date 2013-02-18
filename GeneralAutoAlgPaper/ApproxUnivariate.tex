@@ -1,16 +1,16 @@
 
-Now we consider the problem of $\cl_{\infty}$ recovery of functions defined on $[0,1]$, i.e., 
+Now we consider the problem of $\cl_{\infty}$ recovery of functions defined on $[0,1]$, i.e.,
 \[
 S(f)=f, \qquad \ch=\cl_{\infty}, \qquad \norm[\ch]{S(f)-A(f)}=\norm[\infty]{f-A(f)}.
 \]
-The spaces of functions to be recovered are the Sobolev spaces $\cg = \mathcal{W}^{1,\infty}$ and $\cf = \mathcal{W}^{2,\infty}$, where $\mathcal{W}^{k,\infty}$ was defined in \eqref{??}.  The cone of functions for which our adaptive algorithms will be shown to work well is defined as 
+The spaces of functions to be recovered are the Sobolev spaces $\cg = \mathcal{W}^{1,\infty}$ and $\cf = \mathcal{W}^{2,\infty}$, where $\mathcal{W}^{k,\infty}$ was defined in \eqref{??}.  The cone of functions for which our adaptive algorithms will be shown to work well is defined as
 \begin{equation}\label{taudef}
 \cc_{\tau}=\{f \in  \mathcal{W}^{2,\infty} : \norm[\infty]{f''}\leq \tau\norm[\infty]{f'}\}.
 \end{equation}
 
 The basic non-adaptive algorithm used to approximate functions in the cone $\cc_{\tau}$ is linear interpolation on evenly spaced points.  Letting $\ci=\{2, 3, \ldots\}$ as in the previous section, the sequence of algorithms $\{A_n\}_{n \in \ci},$ is defined by
 \begin{subequations} \label{linearspline}
-\begin{gather} 
+\begin{gather}
 x_i=\frac{i-1}{n-1}, \qquad i=1, \ldots, n, \\
 A_{n}(f)(x)=(n-1) \left[ f(x_{i})(x_{i+1}-x) +f(x_{i+1})(x-x_i) \right], \qquad x_i \leq x \leq x_{i+1}.
 \end{gather}
@@ -19,7 +19,7 @@ The cost of $A_n$, is the number of function evaluations, $n$.  Using this same 
 \begin{equation}\label{estfirstderiv}
 G_n(f) = (n-1) \sup_{i=1, \ldots, n-1} \abs{f(x_{i+1})-f(x_i)}.
 \end{equation}
-Since $A_n$, which uses $n-1$ line segments, is embedded in $A_{2n-1}$, which uses $2(n-1)$ line segments, the minimum cost multiple is $r=2$. 
+Since $A_n$, which uses $n-1$ line segments, is embedded in $A_{2n-1}$, which uses $2(n-1)$ line segments, the minimum cost multiple is $r=2$.
 
 \subsection{Adaptive Algorithm and Upper Bound on the Cost}
 
@@ -56,7 +56,7 @@ The expression involving $f'$ yields the bound
 &\le 2 (n-1)(x-x_i)(x_{i+1}-x)\norm[\infty]{f'} \\
 &\le \frac{\norm[\infty]{f'}}{2(n-1)},
 \end{align*}
-while the expression involving $f''$ yields the bound 
+while the expression involving $f''$ yields the bound
 \begin{align*}
 \abs{f(x)-A_n (f)(x)}
 &\le (n-1)\left[(x_{i+1}-x)\frac{(x-x_i)^2}{2} + (x-x_i)\frac{(x_{i+1}-x)^2}{2} \right ]\norm[\infty]{f''} \\
@@ -69,21 +69,21 @@ This implies that we may take
 
 By condition \eqref{hbestverb}, it follows that $\min(\tildeh(n),\tau h(n))=\tau h(n)$, which then simplifies some of the expressions in Algorithm \ref{multistageapproalgo} and Theorem \ref{MultiStageThm}.  Specifically, the left side of the inequality in \eqref{multistageconv} becomes
 \[
-\min(\tildeh(n_i),\tau h(n_i))\fC_{n_i} G_{n_i}(f) = \frac{\tau  G_{n_i}(f) } {4\varepsilon (n_i-1)(2n_i-2 -\tau)}.
+\min(\tildeh(n_i),\tau h(n_i))\fC_{n_i} G_{n_i}(f) = \frac{\tau  G_{n_i}(f) } {4(n_i-1)(2n_i-2 -\tau)}.
 \]
-The function $N_A$ defined in \eqref{Nmindef} is 
+The function $N_A$ defined in \eqref{Nmindef} is
 \[
 N_{A}(a)= \min\left\{ n \in \ci : \tau h(n) \le a \right\} = 1+ \left \lceil \sqrt{a/(8\tau)}\right \rceil.
 \]
-The denominator in the definition of the set of integrands $\cn$ in \eqref{nicefdefmulti} is 
+The denominator in the definition of the set of integrands $\cn$ in \eqref{nicefdefmulti} is
 \[
-\fC_{N_{\max}/r} \fc_{N_{\max}/r} \min(\tildeh(N_{\max}/r),\tau h(N_{\max}/r)) = 
+\fC_{N_{\max}/r} \fc_{N_{\max}/r} \min(\tildeh(N_{\max}/r),\tau h(N_{\max}/r)) =
 \frac{\tau}{2 (N_{\max}-2)(N_{\max}-2 -\tau)}.
 \]
-The function $\tN_A$ defined in \eqref{tNmindef} is  
+The function $\tN_A$ defined in \eqref{tNmindef} is
 \begin{align*} \label{tNmindef}
 \tN_A(a) &= \min\left\{ n \in \ci : \min(\tildeh(n),\tau h(n))\fC_n\fc_n \le a \right\} \\
-&= 1+ \left \lceil \sqrt{\frac{1}{8a} + \frac{\tau^2}{16}} +\frac{\tau}{4} \right \rceil \le 1+ \left \lceil\sqrt{\frac{1}{8a}} + \frac{\tau}{2} \right \rceil.
+&= 1+ \left \lceil \sqrt{\frac{\tau}{8a} + \frac{\tau^2}{16}} +\frac{\tau}{4} \right \rceil \le 1+ \left \lceil\sqrt{\frac{\tau}{8a}} + \frac{\tau}{2} \right \rceil.
 \end{align*}
 With these preliminaries, Algorithm \ref{multistagealgo} and Theorem \ref{MultiStageThm} may be applied directly to  yield the following algorithm for function approximation and its guarantee.
 
@@ -127,11 +127,11 @@ be the nice subset of the cone $\cc_\tau$.  Then it follows that Algorithm \ref{
 
 
 \subsection{Lower Bound}
-Next, we derive a lower bound on the cost of approximating functions in the cone $\cc_{\tau}$ by constructing fooling functions. Following the arguments of Section \ref{LowBoundSec}, we choose  $f_0(x)=x.$ Then 
+Next, we derive a lower bound on the cost of approximating functions in the cone $\cc_{\tau}$ by constructing fooling functions. Following the arguments of Section \ref{LowBoundSec}, we choose  $f_0(x)=x.$ Then
 \[
 \norm[\infty]{f'_0}=1, \qquad \norm[\infty]{f''_0}=0, \qquad \tau_0=0.
 \]
-For any $n =2, 3, \ldots$, suppose that the one has the data $L_i(f)=f(\xi_i)$, $i=1, \ldots, n$ for arbitrary $\xi_i$, where $0=\xi_0 \le \xi_1 < \cdots < \xi_n \le \xi_{n+1} = 1$.  There must be some $j=0, \ldots, n$ such that $\xi_{j+1} - \xi_j \ge 1/(n+1)$.  The function $f_{1}$, defined as 
+For any $n =2, 3, \ldots$, suppose that the one has the data $L_i(f)=f(\xi_i)$, $i=1, \ldots, n$ for arbitrary $\xi_i$, where $0=\xi_0 \le \xi_1 < \cdots < \xi_n \le \xi_{n+1} = 1$.  There must be some $j=0, \ldots, n$ such that $\xi_{j+1} - \xi_j \ge 1/(n+1)$.  The function $f_{1}$, defined as
 $$
 f_{1}(x):=\begin{cases} \displaystyle
 \frac{16(x-\xi_{j})^{2}(\xi_{j+1}-x)^{2}}{(\xi_{i+1}-\xi_{i})^4} & \xi_{j} \le x \leq \xi_{j+1},\\
@@ -162,7 +162,7 @@ Moreover, Algorithm \ref{multistageapproalgo} is optimal for approximating funct
 
 \subsection{Numerical Example}
 
-To illustrate Algorithm \ref{multistageapproalgo} we 
+To illustrate Algorithm \ref{multistageapproalgo} we
 choose a family of test functions $f:x \mapsto \me^{-(a(x-\mu))^2},$
 where $\mu$ is distributed uniformly on $[0,1]$ and $\log_{10}(a)$ is distributed uniformly $[0,4]$.  When $a$ is large this function is very spiky and hard to approximate since the sampled function values may miss the spike.  Since $\norm[\infty]{f'}=a\sqrt{2/e}$ and $\norm[\infty]{f''}=2a^2$, the probability that $f \in \cc_{\tau}$ is $\log_{10}(\tau/\sqrt{2e})/4.$
 For $\tau = 10, 25 , 100$ we choose a sample of  $10000$ functions and an error tolerance of  $\varepsilon = 1e-7$.  The empirical probability that Algorithm \ref{multistageapproalgo} succeeds in returning an answer within the error tolerance is given in Table {approxnumerical}.  Our algorithm succeeds for all functions lying in the cone plus some others.  It is conservative, but not overly so.
