@@ -1,0 +1,184 @@
+\documentclass[]{elsarticle}
+\setlength{\marginparwidth}{0.5in}
+\usepackage{amsmath,amssymb,amsthm,natbib,mathtools,graphicx}
+\input FJHDef.tex
+
+\DeclareMathOperator{\lin}{lin}
+\DeclareMathOperator{\up}{up}
+\DeclareMathOperator{\lo}{lo}
+\DeclareMathOperator{\fix}{non}
+\DeclareMathOperator{\err}{err}
+\DeclareMathOperator{\tol}{tol}
+\newcommand{\fudge}{\mathfrak{C}}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{prop}[theorem]{Proposition}
+\newtheorem{lem}{Lemma}
+\theoremstyle{definition}
+\newtheorem{algo}{Algorithm}
+\newtheorem{condit}{Condition}
+%\newtheorem{assump}{Assumption}
+\theoremstyle{remark}
+\newtheorem{rem}{Remark}
+
+
+\journal{Journal of Complexity}
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{Guaranteed Automatic Algorithms with a Generalized Error Criterion}
+\author{Yuhan Ding}
+\author{Fred J. Hickernell}
+\author{Yizhi Zhang}
+\address{Room E1-208, Department of Applied Mathematics, Illinois Institute of Technology,\\ 10 W.\ 32$^{\text{nd}}$ St., Chicago, IL 60616}
+\begin{abstract}
+\end{abstract}
+
+\begin{keyword}
+adaptive \sep cones \sep function recovery \sep integration \sep quadrature
+%% keywords here, in the form: keyword \sep keyword
+
+\MSC[2010] 65D05 \sep 65D30 \sep 65G20
+%% MSC codes here, in the form: \MSC code \sep code
+%% or \MSC[2008] code \sep code (2000 is the default)
+
+\end{keyword}
+\end{frontmatter}
+
+
+\section{A General Global Error Criterion} \label{globalerrsec}
+
+The criterion used for the automatica algorithms in \cite{HicEtal14b} is an \emph{absolute} error criterion. Given an error tolerance, $\varepsilon_a$, one seeks an algorithm, $A$, such that
+\begin{equation} \label{abserrcrit}
+\norm[\ch]{S(f)-A(f)} \le \varepsilon_a.
+\end{equation}
+This is done through a sequence of non-adaptive algorithms, $A_n$, with cost $n$.  For each $n$ one can compute from only data the quantity $\hvareps_n$, a reliable upper bound on $\norm[\ch]{S(f)-A_n(f)}$, i.e.,
+\begin{equation} \label{hatvareps}
+\norm[\ch]{S(f)-A_n(f)} \le \hvareps_n.
+\end{equation}
+The automatic algorithms in \cite{HicEtal14b} uses a sequence of $A_n$ with $n$ increasing until $\hvareps_n \le \varepsilon_a$.
+
+In many practical situations, one needs to approximate the answer with a certain \emph{relative} accuracy, e.g., correct to three significant digits.  In this case, given a tolerance, $\varepsilon_r$, one seeks an algorithm, $A$, such that
+\begin{equation} \label{globalrelerrcrit}
+\norm[\ch]{S(f)-A(f)} \le \varepsilon_r \norm[\ch]{S(f)}.
+\end{equation}
+This is a global relative error criterion, rather than a point-wise relative error criterion.  One may generalize the pure absolute and pure relative error criteria as follows:
+\begin{equation} \label{globalgenerrcrit}
+\norm[\ch]{S(f)-A(f)} \le \tol(\varepsilon_a, \varepsilon_r \norm[\ch]{S(f)}).
+\end{equation}
+Here $\tol:[0,\infty) \times [0,\infty) \to [0,\infty)$ is non-decreasing in each of its arguments and satisfies a Lipschitz condition in terms of its second argument:
+\begin{equation} \label{tolLip}
+\abs{\tol(a,b)-\tol(a,b')} \le \abs{b-b'} \quad \forall a,b,b' \ge 0.
+\end{equation}
+Two examples that one might choose are 
+\begin{gather} 
+\label{tolspeciala}
+\tol(a,b) = \max(a,b), \\ 
+\label{tolspecialb}
+\tol(a,b) = (1-\theta) a + \theta b, \quad 0 \le \theta \le 1.
+\end{gather}
+Both of these examples include absolute error and relative error as special cases. 
+
+Using the $\hvareps_n$, the aforementioned reliable upper bounds on $\norm[\ch]{S(f)-A(f)}$, the aim is to take enough samples so that the generalized error criterion can be satisfied, but not too many.  The triangle inequality implies that
+\[
+\norm[\ch]{A_n(f)} - \norm[\ch]{S(f) - A_n(f)} \le \norm[\ch]{S(f)} \le \norm[\ch]{A_n(f)} + \norm[\ch]{S(f) - A_n(f)}.
+\]
+Supposing that one can evaluate $\norm[\ch]{A_n(f)}$ strictly from the data, this implies that any algorithm satisfying the data-dependent criterion
+\begin{equation} \label{globalgenerrcritsuff}
+\hvareps_n \le \tol\bigl(\varepsilon_a, \varepsilon_r \max(\norm[\ch]{A_n(f)}-\hvareps_n,0)\bigr)
+\end{equation}
+must also satisfy \eqref{globalgenerrcrit}.  This criterion becomes the stopping criterion for the automatic Algorithm \ref{??} below.  Using the triangle inequality again implies that if
+\begin{equation} \label{globalgenerrcritsuffagain}
+\hvareps_n \le \tol\bigl(\varepsilon_a, \varepsilon_r \max(\norm[\ch]{S(f)}-2\hvareps_n,0)\bigr),
+\end{equation}
+then \eqref{globalgenerrcritsuff} must also be satisfied.  This criterion is used to construct an upper bound on the cost of automatic Algorithm \ref{??} in Theorem \ref{??}.  
+
+\section{A General Pointwise Error Criterion} \label{pointerrsec}
+
+In many cases it is possible to work with a point-wise generalized error criterion.  Suppose that the space of solutions, $\ch$, is a vector space of real-valued functions on $\cy$, and that the $\ch$-norm is a sup norm:
+\begin{equation}
+\norm[\ch]{h} = \sup_{\vy \in \cy} \abs{h(\vy)}.
+\end{equation}
+Then a point-wise generalized error criterion would take the form:
+\begin{equation} \label{localgenerrcrit}
+\abs{(S-\tA_n)(f)(\vy)} \le \tol(\varepsilon_a, \varepsilon_r \abs{S(f)(\vy)}) \quad \forall \vy \in \cy,
+\end{equation}
+where again $0 \le \theta \le 1$.  Here $\tA_n$ may not be the same as $A_n$, but as shall be seen below is defined in terms of $A_n$.
+Suppose one has a reliable pointwise upper bound on the error of a non-adaptive algorithm, $A_n$, with cost $n$:
+\begin{equation} \label{hatvareps}
+\hvareps_n(\vy) \ge \abs{(S-A_n)(f) (\vy)} \quad \forall \vy \in \cy.
+\end{equation}
+Here, $\hvareps_n(\vy)$ might be independent of $\vy$. Furthermore, suppose that $A_n(f)(\vy)$ can be evaluated from the data.
+
+\begin{prop} Suppose that $\varepsilon_r \le 1$, and define 
+\begin{multline} \label{Deltadef}
+\Delta_{\pm}(\vy)\\
+= \frac{1}{2}\left[\tol\bigl(\varepsilon_a, \varepsilon_r \abs{A_n(f)(\vy)-\hvareps_n(\vy)}\bigr) \pm \tol\bigl(\varepsilon_a, \varepsilon_r \abs{A_n(f)(\vy)+\hvareps_n(\vy)}\bigr) \right],
+\end{multline}
+and the approximation 
+\begin{equation} \label{tAdef}
+\tA_n(f)(\vy) = A_n(f)(\vy) + \Delta_-(\vy).
+\end{equation}
+If point-wise error bound \eqref{hatvareps} holds, where $\hvareps_n(\vy)$ satisfies the following condition,
+\begin{equation} \label{epscond}
+\hvareps_n(\vy) \le \Delta_+(\vy) \qquad \forall \vy \in \cy,
+\end{equation}
+then the point-wise generalized error criterion for $\tA_n(f)$, \eqref{localgenerrcrit}, is satisfied.  If $\hvareps_n(\vy)$ becomes small enough to satisfy
+\begin{multline} \label{suffepscond}
+\hvareps_n(\vy) \\
+\le \frac{1}{2}\left[\tol\bigl(\varepsilon_a, \varepsilon_r \abs{S(f)(\vy)-\hvareps_n(\vy)}\bigr) + \tol\bigl(\varepsilon_a, \varepsilon_r \abs{S(f)(\vy)+\hvareps_n(\vy)}\bigr) \right],
+\end{multline}
+for all $\vy \in \cy$, then \eqref{epscond} must be satisfied.
+\end{prop}
+\begin{proof} The proof follows by applying the condition \eqref{hatvareps} that bounds the absolute error in terms of $\hvareps_n(\vy)$, upper bound condition \eqref{epscond} on $\hvareps_n(\vy)$, the definition of the approximate solution in \eqref{tAdef}, and definition \eqref{Deltadef}:
+\begin{align*}
+\MoveEqLeft{\abs{\tA_n(f)(\vy) - A_n(f)(\vy) - \Delta_-(\vy)}= 0  \le \Delta_+(\vy) - \hvareps_n(\vy)} \quad \text{by \eqref{tAdef} and \eqref{epscond}}\\
+& \iff A_n(f)(\vy) + \Delta_-(\vy) - \Delta_+(\vy) + \hvareps_n(\vy) \le  \tA_n(f)(\vy) \\
+& \qquad \qquad  \le A_n(f)(\vy) + \Delta_-(\vy) + \Delta_+(\vy) - \hvareps_n(\vy)\\
+& \iff A_n(f)(\vy) - \tol\bigl(\varepsilon_a, \varepsilon_r \abs{A_n(f)(\vy)+\hvareps_n(\vy)}\bigr) + \hvareps_n(\vy) \le  \tA_n(f)(\vy) \\
+& \qquad \qquad  \le A_n(f)(\vy) + \tol\bigl(\varepsilon_a, \varepsilon_r \abs{A_n(f)(\vy)-\hvareps_n(\vy)}\bigr) - \hvareps_n(\vy) \quad\text{by \eqref{Deltadef}}\\
+& \implies S(f)(\vy) - \tol\bigl(\varepsilon_a, \varepsilon_r\abs{S(f)(\vy)}\bigr) \le  \tA_n(f)(\vy) \\
+& \qquad \qquad  \le S(f)(\vy) + \tol\bigl(\varepsilon_a, \varepsilon_r \abs{S(f)(\vy)}\bigr) \\
+& \qquad \qquad \text{by \eqref{hatvareps} and since  $b \mapsto b\pm\tol(a,\varepsilon_r\abs{b})$ is non-decreasing by \eqref{tolLip}}\\
+& \iff  \abs{\tA_n(f)(\vy) - S(f)(\vy)} \le \tol\bigl(\varepsilon_a, \varepsilon_r \abs{S(f)(\vy)}\bigr).
+\end{align*}
+This completes the proof.
+\end{proof}
+
+For the special case of \eqref{tolspeciala}
+\begin{align*}
+\Delta_+ 
+& = \frac{1}{2}\left[\max\bigl(\varepsilon_a,\varepsilon_r\abs{A_n(f)(\vy)-\hvareps_n(\vy)}\bigr) + \max\bigl(\varepsilon_a,\varepsilon_r\abs{A_n(f)(\vy)+\hvareps_n(\vy)}\bigr) \right] \\
+& = \begin{cases} \max\bigl(\abs{A_n(f)(\vy)},\hvareps_n(\vy)\bigr), \qquad \qquad \hfill \hfill  \varepsilon_a \le \varepsilon_r \abs{ \abs{A_n(f)(\vy)} - \hvareps_n(\vy) },\\
+\frac{1}{2}\left[\varepsilon_a + \varepsilon_r\bigl(\abs{A_n(f)(\vy)}+\hvareps_n(\vy)\bigr) \right], \\
+\hfill \hfill \varepsilon_r \abs{ \abs{A_n(f)(\vy)} - \hvareps_n(\vy) } \le \varepsilon_a \le  \varepsilon_r \bigl( \abs{A_n(f)(\vy)} + \hvareps_n(\vy) \bigr),\\
+\varepsilon_a, \hfill \hfill  \varepsilon_r \bigl( \abs{A_n(f)(\vy)} + \hvareps_n(\vy) \bigr) \le \varepsilon_a.
+\end{cases}\\
+\Delta_- 
+& = \frac{1}{2}\left[\max\bigl(\varepsilon_a,\varepsilon_r\abs{A_n(f)(\vy)-\hvareps_n(\vy)}\bigr) - \max\bigl(\varepsilon_a,\varepsilon_r\abs{A_n(f)(\vy)+\hvareps_n(\vy)}\bigr) \right] \\
+& = \begin{cases} -\sign(A_n(f)(\vy)) \min\bigl(\abs{A_n(f)(\vy)},\hvareps_n(\vy)\bigr), \\
+\hfill \hfill \varepsilon_a \le \varepsilon_r \abs{ \abs{A_n(f)(\vy)} - \hvareps_n(\vy) },\\
+\frac{-\sign(A_n(f)(\vy)) }{2}\left[\varepsilon_r\bigl(\abs{A_n(f)(\vy)}+\hvareps_n(\vy)\bigr) - \varepsilon_a\right], \\
+\hspace{1.5cm}  \varepsilon_r \abs{ \abs{A_n(f)(\vy)} - \hvareps_n(\vy) } \le \varepsilon_a \le \varepsilon_r \bigl( \abs{A_n(f)(\vy)} + \hvareps_n(\vy) \bigr),\\
+0, \hfill \hfill  \varepsilon_r \bigl( \abs{A_n(f)(\vy)} + \hvareps_n(\vy) \bigr) \le \varepsilon_a.
+\end{cases}
+\end{align*}
+
+For the special case of \eqref{tolspecialb}
+\begin{align*}
+\Delta_+ 
+& = (1-\theta)\varepsilon_a + \theta \varepsilon_r \frac{1}{2}\left[\abs{A_n(f)(\vy)-\hvareps_n(\vy)} + \abs{A_n(f)(\vy)+\hvareps_n(\vy)} \right] \\
+& = (1-\theta)\varepsilon_a + \theta \varepsilon_r \max(\abs{A_n(f)(\vy)},\hvareps_n(\vy)) \\
+\Delta_- 
+& = \theta \varepsilon_r \frac{1}{2}\left[ \abs{A_n(f)(\vy)-\hvareps_n(\vy)} - \abs{A_n(f)(\vy) + \hvareps_n(\vy)} \right] \\
+& = - \theta \varepsilon_r \sign(A_n(f)(\vy))\min(\abs{A_n(f)(\vy)},\hvareps_n(\vy))
+\end{align*}
+
+
+\section*{Acknowledgements} 
+
+\bibliographystyle{spbasic}
+\bibliography{FJH22,FJHown22}
+\end{document}
