@@ -1,0 +1,199 @@
+\documentclass[]{elsarticle}
+\setlength{\marginparwidth}{0.5in}
+\usepackage{amsmath,amssymb,amsthm,natbib,mathtools,bbm,graphicx}
+\input FJHDef.tex
+
+
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{Error Estimation for Quasi-Monte Carlo Methods}
+\author{Fred J. Hickernell}
+\address{Room E1-208, Department of Applied Mathematics, Illinois Institute of Technology,\\ 10 W.\ 32$^{\text{nd}}$ St., Chicago, IL 60616}
+\begin{abstract} 
+\end{abstract}
+
+\begin{keyword}
+%% keywords here, in the form: keyword \sep keyword
+
+%% MSC codes here, in the form: \MSC code \sep code
+%% or \MSC[2008] code \sep code (2000 is the default)
+
+\end{keyword}
+\end{frontmatter}
+
+\section{Bases and Node Sets}
+
+\subsection{Group-Like Structures}
+Consider the half open $d$-dimensional unit cube, $\cx:=[0,1)^d$, on which the functions of interest are to be defined. Suppose that there exists a commutative unidal structure on $\cx$, i.e., there exists a commutative addition operation $\oplus:\cx \times \cx \to \cx$ with identity element $\vzero$ (the zero vector): 
+\[
+\vx \oplus \vt = \vt \oplus \vx, \quad \vx \oplus \vzero =\vx \qquad \forall \vx,\vt \in \cx.
+\]
+Every $\vx \in \cx$ is assumed to have a unique additive inverse,  denoted $\ominus \vx$, and $\vx \ominus \vt$ means $\vx \oplus (\ominus \vt)$.  Thus, $\vx \ominus \vx = \vzero$.  Associativity is not assumed, and so there may exist $\vt \in \cx$, $\vt \ne \ominus \vx$, such that $\vx \oplus \vt = \vzero$.  This means that $\cx$ might not be a group.  
+
+However, it is assumed that for some subsets of $\cx$, denoted $\tcx$, which are closed under $\oplus$ and for which associativity also holds:
+\begin{equation} \label{assocprop}
+\vx \oplus (\vt \oplus \vu) = (\vx \oplus \vt) \oplus \vu \qquad \forall \vx,\vt,\vu \in \tcx.
+\end{equation}
+As a consequence, such subsets, $\tcx$, are commutative groups.
+
+Let $\bbK$ denote some subset of the $d$-dimensional vector of integers that contains $\vzero$.  Important examples are the set of integer vectors, $\integers^d$, and the set of non-negative integer vectors, $\natzero^d$.  The set $\bbK$ is used to index the series expressions for the functions to be integrated.  Suppose also that there exists an Abelian group structure on $\bbK$, with the additive operation $\oplus$.  Moreover, assume that there exists an operation $\otimes: \bbK \times \cx \to [0,1)$ that returns zero if either argument is zero and also has a distributive property:
+\begin{subequations} \label{distrib}
+\begin{gather}
+\vk \otimes \vzero = \vzero \otimes \vx = 0 \qquad \forall \vk \in \bbK, \vx \in \cx,\\
+\vk \otimes (\vx \oplus \vt) = (\vk\otimes\vx) + (\vk\otimes\vt) \pmod 1 \qquad \forall \vk \in \bbK, \vx \in \cx, \vt \in \tcx, \\
+(\vk \oplus \vl) \otimes \vx = (\vk\otimes\vx) + (\vl\otimes\vx) \pmod 1 \qquad \forall \vk,\vl \in \bbK, \vx \in \cx.
+\end{gather}
+\end{subequations}
+
+\subsection{Examples of Group-Like Structures}
+The general notation introduced in the previous subsection and continued in the subsections below is intended to include the algebra behind both \emph{integration lattices} and \emph{digital nets}.  This subsection defines these two special kinds of operators $\oplus$, $\ominus$ and $\otimes$.
+
+Integration lattices are sets that are closed under addition and subtraction modulo one.  In this setting $\bbK=\integers^d$, and
+\begin{gather*}
+\vx \oplus \vt = \vx + \vt \pmod 1, \qquad \ominus \vx = -\vx \pmod 1 \qquad \forall \vx, \vt \in \cx, \\
+\vk \oplus \vl = \vk + \vl, \qquad \ominus \vk = -\vk \qquad \forall \vk, \vl \in \bbK, \\
+\vk \otimes \vx = \vk^T \vx \pmod 1 \qquad \forall \vx \in \cx, \vk \in \bbK.
+\end{gather*}
+All the properties of the previous section can be shown to hold.  Specifically, associativity, \eqref{assocprop}, and the distributive property, \eqref{distrib}, hold for $\tcx = \cx=[0,1)^d$, so $\cx$ is a group.  
+
+The digital net setting deals with $b$-ary expansions of $\cx$, where $b$ is prime, and $\bbK=\naturals_0^d$.  Let $\vx=(x_1, \ldots, x_d)$, and let $x_j={}_b 0.x_{j1} x_{j2} \cdots $ be the proper $b$-ary expansion (no infinite trail of $b-1$s) of $x_j \in [0,1)$.  Furthermore, let $\vk=(k_1, \ldots, k_d)$, and let $k_j=(\cdots k_{j2} k_{j1})_b$ be the $b$-ary expansion of $k_j \in \naturals_0$.  Specifically
+\begin{gather*}
+\vx = \left(\sum_{\ell=1}^{\infty} x_{j\ell} b^{-\ell}\right)_{j=1}^d, \qquad \ominus \vx = \left(\sum_{\ell=1}^{\infty} [-x_{j\ell} \bmod b] b^{-\ell}\right)_{j=1}^d \qquad \forall \vx \in \cx  \\ 
+\vx \oplus \vt = \left(\sum_{\ell=1}^{\infty} [x_{j\ell} + t_{j\ell} \bmod b] b^{-\ell}\right)_{j=1}^d \qquad \forall \vx, \vt \in \cx, \\
+\vk =  \left(\sum_{\ell=0}^{\infty} k_{j\ell} b^{\ell}\right)_{j=1}^d, \qquad \ominus \vk = \left(\sum_{\ell=0}^{\infty} [-k_{j\ell} \bmod b] b^{\ell}\right)_{j=1}^d \qquad \forall \vk \in \bbK, \\
+\vk \oplus \vl = \left(\sum_{\ell=0}^{\infty} [k_{j\ell} + l_{j\ell} \bmod b] b^{\ell}\right)_{j=1}^d \qquad \forall \vk, \vl \in \bbK, \\
+\vk \otimes \vx = \left( \left[\frac 1b \sum_{\ell=0}^{\infty} k_{j\ell}x_{j,\ell+1} \right] \bmod 1 \right)_{j=1}^d \qquad \forall \vx \in \cx, \vk \in \bbK.
+\end{gather*}
+
+What is $\tcx$?
+
+\subsection{Fourier Series}
+
+The integrands are assumed to belong to some subset of $\cl_2(\cx)$, the space of square integrable functions.  The $\cl_2$ inner product is defined as 
+\[
+\ip[2]{f}{g} = \int_{\cx} f(\vx) \overline{g(\vx)} \, \dif \vx.
+\]
+Let $\{\varphi(\cdot,\vk) \in \cl_2(\cx) : \vk \in \bbK\}$ be some complete orthonormal \emph{basis} for $\cl_2(\cx)$. In particular, let 
+\[
+\varphi(\vx,\vk)  = \me^{2 \pi \sqrt{-1} \vk \otimes \vx}, \qquad \vk \in \bbK, \vx \in \cx.
+\]
+Then any function in $\cl_2$ may be written in series form as
+\begin{equation} \label{Fourierdef}
+f(\vx) = \sum_{\vk \in \bbK} \hf(\vk) \varphi(\vx,\vk), \quad \text{where } \hf(\vk) = \ip[2]{f}{\varphi(\cdot,\vk)},
+\end{equation}
+and the inner product of two functions in $\cl_2$ is the $\ell_2$ inner product of their series coefficients:
+\[
+\ip[2]{f}{g} = \sum_{\vk \in \bbK} \hf(\vk)\overline{\hg(\vk)} =: \ip[2]{\bigl(\hf(\vk)\bigr)_{\vk \in \bbK}}{\bigl ( \hg(\vk)\bigr )_{\vk \in \bbK}}.
+\]
+
+\subsection{Node Sets and Their Dual Sets} Now suppose that $\cp$ is any finite subgroup of $\tcx$ with cardinality $\abs{\cp}$.  This will be called a \emph{node set}  It then follows that for all $\vk \in \bbK$ and $\vt \in \cp$,
+\begin{align} 
+\nonumber
+0 & = \frac{1}{\abs{\cp}} \sum_{\vx \in \cp} [\varphi(\vx,\vk) - \varphi(\vx \oplus \vt,\vk)]  = \frac{1}{\abs{\cp}} \sum_{\vx \in \cp} [\me^{2 \pi \sqrt{-1} \vk \otimes \vx} - \me^{2 \pi \sqrt{-1} \vk \otimes (\vx \oplus \vt)}]\\
+\nonumber
+& = \frac{1}{\abs{\cp}} \sum_{\vx \in \cp} [\me^{2 \pi \sqrt{-1} \vk \otimes \vx} - \me^{2 \pi \sqrt{-1} \{(\vk \otimes \vx) + (\vk \otimes\vt)\}}] \quad \text{by } \eqref{distrib}\\
+\label{sumeq}
+& = [1 - \me^{2 \pi \sqrt{-1} \vk \otimes\vt)}] \frac{1}{\abs{\cp}} \sum_{\vx \in \cp} \me^{2 \pi \sqrt{-1} \vk \otimes \vx}.
+\end{align}
+
+Define the \emph{dual set} corresponding to $\cp$ as  
+\begin{equation*}
+\cp^{\perp} = \{\vk \in \bbK : \vk \otimes \vx = 0 \ \forall \vx \in \cp\}.
+\end{equation*}
+The distributive property, \eqref{distrib}, implies that dual set is a subgroup of $\bbK$.  By the equality \eqref{sumeq} above it follows that the average of a basis function, $\varphi(\cdot,\vk)$, over the points in a node set is either one or zero, depending on whether $\vk$ is in the dual set or not.
+\begin{equation*}
+ \frac{1}{\abs{\cp}} \sum_{\vx \in \cp} \me^{2 \pi \sqrt{-1} \vk \otimes \vx} = \bbone_{\cp^{\perp}}(\vk) = \begin{cases} 1 , & \vk \in \cp^{\perp}\\
+ 0,  & \vk \in \bbK \setminus \cp^{\perp}.
+ \end{cases}
+\end{equation*}
+A \emph{shifted} node set is constructed by adding the same point $\vDelta \in \cx$ to each element in the node set: 
+\begin{equation*}
+\cp_{\vDelta} = \{ \vx + \vDelta : \vx \in \cp\}.
+\end{equation*}
+\begin{align*}
+\frac{1}{\abs{\cp_{\vDelta}}} \sum_{\vx \in \cp_{\vDelta}} \me^{2 \pi \sqrt{-1} \vk \otimes \vx} 
+& = \frac{1}{\abs{\cp}} \sum_{\vx \in \cp} \me^{2 \pi \sqrt{-1} \vk \otimes (\vx \oplus \vDelta)} = \frac{1}{\abs{\cp}} \sum_{\vx \in \cp} \me^{2 \pi \sqrt{-1} [(\vk \otimes \vx) + (\vk \otimes \vDelta)]}\\
+&= \me^{2 \pi \sqrt{-1} \vk \otimes \vDelta} \bbone_{\cp^{\perp}}(\vk) = \begin{cases} \me^{2 \pi \sqrt{-1} \vk \otimes \vDelta} , & \vk \in \cp^{\perp}\\
+ 0,  & \vk \in \bbK \setminus \cp^{\perp}.
+ \end{cases}
+\end{align*}
+
+\subsection{Discrete Transforms}
+Define the discrete transform of a function, $f$, over the shifted node set $\cp_{\Delta}$ as 
+\begin{align}
+\label{tfdef}
+\tf(\vk) 
+&:= \frac{1}{\abs{\cp_{\vDelta}}} \sum_{\vx \in \cp_{\Delta}} \me^{-2 \pi \sqrt{-1} \vk \otimes \vx} f(\vx) \\
+\nonumber
+&= \frac{1}{\abs{\cp_{\vDelta}}} \sum_{\vx \in \cp_{\Delta}} \left[\me^{-2 \pi \sqrt{-1} \vk \otimes \vx}\sum_{\vl \in \bbK} \hf(\vl) \me^{2 \pi \sqrt{-1} \vl \otimes \vx} \right] \\
+\nonumber
+& = \sum_{\vl  s\in \bbK} \hf(\vl)  \frac{1}{\abs{\cp_{\vDelta}}} \sum_{\vx \in \cp_{\vDelta}}  \me^{2 \pi \sqrt{-1} (\vl \ominus \vk) \otimes \vx} \\
+\nonumber
+& = \sum_{\substack{\vl \in \bbK \\ \vl \ominus \vk \in \cp^{\perp}}} \hf(\vl) \me^{2 \pi \sqrt{-1} (\vl \ominus \vk) \otimes \vDelta} \\
+\nonumber
+&= \sum_{\vm \in \cp^{\perp}} \hf(\vk\oplus\vm) \me^{2 \pi \sqrt{-1} \vm \otimes \vDelta}, \\
+&= \hf(\vk) + \sum_{\vm \in \cp^{\perp}\setminus \vzero} \hf(\vk\oplus\vm) \me^{2 \pi \sqrt{-1} \vm \otimes \vDelta}, \qquad \forall \vk \in \bbK. \label{tfassum}
+\end{align}
+It is seen here that the discrete transform $\tf(\vk)$ is equal to the integral transform $\hf(\vk)$, defined in \eqref{Fourierdef}, plus the \emph{aliasing} terms corresponding to $\hf(\vl)$ where $\vl$ and $\vk$ differ (in the $\ominus$ sense) by a nonzero element of the dual set.
+
+Notice that the dual nets can be used to form cosets of wavenumbers.  Let 
+\begin{equation*}
+\cp^{\perp}_{\vk} = \{ \vl \in \bbK : \vl \ominus \vk \in \cp^{\perp}\}.
+\end{equation*}
+This means that $\cp^{\perp}_{\vzero}=\cp^{\perp}$.  There are $\abs{\cp}$ distinct cosets.  Then \eqref{tfassum} above implies that 
+\begin{equation}
+\label{tfassumb}
+\tf(\vk) = \sum_{\vl \in \cp^{\perp}_{\vk}} \hf(\vl) \me^{2 \pi \sqrt{-1} (\vl \ominus \vk) \otimes \vDelta}.
+\end{equation}
+
+Now consider the situation where there is a sequence of nested sets,
+\[
+\cp_0 = \{\vzero\} \subset \cp_{1} \subset \cp_{2} \subset \cdots, \qquad \abs{\cp_r} = b^r
+\]
+Furthermore, assume that each set equals the previous plus multiples of one element:
+\begin{equation*}
+\cp_r = \{ \vx \oplus \vt : \vx \in \cp_{r-1},\ \vt \in \{\vzero, \vz_r, \vz_r\oplus\vz_r, \ldots \} \}, \qquad r=1, 2, \ldots,
+\end{equation*}
+where $\vz_1, \vz_2, \ldots \in \tcx$ is some fixed sequence.  According to this definition of nested sets, the dual sets are nested in the opposite direction,
+\begin{equation*}
+\cp_0^\perp = \bbK \supset \cp_{1}^\perp \supset \cp_{2}^\perp \supset \cdots.
+\end{equation*}
+
+Now we are going to map the non-negative numbers into the space of all wavenumbers using the dual sets.  For every $\kappa \in \natzero$, we assign a wavenumber $\vk(\kappa) \in \bbK$ iteratively as follows.  
+\begin{itemize}
+
+\item Let $\vk(0)= \vzero$.
+
+\item For any $\kappa = \kappa_0 + \kappa_1 b + \kappa_2 b^2 + \cdots + \kappa_{r-1} b^{r-1}$ and any $\kappa' = \kappa_0 + \kappa_1 b + \kappa_2 b^2 + \cdots + \kappa_{r-1} b^{r-1} + \kappa_{r}' b^{r} + \cdots +\kappa_{r'}' b^{r'+1}$, where $\kappa_j$ and $\kappa_j'$ are integers between $0$ and $b-1$, assign $\vk(\kappa)$ and $\vk(\kappa')$ such that $\cp^{\perp}_{r,\vk(\kappa)}$ and $\cp^{\perp}_{r,\vk(\kappa')}$ the same equivalence class.
+\end{itemize}
+
+Introducing the shorthand notation such $\hf_{\kappa}=\hf(\vk(\kappa))$, and such that $\tf_{\kappa,r}$ corresponds to the discrete transform $\tf(\vk(\kappa))$ defined in \eqref{tfdef} based on the shifted nodeset $\cp_{r,\vDelta}$.  Likewise, $\cp^{\perp}_{\kappa,r}$ denote the coset $\cp^{\perp}_{\vk(\kappa),r}$ for $\kappa=0, \cdots, b^r-1$. According to \eqref{tfassumb}, it follows that 
+\begin{align}
+\nonumber
+\tf_{\kappa,r} &= \sum_{\vl \in \cp^{\perp}_{\kappa,r}} \hf(\vl) \me^{2 \pi \sqrt{-1} (\vl \ominus \vk(\kappa)) \otimes \vDelta} \\
+\nonumber
+&= \sum_{\lambda=0}^{\infty} \hf_{\kappa+\lambda b^{r}} \me^{2 \pi \sqrt{-1} (\vl(\kappa+\lambda b^{r}) \ominus \vk(\kappa)) \otimes \vDelta} \\
+& = \hf_{\kappa} + \sum_{\lambda=1}^{\infty} \hf_{\kappa+\lambda b^{r}} \me^{2 \pi \sqrt{-1} (\vl(\kappa+\lambda b^{r}) \ominus \vk(\kappa)) \otimes \vDelta}.
+\label{tfassumc}
+\end{align}
+We want to use $\tf_{\kappa,r}$ to estimate $\hf_{\kappa}$ if $r$ is larger enough than $\lfloor \log_b(\kappa) \rfloor$.
+
+Consider the following sums
+\begin{gather}
+S(r) = \sum_{\kappa=b^{r}}^{b^{r+1}-1} \abs{\hf_{\kappa}}, \qquad r \in \natzero, \\
+\tS(\kappa,r_1,r_2) = \sum_{\lambda=b^{r_2}}^{b^{r_2+1}-1} \abs{\hf_{\kappa+\lambda b^{r_1}}}, \qquad \kappa=0, \ldots, b^{r_1}-1, \ r_1,r_2 \in \natzero, \\
+\hS(r,r_1,r_2) = \sum_{\lambda=b^{r}}^{b^{r+1}-1} \tS(\kappa,r_1,r_2), \qquad r=0, \ldots, r_1-1, \ r_1,r_2 \in \natzero,
+\end{gather}
+We make the critical assumption that these sums decay with increasing $r_1$ and $r_2$, namely, 
+\begin{equation}
+S(r,r_1,r_2) \le s_1 s_2^{r_1+r_2-r} S(r,r_1,r_2), \qquad r\ge r_{\min}, \\
+\end{equation}
+
+
+\bibliographystyle{model1b-num-names.bst}
+\bibliography{FJH22,FJHown22}
+\end{document}
+
