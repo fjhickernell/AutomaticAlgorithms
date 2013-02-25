@@ -3,7 +3,7 @@
 \usepackage{amsmath,amssymb,amsthm,natbib,mathtools,bbm,graphicx}
 \input FJHDef.tex
 
-
+\newcommand{\fudge}{\fC}
 
 \begin{document}
 
@@ -126,7 +126,7 @@ Define the discrete transform of a function, $f$, over the shifted node set $\cp
 \begin{align}
 \label{tfdef}
 \tf(\vk) 
-&:= \frac{1}{\abs{\cp_{\vDelta}}} \sum_{\vx \in \cp_{\Delta}} \me^{-2 \pi \sqrt{-1} \vk \otimes \vx} f(\vx) \\
+&:= \frac{1}{\abs{\cp_{\vDelta}}} \sum_{\vx \in \cp_{\vDelta}} \me^{-2 \pi \sqrt{-1} \vk \otimes \vx} f(\vx) \\
 \nonumber
 &= \frac{1}{\abs{\cp_{\vDelta}}} \sum_{\vx \in \cp_{\Delta}} \left[\me^{-2 \pi \sqrt{-1} \vk \otimes \vx}\sum_{\vl \in \bbK} \hf(\vl) \me^{2 \pi \sqrt{-1} \vl \otimes \vx} \right] \\
 \nonumber
@@ -141,7 +141,7 @@ It is seen here that the discrete transform $\tf(\vk)$ is equal to the integral 
 
 Notice that the dual nets can be used to form cosets of wavenumbers.  Let 
 \begin{equation*}
-\cp^{\perp}_{\vk} = \{ \vl \in \bbK : \vl \ominus \vk \in \cp^{\perp}\}.
+\cp^{\perp}_{\vk} = \{ \vl \in \bbK : \vl \ominus \vk \in \cp^{\perp}\} \qquad \forall \vk \in \bbK.
 \end{equation*}
 This means that $\cp^{\perp}_{\vzero}=\cp^{\perp}$.  There are $\abs{\cp}$ distinct cosets.  Then \eqref{tfassum} above implies that 
 \begin{equation}
@@ -149,51 +149,105 @@ This means that $\cp^{\perp}_{\vzero}=\cp^{\perp}$.  There are $\abs{\cp}$ disti
 \tf(\vk) = \sum_{\vl \in \cp^{\perp}_{\vk}} \hf(\vl) \me^{2 \pi \sqrt{-1} (\vl \ominus \vk) \otimes \vDelta}.
 \end{equation}
 
+\subsection{Nested Node Sets and Their Corresponding Nested Dual Sets}
 Now consider the situation where there is a sequence of nested sets,
 \[
-\cp_0 = \{\vzero\} \subset \cp_{1} \subset \cp_{2} \subset \cdots, \qquad \abs{\cp_r} = b^r
+\cp_0 = \{\vzero\} \subset \cp_{1} \subset \cp_{2} \subset \cdots, \qquad \abs{\cp_s} = b^s
 \]
 Furthermore, assume that each set equals the previous plus multiples of one element:
 \begin{equation*}
-\cp_r = \{ \vx \oplus \vt : \vx \in \cp_{r-1},\ \vt \in \{\vzero, \vz_r, \vz_r\oplus\vz_r, \ldots \} \}, \qquad r=1, 2, \ldots,
+\cp_s = \{ \vx \oplus \vt : \vx \in \cp_{s-1},\ \vt \in \{\vzero, \vz_s, \vz_s\oplus\vz_s, \ldots \} \}, \qquad s \in \naturals
 \end{equation*}
 where $\vz_1, \vz_2, \ldots \in \tcx$ is some fixed sequence.  According to this definition of nested sets, the dual sets are nested in the opposite direction,
 \begin{equation*}
 \cp_0^\perp = \bbK \supset \cp_{1}^\perp \supset \cp_{2}^\perp \supset \cdots.
 \end{equation*}
+Furthermore, the equivalence classes also obey this nesting:
+\begin{equation*}
+\cp^{\perp}_{s,\vk} = \{ \vl \in \bbK : \vl \ominus \vk \in \cp^{\perp}_s\}, \qquad \cp_{0,\vk}^\perp = \bbK \supset \cp_{1,\vk}^\perp \supset \cp_{2,\vk}^\perp \supset \cdots \quad \forall \vk \in \bbK.
+\end{equation*}
 
-Now we are going to map the non-negative numbers into the space of all wavenumbers using the dual sets.  For every $\kappa \in \natzero$, we assign a wavenumber $\vk(\kappa) \in \bbK$ iteratively as follows.  
+\section{Error Estimate}
+
+\subsection{Wavenumber Map}
+
+Now we are going to map the non-negative numbers into the space of all wavenumbers using the dual sets.  For every $\kappa \in \natzero$, we assign a wavenumber $\vk(\kappa) \in \bbK$ iteratively according to the following constraints: 
 \begin{itemize}
 
 \item Let $\vk(0)= \vzero$.
 
-\item For any $\kappa = \kappa_0 + \kappa_1 b + \kappa_2 b^2 + \cdots + \kappa_{r-1} b^{r-1}$ and any $\kappa' = \kappa_0 + \kappa_1 b + \kappa_2 b^2 + \cdots + \kappa_{r-1} b^{r-1} + \kappa_{r}' b^{r} + \cdots +\kappa_{r'}' b^{r'+1}$, where $\kappa_j$ and $\kappa_j'$ are integers between $0$ and $b-1$, assign $\vk(\kappa)$ and $\vk(\kappa')$ such that $\cp^{\perp}_{r,\vk(\kappa)}$ and $\cp^{\perp}_{r,\vk(\kappa')}$ the same equivalence class.
+\item For any $s,\lambda \in \naturals$, $\kappa=0, \ldots, b^s-1$, assign $\vk(\kappa)$ and $\vk(\kappa+ \lambda b^s)$ such that $\cp^{\perp}_{s,\vk(\kappa)}=\cp^{\perp}_{s,\vk(\kappa+ \lambda b^s)}$.
 \end{itemize}
 
-Introducing the shorthand notation such $\hf_{\kappa}=\hf(\vk(\kappa))$, and such that $\tf_{\kappa,r}$ corresponds to the discrete transform $\tf(\vk(\kappa))$ defined in \eqref{tfdef} based on the shifted nodeset $\cp_{r,\vDelta}$.  Likewise, $\cp^{\perp}_{\kappa,r}$ denote the coset $\cp^{\perp}_{\vk(\kappa),r}$ for $\kappa=0, \cdots, b^r-1$. According to \eqref{tfassumb}, it follows that 
+This wavenumber map allows us to introduce a shorthand notation that facilitates the later analysis:
+\begin{align*}
+\hf_{\kappa} & =\hf(\vk(\kappa)), \qquad \kappa \in \natzero,\\
+\tf_{s,\kappa}& = \tf(\vk(\kappa)) \\
+& = \frac{1}{b^s} \sum_{\vx \in \cp_{s,\vDelta}} \me^{-2 \pi \sqrt{-1} \vk(\kappa) \otimes \vx} f(\vx), \qquad \kappa=0, \ldots, b^s-1, \quad s \in \naturals,\\
+\intertext{ as defined in \eqref{tfdef} based on the shifted nodeset $\cp_{s,\vDelta}$,}
+\cp^{\perp}_{s,\kappa}&=\cp^{\perp}_{s,\vk(\kappa)}, \qquad \kappa=0, \ldots, b^s-1.
+\end{align*}
+According to \eqref{tfassumb}, it follows that 
 \begin{align}
 \nonumber
-\tf_{\kappa,r} &= \sum_{\vl \in \cp^{\perp}_{\kappa,r}} \hf(\vl) \me^{2 \pi \sqrt{-1} (\vl \ominus \vk(\kappa)) \otimes \vDelta} \\
+\tf_{s,\kappa} &= \sum_{\vl \in \cp^{\perp}_{s,\kappa}} \hf(\vl) \me^{2 \pi \sqrt{-1} (\vl \ominus \vk(\kappa)) \otimes \vDelta} \\
 \nonumber
-&= \sum_{\lambda=0}^{\infty} \hf_{\kappa+\lambda b^{r}} \me^{2 \pi \sqrt{-1} (\vl(\kappa+\lambda b^{r}) \ominus \vk(\kappa)) \otimes \vDelta} \\
-& = \hf_{\kappa} + \sum_{\lambda=1}^{\infty} \hf_{\kappa+\lambda b^{r}} \me^{2 \pi \sqrt{-1} (\vl(\kappa+\lambda b^{r}) \ominus \vk(\kappa)) \otimes \vDelta}.
+&= \sum_{\lambda=0}^{\infty} \hf_{\kappa+\lambda b^{s}} \me^{2 \pi \sqrt{-1} (\vk(\kappa+\lambda b^{s}) \ominus \vk(\kappa)) \otimes \vDelta} \\
+& = \hf_{\kappa} + \sum_{\lambda=1}^{\infty} \hf_{\kappa+\lambda b^{s}} \me^{2 \pi \sqrt{-1} (\vk(\kappa+\lambda b^{s}) \ominus \vk(\kappa)) \otimes \vDelta}.
 \label{tfassumc}
 \end{align}
-We want to use $\tf_{\kappa,r}$ to estimate $\hf_{\kappa}$ if $r$ is larger enough than $\lfloor \log_b(\kappa) \rfloor$.
+We want to use $\tf_{s,\kappa}$ to estimate $\hf_{\kappa}$ if $s$ is signficantly larger than $\lfloor \log_b(\kappa) \rfloor$.
 
-Consider the following sums
-\begin{gather}
-S(r) = \sum_{\kappa=b^{r}}^{b^{r+1}-1} \abs{\hf_{\kappa}}, \qquad r \in \natzero, \\
-\tS(\kappa,r_1,r_2) = \sum_{\lambda=b^{r_2}}^{b^{r_2+1}-1} \abs{\hf_{\kappa+\lambda b^{r_1}}}, \qquad \kappa=0, \ldots, b^{r_1}-1, \ r_1,r_2 \in \natzero, \\
-\hS(r,r_1,r_2) = \sum_{\lambda=b^{r}}^{b^{r+1}-1} \tS(\kappa,r_1,r_2), \qquad r=0, \ldots, r_1-1, \ r_1,r_2 \in \natzero,
-\end{gather}
-We make the critical assumption that these sums decay with increasing $r_1$ and $r_2$, namely, 
+\subsection{Sums of Series Coefficients and Their Bounds}
+Consider the following sums of the series coefficients defined for $r,s \in \naturals$, $r \le s$:
 \begin{equation}
-S(r,r_1,r_2) \le s_1 s_2^{r_1+r_2-r} S(r,r_1,r_2), \qquad r\ge r_{\min}, \\
+S(r) =  \sum_{\kappa=b^{r-1}}^{b^{r}-1} \bigl \lvert \hf_{\kappa} \bigr \rvert, \quad 
+\hS(r,s)  = \sum_{\kappa=b^{r-1}}^{b^{r}-1} \sum_{\lambda=1}^{\infty} \bigl \lvert \hf_{\kappa+\lambda b^{s}}\bigr\rvert, \quad 
+\tS(r,s) = \sum_{\kappa=b^{r-1}}^{b^{r}-1} \bigl \lvert \tf_{s,\kappa}\bigr\rvert.
 \end{equation}
+These first two quantities, which involve the true series coefficients, cannot be observed, but the third one, which involves the discrete transform coefficients, can easily be observed.
 
+We now make critical assumptions that $\hS(r,s)$ and $S(s)$ can be bounded above in terms of $S(r)$, provided that $r$ is large enough.  Fix $r_* \in \naturals$.  The assumptions are the following:
+\begin{equation}
+S(s) \le \omega(s-r) S(r), \quad \hS(r,s) \le \homega(s-r) S(r), \qquad r,s \in \naturals, \ r_* \le r \le s,
+\end{equation}
+for some functions $\omega$ and $\homega$ with $\lim_{s \to \infty} \omega(s) = \lim_{s \to \infty} \homega(s) = 0$.  
+
+The reason for enforcing these assumptions only  for $r \ge r_*$ is that for small $r$, one might have $S(r)$ coincidentally small, since it only involves $b^r$ coefficients, while $S(s)$ or $\hS(r,s)$ is large.  If $S(s)$ is large compared to $S(r)$ for some $s > r$, it means that the true series coefficients for the integrand are large for some large wavenumbers.  If $\hS(r,s)$ is large compared to $S(r)$ for some $s > r$, it means that the obserbed discrete series coefficients may not correspond well to the true coefficients.
+
+Under this assumption, for $r, s \in \naturals$, $r_* \le r \le s$, it is possible to bound the sum of the true coefficients, $S(r)$, in terms of the observed sum of the discrete coefficients, $\tS(r,s)$, as follows:
+\begin{align*}
+S(r) &= \sum_{\kappa=b^{r-1}}^{b^{r}-1} \bigl \lvert \hf_{\kappa}\bigr\rvert= \sum_{\kappa=b^{r-1}}^{b^{r}-1} \abs{\tf_{s,\kappa} - \sum_{\lambda=1}^{\infty} \hf_{\kappa+\lambda b^{s}} \me^{2 \pi \sqrt{-1} (\vl(\kappa+\lambda b^{s}) \ominus \vk(\kappa)) \otimes \vDelta}}\\
+&\le \sum_{\kappa=b^{r-1}}^{b^{r}-1} \bigl \lvert \tf_{s,\kappa} \bigr\rvert + \sum_{\kappa=b^{r-1}}^{b^{r}-1} \sum_{\lambda=1}^{\infty} \bigl \lvert \hf_{\kappa+\lambda b^{s}}\bigr\rvert = \tS(r,s) + \hS(r,s) \\
+&\le \tS(r,s) + \homega(s-r) S(r) \\
+S(r) & \le \frac{\tS(r,s)}{1 - \homega(s-r)} \qquad \text{provided that } \homega(s-r) < 1.
+\end{align*}
+
+Using this upper bound, one can then conservatively bound the error of integration using the shifted node set $\cp_{s,\vDelta}$.  For for $r, s \in \naturals$, $r_* \le r \le s$, it follows that 
+\begin{align*}
+\MoveEqLeft{\abs{\int_{\cx} f(\vx) \, \dif \vx - \frac{1}{b^s} \sum_{\vx \in \cp_{s,\vDelta}} f(\vx) }}\\
+&= \abs{\hf(\vzero) - \tf(\vzero)} = \abs{\hf_0 - \tf_{s,0}} = \abs{\sum_{\lambda=1}^{\infty} \hf_{\lambda b^{s}} \me^{2 \pi \sqrt{-1} \vl(\lambda b^{s}) \otimes \vDelta}}\\
+&\le \sum_{\lambda=1}^{\infty} \bigl \lvert \hf_{\lambda b^{s}} \bigr \rvert \\
+&\le \sum_{\kappa=b^{s}}^{\infty} \bigl \lvert \hf_{\kappa} \bigr \rvert = \sum_{r'=s+1}^{\infty} \sum_{\kappa=b^{r'-1}}^{b^{r'}-1} \bigl \lvert \hf_{\kappa} \bigr \rvert = \sum_{r'=s+1}^{\infty} S(r')\\
+&\le \sum_{r'=s+1}^{\infty} \omega(r'-r) S(r) =   \sum_{r'=1}^{\infty} \omega(r'+s-r) S(r) =  \Omega(s-r) S(r)\\
+& \le \frac{\tS(r,s)\Omega(s-r)}{1 - \homega(s-r)}.
+\end{align*}
+where 
+\[
+\Omega(\delta)=\sum_{r'=1}^{\infty} \omega(r'+ \delta), \qquad \delta \in \natzero.
+\]
+Assuming that $\Omega(0)$ is finite, $\lim_{\delta \to \infty} \Omega(\delta) = 0$.
+
+This error bound suggests the following algorithm.  Choose $\delta \in \natzero$ such that $\homega(s-r)<1$ and set 
+\[
+\fudge = \frac{\Omega(\delta)}{1 - \homega(\delta)}.
+\]
+Define $r_j=r_*+j-1$ and $s_j=r_j+\delta$.  Given a tolerance $\varepsilon$, and an integrand $f$, do the following:  for $j=1, 2, \ldots$ check whether
+\[
+\fudge \tS(r_j,s_j) \le \varepsilon.
+\]
+If so, we're done.  If not, increment $j$ by one and repeat.
 
 \bibliographystyle{model1b-num-names.bst}
 \bibliography{FJH22,FJHown22}
 \end{document}
-
