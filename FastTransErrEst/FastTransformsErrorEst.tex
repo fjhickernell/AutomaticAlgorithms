@@ -1,9 +1,10 @@
 \documentclass[]{elsarticle}
 \setlength{\marginparwidth}{0.5in}
-\usepackage{amsmath,amssymb,amsthm,natbib,mathtools,bbm,graphicx}
+\usepackage{amsmath,amssymb,amsthm,natbib,mathtools,bbm,extraipa,accents,graphicx}
 \input FJHDef.tex
 
 \newcommand{\fudge}{\fC}
+\newcommand{\dtf}{\textit{\doubletilde{f}}}
 
 \begin{document}
 
@@ -167,7 +168,30 @@ Furthermore, the equivalence classes also obey this nesting:
 \cp^{\perp}_{s,\vk} = \{ \vl \in \bbK : \vl \ominus \vk \in \cp^{\perp}_s\}, \qquad \cp_{0,\vk}^\perp = \bbK \supset \cp_{1,\vk}^\perp \supset \cp_{2,\vk}^\perp \supset \cdots \quad \forall \vk \in \bbK.
 \end{equation*}
 
-\section{Error Estimate}
+The discrete transforms of for nested sets can be constructed iteratively.  Suppose that the points in these nested sets are ordered such that $\cp_{s,\vDelta}=\{\vx_0, \ldots, \vx_{b^s-1}\}$ for some infinite sequence, $\{\vx_i\}_{i=0}^{\infty}$.  Furthermore, suppose that 
+\[
+\vx_{i+jb^s}=\vx_{i}\oplus\underbrace{\vz_s \oplus \cdots \oplus \vz_s}_{j \text{ times}}, \qquad i=0, \ldots, b^{s-1}-1, \ j=0, \ldots, b-1.
+\]
+Nested rank-1 integration lattices are constructed in terms of the radical inverse function, as in \cite{}: 
+\begin{subequations}
+\begin{equation}
+\vx_i = \vh \phi_b(i) \mod 1,
+\end{equation}
+where $\vh$ is a $d$-dimensional generating vector of ???? integers
+\begin{equation}
+\phi_b(i) = i_0 b^{-1} + i_1 b^{-2} + \cdots, \quad i=i_0 + i_1 b + \cdots, \quad i_{\ell} \in \{0, \ldots, b-1\}.
+\end{equation}
+\end{subequations}
+
+For $s \in \natzero$, the formula in \eqref{tfdef} becomes
+\begin{align*}
+\tf_s(\vk) &= \frac{1}{b^s} \sum_{i=0}^{b^s-1} \me^{-2 \pi \sqrt{-1} \vk \otimes \vx_i} f(\vx_i)\\
+&= \frac{1}{b^s} \sum_{j=0}^{b-1} \sum_{i=0}^{b^{s-1}-1} \me^{-2 \pi \sqrt{-1} \vk \otimes \vx_{i+jb^s}} f(\vx_{i+jb^s}) \\
+&= \frac{1}{b^s} \sum_{j=0}^{b-1} \me^{-2 \pi \sqrt{-1} j (\vk \otimes \vz_{s})} \left[ \frac{1}{b^{s-1}}\sum_{i=0}^{b^{s-1}-1} \me^{-2 \pi \sqrt{-1} \vk \otimes \vx_{i}} f(\vx_{i+jb^s}) \right] \\
+\end{align*}
+
+For 
+\section{Error Estimation and an Automatic Algorithm}
 
 \subsection{Wavenumber Map}
 
@@ -248,6 +272,8 @@ Define $r_j=r_*+j-1$ and $s_j=r_j+\delta$.  Given a tolerance $\varepsilon$, and
 \]
 If so, we're done.  If not, increment $j$ by one and repeat.
 
+
+$\dtf$ $a^{\dtf}$ $a_{\dtf}$
 \bibliographystyle{model1b-num-names.bst}
 \bibliography{FJH22,FJHown22}
 \end{document}
