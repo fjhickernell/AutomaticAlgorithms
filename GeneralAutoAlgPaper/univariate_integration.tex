@@ -1,6 +1,10 @@
 
 \newcommand{\R}{\mathbb{R}}
-In the following cases, we focus on approximation of upper bound errors. The input function is in Sobolev space:
+In the following cases, we focus on approximation of upper bound errors. Define Sobolev space:
+\begin{align*}
+  W^{k,p}[0,1]=\{f\in C[0,1]: \|f^{k}\|_{p}<\infty\}.
+\end{align*}
+The input functions are in two specific ones:
 \begin{align*}
   \cf&=W^{2,1}=W^{2,1}[0,1]=\{f\in C^1[0,1]: \|f''\|_1<\infty\}, \text{ and }\\
   \cg&=W^{1,1}=W^{1,1}[0,1]=\{f\in C^1[0,1]: \|f'\|_1<\infty\},
@@ -225,10 +229,8 @@ we can have the above results.
 
 \subsection{Numerical Example}
 Consider the test function $f(x)=e^{-(a(x-\mu))^2},$
-where $\mu \sim U[0,1]$ and $\log_{10} a \sim U[0,4].$
-And $\mu \sim U[0,1]$ means $\mu$ is uniformly distributed on [0,1].
-Also for this kind of function, if we have large $a$, we can approximate the function hardly
-because the function has a sharper bump. From the numerical results, we can find the success rate for our algorithm. Since $\norm[1]{f'}=??, \ \norm[1]{f''}=??.$
+where $\mu$'s are uniformly distributed on [0,1] and $\log_{10} a \sim U[0,4].$
+If we have large $a$, we can hardly approximate the function due to the spiky shape of the function. From the numerical results, we can find the success rate for our algorithm. Since $\norm[1]{f'}=2-e^{-(a\mu)^2}-e^{-(a(1-\mu))^2}, \ \norm[1]{f''}=-2a(\mu e^{-(a\mu)^2}+(1-\mu)e^{-(a(1-\mu))^2}).$
 If $f \in \cc_{\tau}$ then we should have
 $a \leq ??.$ Which means Expected Success Rate should be $??.$
 Here we use $\tau = 10, 25 , 100$ separately to test $10000$ times with
