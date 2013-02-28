@@ -1,4 +1,3 @@
-%\newcommand{\R}{\mathbb{R}}
 The first example we consider is univariate integration on the unit interval, $S(f)=\int_{0}^{1}f(x) \, \dif x$.  The two spaces of input functions are Sobolev spaces of different degrees of smoothness:
 \begin{equation*}
   \cf=\mathcal{W}^{2,1} \quad \text{and} \quad
@@ -19,7 +18,7 @@ The non-adaptive building block to construct the adaptive algorithm is the compo
     A_{n}(f)
     =\frac{1}{2n}[f(x_1)+2f(x_2)+\cdots+2f(x_{n-1})+f(x_n)], \qquad x_i=\frac{i-1}{n-1},
 \end{equation*}
-defined for $n \in \mathcal{I}=\{2,3,\ldots\}$, and with $\cost(A_n)=n$.  The algorithm $A_n$ is imbedded in the algorithm $A_{2n-1}$, which uses $2n-2$ trapezoids.  
+defined for $n \in \mathcal{I}=\{2,3,\ldots\}$, and with $\cost(A_n)=n$.  The algorithm $A_n$ is imbedded in the algorithm $A_{2n-1}$, which uses $2n-2$ trapezoids, so the minimum cost multiple is $r=2$.  
 The algorithm for approximating $\|f'\|_{1}$ is the corresponding norm of the linear spline using the same $x_i$ as used in the trapezoidal rule:
 \begin{equation}\label{1direst}
     G_n(f)=\sum_{i=0}^{n-1}\left|f(x_{i+1})-f(x_{i})\right|.
@@ -57,10 +56,28 @@ Applying this inequality over the entire interval, $[0,1]$ leads to
  \end{align*}
 According to \eqref{Gerrbds} and , we have $h_{+}(n)=1/[2(n-1)]$ and an inflation factor of 
 \begin{equation}\label{factor}
-\mathfrak{C}_n =\frac{1}{1 - \tau/[2(n-1)]} \geq 1 \qquad \text{for } n>1+\tau/2.
+\mathfrak{C}_n =\frac{1}{1 - \tau/(2n-2)} \geq 1 \qquad \text{for } n>1+\tau/2.
 \end{equation}
 
-It is straightforward to verify condition \eqref{hbestverb}, namely that $h(n) \leq \tilde{h}(n) h_{+}(n)$ for all $n>1$.  Thus, in the algorithms and theorems of the the previous sections, it is always the case that $ \tau h(n) \le \tilde{h}(n)$.  The following is multi-stage Algorithm \ref{multistagealgo} for the integration problem.  
+By condition \eqref{hbestverb}, it follows that $\min(\tildeh(n),\tau h(n))=\tau h(n)$, which then simplifies some of the expressions in Algorithm \ref{multistagealgo} and Theorem \ref{MultiStageThm}.  Specifically, the left side of the inequality in \eqref{multistageconv} becomes
+\[
+\min(\tildeh(n_i),\tau h(n_i))\fC_{n_i} G_{n_i}(f) = \frac{\tau  G_{n_i}(f) } {4(n_i-1)(2n_i-2 -\tau)}.
+\]
+The function $N_A$ defined in \eqref{Nmindef} is
+\[
+N_{A}(a)= \min\left\{ n \in \ci : \tau h(n) \le a \right\} = 1+ \left \lceil \sqrt{a/(8\tau)}\right \rceil.
+\]
+The denominator in the definition of the set of integrands $\cn$ in \eqref{nicefdefmulti} is
+\[
+\fC_{N_{\max}/r} \fc_{N_{\max}/r} \min(\tildeh(N_{\max}/r),\tau h(N_{\max}/r)) =
+\frac{\tau}{2 (N_{\max}-2)(N_{\max}-2 -\tau)}.
+\]
+The function $\tN_A$ defined in \eqref{tNmindef} is
+\begin{align*} \label{tNmindef}
+\tN_A(a) &= \min\left\{ n \in \ci : \min(\tildeh(n),\tau h(n))\fC_n\fc_n \le a \right\} \\
+&= 1+ \left \lceil \sqrt{\frac{\tau}{8a} + \frac{\tau^2}{16}} +\frac{\tau}{4} \right \rceil \le 1+ \left \lceil\sqrt{\frac{\tau}{8a}} + \frac{\tau}{2} \right \rceil.
+\end{align*}
+With these preliminaries, Algorithm \ref{multistagealgo} and Theorem \ref{MultiStageThm} may be applied directly to  yield the following automatic, adaptive integration algorithm and its guarantee.
 
 \begin{algo} \label{multistageintegalgo}
 Let the error tolerance $\varepsilon$, the maximum cost budget $N_{\text{max}}$ and the cone constant $\tau$ be given inputs. Let the sequence of algorithms $\{A_n\}_{n\in \mathcal{I}}$, $\{G_n\}_{n\in \mathcal{I}}$ be described above. Set $i=1$. Let $n_1=\lceil(\tau+1)/2\rceil+1$. For any input function $f\in \mathcal{W}^{2,1}$, do the following:
@@ -84,33 +101,18 @@ Otherwise, if $n_{i+1} > N_{\max}$, choose $n_{i+1}$ to be the largest number no
 \end{description}
 \end{algo}
 
- \begin{theorem}
-
-Let  $\varepsilon$, $N_{\max}$, $\tau$ and $n_1$ be given as described in Algorithm \ref{multistageintegalgo}.
-Assume that $n_1 \le N_{\max}$. Let $r$ be the number described in the paragraph preceding that algorithm.
-Let $\cc_\tau$ be the cone of functions defined in \eqref{coneinteg}.
-Define
-\[
-\tN_A(a) = \min\left\{ n \in \ci : \frac{\tau \fC_n }{8(n-1)^2} \le a \right\}, \quad a \in (0,\infty).
-\]
-and
+\begin{theorem} Let  $\varepsilon$, $N_{\max}$, $\tau$ and $n_1$ be given as described in Algorithm \ref{multistageintegalgo}.  Assume that $n_1 \le N_{\max}$.  Let $\cc_\tau$ be the cone of functions defined in \eqref{coneinteg}.  Let
 $$
-\cn = \left \{ f \in \cc_\tau :r\tN_{A}\left(\frac{\varepsilon}{\sigma} \right) \le N_{\max} \right\}
-= \left \{ f \in \cc_\tau : \sigma \le \frac{8(N_{\max}/r-1)^2 \varepsilon }{\tau \fC_{N_{\max}/r}  } \right\}
+\cn
+= \left \{ f \in \cc_\tau : \norm[1]{f'} \le \frac{2\varepsilon (N_{\max}-2)(N_{\max}-2 -\tau)}{\tau} \right\}
 $$
-be the nice subset of the cone $\cc_\tau$.  Then it follows that Algorithm \ref{multistageintegalgo} is successful for all functions in $\cn$,  i.e.,  $\success(A,W,\cn,\varepsilon,N_{\max}) = 1$.  Moreover, the cost of this algorithm is bounded above in terms of the $\|f'\|_{1}$ of the input function as follows:
-\begin{multline}
-\cost(A,\cn,\varepsilon,N_{\max},\sigma) \\
-\le  \min\left\{ n \in \ci : n \ge \left(\frac{\sigma\tau}{8\varepsilon(1 - \tau/(2(n_{1}-1)))}\right)^{\frac{1}{2}} +1\right\}
-\end{multline} where $\sigma=\|f'\|_{1}.$
- \end{theorem}
-
-\begin{proof}
-Applied Theorem \ref{MultiStageThm}, then we can have the above result.
-\end{proof}
-
-
-
+be the nice subset of the cone $\cc_\tau$.  Then it follows that Algorithm \ref{multistageintegalgo} is successful for all functions in $\cn$,  i.e.,  $\success(A,W,\cn,\varepsilon,N_{\max}) = 1$.  Moreover, the cost of this algorithm is bounded above as follows:
+\begin{align*}
+\cost(A,\cn,\varepsilon,N_{\max},\norm[\infty]{f'})
+&\le 2+2 \left \lceil \sqrt{\frac{\tau \norm[1]{f'}}{8\varepsilon} + \frac{\tau^2 }{16}} + \frac{\tau}{4} \right\rceil \\
+&\le 2+2 \left \lceil\sqrt{\frac{\tau \norm[1]{f'}}{8\varepsilon}} + \frac{\tau}{2} \right \rceil.
+\end{align*}
+\end{theorem}
 
 \subsection{Lower Bounds}
 Now we consider the lower bound. We define the fooling function as $f_{\pm}=c_0f_0\pm c_1f_1$. The first piece of the fooling function is defined by $f_0=x$. In this case,
