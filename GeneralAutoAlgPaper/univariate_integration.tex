@@ -2,33 +2,26 @@
 \newcommand{\R}{\mathbb{R}}
 In the following cases, we focus on approximation of upper bound errors. Define Sobolev space:
 \begin{align*}
-  W^{k,p}[0,1]=\{f\in C[0,1]: \|f^{k}\|_{p}<\infty\}.
+  \mathcal{W}^{k,p}[0,1]=\{f\in C[0,1]: \|f^{k}\|_{p}<\infty\}.
 \end{align*}
 The input functions are in two specific ones:
 \begin{align*}
-  \cf&=W^{2,1}=W^{2,1}[0,1]=\{f\in C^1[0,1]: \|f''\|_1<\infty\}, \text{ and }\\
-  \cg&=W^{1,1}=W^{1,1}[0,1]=\{f\in C^1[0,1]: \|f'\|_1<\infty\},
+  \cf=\mathcal{W}^{2,1} \text{ and }
+  \cg=\mathcal{W}^{1,1},
 \end{align*}
-which has the semi-norm $\|f\|_{\cf}=\|f''\|_{1}$ and $\|f\|_{\cg}=\|f'\|_{1}$ respectively. The space of outputs $\ch$ is the real space $\R$. Given $\tau > 0$, we have the cone $\mathfrak{C}_{\tau} \subset \cf$ defined as
+which has the semi-norm $\|f\|_{\cf}=\|f''\|_{1}$ and $\|f\|_{\cg}=\|f'\|_{1}$ respectively. The space of outputs $\ch$ is the real space $\R$. Given $\tau > 0$, we have the cone $\cc_{\tau} \subset \cf$ defined as
 \begin{align}\label{coneinteg}
-\cc_{\tau}=\{f\in W^{2,1}:\|f''\|_1\leq\tau\|f'\|_1\}.
+\cc_{\tau}=\{f\in \mathcal{W}^{2,1}:\|f''\|_1\leq\tau\|f'\|_1\}.
 \end{align}
 
 To approximate the integrations of functions in the cone based on the function values, define the solution operator $S$ as $S(f)=\int_{0}^{1}f(x)dx$. The goal is to make the error small, i.e. to find an algorithm A, for which $|\int_{0}^{1}f(x)dx-A(f)|\leq \varepsilon$.
 
 We use the trapezoidal rule to approximate the integral. Consider a sequence of algorithms $\{A_n\}_{n\in \mathcal{I}}$, where $\mathcal{I}=\{2,3,\cdots\}$ with cost$(A_n)=n$, given the data $f(x_i)$, where $x_i=(i-1)/(n-1), i=1,\cdots,n$ are uniformly distributed between $[0,1]$ with corresponding function values, define $A_n(f)$ as: \begin{align*}
-    A_{n}(f)%&=\frac{1}{2n}\sum_{i=1}^{n}(f(x_{i+1})+f(x_i)),\\
+    A_{n}(f)
     =\frac{1}{2n}[f(x_1)+2f(x_2)+\cdots+2f(x_{n-1})+f(x_n)].
 \end{align*}
 According to (7.14) and (7.15) from \cite{BraPet11a}, the upper bound error function can be expressed as $\tilde{h}(n)=1/[2(n-1)]$, $h(n)=1/[8(n-1)^2]$.
-%The approximation is about the integral $S(f)=\int_{0}^{1}f(x)dx$ and $\ch=\R$. In the investigation of the truncation error of approximate integration, we usually treat the error:
-%$$E=E(f)=\left|\int_{0}^{1}f(x)dx-A(f)\right|$$
-%as a linear functional defined over a certain class of functions. Moreover, consider using the composite trapezoidal rule, we approximate the integral piece by piece:
-%$\int_{0}^{1}f(x)dx\approx\sum_{i=0}^{n-1}\int_{x_{i}}^{x_{i+1}}f(x)dx$, $0=x_0<x_1<\cdots<x_n=1$, so the error of each term can be written as $E_i(f)=|\int_{x_{i}}^{x_{x+1}}f(x)dx-f(x_i)|$.
-%
-%Let $\cg$ be the Sobolev space $W^{1,1}_{[0,1]}=\{f\in C^1[0,1]: \|f'\|_1<\infty\}$ i.e. $\|f\|_{\cg}=\|f'\|_{1}$, and $\cf$ be the Sobolev space $W^{2,1}_{[0,1]}=\{f\in C^1[0,1]: \|f''\|_1<\infty\}$ i.e. $\|f\|_{\cf}=\|f''\|_{1}$. Given $\tau > 0$, we have the conic space $\mathfrak{C}_{\tau} \subset \cf$ as $$\mathfrak{C}_{\tau}=\{f\in W^{2,1}_{[0,1]}:\|f''\|_1\leq\tau\|f'\|_1\}.$$
-%
-%Suppose one wants to approxiamte the integration of functions in $\mathfrak{C}_{\tau}$ based on function values, the goal is to make the $\mathcal{L}_1$ error small, i.e. to find an algorithm $\mathcal{A}$, for which $|\int_{0}^{1}f(x)dx-A(f)|\leq \varepsilon$.
+
 \subsection{Upper Bounds}
  Fix the algorithm, trapezoidal rule, $A_n$, with cost$(A_n)=n$. One may estimate $\|f'\|_1$ in the following way:
  \begin{align}\label{1direst}
@@ -67,23 +60,15 @@ According to \eqref{Gerrbds}, we have $h_{+}(n)=\frac{1}{2(n-1)}$. So the deflat
 \mathfrak{C}_n =\frac{1}{1 - \tau/(2(n-1))} \geq 1.
 \end{gather}
 
-It is trivial to find that if $h(n) \leq \tilde{h}(n) h_{+}(n), \forall n \in \mathcal{I},$ then $ \tau h(n)< \tilde{h}(n) \ \forall n \in \mathcal{I}.$ %Since $h(n)=\frac{1}{8(n-1)^2}\leq \frac{1}{4(n-1)^2}=\frac{1}{2(n-1)}\frac{1}{2(n-1)}=\tilde{h}(n) h_{+}(n)$,
+It is trivial to find that if $h(n) \leq \tilde{h}(n) h_{+}(n), \forall n \in \mathcal{I},$ then $ \tau h(n)< \tilde{h}(n) \ \forall n \in \mathcal{I}.$
 Thus we only need to find $n$ such that
 \[
 \frac{\tau \fC_n G_{n}(f)}{8(n-1)^2} \le \varepsilon.
 \]
- %$\tau < n-1.$ Thus it is shown that in the specific case, the worst error in $W^{2,1}$ will be always smaller than the one in $W^{1,1}$, namely, $\tau \tildeh(n)\leq h(n)$. Then for those two non-decreasing functions, $h(n)$ and $\tau \tildeh(n)$ the upper bounds on the error of $A_n(f)$ in terms of the $\cg$-semi-norm of $f$ is:
-%\begin{align*}
-%  \left|\int_{0}^{1}f(x)dx-A_n(f)\right|& \leq \min(h(n),\tau\tilde{h}(n))\|f\|_{\cg}, \quad \forall f \in \mathfrak{C}_{\tau}\\
-%  &= \min\left(1,\frac{\tau}{4(n-1)}\right)\frac{\|f'\|_{1}}{2(n-1)},\\
-%  &\leq \frac{\tau\|f'\|_{1}}{8(n-1)^2},\\
-%  &\leq \frac{\tau\mathfrak{C}_n G_n(f)}{8(n-1)^2}\leq\varepsilon.
-%\end{align*}
-%  &\leq \frac{\tau\hat{\sigma_n}}{8n^2(1-\tau/n)}.
-%\end{align*}
+ 
 If we consider the embedded algorithms, we will have the following:
 \begin{algo} \label{multistageintegalgo}
- Let $\varepsilon$ be the positive error tolerance, $N_{\text{max}}$ be the maximum cost budget. Let $\tau$ be a fixed positive constant and the sequence of algorithms $\{A_n\}_{n\in \mathcal{I}}$, $\{G_n\}_{n\in \mathcal{I}}$ be described above. Set $i=1$, let $n_1$ be the smallest number in $\mathcal{I}$ such that $\tau < n-1$. Then do the following:
+ Let the error tolerance $\varepsilon$, the maximum cost budget $N_{\text{max}}$ and the cone constant $\tau$ be given inputs. Let the sequence of algorithms $\{A_n\}_{n\in \mathcal{I}}$, $\{G_n\}_{n\in \mathcal{I}}$ be described above. Set $i=1$. Let $n_1=\lceil(\tau+1)/2\rceil+1$. For any input function $f\in\cf$, do the following:
 \begin{description}
 \item[Stage 1.\ Estimate {$\|f'\|_{1}$}.] First compute $G_{n_i}(f)$ in \eqref{1direst} and $\fC_n$ in \eqref{factor}.
 
@@ -120,73 +105,13 @@ be the nice subset of the cone $\cc_\tau$.  Then it follows that Algorithm \ref{
 \cost(A,\cn,\varepsilon,N_{\max},\sigma) \\
 \le  \min\left\{ n \in \ci : n \ge \left(\frac{\sigma\tau}{8\varepsilon(1 - \tau/(2(n_{1}-1)))}\right)^{\frac{1}{2}} +1\right\}
 \end{multline} where $\sigma=\|f'\|_{1}.$
-   L%et $\varepsilon$, $\mathfrak{C}_n$, and $\tau$ be given. Let $\mathcal{C}_{\tau}$ be the cone of functions defined above. The cost of the algorithm is bounded above in terms of $\|f'\|_{1}$ of the input function as follows:
-%   $$\text{cost}(A,\varepsilon,\sigma)\leq\min\left\{n\in\mathcal{I}:n\geq\left(\frac{\sigma\tau}{8\varepsilon(1-\tau/(n-1))}\right)\right\}.$$
-%   where $\sigma=\|f'\|_{1}.$
  \end{theorem}
 
 \begin{proof}
 Applied Theorem \ref{MultiStageThm}, then we can have the above result.
 \end{proof}
 
-%By the fundamental theorem in calculus, if we consider the integral $\int_{0}^{1}f(x)dx$,
-%\begin{align*}
-%  \int_{0}^{1}f(x)dx&=(x-1/2)f(x)\left|\right._{0}^{1}-\int_{0}^{1}(x-1/2)f'(x)dx,\\
-%  &=\frac{1}{2}[f(1)+f(0)]-\{[\frac{(x-1/2)^2}{2}-\frac{1}{8}]f'(x)\left|_{0}^{1}\right.\}+\int_{0}^{1}[\frac{(x-1/2)^2}{2}-\frac{1}{8}]f''(x)dx,\\
-%  &=\frac{1}{2}[f(1)+f(0)]+\frac{1}{2}\int_{0}^{1}x(x-1)f''(x)dx,\\
-%  &=\frac{1}{2}[f(1)+f(0)]-\frac{1}{2}\int_{0}^{1}x(1-x)f''(x)dx.
-%\end{align*}
-%\begin{align*}
-%  |\int_{0}^{1}f(x)dx-\frac{1}{2}[f(1)+f(0)]|&=|-\frac{1}{2}\int_{0}^{1}x(1-x)f''(x)dx|,\\
-%  &\leq\frac{1}{2}\sup_x|x(1-x)|\|f''\|_1,\\
-%  &=\frac{1}{8}\|f''\|_1.
-%\end{align*}
-%
-%So
-%\begin{align*}
-%  \left|\int_{0}^{1}f(x)dx-T_n(f)\right|&=\left|\sum_{i=1}^{n}\{\int_{x_{i-1}}^{x_i}f(x)dx-\frac{f(x_i)+f(x_{i-1})}{2}\}\right|,\\
-%  &=\left|\frac{1}{n}\sum_{i=1}^{n}\{\int_{0}^{1}g_i(t)-\frac{g_i(0)+g_i(1)}{2}\}\right|,\\
-%  &\leq\frac{1}{n}\sum_{i=1}^{n}\frac{1}{8}\|g''_i\|_1,\\
-%  &=\frac{1}{8n^2}\|f''\|_1.
-%\end{align*}
-%
-%Furthermore, by the Peano's theorem, the error with respect to the first derivative can be represented as:
-%
-%$$\left|\int_{0}^{1}f(x)dx-A(f)\right|\leq\frac{1}{2n}\|f'\|_{1}.$$
-%
-%In our case, set $\|f'\|_{1}<\sigma$, also $\frac{\|f''\|_{1}}{\|f'\|_{1}}\leq\tau$, from the derivation above, we have that
-%\begin{align*}
-%  E=E(f)=\left|\int_{0}^{1}f(x)dx-A(f)\right|\leq\begin{cases} \displaystyle \frac{1}{2n}\|f'\|_1, & \forall f\in\cg,\\[2ex]
-% \displaystyle  \frac{1}{8n^2}\|f'\|_1, & \forall f \in \cf.
-%\end{cases}
-%\end{align*}
-%Furthermore, if we let $\hat{\sigma_n}=\sup_i\left|\frac{f(x_{i+1})-f(x_i)}{1/n}\right|$,
-%\begin{align*}
-%  E(f) &\leq \min\left\{\frac{\|f'\|_{1}}{2n},\frac{\|f''\|_{1}}{8n^2}\right\},\\
-%  &\leq \min\left\{\frac{1}{2n},\frac{\tau}{8n^2}\right\}\|f'\|_{1},\\
-%  &= \min(1,\frac{\tau}{4n})\frac{\|f'\|_{1}}{2n},\\
-%  &\leq \frac{\tau\|f'\|_{1}}{8n^2}, \quad (n\geq \tau \Rightarrow \frac{\tau}{4n}<1),\\
-%  &\leq \frac{\tau\hat{\sigma_n}}{8n^2(1-\tau/n)}.
-%\end{align*}
-%It is shown that in the specific case, the worst error in $\cf$ will be always smaller than the one in $\cg$. Therefore, the best worst error will be $\frac{1}{8n^2}\|f'\|_1$.
-%
-%\begin{algo} \label{twostagedetalgo} {\bf (Automatic, Adaptive, Two-Stage).}
-%
-%\begin{description}
-%
-%\item[Stage 1.\ Estimate {$\|\cdot\|_{\cg}$}.] First compute $G(f)$ at a cost of $N_{G} = \cost(G)$.   Define the inflation factor
-%\begin{equation}\label{norminflate}
-%\mathfrak{C} =\left\lceil\frac{\sqrt{\frac{\tau \hat{\sigma}_{N_G}}{\varepsilon(1 - \tau/ N_G)}}}{N_{G}}\right\rceil \ge 1. \text{need 2 fix}
-%\end{equation}
-%Then $\mathfrak{C} G(f)$ provides a reliable upper bound on $\|f\|_{\cg}$.
-%
-%\item [Stage 2.\ Estimate {$S(f)$}.] Choose the sample size need to approximate $S(f)$, namely,
-%\[
-%N \geq \left(\frac{\tau \hat{\sigma}_{N_G}}{12\varepsilon(1-\tau/N_G)}\right)^{\frac{1}{2}} \text{need 2 fix}
-%\]
-%If $N \le N_{\max}-N_G$, then $S(f)$ may be approximated within the desired error tolerance and within the cost budget.  Set the warning flag to false, $W=0$. Otherwise, recompute $N$ to be within budget, $N = \tN_{\max} := \max\{N \in \ci : N\le N_{\max} -  N_G\}$, and set the warning flag to true, $W=1$.  Compute $A_N(f)$ as the approximation to $S(f)$.
-%\end{description}
-%\end{algo}
+
 
 
 \subsection{Lower Bounds}
@@ -208,12 +133,6 @@ Note that
 \end{align*}
 We can easily get that $g^{-1}(n)=\frac{4}{15}x-1$ and $(\tilde{g}g)^{-1}(x)=\sqrt{\frac{\sqrt{3}}{40}x}-1$. So according to Theorem \ref{MultiStageThm} in the paper, $$\text{comp}\geq \min\left(\frac{4}{15}(\frac{\sigma}{4\varepsilon})+1,\sqrt{\frac{\sqrt{3}}{40}\frac{\sigma\tau}{4\varepsilon}}+1\right)=\min\left(\frac{\sigma}{15\varepsilon},\sqrt{\frac{\sqrt{3}\sigma\tau}{160\varepsilon}}\right)+1$$
 
-%Let $f_0=x$, then $\|f_0\|_{\mathcal{G}}=\|f'_0\|_1=1>0$, $\|f_0\|_{\mathcal{F}}=\|f''_0\|_1=0=\tau_0*1$. It satisfies (23) in the paper.
-%
-%Moreover, let $f_1(x)=\frac{30(x-l^2)(x-u)^2}{(u-l)^5}$ when $l \leq x \leq u$, where $u-l\geq\frac{1}{n+1}$ and $f_1(x)=0$ anywhere else. Then, $\int_{0}^{1}f_1(x)dx=1$, namely $\|S(f_1)\|_{\mathcal{H}}$. Also $\|f_1\|_{\mathcal{G}}=\|f'_{1}\|_1=\frac{15}{4(u-l)}\leq \frac{15}{4}(n+1)=g(n)$ and $\|f_1\|_{\mathcal{F}}=\|f''_{1}\|_1=\frac{40}{\sqrt{3}(u-l)^2}\leq \frac{40}{\sqrt{3}}(n+1)^2=\frac{32}{3\sqrt{3}}(n+1)g(n)=\tilde{g}(n)g(n)$. Condition (22) is satisfied. We can easily get that $g^{-1}(n)=\frac{4}{15}x-1$ and $(\tilde{g}(g))^{-1}(x)=\sqrt{\frac{\sqrt{3}}{40}x}-1$. So according to the Theorem 3 in the paper, $$\text{comp}\geq \min\left(\frac{4}{15}(\frac{\sigma}{4\varepsilon})-1,\sqrt{\frac{\sqrt{3}}{40}\frac{\sigma\tau}{4\varepsilon}}-1\right)\geq\min\left(\frac{4}{15}(\frac{\sigma}{4\varepsilon}),\sqrt{\frac{\sqrt{3}}{40}\frac{\sigma\tau}{4\varepsilon}}\right)-1$$
-%So the lower bounds on the error of $A_n(f)$ in terms of the $\cg$-semi-norm of $f$ is:
-%$$\left\|S(f)-A_n(f)\right\|_{\ch} \geq \min\left(\frac{1}{15(n+1)},\frac{\sqrt{3}\tau}{160(n+1)^2}\right)\|f'\|_{1}.$$
-
 
 \begin{theorem} \label{complowbdinteg} Suppose that functions $f_{0}$ and $f_1$ can be found that satisfy conditions \eqref{assumpfone} and \eqref{assumpfzero}.  It then follows that the complexity of the problem, defined by \eqref{complexdef}, assuming infinite cost budget, over the cone of functions $\cc_{\tau}$ is
 $$
@@ -229,41 +148,19 @@ we can have the above results.
 
 \subsection{Numerical Example}
 Consider the test function $f(x)=e^{-(a(x-\mu))^2},$
-where $\mu$'s are uniformly distributed on [0,1] and $\log_{10} a \sim U[0,4].$
-If we have large $a$, we can hardly approximate the function due to the spiky shape of the function. From the numerical results, we can find the success rate for our algorithm. Since $\norm[1]{f'}=2-e^{-(a\mu)^2}-e^{-(a(1-\mu))^2}, \ \norm[1]{f''}=-2a(\mu e^{-(a\mu)^2}+(1-\mu)e^{-(a(1-\mu))^2}).$
-If $f \in \cc_{\tau}$ then we should have
-$a \leq ??.$ Which means Expected Success Rate should be $??.$
-Here we use $\tau = 10, 25 , 100$ separately to test $10000$ times with
-$\varepsilon = 1e-7$ to obtain the observed success rate.
+where $\mu$'s are uniformly distributed on $[-1/\sqrt{2}a,1-1/\sqrt{2}a],$ and $\log_{10} a \sim U[0,4].$
+If we have large $a$, we can hardly approximate the function due to the spiky shape of the function. From the numerical results, we can find the success rate for our algorithm. Since $\norm[1]{f'}=-e^{-(a\mu)^2}-e^{-(a(1-\mu))^2}, \ \norm[1]{f''}=-2a(\mu e^{-(a\mu)^2}+(1-\mu)e^{-(a(1-\mu))^2})$, if $f \in \cc_{\tau}$ then we should have
+$\norm[1]{f''}/\norm[1]{f'} \leq \tau$. We use Monte Carlo simulation with 1000000 samples to estimate this probability. To obtain the observed success rate, here we use $\tau = 10, 25 , 100$ separately to test $10000$ times with $\varepsilon = 1e-7$.
 \begin{table}[h]
 \centering
 \begin{tabular}{cccc}
 $\tau$ &  10 & 25 & 100\\
 \toprule
-Expected Success Rate &  $\leq ?? \%$ &  $\leq ?? \%$  & $\leq ?? \%$ \\
-Observed Success Rate & ??$\%$ &  ??$\%$  & ??$\%$ \\
+Probability of $f \in \mathfrak{C}_{\tau}$ &  $\leq 45 \%$ &  $\leq 50 \%$  & $\leq 54 \%$ \\
+Observed Success Rate & $52\%$ &  $60\%$  & $74\%$ \\
 \end{tabular}
-\caption{ Comparison between expected and observed success rate}
+\caption{ Comparison between probability of the input function lying in the cone and the empirical success rate of the algorithm}
 \end{table}
 
 From the above table, we can find our algorithm works very well, as the observed
 success rate is always larger than the expected success rate.
-%$\norm[1]{f'}=a\sqrt{2/e}, \ \norm[1]{f''}=2a^2.$
-%If $f \in \cc_{\tau}$ then we should have
-%$a \leq \tau/\sqrt{2e}.$ Which means Expected Success Rate should be $\log_{10}(\tau/\sqrt{2e})/4.$
-%Here we use $\tau = 10, 25 , 100$ separately to test $10000$ times with
-%$\varepsilon = 1e-7$ to obtain the observed success rate.
-%\begin{table}[h]
-%\centering
-%\begin{tabular}{cccc}
-%$\tau$ &  10 & 25 & 100\\
-%\toprule
-%Expected Success Rate &  $\leq 16 \%$ &  $\leq 26 \%$  & $\leq 41 \%$ \\
-%Observed Success Rate & 25$\%$ &  34$\%$  & 49$\%$ \\
-%\end{tabular}
-%\caption{ Comparison between expected and observed success rate}
-%\end{table}
-%
-%From the above table, we can find our algorithm works very well, as the observed
-%success rate is always larger than the expected success rate.
-%\bibliography{FJH22,FJHown22,yizhi} 
