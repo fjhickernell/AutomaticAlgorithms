@@ -134,7 +134,7 @@ Next, we derive a lower bound on the cost of approximating functions in the cone
 For any $n =2, 3, \ldots$, suppose that the one has the data $L_i(f)=f(\xi_i)$, $i=1, \ldots, n$ for arbitrary $\xi_i$, where $0=\xi_0 \le \xi_1 < \cdots < \xi_n \le \xi_{n+1} = 1$.  There must be some $j=0, \ldots, n$ such that $\xi_{j+1} - \xi_j \ge 1/(n+1)$.  The function $f_{1}$, defined as
 $$
 f_{1}(x):=\begin{cases} \displaystyle
-\frac{16(x-\xi_{j})^{2}(\xi_{j+1}-x)^{2}}{(\xi_{i+1}-\xi_{i})^4} & \xi_{j} \le x \leq \xi_{j+1},\\
+\frac{16(x-\xi_{j})^{2}(\xi_{j+1}-x)^{2}}{(\xi_{j+1}-\xi_{j})^4} & \xi_{j} \le x \leq \xi_{j+1},\\
 0 & \text{otherwise},
 \end{cases}
 $$
@@ -155,7 +155,7 @@ Using these choices of $f_0$ and $f_1$, along with the corresponding $\tg$ and $
 \begin{align*}
 \comp(\varepsilon,\ca(\cc_{\tau},\ch,S,\Lambda),\infty,\norm[\infty]{f'})
 &\ge \min\left(\frac{3\sqrt{3}\norm[\infty]{f'}}{64 \varepsilon}, \sqrt{\frac{\tau\norm[\infty]{f'}}{64\varepsilon}} \right)-1\\
-& \sim \sqrt{\frac{\tau\norm[\infty]{f'}}{64\varepsilon}}  \quad\text{as } \frac{\norm[\infty]{f'}}{\varepsilon} \to \infty
+& \sim \sqrt{\frac{\tau\norm[\infty]{f'}}{64\varepsilon}}  \quad\text{as } \frac{\norm[\infty]{f'}}{\varepsilon} \to \infty.
 \end{align*}
 Moreover, Algorithm \ref{multistageapproalgo} is optimal for approximating functions in $\cc_{\tau}$.
 \end{theorem}

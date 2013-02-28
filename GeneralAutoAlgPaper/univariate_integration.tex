@@ -114,37 +114,39 @@ be the nice subset of the cone $\cc_\tau$.  Then it follows that Algorithm \ref{
 \end{align*}
 \end{theorem}
 
-\subsection{Lower Bounds}
-Now we consider the lower bound. We define the fooling function as $f_{\pm}=c_0f_0\pm c_1f_1$. The first piece of the fooling function is defined by $f_0=x$. In this case,
-\begin{align*}
-    \|f_0\|_{W^{1,1}}&=\|f'_0\|_1=1,\\
-    \|f_0\|_{W^{2,1}}&=\|f''_0\|_1=0=\tau_0.
-\end{align*}
-
-The second part depends on the sample points. Given any $n$ sample points $\{\xi_i\}_{i=1}^{n}$ between $0$ and $1$ such that $0=\xi_0\leq \xi_1<\cdots<\xi_n\leq \xi_{n+1}=1$, let $l$ and $u$ be the two consecutive points with maximum distance between them, i.e. $\exists j\in \{1,2,\cdots,n-1\}$ such that $l=\xi_j, u=\xi_{j+1}$ and $u-l=\max_{1\leq i\leq n}(\xi_{i+1}-\xi_i)$. Then let
-$$f_1(x)=\begin{cases}  \displaystyle  \frac{30(x-l^2)(x-u)^2}{(u-l)^5}, & l\leq x\leq u,\\[2ex]
- \displaystyle  0, & \text{otherwise}.
-\end{cases}.$$
-Note that
-\begin{align*}
-    \|S(f_1)\|_{W^{1,1}}&=\int_{0}^{1}f_1(x)dx=1,\\
-    \|f_1\|_{W^{1,1}}&=\|f'_{1}\|_1=\frac{15}{4(u-l)}\leq \frac{15}{4}(n+1)=g(n),\\
-    \|f_1\|_{W^{2,1}}&=\|f''_{1}\|_1=\frac{40}{\sqrt{3}(u-l)^2}=\frac{32}{3\sqrt{3}(u-l)}\|f_1'\|_1\leq \frac{32}{3\sqrt{3}}(n+1)\|f_1'\|_1%=\tilde{g}(n)g(n).
-\end{align*}
-We can easily get that $g^{-1}(n)=\frac{4}{15}x-1$ and $(\tilde{g}g)^{-1}(x)=\sqrt{\frac{\sqrt{3}}{40}x}-1$. So according to Theorem \ref{MultiStageThm} in the paper, $$\text{comp}\geq \min\left(\frac{4}{15}(\frac{\sigma}{4\varepsilon})+1,\sqrt{\frac{\sqrt{3}}{40}\frac{\sigma\tau}{4\varepsilon}}+1\right)=\min\left(\frac{\sigma}{15\varepsilon},\sqrt{\frac{\sqrt{3}\sigma\tau}{160\varepsilon}}\right)+1$$
-
-
-\begin{theorem} \label{complowbdinteg} Suppose that functions $f_{0}$ and $f_1$ can be found that satisfy conditions \eqref{assumpfone} and \eqref{assumpfzero}.  It then follows that the complexity of the problem, defined by \eqref{complexdef}, assuming infinite cost budget, over the cone of functions $\cc_{\tau}$ is
+\subsection{Lower Bound on the Computational Cost}
+Next, we derive a lower bound on the cost of approximating functions in the cone $\cc_{\tau}$ by constructing fooling functions. Following the arguments of Section \ref{LowBoundSec}, we choose  $f_0(x)=x.$ Then
+\[
+\norm[1]{f'_0}=1, \qquad \norm[1]{f''_0}=0, \qquad \tau_0=0.
+\]
+For any $n =2, 3, \ldots$, suppose that the one has the data $L_i(f)=f(\xi_i)$, $i=1, \ldots, n$ for arbitrary $\xi_i$, where $0=\xi_0 \le \xi_1 < \cdots < \xi_n \le \xi_{n+1} = 1$.  There must be some $j=0, \ldots, n$ such that $\xi_{j+1} - \xi_j \ge 1/(n+1)$.  The function $f_{1}$, defined as
 $$
-\comp(\varepsilon,\ca(\cc_{\tau},\ch,S,\Lambda),\infty,\sigma)
-\ge \min\left(\frac{\sigma}{15\varepsilon},\sqrt{\frac{\sqrt{3}\sigma\tau}{160\varepsilon}}\right)+1.
+f_{1}(x):=\begin{cases} \displaystyle
+\frac{30(x-\xi_{j})^{2}(\xi_{j+1}-x)^{2}}{(\xi_{j+1}-\xi_{j})^5} & \xi_{j} \le x \leq \xi_{j+1},\\
+0 & \text{otherwise},
+\end{cases}
 $$
+has $\int_0^1 f(x) \, \dif x=1$ and $f_1(\xi_i)=0$ for $i=0, \ldots, n+1$.  Moreover, the norms of the first and second derivatives of $f_1$ are
+\begin{align*}
+\norm[1]{f'_1}&=\frac{15}{4(\xi_{j+1}-\xi_{j})}\leq \tg(n),\\
+\norm[1]{f''_1}&=\frac{20}{\sqrt{3}(\xi_{j+1}-\xi_{j})^2}
+=\frac{16\norm[1]{f'_1}}{3\sqrt{3}(\xi_{j+1}-\xi_{j})}
+ \leq g(n) \norm[1]{f'_1},
+\end{align*}
+where the inequality $\xi_{j+1} - \xi_j \ge 1/(n+1)$ is used to define $\tg$ and $g$ as
+\[
+\tg(n) = \frac{15(n+1)}{4}, \qquad g(n) = \frac{16(n+1)}{3\sqrt{3}}, \qquad (g\tg)(n) = \frac{20(n+1)^2}{\sqrt{3}}.
+\]
+Using these choices of $f_0$ and $f_1$, along with the corresponding $\tg$ and $g$ above, one may invoke Proposition \ref{optimalprop}, Theorem \ref{complowbd}, and Corollary \ref{optimcor} to obtain the following theorem.
+
+\begin{theorem} \label{complowbdappr} The adaptive trapezoidal algorithm is optimal for integration of functions in $\mathcal{W}^{1,1}$ and $\mathcal{W}^{2,1}$. Assuming an infinite cost budget, the complexity of the function recovery problem problem, over the cone of functions $\cc_{\tau}$ defined in \eqref{coneinteg} is
+\begin{align*}
+\comp(\varepsilon,\ca(\cc_{\tau},\ch,S,\Lambda),\infty,\norm[1]{f'})
+&\ge \min\left(\frac{\norm[1]{f'}}{15 \varepsilon}, \sqrt{\frac{\sqrt{3}\tau\norm[1]{f'}}{80\varepsilon}} \right)-1\\
+& \sim \sqrt{\frac{\sqrt{3}\tau\norm[1]{f'}}{80\varepsilon}}  \quad\text{as } \frac{\norm[\infty]{f'}}{\varepsilon} \to \infty.
+\end{align*}
+Moreover, Algorithm \ref{multistageapproalgo} is optimal for approximating functions in $\cc_{\tau}$.
 \end{theorem}
-
-\begin{proof}
-$g(n), \ \tg(n)$ and $\tau_0$ is obtained above, then by Theorem \ref{complowbd}
-we can have the above results.
-\end{proof}
 
 \subsection{Numerical Example}
 Consider the test function $f(x)=e^{-(a(x-\mu))^2},$
