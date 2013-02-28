@@ -1,88 +1,86 @@
-
-\newcommand{\R}{\mathbb{R}}
-In the following cases, we focus on approximation of upper bound errors. Define Sobolev space:
-\begin{align*}
-  \mathcal{W}^{k,p}[0,1]=\{f\in C[0,1]: \|f^{k}\|_{p}<\infty\}.
-\end{align*}
-The input functions are in two specific ones:
-\begin{align*}
-  \cf=\mathcal{W}^{2,1} \text{ and }
+%\newcommand{\R}{\mathbb{R}}
+The first example we consider is univariate integration on the unit interval, $S(f)=\int_{0}^{1}f(x) \, \dif x$.  The two spaces of input functions are Sobolev spaces of different degrees of smoothness:
+\begin{equation*}
+  \cf=\mathcal{W}^{2,1} \quad \text{and} \quad
   \cg=\mathcal{W}^{1,1},
-\end{align*}
-which has the semi-norm $\|f\|_{\cf}=\|f''\|_{1}$ and $\|f\|_{\cg}=\|f'\|_{1}$ respectively. The space of outputs $\ch$ is the real space $\R$. Given $\tau > 0$, we have the cone $\cc_{\tau} \subset \cf$ defined as
-\begin{align}\label{coneinteg}
+\end{equation*}
+where the general Sobolev spaces with smoothness of degree $k$ are defined as 
+\begin{equation} \label{defSobolev}
+  \mathcal{W}^{k,p}=\mathcal{W}^{k,p}[0,1]=\{f\in C[0,1]: \|f^{k}\|_{p}<\infty\}.
+\end{equation}
+The corresponding semi-norms are $\|f\|_{\cf}=\|f''\|_{1}$ and $\|f\|_{\cg}=\|f'\|_{1}$, respectively, and the cone of integrands is defined as  
+\begin{equation}\label{coneinteg}
 \cc_{\tau}=\{f\in \mathcal{W}^{2,1}:\|f''\|_1\leq\tau\|f'\|_1\}.
-\end{align}
+\end{equation}
+The space of outputs $\ch$ is $\reals$.
 
-To approximate the integrations of functions in the cone based on the function values, define the solution operator $S$ as $S(f)=\int_{0}^{1}f(x)dx$. The goal is to make the error small, i.e. to find an algorithm A, for which $|\int_{0}^{1}f(x)dx-A(f)|\leq \varepsilon$.
-
-We use the trapezoidal rule to approximate the integral. Consider a sequence of algorithms $\{A_n\}_{n\in \mathcal{I}}$, where $\mathcal{I}=\{2,3,\cdots\}$ with cost$(A_n)=n$, given the data $f(x_i)$, where $x_i=(i-1)/(n-1), i=1,\cdots,n$ are uniformly distributed between $[0,1]$ with corresponding function values, define $A_n(f)$ as: \begin{align*}
+The non-adaptive building block to construct the adaptive algorithm is the composite trapezoidal rule based on $n-1$ trapezoids:
+\begin{equation*}
     A_{n}(f)
-    =\frac{1}{2n}[f(x_1)+2f(x_2)+\cdots+2f(x_{n-1})+f(x_n)].
-\end{align*}
-According to (7.14) and (7.15) from \cite{BraPet11a}, the upper bound error function can be expressed as $\tilde{h}(n)=1/[2(n-1)]$, $h(n)=1/[8(n-1)^2]$.
-
-\subsection{Upper Bounds}
- Fix the algorithm, trapezoidal rule, $A_n$, with cost$(A_n)=n$. One may estimate $\|f'\|_1$ in the following way:
- \begin{align}\label{1direst}
+    =\frac{1}{2n}[f(x_1)+2f(x_2)+\cdots+2f(x_{n-1})+f(x_n)], \qquad x_i=\frac{i-1}{n-1},
+\end{equation*}
+defined for $n \in \mathcal{I}=\{2,3,\ldots\}$, and with $\cost(A_n)=n$.  The algorithm $A_n$ is imbedded in the algorithm $A_{2n-1}$, which uses $2n-2$ trapezoids.  
+The algorithm for approximating $\|f'\|_{1}$ is the corresponding norm of the linear spline using the same $x_i$ as used in the trapezoidal rule:
+\begin{equation}\label{1direst}
     G_n(f)=\sum_{i=0}^{n-1}\left|f(x_{i+1})-f(x_{i})\right|.
- \end{align} Note that $G_{n}(f)$ never overestimates $\|f'\|_{1}$, so $h_{\cg_{-}}(n)=0$. Consider \eqref{twosidedGineq}, in this case, the deflation factor, $\mathfrak{c}_n=1$. When it comes to the inflation factor, $\mathfrak{C}_n$, we consider that in the interval $(x_I,x_{x+1})$, we define the function $v(t,x)$ as
- \begin{align*}
-   v(t,x)=\begin{cases}  \displaystyle  x_i-t, & x_i\leq t\leq x,\\[2ex]
- \displaystyle  t-x_{i+1}, & x< t \leq x_{i+1}.
-\end{cases}
- \end{align*}
- Also that
- \begin{align*}
-   \int_{x_i}^{x_{i+1}}|v(t,x)|dx=&\int_{x_i}^{t}|t-x_{i+1}|dx+\int_{t}^{x_{i+1}}|x_i-t|dx,\\
-   =&(t-x_i)|t-x_{i+1}|+(x_{i+1}-t)|x_i-t|,\\
-   =&2(t-x_i)(x_{i+1}-t).
- \end{align*}
- So,
- \begin{align*}
-   f'(x)=&[f(x_{x+1})-f(x_{i})]+\int_{x_i}^{x_{i+1}}v(t,x)f''(t)dt,\\
-   \Rightarrow \int_{x_i}^{x_{i+1}}|f'(x)|dx \leq & |f(x_{i+1})-f(x_i)|+\int_{x_i}^{x_{i+1}}\int_{x_i}^{x_{i+1}}|v(t,x)||f''(t)|dtdx,\\
-   \leq & |f(x_{i+1})-f(x_i)|+\int_{x_i}^{x_{i+1}}2(t-x_i)(x_{i+1}-t)|f''(t)|dt,\\
-   \leq & |f(x_{i+1})-f(x_i)|+\|2(t-x_i)(x_{i+1}-t)\|_{\infty}\|f''(t)\|_{1},\\
-   \leq & |f(x_{i+1})-f(x_i)|+\frac{(x_{i+1}-x_{i})^2}{2}\|f''(t)\|_{1},\\
-   \leq & |f(x_{i+1})-f(x_i)|+\frac{1}{2(n-1)^2}\|f''(t)\|_{1}.\\
- \end{align*}
- Consider the interval $(0,1)$:
- \begin{align*}
-   &\int_{0}^{1}|f'(x)|dx,\\
-   =&\sum_{i=1}^{n-1}\int_{x_i}^{x_{i+1}}|f'(x)|dx,\\
-   \leq & \sum_{i=1}^{n-1}[f(x_{x+1})-f(x_{i})]+\sum_{i=1}^{n-1}\frac{1}{2(n-1)^2}\|f''(t)\|_{1},\\
-   \leq & G_n(f)+\frac{1}{2(n-1)}\|f''(t)\|_{1}.\\
- \end{align*}
-According to \eqref{Gerrbds}, we have $h_{+}(n)=\frac{1}{2(n-1)}$. So the deflation factor and inflation factor are as follows:
-\begin{gather}\label{factor}
-\mathfrak{c}_n =1 \\
-\mathfrak{C}_n =\frac{1}{1 - \tau/(2(n-1))} \geq 1.
-\end{gather}
+\end{equation} 
 
-It is trivial to find that if $h(n) \leq \tilde{h}(n) h_{+}(n), \forall n \in \mathcal{I},$ then $ \tau h(n)< \tilde{h}(n) \ \forall n \in \mathcal{I}.$
-Thus we only need to find $n$ such that
-\[
-\frac{\tau \fC_n G_{n}(f)}{8(n-1)^2} \le \varepsilon.
-\]
- 
-If we consider the embedded algorithms, we will have the following:
+\subsection{Adaptive Algorithm and Upper Bound on the Cost}
+
+Constructing the adaptive algorithm for integration requires upper bounds on the errors of the $A_n$ and $G_n$.  The errors of the trapezoidal rule for integrands in the spaces $\mathcal{W}^{2,1}$ and $\mathcal{W}^{1,1}$ are bounded in terms of $h(n)=1/[8(n-1)^2]$ and $\tilde{h}(n)=1/[2(n-1)]$, respectively, according to \cite[(7.14) and (7.15)]{BraPet11a}.  Since $G_{n}(f)$ never overestimates $\|f'\|_{1}$, it follows that $h_{\cg_{-}}(n)=0$ and $\mathfrak{c}_n=1$. 
+
+To find an upper bound on $\|f'\|_{1}-G_{n}(f)$, note that for $x_i \le x_{i+1}$
+\begin{subequations}
+\begin{equation}
+f'(x)=(n-1)\left\{[f(x_{x+1})-f(x_{i})]+\int_{x_i}^{x_{i+1}}(n-1)v(t,x)f''(t) \, \dif t \right\}
+\end{equation}
+where 
+\begin{equation}
+v(t,x)=\begin{cases}  x_i-t, & x_i\leq t\leq x,\\
+t-x_{i+1}, & x< t \leq x_{i+1}.
+\end{cases}
+\end{equation}
+\end{subequations}
+This implies the following upper bound on a piece of $\|f'\|_{1}$
+\begin{align*}
+\MoveEqLeft{\int_{x_i}^{x_{i+1}}|f'(x)| \, \dif x - |f(x_{i+1})-f(x_i)|}\\
+& \le (n-1)\int_{x_i}^{x_{i+1}}\int_{x_i}^{x_{i+1}}|v(t,x)||f''(t)| \dif t \, \dif x\\
+& \le  (n-1)\int_{x_i}^{x_{i+1}}2(t-x_i)(x_{i+1}-t)|f''(t)| \, \dif t \\
+& \le  (n-1) \max_{x_i \le t \le x_{i+1}} \abs{2(t-x_i)(x_{i+1}-t)} \int_{x_i}^{x_{i+1}} |f''(t)| \, \dif t \\
+ &  \leq  \frac{1}{2(n-1)}\int_{x_i}^{x_{i+1}} |f''(t)| \, \dif t .
+\end{align*}
+Applying this inequality over the entire interval, $[0,1]$ leads to 
+\begin{align*}
+\norm[1]{f'} - G_n(f)  &  = \sum_{i=1}^{n-1} \left \{  \int_{x_i}^{x_{i+1}}|f'(x)|\, \dif x - |f(x_{i+1})-f(x_i)| \right \} \\
+& \le \frac{1}{2(n-1)} \sum_{i=1}^{n-1} \int_{x_i}^{x_{i+1}} |f''(t)| \, \dif t = 
+\frac{\|f''(t)\|_{1}}{2(n-1)}.
+ \end{align*}
+According to \eqref{Gerrbds} and , we have $h_{+}(n)=1/[2(n-1)]$ and an inflation factor of 
+\begin{equation}\label{factor}
+\mathfrak{C}_n =\frac{1}{1 - \tau/[2(n-1)]} \geq 1 \qquad \text{for } n>1+\tau/2.
+\end{equation}
+
+It is straightforward to verify condition \eqref{hbestverb}, namely that $h(n) \leq \tilde{h}(n) h_{+}(n)$ for all $n>1$.  Thus, in the algorithms and theorems of the the previous sections, it is always the case that $ \tau h(n) \le \tilde{h}(n)$.  The following is multi-stage Algorithm \ref{multistagealgo} for the integration problem.  
+
 \begin{algo} \label{multistageintegalgo}
- Let the error tolerance $\varepsilon$, the maximum cost budget $N_{\text{max}}$ and the cone constant $\tau$ be given inputs. Let the sequence of algorithms $\{A_n\}_{n\in \mathcal{I}}$, $\{G_n\}_{n\in \mathcal{I}}$ be described above. Set $i=1$. Let $n_1=\lceil(\tau+1)/2\rceil+1$. For any input function $f\in\cf$, do the following:
+Let the error tolerance $\varepsilon$, the maximum cost budget $N_{\text{max}}$ and the cone constant $\tau$ be given inputs. Let the sequence of algorithms $\{A_n\}_{n\in \mathcal{I}}$, $\{G_n\}_{n\in \mathcal{I}}$ be described above. Set $i=1$. Let $n_1=\lceil(\tau+1)/2\rceil+1$. For any input function $f\in \mathcal{W}^{2,1}$, do the following:
 \begin{description}
-\item[Stage 1.\ Estimate {$\|f'\|_{1}$}.] First compute $G_{n_i}(f)$ in \eqref{1direst} and $\fC_n$ in \eqref{factor}.
+\item[Stage 1.\ Estimate {$\|f'\|_{1}$}.] Compute $G_{n_i}(f)$ in \eqref{1direst}.
 
 \item[Stage 2. Check for convergence.] Check whether $n_i$ is large enough to satisfy the error tolerance, i.e.
     \begin{align*}
-      \frac{\tau \fC_{n_i} G_{n_i}(f)}{8(n_i-1)^2} \le \varepsilon.
+     G_{n_i}(f) \le \frac{4\varepsilon(n_i-1)(2n_i-2 - \tau)}{\tau}.
     \end{align*}
-    If this is true, then set $W=0$, return $(A_{n_i}(f),W)$ and terminate the algorithm. If this is not true, go to Stage 3.
+    If this is true, then set $W$ to be false, return $(A_{n_i}(f),W)$ and terminate the algorithm. If this is not true, go to Stage 3.
 
-\item[Stage 3. Compute $n_{i+1}$.] Choose $n_{i+1}$ as the smallest number exceeding $n_i$ and not less than $N_A(\varepsilon/G_{n_i}(f))$ such that $A_n$ is embedded in $A_{n+1}$. That is
-    \begin{align*}
-      n_{i+1}=(n_i-1)\left\lceil\frac{1}{n_{i}-1}\sqrt{\frac{\tau G_{n_i}(f)}{8\varepsilon}}\right\rceil+1.
-    \end{align*}
-    If $n_{i+1}\leq N{\text{max}}$, increment $i$ by 1, and return to Stage 1. Otherwise, if $n_{i+1}> N{\text{max}}$, choose $n_{i+1}$ be the largest number not exceeding $N{\text{max}}$ such that $A_n$ is embedded in $A_{n+1}$ and set $W=1$. Return $(A_{n_{i+1}}(f),W)$ and terminate the algorithm.
+\item[Stage 3. Compute $n_{i+1}$.] Otherwise, if the inequality above fails to hold,
+choose
+$$
+n_{i+1}=1+ (n_i-1)\max\left\{\left\lceil\frac{1}{(n_i-1)}\sqrt{\frac{\tau G_{n_i}(f)}{8\varepsilon}}\right\rceil,2\right\}.
+$$
+If $n_{i+1} \le N_{\max}$, increment $i$ by $1$, and return to Stage 1.
+
+Otherwise, if $n_{i+1} > N_{\max}$, choose $n_{i+1}$ to be the largest number not exceeding $N_{\max}$ such that $A_{n_{i}}$ is embedded in $A_{n_{i+1}}$, and set $W$ to be true. Return $(A_{n_{i+1}}(f),W)$ and terminate the algorithm.
 \end{description}
 \end{algo}
 

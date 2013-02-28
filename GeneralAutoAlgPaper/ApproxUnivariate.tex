@@ -92,7 +92,7 @@ Let the error tolerance $\varepsilon$, the maximum cost budget $N_{\max}$, and t
 \begin{description}
 
 \item [Stage 1. Estimate {$\norm[\infty]{f'} $}.]
-Compute $G_{n_i}(f)$ in \eqref{estfirstderiv} and $\fC_{n_i}$ in \eqref{inflaapprox}.
+Compute $G_{n_i}(f)$ in \eqref{estfirstderiv}.
 
 \item [Stage 2. Check for Convergence.]
 Check whether $n_i$ is large enough to satisfy the error tolerance, i.e.,
@@ -101,13 +101,13 @@ G_{n_i}(f) \le \frac{4\varepsilon (n_i-1)(2n_i-2 -\tau)}{\tau} .
 $$
 If this is true, then set $W$ to be false, return $(A_{n_i}(f),W)$ and terminate the algorithm.
 
-
 \item[Stage 3. Compute $n_{i+1}$.]  Otherwise, if the inequality above fails to hold,
 choose
 $$
 n_{i+1}=1+ (n_i-1)\max\left\{\left\lceil\frac{1}{(n_i-1)}\sqrt{\frac{\tau G_{n_i}(f)}{8\varepsilon}}\right\rceil,2\right\}.
 $$
- If $n_{i+1} \le N_{\max}$, increment $i$ by $1$, and return to Stage 1.\\
+If $n_{i+1} \le N_{\max}$, increment $i$ by $1$, and return to Stage 1.
+
 Otherwise, if $n_{i+1} > N_{\max}$, choose $n_{i+1}$ to be the largest number not exceeding $N_{\max}$ such that $A_{n_{i}}$ is embedded in $A_{n_{i+1}}$, and set $W$ to be true. Return $(A_{n_{i+1}}(f),W)$ and terminate the algorithm.
 \end{description}
 \end{algo}
