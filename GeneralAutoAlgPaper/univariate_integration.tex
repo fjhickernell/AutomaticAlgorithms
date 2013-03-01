@@ -149,20 +149,27 @@ Moreover, Algorithm \ref{multistageapproalgo} is optimal for approximating funct
 \end{theorem}
 
 \subsection{Numerical Example}
-Consider the test function $f(x)=e^{-(a(x-\mu))^2},$
-where $\mu$'s are uniformly distributed on $[-1/\sqrt{2}a,1-1/\sqrt{2}a],$ and $\log_{10} a \sim U[0,4].$
-If we have large $a$, we can hardly approximate the function due to the spiky shape of the function. From the numerical results, we can find the success rate for our algorithm. Since $\norm[1]{f'}=-e^{-(a\mu)^2}-e^{-(a(1-\mu))^2}, \ \norm[1]{f''}=-2a(\mu e^{-(a\mu)^2}+(1-\mu)e^{-(a(1-\mu))^2})$, if $f \in \cc_{\tau}$ then we should have
-$\norm[1]{f''}/\norm[1]{f'} \leq \tau$. We use Monte Carlo simulation with 1000000 samples to estimate this probability. To obtain the observed success rate, here we use $\tau = 10, 25 , 100$ separately to test $10000$ times with $\varepsilon = 1e-7$.
+Consider the test function 
+\begin{equation} \label{testfun}
+f(x)=\me^{-a^2(x-\mu)^2},
+\end{equation}
+where $\mu \sim \cu[1/\sqrt{2}a,1-1/\sqrt{2}a],$ and $\log_{10}(a) \sim \cu[1,4].$
+If $a$ is large, then $f$ is spiky, and it is difficult to approximate the integral. From the numerical results, we can find the success rate for our algorithm. Straightforward calculations yield that 
+\begin{gather*}
+\norm[1]{f'}=2-\me^{-a^2\mu^2}-\me^{-a^2(1-\mu)^2}, \\ 
+\norm[1]{f''}=2a\left\{2\sqrt{\frac{2}{\me}}-2a \left[\mu \me^{-a^2\mu^2}+(1-\mu)\me^{-a^2(1-\mu)^2}\right] \right\}.
+\end{gather*}
+Monte Carlo simulation is used to determine the probability that $f \in \cc_{\tau}$ for $\tau = 10, 100$, and $100$ (see Table \ref{integresultstable}). 
 \begin{table}[h]
 \centering
-\begin{tabular}{cccc}
-$\tau$ &  10 & 25 & 100\\
+\begin{tabular}{cccc|cccc}
+\multicolumn{4}{c|}{Algorithm \ref{multistageintegalgo}} \\
+$\tau$ &  10 & 100 & 1000 & {\tt quad} & {\tt quadgk} & {\tt chebfun} \\
 \toprule
-Probability of $f \in \mathfrak{C}_{\tau}$ &  $\leq 45 \%$ &  $\leq 50 \%$  & $\leq 54 \%$ \\
-Observed Success Rate & $52\%$ &  $60\%$  & $74\%$ \\
+Probability of $f \in \mathfrak{C}_{\tau}$ &  $0\%$ &  $25\%$  & $58\%$ \\
+Observed Success Rate & $37\%$ &  $69\%$  & $97\%$ & $30\%$ & $77\%$ & $68\%$
 \end{tabular}
-\caption{ Comparison between probability of the input function lying in the cone and the empirical success rate of the algorithm}
+\caption{Performance of multistage, adaptive Algorithm \ref{multistageintegalgo} for various values of $\tau$, and also of other automatic quadrature algorithms. \label{integresultstable}}
 \end{table}
 
-From the above table, we can find our algorithm works very well, as the observed
-success rate is always larger than the expected success rate.
+Ten thousand random instances of this test function are integrated by  Algorithm \ref{multistageintegalgo} and three existing automatic algorithms with an absolute error tolerance of $\varepsilon=10^{-8}$.  The observed success rates for these algorithms are shown.  As expected, the success rate increases as $\tau$ is increased.  All of the integrands lying inside $\cc_{\tau}$ are integrated to within the error tolerance, and a significant number of integrands lying outside the cone are integrated accurately as well.
