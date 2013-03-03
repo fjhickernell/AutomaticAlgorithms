@@ -3,17 +3,19 @@ Now we consider the problem of $\cl_{\infty}$ recovery of functions defined on $
 \[
 S(f)=f, \qquad \ch=\cl_{\infty}, \qquad \norm[\ch]{S(f)-A(f)}=\norm[\infty]{f-A(f)}.
 \]
-The spaces of functions to be recovered are the Sobolev spaces $\cg = \mathcal{W}^{1,\infty}$ and $\cf = \mathcal{W}^{2,\infty}$, where $\mathcal{W}^{k,\infty}$ was defined in \eqref{??}.  The cone of functions for which our adaptive algorithms will be shown to work well is defined as
+The spaces of functions to be recovered are the Sobolev spaces $\cg = \mathcal{W}^{1,\infty}$ and $\cf = \mathcal{W}^{2,\infty}$, where $\mathcal{W}^{k,\infty}$ was defined in \eqref{defSobolev}.  The cone of functions for which our adaptive algorithms will be shown to work well is defined as
 \begin{equation}\label{taudef}
 \cc_{\tau}=\{f \in  \mathcal{W}^{2,\infty} : \norm[\infty]{f''}\leq \tau\norm[\infty]{f'}\}.
 \end{equation}
 
 The basic non-adaptive algorithm used to approximate functions in the cone $\cc_{\tau}$ is linear interpolation on evenly spaced points.  Letting $\ci=\{2, 3, \ldots\}$ as in the previous section, the sequence of algorithms $\{A_n\}_{n \in \ci},$ is defined by
 \begin{subequations} \label{linearspline}
-\begin{gather}
-x_i=\frac{i-1}{n-1}, \qquad i=1, \ldots, n, \\
-A_{n}(f)(x)=(n-1) \left[ f(x_{i})(x_{i+1}-x) +f(x_{i+1})(x-x_i) \right], \qquad x_i \leq x \leq x_{i+1}.
-\end{gather}
+\begin{equation}
+x_i=\frac{i-1}{n-1}, \qquad i=1, \ldots, n,
+\end{equation}
+\begin{multline}
+A_{n}(f)(x)=(n-1) \left[ f(x_{i})(x_{i+1}-x) +f(x_{i+1})(x-x_i) \right], \\ x_i \leq x \leq x_{i+1}.
+\end{multline}
 \end{subequations}
 The cost of $A_n$, is the number of function evaluations, $n$.  Using this same data one may approximate the $\cl_\infty$ norm of $f'$ by the algorithm
 \begin{equation}\label{estfirstderiv}
@@ -23,13 +25,12 @@ Since $A_n$, which uses $n-1$ line segments, is embedded in $A_{2n-1}$, which us
 
 \subsection{Adaptive Algorithm and Upper Bound on the Cost}
 
-Given the algorithms $G_n$ and $A_n$, we now turn to deriving the worst case error bounds, $h_{\pm}$ defined in \eqref{Gerrbds} and $\tildeh$ and $h$ defined in \eqref{algseqerrbd}.  For $x_{i} \le x \le x_{i+1}$ note that the difference between $f'(x)$ and its linear spline approximation is bounded by
+Given the algorithms $G_n$ and $A_n$, we now turn to deriving the worst case error bounds, $h_{\pm}$ defined in \eqref{Gerrbds} and $\tildeh$ and $h$ defined in \eqref{algseqerrbd}.  For $x_{i} \le x \le x_{i+1}$ note from \ref{foneasinteg} that the difference between $f'(x)$ and its linear spline approximation is bounded by
 \begin{align*}
 \MoveEqLeft{\abs{f'(x)} - (n-1) \abs{f(x_{i+1})-f(x_i)}} \\
- & \le \abs{f'(x) - (n-1)[f(x_{i+1})-f(x_i)]} \\
-&=\abs{ \int_{x_i}^{x_{i+1}} f''(t) [(n-1)(t-x_i) -  1_{[x,x_{i+1}]}(t)] \, \dif t} \\
-& \le \norm[\infty]{f''} \int_{x_i}^{x_{i+1}} \abs{  (n-1)(t-x_i) -  1_{[x,x_{i+1}]}(t)} \, \dif t \\
-&=\norm[\infty]{f''} \left \{\frac{1}{2(n-1)} - (x-x_i)[1-(n-1)(x-x_i)] \right\} \\
+&\le(n-1)\abs{ \int_{x_i}^{x_{i+1}} v(t,x) f''(t) \, \dif t} \\
+& \le (n-1) \norm[\infty]{f''}\int_{x_i}^{x_{i+1}} \abs{v(t,x)} \, \dif t \\
+&=(n-1)\norm[\infty]{f''} \left \{\frac{1}{2(n-1)^2} - (x-x_i)(x_{i+1}-x) \right\} \\
 &\le \frac{\norm[\infty]{f''}}{2(n-1)}.
 \end{align*}
 Applying the above argument for $i=1, \ldots, n-1$ and noting that $G_n(f)$ never overestimates $\norm[\infty]{f'}$, we have the following two-sided inequality:
@@ -67,25 +68,7 @@ This implies that we may take
 \tildeh(n) =  \frac{1}{2(n-1)}, \qquad h(n) =  \frac{1}{8(n-1)^2} \leq \frac{1}{4(n-1)^2} = \tilde{h}(n) h_{+}(n).
 \end{equation}
 
-By condition \eqref{hbestverb}, it follows that $\min(\tildeh(n),\tau h(n))=\tau h(n)$, which then simplifies some of the expressions in Algorithm \ref{multistageapproalgo} and Theorem \ref{MultiStageThm}.  Specifically, the left side of the inequality in \eqref{multistageconv} becomes
-\[
-\min(\tildeh(n_i),\tau h(n_i))\fC_{n_i} G_{n_i}(f) = \frac{\tau  G_{n_i}(f) } {4(n_i-1)(2n_i-2 -\tau)}.
-\]
-The function $N_A$ defined in \eqref{Nmindef} is
-\[
-N_{A}(a)= \min\left\{ n \in \ci : \tau h(n) \le a \right\} = 1+ \left \lceil \sqrt{a/(8\tau)}\right \rceil.
-\]
-The denominator in the definition of the set of integrands $\cn$ in \eqref{nicefdefmulti} is
-\[
-\fC_{N_{\max}/r} \fc_{N_{\max}/r} \min(\tildeh(N_{\max}/r),\tau h(N_{\max}/r)) =
-\frac{\tau}{2 (N_{\max}-2)(N_{\max}-2 -\tau)}.
-\]
-The function $\tN_A$ defined in \eqref{tNmindef} is
-\begin{align*} \label{tNmindef}
-\tN_A(a) &= \min\left\{ n \in \ci : \min(\tildeh(n),\tau h(n))\fC_n\fc_n \le a \right\} \\
-&= 1+ \left \lceil \sqrt{\frac{\tau}{8a} + \frac{\tau^2}{16}} +\frac{\tau}{4} \right \rceil \le 1+ \left \lceil\sqrt{\frac{\tau}{8a}} + \frac{\tau}{2} \right \rceil.
-\end{align*}
-With these preliminaries, Algorithm \ref{multistagealgo} and Theorem \ref{MultiStageThm} may be applied directly to  yield the following algorithm for function approximation and its guarantee.
+Since $h_{\pm}(n), \tildeh(n)$, and $h(n)$, are the same as in the previous section for integration, the simplifcations in \ref{simpifycond} apply here as well.  Then Algorithm \ref{multistagealgo} and Theorem \ref{MultiStageThm} may be applied directly to  yield the following algorithm for function approximation and its guarantee.
 
 \begin{algo} \label{multistageapproalgo}
 Let the error tolerance $\varepsilon$, the maximum cost budget $N_{\max}$, and the cone constant $\tau$ be given inputs. Let the sequences of algorithms, $\{A_n\}_{n \in \ci}$ and  $\{G_n\}_{n \in \ci}$ be as described above.  Set $i=1$.  Let $n_1=\lceil (\tau+1)/2\rceil + 1$. For any input function $f \in \cf$, do the following:
@@ -99,12 +82,11 @@ Check whether $n_i$ is large enough to satisfy the error tolerance, i.e.,
 $$
 G_{n_i}(f) \le \frac{4\varepsilon (n_i-1)(2n_i-2 -\tau)}{\tau} .
 $$
-If this is true, then set $W$ to be false, return $(A_{n_i}(f),W)$ and terminate the algorithm.
+If this is true, then set $W$ to be false, return $(A_{n_i}(f),W)$ and terminate the algorithm.   If this is not true, go to Stage 3.
 
-\item[Stage 3. Compute $n_{i+1}$.]  Otherwise, if the inequality above fails to hold,
-choose
+\item[Stage 3. Compute $n_{i+1}$.]  Choose
 $$
-n_{i+1}=1+ (n_i-1)\max\left\{\left\lceil\frac{1}{(n_i-1)}\sqrt{\frac{\tau G_{n_i}(f)}{8\varepsilon}}\right\rceil,2\right\}.
+n_{i+1}=1+ (n_i-1)\max\left\{2,\left\lceil\frac{1}{(n_i-1)}\sqrt{\frac{\tau G_{n_i}(f)}{8\varepsilon}}\right\rceil\right\}.
 $$
 If $n_{i+1} \le N_{\max}$, increment $i$ by $1$, and return to Stage 1.
 
@@ -112,7 +94,7 @@ Otherwise, if $n_{i+1} > N_{\max}$, choose $n_{i+1}$ to be the largest number no
 \end{description}
 \end{algo}
 
-\begin{theorem}   Let  $\varepsilon$, $N_{\max}$, $\tau$ and $n_1$ be given as described in Algorithm \ref{multistageapproalgo}.  Assume that $n_1 \le N_{\max}$.  Let $\cc_\tau$ be the cone of functions defined in \eqref{taudef}.  Let
+\begin{theorem} \label{multistageappxthm} Let  $\varepsilon$, $N_{\max}$, $\tau$ and $n_1$ be given as described in Algorithm \ref{multistageapproalgo}.  Assume that $n_1 \le N_{\max}$.  Let $\cc_\tau$ be the cone of functions defined in \eqref{taudef}.  Let
 $$
 \cn
 = \left \{ f \in \cc_\tau : \norm[\infty]{f'} \le \frac{2\varepsilon (N_{\max}-2)(N_{\max}-2 -\tau)}{\tau} \right\}
@@ -141,31 +123,29 @@ $$
 has $\norm[\infty]{f}=1$ and $f_1(\xi_i)=0$ for $i=0, \ldots, n+1$.  Moreover, the norms of the first and second derivatives of $f_1$ are
 \begin{align*}
 \norm[\infty]{f'_1}&=\frac{16}{3\sqrt{3}(\xi_{j+1}-\xi_{j})}\leq \tg(n),\\
-\norm[\infty]{f''_1}&=\frac{16}{(\xi_{j+1}-\xi_{j})^2}
-=\frac{3\sqrt{3}\norm[\infty]{f'_1}}{(\xi_{j+1}-\xi_{j})}
+\norm[\infty]{f''_1}&=\frac{32}{(\xi_{j+1}-\xi_{j})^2}
+=\frac{6\sqrt{3}\norm[\infty]{f'_1}}{(\xi_{j+1}-\xi_{j})}
  \leq g(n) \norm[\infty]{f'_1},
 \end{align*}
 where the inequality $\xi_{j+1} - \xi_j \ge 1/(n+1)$ is used to define $\tg$ and $g$ as
 \[
-\tg(n) = \frac{16(n+1)}{3\sqrt{3}}, \qquad g(n) = 3\sqrt{3}(n+1), \qquad (g\tg)(n) = 16(n+1)^2.
+\tg(n) = \frac{16(n+1)}{3\sqrt{3}}, \qquad g(n) = 6\sqrt{3}(n+1), \qquad (g\tg)(n) = 32(n+1)^2.
 \]
 Using these choices of $f_0$ and $f_1$, along with the corresponding $\tg$ and $g$ above, one may invoke Proposition \ref{optimalprop}, Theorem \ref{complowbd}, and Corollary \ref{optimcor} to obtain the following theorem.
 
 \begin{theorem} \label{complowbdappr} The linear spline algorithm is optimal for $\cl_{\infty}$ approximation of functions in $\mathcal{W}^{1,\infty}$ and $\mathcal{W}^{2,\infty}$. Assuming an infinite cost budget, the complexity of the function recovery problem problem, over the cone of functions $\cc_{\tau}$ defined in \eqref{taudef} is
 \begin{align*}
 \comp(\varepsilon,\ca(\cc_{\tau},\ch,S,\Lambda),\infty,\norm[\infty]{f'})
-&\ge \min\left(\frac{3\sqrt{3}\norm[\infty]{f'}}{64 \varepsilon}, \sqrt{\frac{\tau\norm[\infty]{f'}}{64\varepsilon}} \right)-1\\
-& \sim \sqrt{\frac{\tau\norm[\infty]{f'}}{64\varepsilon}}  \quad\text{as } \frac{\norm[\infty]{f'}}{\varepsilon} \to \infty.
+&\ge \min\left(\frac{3\sqrt{3}\norm[\infty]{f'}}{64 \varepsilon}, \sqrt{\frac{\tau\norm[\infty]{f'}}{128\varepsilon}} \right)-1\\
+& \sim \sqrt{\frac{\tau\norm[\infty]{f'}}{128\varepsilon}}  \quad\text{as } \frac{\norm[\infty]{f'}}{\varepsilon} \to \infty.
 \end{align*}
 Moreover, Algorithm \ref{multistageapproalgo} is optimal for approximating functions in $\cc_{\tau}$.
 \end{theorem}
 
 \subsection{Numerical Example}
 
-To illustrate Algorithm \ref{multistageapproalgo} we
-choose a family of test functions $f:x \mapsto \me^{-(a(x-\mu))^2},$
-where $\mu$ is distributed uniformly on $[0,1]$ and $\log_{10}(a)$ is distributed uniformly $[0,4]$.  When $a$ is large this function is very spiky and hard to approximate since the sampled function values may miss the spike.  Since $\norm[\infty]{f'}=a\sqrt{2/e}$ and $\norm[\infty]{f''}=2a^2$, the probability that $f \in \cc_{\tau}$ is $\log_{10}(\tau/\sqrt{2e})/4.$
-For $\tau = 10, 25 , 100$ we choose a sample of  $10000$ functions and an error tolerance of  $\varepsilon = 1e-7$.  The empirical probability that Algorithm \ref{multistageapproalgo} succeeds in returning an answer within the error tolerance is given in Table {approxnumerical}.  Our algorithm succeeds for all functions lying in the cone plus some others.  It is conservative, but not overly so.
+To illustrate Algorithm \ref{multistageapproalgo} we choose the same  family of test functions as in \ref{testfun}. When $a$ is large this function is very spiky and hard to approximate since the sampled function values may miss the spike.  Since $\norm[\infty]{f'}=a\sqrt{2/\me}$ and $\norm[\infty]{f''}=2a^2$, the probability that $f \in \cc_{\tau}$ is $\log_{10}(\tau/\sqrt{2\me})/4.$
+For $\tau = 10, 100 , 1000$ we choose a sample of  $10000$ functions and an error tolerance of  $\varepsilon = 10^{-8}$.  The empirical probability that Algorithm \ref{multistageapproalgo} succeeds in returning an answer within the error tolerance is given in Table \ref{approxnumerical}.  Our algorithm succeeds for all functions lying in the cone plus some others.  It is conservative, but not overly so.
 \begin{table}[h]
 \centering
 \begin{tabular}{cccc}

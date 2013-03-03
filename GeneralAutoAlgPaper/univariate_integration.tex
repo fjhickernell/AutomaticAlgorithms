@@ -7,13 +7,13 @@ where the general Sobolev spaces with smoothness of degree $k$ are defined as
 \begin{equation} \label{defSobolev}
   \mathcal{W}^{k,p}=\mathcal{W}^{k,p}[0,1]=\{f\in C[0,1]: \|f^{k}\|_{p}<\infty\}.
 \end{equation}
-The corresponding semi-norms are $\|f\|_{\cf}=\|f''\|_{1}$ and $\|f\|_{\cg}=\|f'\|_{1}$, respectively, and the cone of integrands is defined as  
+The corresponding semi-norms are $\|f\|_{\cf}=\|f''\|_{1}$ and $\|f\|_{\cg}=\|f'\|_{1}$, respectively, which correspond to the total variation of $f'$ and $f$, respectively,  and the cone of integrands is defined as  
 \begin{equation}\label{coneinteg}
 \cc_{\tau}=\{f\in \mathcal{W}^{2,1}:\|f''\|_1\leq\tau\|f'\|_1\}.
 \end{equation}
 The space of outputs $\ch$ is $\reals$.
 
-The non-adaptive building block to construct the adaptive algorithm is the composite trapezoidal rule based on $n-1$ trapezoids:
+The non-adaptive building blocks to construct the adaptive algorithm are the composite trapezoidal rules based on $n-1$ trapezoids:
 \begin{equation*}
     A_{n}(f)
     =\frac{1}{2n}[f(x_1)+2f(x_2)+\cdots+2f(x_{n-1})+f(x_n)], \qquad x_i=\frac{i-1}{n-1},
@@ -29,7 +29,7 @@ The algorithm for approximating $\|f'\|_{1}$ is the corresponding norm of the li
 Constructing the adaptive algorithm for integration requires upper bounds on the errors of the $A_n$ and $G_n$.  The errors of the trapezoidal rule for integrands in the spaces $\mathcal{W}^{2,1}$ and $\mathcal{W}^{1,1}$ are bounded in terms of $h(n)=1/[8(n-1)^2]$ and $\tilde{h}(n)=1/[2(n-1)]$, respectively, according to \cite[(7.14) and (7.15)]{BraPet11a}.  Since $G_{n}(f)$ never overestimates $\|f'\|_{1}$, it follows that $h_{\cg_{-}}(n)=0$ and $\mathfrak{c}_n=1$. 
 
 To find an upper bound on $\|f'\|_{1}-G_{n}(f)$, note that for $x_i \le x_{i+1}$
-\begin{subequations}
+\begin{subequations} \label{foneasinteg}
 \begin{equation}
 f'(x)=(n-1)\left\{[f(x_{x+1})-f(x_{i})]+\int_{x_i}^{x_{i+1}}(n-1)v(t,x)f''(t) \, \dif t \right\}
 \end{equation}
@@ -56,27 +56,31 @@ Applying this inequality over the entire interval, $[0,1]$ leads to
  \end{align*}
 According to \eqref{Gerrbds} and , we have $h_{+}(n)=1/[2(n-1)]$ and an inflation factor of 
 \begin{equation}\label{factor}
-\mathfrak{C}_n =\frac{1}{1 - \tau/(2n-2)} \geq 1 \qquad \text{for } n>1+\tau/2.
+\mathfrak{C}_n =\frac{1}{1 - \tau/(2n-2)} \qquad \text{for } n>1+\tau/2.
 \end{equation}
 
 By condition \eqref{hbestverb}, it follows that $\min(\tildeh(n),\tau h(n))=\tau h(n)$, which then simplifies some of the expressions in Algorithm \ref{multistagealgo} and Theorem \ref{MultiStageThm}.  Specifically, the left side of the inequality in \eqref{multistageconv} becomes
-\[
+\begin{subequations} \label{simpifycond}
+\begin{equation}
 \min(\tildeh(n_i),\tau h(n_i))\fC_{n_i} G_{n_i}(f) = \frac{\tau  G_{n_i}(f) } {4(n_i-1)(2n_i-2 -\tau)}.
-\]
+\end{equation}
 The function $N_A$ defined in \eqref{Nmindef} is
-\[
+\begin{equation}
 N_{A}(a)= \min\left\{ n \in \ci : \tau h(n) \le a \right\} = 1+ \left \lceil \sqrt{a/(8\tau)}\right \rceil.
-\]
+\end{equation}
 The denominator in the definition of the set of integrands $\cn$ in \eqref{nicefdefmulti} is
-\[
-\fC_{N_{\max}/r} \fc_{N_{\max}/r} \min(\tildeh(N_{\max}/r),\tau h(N_{\max}/r)) =
+\begin{multline}
+\fC_{N_{\max}/r} \fc_{N_{\max}/r} \min(\tildeh(N_{\max}/r),\tau h(N_{\max}/r)) \\
+=
 \frac{\tau}{2 (N_{\max}-2)(N_{\max}-2 -\tau)}.
-\]
+\end{multline}
 The function $\tN_A$ defined in \eqref{tNmindef} is
-\begin{align*} \label{tNmindef}
+\begin{align}
+\nonumber
 \tN_A(a) &= \min\left\{ n \in \ci : \min(\tildeh(n),\tau h(n))\fC_n\fc_n \le a \right\} \\
 &= 1+ \left \lceil \sqrt{\frac{\tau}{8a} + \frac{\tau^2}{16}} +\frac{\tau}{4} \right \rceil \le 1+ \left \lceil\sqrt{\frac{\tau}{8a}} + \frac{\tau}{2} \right \rceil.
-\end{align*}
+\end{align}
+\end{subequations}
 With these preliminaries, Algorithm \ref{multistagealgo} and Theorem \ref{MultiStageThm} may be applied directly to  yield the following automatic, adaptive integration algorithm and its guarantee.
 
 \begin{algo} \label{multistageintegalgo}
@@ -90,10 +94,9 @@ Let the error tolerance $\varepsilon$, the maximum cost budget $N_{\text{max}}$ 
     \end{align*}
     If this is true, then set $W$ to be false, return $(A_{n_i}(f),W)$ and terminate the algorithm. If this is not true, go to Stage 3.
 
-\item[Stage 3. Compute $n_{i+1}$.] Otherwise, if the inequality above fails to hold,
-choose
+\item[Stage 3. Compute $n_{i+1}$.] Choose
 $$
-n_{i+1}=1+ (n_i-1)\max\left\{\left\lceil\frac{1}{(n_i-1)}\sqrt{\frac{\tau G_{n_i}(f)}{8\varepsilon}}\right\rceil,2\right\}.
+n_{i+1}=1+ (n_i-1)\max\left\{2,\left\lceil\frac{1}{(n_i-1)}\sqrt{\frac{\tau G_{n_i}(f)}{8\varepsilon}}\right\rceil\right\}.
 $$
 If $n_{i+1} \le N_{\max}$, increment $i$ by $1$, and return to Stage 1.
 
@@ -101,7 +104,7 @@ Otherwise, if $n_{i+1} > N_{\max}$, choose $n_{i+1}$ to be the largest number no
 \end{description}
 \end{algo}
 
-\begin{theorem} Let  $\varepsilon$, $N_{\max}$, $\tau$ and $n_1$ be given as described in Algorithm \ref{multistageintegalgo}.  Assume that $n_1 \le N_{\max}$.  Let $\cc_\tau$ be the cone of functions defined in \eqref{coneinteg}.  Let
+\begin{theorem} \label{multistageintegthm} Let  $N_{\max}$, $\tau$, $n_1$, and $\varepsilon$ be given as described in Algorithm \ref{multistageintegalgo}.  Assume that $n_1 \le N_{\max}$.  Let $\cc_\tau$ be the cone of functions defined in \eqref{coneinteg}.  Let
 $$
 \cn
 = \left \{ f \in \cc_\tau : \norm[1]{f'} \le \frac{2\varepsilon (N_{\max}-2)(N_{\max}-2 -\tau)}{\tau} \right\}
@@ -117,7 +120,7 @@ be the nice subset of the cone $\cc_\tau$.  Then it follows that Algorithm \ref{
 \subsection{Lower Bound on the Computational Cost}
 Next, we derive a lower bound on the cost of approximating functions in the cone $\cc_{\tau}$ by constructing fooling functions. Following the arguments of Section \ref{LowBoundSec}, we choose  $f_0(x)=x.$ Then
 \[
-\norm[1]{f'_0}=1, \qquad \norm[1]{f''_0}=0, \qquad \tau_0=0.
+\norm[1]{f'_0}=2, \qquad \norm[1]{f''_0}=0, \qquad \tau_0=0.
 \]
 For any $n =2, 3, \ldots$, suppose that the one has the data $L_i(f)=f(\xi_i)$, $i=1, \ldots, n$ for arbitrary $\xi_i$, where $0=\xi_0 \le \xi_1 < \cdots < \xi_n \le \xi_{n+1} = 1$.  There must be some $j=0, \ldots, n$ such that $\xi_{j+1} - \xi_j \ge 1/(n+1)$.  The function $f_{1}$, defined as
 $$
@@ -139,7 +142,7 @@ where the inequality $\xi_{j+1} - \xi_j \ge 1/(n+1)$ is used to define $\tg$ and
 \]
 Using these choices of $f_0$ and $f_1$, along with the corresponding $\tg$ and $g$ above, one may invoke Proposition \ref{optimalprop}, Theorem \ref{complowbd}, and Corollary \ref{optimcor} to obtain the following theorem.
 
-\begin{theorem} \label{complowbdappr} The adaptive trapezoidal algorithm is optimal for integration of functions in $\mathcal{W}^{1,1}$ and $\mathcal{W}^{2,1}$. Assuming an infinite cost budget, the complexity of the function recovery problem problem, over the cone of functions $\cc_{\tau}$ defined in \eqref{coneinteg} is
+\begin{theorem} \label{complowbdinteg} The adaptive trapezoidal algorithm is optimal for integration of functions in $\mathcal{W}^{1,1}$ and $\mathcal{W}^{2,1}$. Assuming an infinite cost budget, the complexity of the function recovery problem problem, over the cone of functions $\cc_{\tau}$ defined in \eqref{coneinteg} is
 \begin{align*}
 \comp(\varepsilon,\ca(\cc_{\tau},\ch,S,\Lambda),\infty,\norm[1]{f'})
 &\ge \min\left(\frac{\norm[1]{f'}}{15 \varepsilon}, \sqrt{\frac{\sqrt{3}\tau\norm[1]{f'}}{80\varepsilon}} \right)-1\\
@@ -149,17 +152,17 @@ Moreover, Algorithm \ref{multistageapproalgo} is optimal for approximating funct
 \end{theorem}
 
 \subsection{Numerical Example}
-Consider the test function 
+Consider the family of test functions defined by 
 \begin{equation} \label{testfun}
 f(x)=\me^{-a^2(x-\mu)^2},
 \end{equation}
 where $\mu \sim \cu[1/\sqrt{2}a,1-1/\sqrt{2}a],$ and $\log_{10}(a) \sim \cu[1,4].$
-If $a$ is large, then $f$ is spiky, and it is difficult to approximate the integral. From the numerical results, we can find the success rate for our algorithm. Straightforward calculations yield that 
+If $a$ is large, then $f$ is spiky, and it is difficult to approximate the integral. From the numerical results, we can find the success rate for our algorithm. Straightforward calculations yield the norms of the first two derivatives of this test function: 
 \begin{gather*}
 \norm[1]{f'}=2-\me^{-a^2\mu^2}-\me^{-a^2(1-\mu)^2}, \\ 
 \norm[1]{f''}=2a\left\{2\sqrt{\frac{2}{\me}}-2a \left[\mu \me^{-a^2\mu^2}+(1-\mu)\me^{-a^2(1-\mu)^2}\right] \right\}.
 \end{gather*}
-Monte Carlo simulation is used to determine the probability that $f \in \cc_{\tau}$ for $\tau = 10, 100$, and $100$ (see Table \ref{integresultstable}). 
+Monte Carlo simulation is used to determine the probability that $f \in \cc_{\tau}$ for $\tau = 10, 100$, and $1000$ (see Table \ref{integresultstable}). 
 \begin{table}[h]
 \centering
 \begin{tabular}{cccc|cccc}
@@ -169,7 +172,7 @@ $\tau$ &  10 & 100 & 1000 & {\tt quad} & {\tt quadgk} & {\tt chebfun} \\
 Probability of $f \in \mathfrak{C}_{\tau}$ &  $0\%$ &  $25\%$  & $58\%$ \\
 Observed Success Rate & $37\%$ &  $69\%$  & $97\%$ & $30\%$ & $77\%$ & $68\%$
 \end{tabular}
-\caption{Performance of multistage, adaptive Algorithm \ref{multistageintegalgo} for various values of $\tau$, and also of other automatic quadrature algorithms. \label{integresultstable}}
+\caption{Performance of multistage, adaptive Algorithm \ref{multistageintegalgo} for various values of $\tau$, and also of other automatic quadrature algorithms. The test function \eqref{testfun} with random parameters, $a$ and $\mu$, was used. \label{integresultstable}}
 \end{table}
 
-Ten thousand random instances of this test function are integrated by  Algorithm \ref{multistageintegalgo} and three existing automatic algorithms with an absolute error tolerance of $\varepsilon=10^{-8}$.  The observed success rates for these algorithms are shown.  As expected, the success rate increases as $\tau$ is increased.  All of the integrands lying inside $\cc_{\tau}$ are integrated to within the error tolerance, and a significant number of integrands lying outside the cone are integrated accurately as well.
+Ten thousand random instances of this test function are integrated by  Algorithm \ref{multistageintegalgo} and three existing automatic algorithms with an absolute error tolerance of $\varepsilon=10^{-8}$.  The observed success rates for these algorithms are shown.  As expected, the success rate of {Algorithm \ref{multistageintegalgo} increases as $\tau$ is increased.  All of the integrands lying inside $\cc_{\tau}$ are integrated to within the error tolerance, and a significant number of integrands lying outside the cone are integrated accurately as well.
