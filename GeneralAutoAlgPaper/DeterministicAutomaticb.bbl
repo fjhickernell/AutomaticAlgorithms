@@ -1,5 +1,5 @@
 \def\Ignore#1{}\def\notesupp#1{}\def\Ignore#1{}\def\notesupp#1{}\def\Ignore#1{}\def\notesupp#1{}\def\Ignore#1{}\def\notesupp#1{}\def\Ignore#1{}\def\notesupp#1{}\def\Ignore#1{}\def\notesupp#1{}
-\begin{thebibliography}{21}
+\begin{thebibliography}{20}
 \expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
 \providecommand{\bibinfo}[2]{#2}
 \ifx\xfnm\relax \def\xfnm[#1]{\unskip,\space#1}\fi
@@ -129,9 +129,5 @@
   {S}tandard information}, \bibinfo{journal}{J. Complexity}
   \bibinfo{volume}{27} (\bibinfo{year}{2011}{\natexlab{b}})
   \bibinfo{pages}{417--440}.
-%Type = Manual
-\bibitem[{{Wolfram Research Inc.}(2011)}]{Mat8a}
-\bibinfo{author}{{Wolfram Research Inc.}}, \bibinfo{title}{Mathematica 8},
-  \bibinfo{year}{2011}.
 
 \end{thebibliography}
