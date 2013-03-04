@@ -154,9 +154,9 @@ Moreover, Algorithm \ref{multistageapproalgo} is optimal for approximating funct
 \subsection{Numerical Example}
 Consider the family of test functions defined by 
 \begin{equation} \label{testfun}
-f(x)=\me^{-a^2(x-\mu)^2},
+f(x)=b\me^{-a^2(x-\mu)^2},
 \end{equation}
-where $\mu \sim \cu[1/\sqrt{2}a,1-1/\sqrt{2}a],$ and $\log_{10}(a) \sim \cu[1,4].$
+where $\mu \sim \cu[1/\sqrt{2}a,1-1/\sqrt{2}a]$, $\log_{10}(a) \sim \cu[1,4]$, and $b$ is chosen to make $\int_0^1 f(x) \, \dif x = 1$.
 If $a$ is large, then $f$ is spiky, and it is difficult to approximate the integral. From the numerical results, we can find the success rate for our algorithm. Straightforward calculations yield the norms of the first two derivatives of this test function: 
 \begin{gather*}
 \norm[1]{f'}=2-\me^{-a^2\mu^2}-\me^{-a^2(1-\mu)^2}, \\ 

@@ -144,7 +144,7 @@ Moreover, Algorithm \ref{multistageapproalgo} is optimal for approximating funct
 
 \subsection{Numerical Example}
 
-To illustrate Algorithm \ref{multistageapproalgo} we choose the same  family of test functions as in \ref{testfun}. When $a$ is large this function is very spiky and hard to approximate since the sampled function values may miss the spike.  Since $\norm[\infty]{f'}=a\sqrt{2/\me}$ and $\norm[\infty]{f''}=2a^2$, the probability that $f \in \cc_{\tau}$ is $\log_{10}(\tau/\sqrt{2\me})/4.$
+To illustrate Algorithm \ref{multistageapproalgo} we choose the same  family of test functions as in \eqref{testfun}. When $a$ is large this function is very spiky and hard to approximate since the sampled function values may miss the spike.  Since $\norm[\infty]{f'}=a\sqrt{2/\me}$ and $\norm[\infty]{f''}=2a^2$, the probability that $f \in \cc_{\tau}$ is $\log_{10}(\tau/\sqrt{2\me})/4.$
 For $\tau = 10, 100 , 1000$ we choose a sample of  $10000$ functions and an error tolerance of  $\varepsilon = 10^{-8}$.  The empirical probability that Algorithm \ref{multistageapproalgo} succeeds in returning an answer within the error tolerance is given in Table \ref{approxnumerical}.  Our algorithm succeeds for all functions lying in the cone plus some others.  It is conservative, but not overly so.
 \begin{table}[h]
 \centering
