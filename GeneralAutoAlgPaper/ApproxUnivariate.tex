@@ -144,18 +144,17 @@ Moreover, Algorithm \ref{multistageapproalgo} is optimal for approximating funct
 
 \subsection{Numerical Example}
 
-To illustrate Algorithm \ref{multistageapproalgo} we choose the same  family of test functions as in \eqref{testfun}, where $\mu \sim \cu[0,1]$ and $\log_{10}(a) \sim \cu[0,4]$. When $a$ is large this function is very spiky and hard to approximate since the sampled function values may miss the spike.  Since $\norm[\infty]{f'}=a\sqrt{2/\me}$ and $\norm[\infty]{f''}=2a^2$, the probability that $f \in \cc_{\tau}$ is $\min\left(\max(0,\log_{10}\left(\tau/\sqrt{2\me})/4\right),1\right).$
+To illustrate Algorithm \ref{multistageapproalgo} we choose the same  family of test functions as in \eqref{testfun}, but now with $z \sim \cu[0,1]$, $\log_{10}(a) \sim \cu[0,4]$, and $b=1$. When $a$ is large this function is very spiky and hard to approximate since the sampled function values may miss the spike.  Since $\norm[\infty]{f'}=a\sqrt{2/\me}$ and $\norm[\infty]{f''}=2a^2$, the probability that $f \in \cc_{\tau}$ is $\min\left(\max(0,\log_{10}\left(\tau/\sqrt{2\me})/4\right),1\right).$
 For $\tau = 10, 100 , 1000$ we choose a sample of  $10000$ functions and an error tolerance of  $\varepsilon = 10^{-8}$.  The empirical probability that Algorithm \ref{multistageapproalgo} succeeds in returning an answer within the error tolerance is given in Table \ref{approxnumerical}.  Our algorithm succeeds for all functions lying in the cone plus some others.  It is conservative, but not overly so.
 \begin{table}[h]
 \centering
 \begin{tabular}{cccc}
-\multicolumn{4}{c}{Algorithm \ref{multistageapproalgo}} \\
 $\tau$ &  10 & 100 & 1000\\
 \toprule
-Probability of $f \in \mathfrak{C}_{\tau}$ &  $ 16 \%$ &  $41 \%$  & $66 \%$ \\
+Probability of $f \in \cc_{\tau}$ &  $ 16 \%$ &  $41 \%$  & $66 \%$ \\
 Observed Success Rate & 25$\%$ &  49$\%$  & 74$\%$ \\
 \end{tabular}
-\caption{Comparison between the probability of the input function lying in the cone and the empirical success rate of the algorithm.  \label{approxnumerical}}
+\caption{Comparison between the probability of the input function lying in the cone and the empirical success rate of Algorithm \ref{multistageapproalgo}.  \label{approxnumerical}}
 \end{table}
 
 

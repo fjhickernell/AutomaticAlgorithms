@@ -154,13 +154,13 @@ Moreover, Algorithm \ref{multistageapproalgo} is optimal for approximating funct
 \subsection{Numerical Example}
 Consider the family of test functions defined by 
 \begin{equation} \label{testfun}
-f(x)=b\me^{-a^2(x-\mu)^2},
+f(x)=b\me^{-a^2(x-z)^2},
 \end{equation}
-where $\mu \sim \cu[1/\sqrt{2}a,1-1/\sqrt{2}a]$, $\log_{10}(a) \sim \cu[1,4]$, and $b$ is chosen to make $\int_0^1 f(x) \, \dif x = 1$.
+where $z \sim \cu[1/\sqrt{2}a,1-1/\sqrt{2}a]$, $\log_{10}(a) \sim \cu[1,4]$, and $b$ is chosen to make $\int_0^1 f(x) \, \dif x = 1$.
 If $a$ is large, then $f$ is spiky, and it is difficult to approximate the integral. From the numerical results, we can find the success rate for our algorithm. Straightforward calculations yield the norms of the first two derivatives of this test function: 
 \begin{gather*}
-\norm[1]{f'}=2-\me^{-a^2\mu^2}-\me^{-a^2(1-\mu)^2}, \\ 
-\norm[1]{f''}=2a\left\{2\sqrt{\frac{2}{\me}}-2a \left[\mu \me^{-a^2\mu^2}+(1-\mu)\me^{-a^2(1-\mu)^2}\right] \right\}.
+\norm[1]{f'}=2-\me^{-a^2z^2}-\me^{-a^2(1-z)^2}, \\ 
+\norm[1]{f''}=2a\left\{2\sqrt{\frac{2}{\me}}-2a \left[z \me^{-a^2z^2}+(1-z)\me^{-a^2(1-z)^2}\right] \right\}.
 \end{gather*}
 Monte Carlo simulation is used to determine the probability that $f \in \cc_{\tau}$ for $\tau = 10, 100$, and $1000$ (see Table \ref{integresultstable}). 
 \begin{table}[h]
@@ -172,7 +172,7 @@ $\tau$ &  10 & 100 & 1000 & {\tt quad} & {\tt quadgk} & {\tt chebfun} \\
 Probability of $f \in \cc_{\tau}$ &  $0\%$ &  $25\%$  & $58\%$ \\
 Observed Success Rate & $37\%$ &  $69\%$  & $97\%$ & $30\%$ & $77\%$ & $68\%$
 \end{tabular}
-\caption{Performance of multistage, adaptive Algorithm \ref{multistageintegalgo} for various values of $\tau$, and also of other automatic quadrature algorithms. The test function \eqref{testfun} with random parameters, $a$ and $\mu$, was used. \label{integresultstable}}
+\caption{Performance of multistage, adaptive Algorithm \ref{multistageintegalgo} for various values of $\tau$, and also of other automatic quadrature algorithms. The test function \eqref{testfun} with random parameters, $a$ and $z$, was used. \label{integresultstable}}
 \end{table}
 
 Ten thousand random instances of this test function are integrated by  Algorithm \ref{multistageintegalgo} and three existing automatic algorithms with an absolute error tolerance of $\varepsilon=10^{-8}$.  The observed success rates for these algorithms are shown.  As expected, the success rate of {Algorithm \ref{multistageintegalgo} increases as $\tau$ is increased.  All of the integrands lying inside $\cc_{\tau}$ are integrated to within the error tolerance, and a significant number of integrands lying outside the cone are integrated accurately as well.
