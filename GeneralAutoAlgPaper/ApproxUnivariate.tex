@@ -25,7 +25,7 @@ Since $A_n$, which uses $n-1$ line segments, is embedded in $A_{2n-1}$, which us
 
 \subsection{Adaptive Algorithm and Upper Bound on the Cost}
 
-Given the algorithms $G_n$ and $A_n$, we now turn to deriving the worst case error bounds, $h_{\pm}$ defined in \eqref{Gerrbds} and $\tildeh$ and $h$ defined in \eqref{algseqerrbd}.  For $x_{i} \le x \le x_{i+1}$ note from \ref{foneasinteg} that the difference between $f'(x)$ and its linear spline approximation is bounded by
+Given the algorithms $G_n$ and $A_n$, we now turn to deriving the worst case error bounds, $h_{\pm}$ defined in \eqref{Gerrbds} and $\tildeh$ and $h$ defined in \eqref{algseqerrbd}.  For $x_{i} \le x \le x_{i+1}$ note from \eqref{foneasinteg} that the difference between $f'(x)$ and its linear spline approximation is bounded by
 \begin{align*}
 \MoveEqLeft{\abs{f'(x)} - (n-1) \abs{f(x_{i+1})-f(x_i)}} \\
 &\le(n-1)\abs{ \int_{x_i}^{x_{i+1}} v(t,x) f''(t) \, \dif t} \\
@@ -120,7 +120,7 @@ f_{1}(x):=\begin{cases} \displaystyle
 0 & \text{otherwise},
 \end{cases}
 $$
-has $\norm[\infty]{f}=1$ and $f_1(\xi_i)=0$ for $i=0, \ldots, n+1$.  Moreover, the norms of the first and second derivatives of $f_1$ are
+has $\norm[\infty]{f_1}=1$ and $f_1(\xi_i)=0$ for $i=0, \ldots, n+1$.  Moreover, the norms of the first and second derivatives of $f_1$ are
 \begin{align*}
 \norm[\infty]{f'_1}&=\frac{16}{3\sqrt{3}(\xi_{j+1}-\xi_{j})}\leq \tg(n),\\
 \norm[\infty]{f''_1}&=\frac{32}{(\xi_{j+1}-\xi_{j})^2}
@@ -144,15 +144,16 @@ Moreover, Algorithm \ref{multistageapproalgo} is optimal for approximating funct
 
 \subsection{Numerical Example}
 
-To illustrate Algorithm \ref{multistageapproalgo} we choose the same  family of test functions as in \eqref{testfun}. When $a$ is large this function is very spiky and hard to approximate since the sampled function values may miss the spike.  Since $\norm[\infty]{f'}=a\sqrt{2/\me}$ and $\norm[\infty]{f''}=2a^2$, the probability that $f \in \cc_{\tau}$ is $\log_{10}(\tau/\sqrt{2\me})/4.$
+To illustrate Algorithm \ref{multistageapproalgo} we choose the same  family of test functions as in \eqref{testfun}, where $\mu \sim \cu[0,1]$ and $\log_{10}(a) \sim \cu[0,4]$. When $a$ is large this function is very spiky and hard to approximate since the sampled function values may miss the spike.  Since $\norm[\infty]{f'}=a\sqrt{2/\me}$ and $\norm[\infty]{f''}=2a^2$, the probability that $f \in \cc_{\tau}$ is $\min\left(\max(0,\log_{10}\left(\tau/\sqrt{2\me})/4\right),1\right).$
 For $\tau = 10, 100 , 1000$ we choose a sample of  $10000$ functions and an error tolerance of  $\varepsilon = 10^{-8}$.  The empirical probability that Algorithm \ref{multistageapproalgo} succeeds in returning an answer within the error tolerance is given in Table \ref{approxnumerical}.  Our algorithm succeeds for all functions lying in the cone plus some others.  It is conservative, but not overly so.
 \begin{table}[h]
 \centering
 \begin{tabular}{cccc}
-$\tau$ &  10 & 25 & 100\\
+\multicolumn{4}{c}{Algorithm \ref{multistageapproalgo}} \\
+$\tau$ &  10 & 100 & 1000\\
 \toprule
-Probability of $f \in \cc_\tau$ &  $\leq 16 \%$ &  $\leq 26 \%$  & $\leq 41 \%$ \\
-Observed Success Rate & 25$\%$ &  34$\%$  & 49$\%$ \\
+Probability of $f \in \mathfrak{C}_{\tau}$ &  $ 16 \%$ &  $41 \%$  & $66 \%$ \\
+Observed Success Rate & 25$\%$ &  49$\%$  & 74$\%$ \\
 \end{tabular}
 \caption{Comparison between the probability of the input function lying in the cone and the empirical success rate of the algorithm.  \label{approxnumerical}}
 \end{table}
