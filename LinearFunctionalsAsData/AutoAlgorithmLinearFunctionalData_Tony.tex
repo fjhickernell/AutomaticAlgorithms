@@ -278,12 +278,12 @@ This $k^*$ will ensure
 The error of an algorithm $A  \in \ca(\cc,\chout,S,\Lambda)$ is defined  as
 \begin{equation} \label{errdefworst}
 \err(A,\cc,\chout,S)
-= \min\{ k \ge 0 : \norm[\chout]{S(f) -  A(f)} \le \sigma_{k}(f) \norm[\pout]{\underline{\gamma}} \ \forall f \in \cc \},
+= \sigma_{\min \{ k \in \naturals: \norm[\chout]{S(f) -  A(f)} \le \sigma_{k}(f) \norm[\pout]{\underline{\gamma}} \ \forall f \in \cc \}}(f),
 \end{equation}
 Because the integration problem has real-valued solutions, i.e., $\chout=\reals$, one may also define a one sided error criterion:
 \begin{equation}\label{errpmdefworst}
 \err_{\pm}(A,\cc,\reals,S) =
-\min \{ k \ge 0 : \pm[S(f) -  A(f)] \le \sigma_{k}(f) \norm[\pout]{\underline{\gamma}} \ \forall f \in \cc \}.
+\sigma_{\min \{ k \in \naturals: \pm [{S(f) -  A(f)}] \le \sigma_{k}(f) \norm[\pout]{\underline{\gamma}} \ \forall f \in \cc \}}(f).
 \end{equation}
 
 The complexity of a problem for this set of algorithms, $\ca(\cc,\chout,S,\Lambda)$, is defined as the cost of the cheapest algorithm that satisfies the specified error tolerance, $\varepsilon$:
@@ -297,20 +297,20 @@ Here the infimum of an empty set is defined to be $\infty$.  This means that to 
 \]
 This cost does not decrease as either $\varepsilon$ decreases or $\ca(\cc,\chout,S,\Lambda)$ increases.
 
-Suppose that there is a sequence of nonadaptive algorithms indexed by their cost, and which converge to the true answer:
+Suppose that there is a sequence of algorithms indexed by their cost, and which converge to the true answer:
 \begin{subequations} \label{algseqdef}
 \begin{gather}
-\{A_n\}_{n \in \ci}, \qquad A_n  \in \ca_{\fix}(\cf,\ch,S,\Lambda), \\
-\lim_{\substack{n \to \infty\\ n \in \ci}} \err(A_n,\cf,\ch,S) = 0, \qquad \cost(A_n) = n,
+\{A_n\}_{n \in \ci}, \qquad A_n  \in \ca(\cc,\chout,S,\Lambda), \\
+\lim_{\substack{n \to \infty\\ n \in \ci}} \err(A_n,\cc,\chout,S) = 0, \qquad \cost(A_n) = n,
 \end{gather}
 \end{subequations}
 where the countable, non-negative-valued index set,
 \begin{equation} \label{indexdef}
 \ci=\{n_1, n_2, \ldots\} \quad \text{with } n_i < n_{i+1}, \quad \text{satisfies } \sup_i \frac{n_{i+1}}{n_i} <\infty.
 \end{equation}
-This sequence of algorithms is called \emph{optimal} for the problem $(\cf,\ch,S,\Lambda)$ if it essentially tracks the minimum cost algorithms, namely,
+This sequence of algorithms is called \emph{optimal} for the problem $(\cc,\chout,S,\Lambda)$ if it essentially tracks the minimum cost algorithms, namely,
 \begin{equation} \label{nearoptdef}
-\sup_{0 < \varepsilon \le 1} \frac{\min\{n \in \ci : \err(A_n,\cf,\ch,S) \le \varepsilon\}} {\comp(\varepsilon,\ca_{\fix}(\cf,\ch,S,\Lambda))} <\infty.
+\sup_{0 < \varepsilon \le 1} \frac{\min\{n \in \ci : \err(A_n,\cc,\chout,S) \le \varepsilon\}} {\comp(\varepsilon,\ca(\cc,\chout,S,\Lambda))} <\infty.
 \end{equation}
 
 \subsection{Low bounds: fooling functions}
