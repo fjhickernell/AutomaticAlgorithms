@@ -1,0 +1,398 @@
+\documentclass[final]{elsarticle}
+\setlength{\marginparwidth}{0.5in}
+\usepackage{amsmath,amssymb,amsthm,natbib,mathtools,graphicx}
+\input FJHDef.tex
+
+\newcommand{\chin}{\ch_{\text{\rm{in}}}}
+\newcommand{\chout}{\ch_{\text{\rm{out}}}}
+\newcommand{\pin}{p_{\text{\rm{in}}}}
+\newcommand{\pout}{p_{\text{\rm{out}}}}
+%\newcommand{\cc}{\mathcal{C}}
+\newcommand{\cq}{\mathcal{Q}}
+\newcommand{\bbW}{\mathbb{W}}
+%\newcommand{\tP}{\widetilde{P}}
+\newcommand{\bg}{{\bf g}}
+\newcommand{\bu}{{\bf u}}
+\newcommand{\bbu}{\bar{\bf u}}
+\newcommand{\bv}{{\bf v}}
+\newcommand{\bbv}{\bar{\bf v}}
+\newcommand{\bw}{{\bf w}}
+\newcommand{\bbw}{\bar{\bf w}}
+%\newcommand{\hv}{\hat{v}}
+\DeclareMathOperator{\MSE}{MSE}
+\DeclareMathOperator{\RMSE}{RMSE}
+\DeclareMathOperator{\rnd}{rnd}
+\DeclareMathOperator{\abso}{abs}
+\DeclareMathOperator{\rel}{rel}
+\DeclareMathOperator{\nor}{nor}
+\DeclareMathOperator{\err}{err}
+\DeclareMathOperator{\lin}{lin}
+%\DeclareMathOperator{\std}{std}
+\DeclareMathOperator{\prob}{prob}
+\DeclareMathOperator{\trunc}{trc}
+\DeclareMathOperator{\third}{third}
+%\DeclareMathOperator{\fourth}{fourth}
+\newtheorem{theorem}{Theorem}
+\newtheorem{prop}[theorem]{Proposition}
+\newtheorem{lem}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{algo}{Algorithm}
+\newtheorem{condit}{Condition}
+%\newtheorem{assump}{Assumption}
+\theoremstyle{remark}
+\newtheorem{rem}{Remark}
+\DeclareMathOperator{\fix}{fix}
+\DeclareMathOperator{\up}{up}
+\DeclareMathOperator{\lo}{lo}
+
+\journal{Journal of Complexity}
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{The Complexity of Automatic Algorithms Employing Continuous Linear Functionals}
+\author{Fred J. Hickernell}
+\address{Room E1-208, Department of Applied Mathematics, Illinois Institute of Technology,\\ 10 W.\ 32$^{\text{nd}}$ St., Chicago, IL 60616}
+\begin{abstract}
+\end{abstract}
+
+\begin{keyword}
+%% keywords here, in the form: keyword \sep keyword
+
+%% MSC codes here, in the form: \MSC code \sep code
+%% or \MSC[2008] code \sep code (2000 is the default)
+
+\end{keyword}
+\end{frontmatter}
+
+
+\section{The Basic Problem}
+Let $\chin$ be a separable Banach space of input functions with basis $\{u_i\}_{i\in\ci}$, where $\ci$ is a countable index set, and let the norm for this Banach space be defined as the $\ell_{\pin}$-norm terms of the Fourier coefficients as follows:
+\begin{equation*}
+f = \sum_{i \in \ci} \hf_i u_i \in \chin, \qquad \norm[\chin]{f}=\big\lVert\big(\hf_i\big)_{i\in \ci}\big\rVert_{\pin}, \qquad 1 \le \pin \le \infty.
+\end{equation*}
+Here the $\hf_i$ denotes the $i^{\text{th}}$ Fourier coefficient of a function $f\in \chin$.  If $\pin=2$, then $\chin$ is a Hilbert space.  Similarly, let $\chout$ be a separable Banach space of outputs  with basis $\{v_i\}_{i \in \ci}$, whose norm may be defined as follows:
+\begin{equation*}
+f = \sum_{i \in \ci} \tf_i v_i \in \chout, \qquad \norm[\chin]{f}=\big\lVert\big(\tf_i\big)_{i\in \ci}\big\rVert_{\pout}, \qquad 1 \le \pout \le \infty.
+\end{equation*}
+In this case $\tf_i$ denotes the $i^{\text{th}}$ Fourier coefficient of a function $f\in \chout$.  Define the solution operator $S$ by $S(u_i) = \lambda_i v_i$, and so
+\begin{equation} \label{HilbertS}
+S(f) = \sum_{i \in \ci}^\infty \lambda_i \hf_i v_i, \qquad \forall f \in \chin.
+\end{equation}
+Here the $\lambda_i$ are the bounded singular values of the operator $S$.  A generalization of H\"older's inequality is
+\begin{multline} \label{HoldIneq}
+\norm[r]{(a_ib_i)_{i \in \ci}} \le \norm[p]{(a_i)_{i \in \ci}} \norm[q]{(b_i)_{i \in \ci}}, \\
+1 \le r, p \le \infty, \quad  q= \frac{pr}{\max(p-r,0)}.
+\end{multline}
+Thus, to ensure that the solution operator is bounded, it is assumed that
+\begin{equation} \label{lamcond}
+\norm[q]{(\lambda_i)_{i \in \ci}}<\infty, \quad  q= \frac{\pin\pout}{\max(\pin-\pout,0)}.
+\end{equation}
+
+This problem definition is rather general in some ways, e.g., allowing the inputs and outputs to lie in Banach spaces, rather than Hilbert spaces.  However, a key requirement is that $S(u_i)=\lambda_i v_i$ for the solution operator of interest, which is a serious restriction on the choice of bases.  Moreover, the norms of the Banach spaces cannot be arbitrarily defined, but must be defined in terms of the coefficients of the series expansions of the inputs and outputs.
+
+For example, if $\chin=\chout=\cl_2[0,1]$, and $S: f \mapsto f$ is the embedding operator, then one may choose a trigonometric polynomial basis:
+\begin{gather*}
+\norm[\chin]{f} = \norm[\chin]{f} = \left[\int_0^1 \abs{f(x)}^2 \, \dif x \right]^{1/2}, \\
+u_{i}(x) = v_i(x) = \me^{2 \pi \sqrt{-1} i x}, \quad \lambda_i=1, \qquad i \in \integers,\\
+\pin=\pout=2,\quad q=\infty.
+\end{gather*}
+If $S$ computes the derivative of a function, $S: f \mapsto f'$, then the space $\chin$ must have a stronger inner product to ensure that the $\lambda_i$ are bounded, e.g.,
+\begin{gather*}
+\norm[\chin]{f} = \left[\int_0^1 \left\{\abs{f(x)}^2 + \abs{f'(x)}^2\right\}\, \dif x\right]^{1/2}, \qquad \\
+u_{i}(x) = \frac{\me^{2 \pi \sqrt{-1} i x}}{\sqrt{1+4 \pi i^2}}, \quad \lambda_i=\frac{2 \pi \sqrt{-1} i}{\sqrt{1+4 \pi i^2}}, \qquad i \in \integers,\\
+\pin=\pout=2,\quad q=\infty.
+\end{gather*}
+
+Suppose that one may choose arbitrary linear functionals to obtain data, and let $i_1, i_2, \ldots$ be an ordering of the elements in $\ci$. Then one may approximate $S(f)$ by the first $n$ terms of its infinite series representation:
+\begin{subequations}
+\begin{gather} \label{Andef}
+A_n(f) = \sum_{j=1}^n \lambda_{i_j} \hf_{i_j} v_{i_j} \qquad \forall f \in \chin, \ n \in \naturals, \\
+\label{errsum}
+\norm[\chout]{S(f)-A_n(f)} = \norm[\pout]{\left(\lambda_{i_j} \hf_{i_j} \right)_{j\ge n+1}}
+\end{gather}
+Again by the generalization of H\"older's inequality, \eqref{HoldIneq}, it follows that
+\begin{equation}
+\label{erreig}
+\sup_{0 \ne f \in \chin}\frac{\norm[\chout]{S(f)-A_n(f)}}{\norm[\chin]{f}} = \norm[q]{\left(\lambda_{i_j} \right)_{j\ge n+1}},
+\end{equation}
+\end{subequations}
+where $q$ was defined in \eqref{lamcond}. For the example above, a natural ordering would be $i_j=(-1)^{j-1}\left \lceil (j-1)/2 \right \rceil$.
+An automatic algorithm for approximating $S(f)$ must have a way of reliably bounding
+\[
+\norm[\pout]{\left(\lambda_{i_j} \hf_{i_j} \right)_{j\ge n+1}} \quad \text{or} \quad \norm[\infty]{\left(\lambda_{i_j} \right)_{j\ge n+1}}
+\]
+in terms of function data.  The next two sections describe two possible ways to do this.
+
+\section{Approximating a Weaker Norm as a Surrogate for a Stronger Norm}
+
+The first method for constructing an automatic algorithm assumes two Banach subspaces of input functions, $\cf \subseteq \cg \subseteq \chin$, whose norms are defined as weighted $\ell_{\pin}$-norms of the series coefficients.  Specifically, let $(\nu_i)_{i \in \ci}$ and $(\omega_i)_{i \in \ci}$ be positive sequences of weights, and
+\begin{equation*}
+f = \sum_{i \in \ci} \hf_i u_i \in \chin, \qquad \norm[\cg]{f}=\bigg\lVert\bigg(\frac{\hf_i}{\omega_i}\bigg)_{i\in \ci}\bigg\rVert_{\pin}, \qquad \norm[\cf]{f}=\bigg\lVert\bigg(\frac{\hf_i}{\nu_i\omega_i}\bigg)_{i\in \ci}\bigg\rVert_{\pin}.
+\end{equation*}
+If $\inf_{i \in \ci} \omega_i = 0$, then the $\cg$-norm is stronger than the $\chin$-norm.  If $\inf_{i \in \ci} \nu_i = 0$, then the $\cf$-norm is stronger than the $\cg$-norm.
+For these two new norms the worst-case error can be bounded tightly as in \eqref{erreig} as follows:
+\begin{gather}
+\nonumber \label{erreigweakG}
+\sup_{0 \ne f \in \cg}\frac{\norm[\chout]{S(f)-A_n(f)}}{\norm[\cg]{f}} = \norm[q]{\left(\omega_{i_j} \lambda_{i_j} \right)_{j\ge n+1}}, \\
+\label{erreigweakF}
+\sup_{0 \ne f \in \cf}\frac{\norm[\chout]{S(f)-A_n(f)}}{\norm[\cf]{f}} = \norm[q]{\left(\nu_{i_j} \omega_{i_j} \lambda_{i_j} \right)_{j\ge n+1}},
+\end{gather}
+where again $q$ is given in terms of $\pin$ and $\pout$ by \eqref{lamcond}.
+
+The (weaker) $\cg$-semi-norm of a function $f \in \cf$ may be estimated using the function data $\ip[\chin]{u_{i_j}}{f}$ that is also used to approximate the solution $S(f)$ as follows:
+\begin{equation} \label{genLGalg}
+G_n(f) = \norm[\cg]{\sum_{i=1}^n \hf_{i_j} u_{i_j} } = \bigg\lVert\bigg(\frac{\hf_{i_j}}{\omega_{i_j}}\bigg)_{j=1}^n\bigg\rVert_{\pin}.
+\end{equation}
+The error of this approximation is given by the two-sided inequality
+\begin{align*}
+0 \le \norm[\cg]{f}^{\pin} - G_n^{\pin}(f)
+&= \bigg\lVert\bigg(\frac{\hf_{i_j}}{\omega_{i_j}}\bigg)_{j\ge n+1}\bigg\rVert_{\pin}^{\pin} \\
+& \le \norm[\infty]{\left(\nu_{i_j} \right)_{j\ge n+1}}^{\pin} \norm[\cf]{f}^{\pin}, \quad 1 \le \pin <  \infty.
+\end{align*}
+Assuming $f$ lies in the specified cone of functions, defined by
+\begin{equation} \label{FGconedef}
+\cc_{\tau} = \{f \in \cf : \norm[\cf]{f} \le \tau \norm[\cg]{f} \},
+\end{equation}
+the arguments of \cite{HicEtal14b} lead to a two-sided bound on the $\cg$-semi-norm $f$ in terms of $G_n(f)$.  Specifically, if $\norm[\infty]{\left(\nu_{i_j} \right)_{j\ge n+1}} < 1/\tau$, then for all $f \in \cc_{\tau}$,  it follows that
+\begin{gather*}
+G_n(f)  \le \norm[\cg]{f} \le \fC G_n(f)\\
+\fC=\begin{cases}\displaystyle \left[1 - \tau^{\pin} \norm[\infty]{\left(\nu_{i_j} \right)_{j\ge n+1}}^{\pin}\right]^{-1/\pin}, & 1 \le \pin <  \infty, \\
+1, & \pin =  \infty.
+\end{cases}
+\end{gather*}
+The case $\pin=\infty$ follows from the $\pin < \infty$ case by taking the limit as $\pin \to \infty$.  Alternatively, the case $\pin=\infty$ may be proven directly by choosing a positive $\delta$ strictly less than $1/\big(\tau \big\lVert\left(\nu_{i_j} \right)_{j\ge n+1}\big\rVert_{\infty}\big)$ and then noting that there exists $j^* \ge n+1$ with
+\begin{align*}
+\bigg\lVert\bigg(\frac{\hf_{i_j}}{\omega_{i_j}}\bigg)_{j\ge n+1}\bigg\rVert_{\infty}
+& \le  \abs{\frac{\hf_{i_{j^*}}}{\omega_{i_{j^*}}}} (1+\delta) \\
+& < \frac{1}{\tau \big\lVert\left(\nu_{i_j} \right)_{j\ge n+1}\big\rVert_{\infty}}  \abs{\frac{\hf_{i_{j^*}}}{\omega_{i_{j^*}}}}
+\le \frac{1}{\tau } \abs{\frac{\hf_{i_{j^*}}}{\nu_{i_{j^*}} \omega_{i_{j^*}}}}\\
+& \le \frac{1}{\tau }\bigg\lVert\bigg(\frac{\hf_{i_j}}{\nu_{i_j}\omega_{i_j}}\bigg)_{j\ge n+1}\bigg\rVert_{\infty} \le \frac{\norm[\cf]{f}}{\tau} \le \norm[\cg]{f}
+\end{align*}
+This strict inequality implies the existence of some $j \le n$ such that $\lvert\hf_{i_j}/\omega_{i_j} \rvert = \norm[\cg]{f}$, and so $G_n(f)$ is has no error.
+
+Combining this upper bound on $\norm[\cg]{f}$, the cone condition, and error bound \eqref{erreigweakF}, implies that
+\begin{equation*}
+\norm[\chout]{S(f)-A_n(f)} \le \tau \fC G_n(f) \norm[\infty]{\left(\nu_{i_j} \omega_{i_j} \lambda_{i_j} \right)_{j\ge n+1}}.
+\end{equation*}
+Thus, one increases $n$ until the right hand side falls below some tolerance, $\varepsilon$.  The drawback of this approach is that one needs to choose the weights $\nu_i$ and $\omega_i$, which define the spaces $\cf$ and $\cg$.
+
+
+
+
+\section{Assuming a Gentle Decay in the Terms of the Series}
+
+Another method for estimating the error of $A_n$ assumes that the decay of the Fourier coefficients of $f$ follows some general rate of decay, which need not be known precisely.  Suppose again that we have some ordering of the linear functionals, as in the previous section, and let $0=n_0 < n_1 < n_2 < \ldots$ be an ordered, unbounded sequence of integers.  Define the sums
+\begin{equation} \label{sumdef}
+\sigma_k(f) = \norm[\pout]{ \left(\lambda_{i_j} \hf_{i_j} \right)_{j=n_{k-1}+1}^{n_k}}, \qquad k=1, 2, \ldots
+\end{equation}
+and the cone of functions in $\chin$ as those whose Fourier coefficients decay at a given rate:
+\begin{equation} \label{decayconedef}
+\cc = \left\{ f \in \chin : \sigma_{k+r}(f) \le \gamma(r) \sigma_k (f), \ \forall r, k \in \naturals, \ \gamma(r) > 0 \right\}.
+\end{equation}
+
+The sequence $\gamma(r)$ has to verify $\lim_{n\rightarrow\infty}\gamma(n)=0$ and that
+\begin{equation} \label{constcone}
+\norm[\pout]{\underline{\gamma}}=\norm[\pout]{ \left(\gamma(r)\right)_{r=1}^\infty}<\infty
+\end{equation}
+
+To see how these conditions might arise naturally, consider the case where the terms in the sum defining $\sigma_k(f)$ decay \emph{algebriacally} and the $n_k$ increase \emph{geometrically}:
+\begin{gather*}
+C_{\lo} j^{-p} \le \abs{\lambda_{i_j} \ip[\chin]{u_{i_j}}{f}} \le C_{\up} j^{-p}, \quad  p>1, \ j \in \naturals, \\
+n_k = a b^k  \quad a, b, k \in \naturals, \ b \ge 2.
+\end{gather*}
+The sum of positive integers raised to a power can be interpreted as a left or right rectangle rule for approximating an integral.  This leads to upper and lower bounds for the sums:
+\begin{align*}
+\sum_{j=n_{\lo}}^{n_{\up}} j^{-p}  & \ge \int_{n_{\lo}}^{n_{\up}+1} x^{-p}\, \dif x  = \frac{n_{\lo} ^{1-p} - (n_{\up}+1)^{1-p}}{p-1}, \\
+\sum_{j=n_{\lo}}^{n_{\up}} j^{-p}  & \le \int_{n_{\lo}-1}^{n_{\up}} x^{-p}\, \dif x = \frac{(n_{\lo}-1) ^{1-p} - n_{\up}^{1-p}}{p-1}.
+\end{align*}
+These two bounds can be used to prove that $f$ lies in the cone \eqref{decayconedef} for appropriately chosen $s_1$ and $s_2$:
+\begin{multline*}
+\sigma_k(f) \ge C_{\lo} \left\{\frac{(n_{k-1}+1) ^{1-p\pout} - (n_{k}+1)^{1-p \pout}}{p \pout-1}\right\}^{1/\pout} \\
+= C_{\lo} \left\{\frac{[ab^{k-1}]^{1-p \pout}}{p \pout-1} \left[(1+a^{-1}b^{1-k})^{1-p \pout} - (b+a^{-1}b^{1-k})^{1-p \pout}\right] \right\}^{1/\pout},
+\end{multline*}
+\begin{multline*}
+\sigma_k(f) \le C_{\up}\left\{\frac{n_{k-1} ^{1-p \pout} - n_{k}^{1-p \pout}}{p \pout-1}\right\}^{1/\pout} \\
+= C_{\up}\left\{\frac{[ab^{k-1}]^{1-p \pout} (1 - b^{1-p \pout})}{p \pout-1}\right\}^{1/p} ,
+\end{multline*}
+\begin{align*}
+\frac{\sigma_k(f)}{\sigma_\kappa(f)} &\le \frac{C_{\up}}  {C_{\lo}}
+\left\{\frac{ (1 - b^{1-p \pout}) b^{(p \pout-1)(\kappa-k)} }  {(1+a^{-1}b^{1-\kappa})^{1-p\pout} - (b+a^{-1}b^{1-\kappa})^{1-p\pout}} \right\}^{1/\pout}\\
+& \le \frac{C_{\up}}  {C_{\lo}}
+\left\{\frac{(1 - b^{1-p\pout}) b^{(p\pout-1)(\kappa-k)} }  {(1+a^{-1})^{1-p\pout} - (b+a^{-1})^{1-p\pout}} \right\}^{1/\pout}   = s_1 s_2^{\kappa-k},
+\end{align*}
+where
+\[
+s_1 = \frac{ C_{\up}}  {C_{\lo}}\left\{\frac{(1 - b^{1-p\pout})}  {(1+a^{-1})^{1-p\pout} - (b+a^{-1})^{1-p\pout} } \right\}^{1/\pout}, \qquad s_2 = b^{p-1/\pout}.
+\]
+
+One may also consider the case where the terms in the sum defining $\sigma_k(f)$ decay \emph{exponentially} and the $n_k$ increase \emph{linearly}:
+\begin{gather*}
+C_{\lo} p^{-j} \le \abs{\lambda_{i_j} \ip[\chin]{u_{i_j}}{f}} \le C_{\up} p^{-j}, \quad  p>1, \ j \in \naturals, \\
+n_k = a +kb  \quad a, b, k \in \naturals.
+\end{gather*}
+The geometric sum that now arises in a bound on the  definition of $\sigma_k(f)$ takes the form
+\begin{equation*}
+\sum_{j=n_{\lo}}^{n_{\up}} p^{-j} = \frac{p^{-n_{\lo}} - p^{-n_{\up}-1}}{1-p^{-1}}, \\
+\end{equation*}
+which implies that
+\begin{align*}
+\frac{\sigma_k(f)}{\sigma_\kappa(f)} & \le
+\frac{C_{\up}}  {C_{\lo}} \left\{\frac{p^{-\pout( n_{k-1}-1} - p^{- \pout(n_{k}-1)}]}  {C_{\lo}^2[p^{-\pout(n_{\kappa-1}-1)} - p^{-\pout(n_{\kappa}-1)}]}\right\}^{1/\pout} \\
+& =
+\frac{C_{\up} p^{n_{\kappa-1}-n_{k-1}}} {C_{\lo}}  \left\{\frac{1 - p^{\pout(n_{k-1}-n_{k})}} {1 - p^{\pout(n_{\kappa-1}-n_{\kappa})}]} \right\}^{1/p}\\
+& = \frac{ C_{\up} p^{b(\kappa-k)}}  {C_{\lo}}  = s_1 s^{\kappa-k},
+\end{align*}
+where
+\[
+s_1 = \frac{ C_{\up}}  {C_{\lo}} , \qquad s_2 = p^b.
+\]
+
+From the definition of the cone and \eqref{errsum}, one can show that
+\begin{align*}
+\norm[\chout]{S(f)-A_{n_k}(f)} &= \norm[\pout]{\left(\lambda_{i_j} \hf_{i_j} \right)_{j\ge n_k+1}} \\
+&= \left\{\sum_{r=1}^\infty \sum_{j=n_{k+r-1}+1}^{n_{k+r}}  \abs{\lambda_{i_j}\tf_{i_j} }^{\pout}  \right\}^{1/\pout}\\
+&= \norm[\pout]{ \left(\sigma_{k+r}(f)\right)_{r=1}^{\infty}} \\
+&\le \norm[\pout]{ \left(\gamma(r)\sigma_{k}(f)\right)_{r=1}^{\infty}} \\
+&= \sigma_{k}(f)\norm[\pout]{\underline{\gamma}} \\
+\end{align*}
+Since the right hand side depends on the data, we have a data-driven error bound.  Note also that $\sigma_\kappa(f)$ decays as quickly with respect to $n$ as the true error.  Unlike the earlier method, one does not need to know the decay rate.  In practice, one increases $\kappa$ until the right hand side is smaller than the error tolerance.
+
+\subsection{Algorithm}
+
+Given our error tolerance $\varepsilon$, we choose $k^*$ such that
+\begin{equation}
+\sigma_{k^*}(f) \le \frac{\varepsilon}{\norm[\pout]{\underline{\gamma}}} < \sigma_{k^*-1}(f)
+\end{equation}
+
+This $k^*$ will ensure
+\begin{equation}
+\norm[\chout]{S(f)-A_{n_{k^*}}(f)} \le \varepsilon
+\end{equation}
+
+\subsection{Cost}
+
+\subsection{Optimality}
+
+The error of an algorithm $A  \in \ca(\cc,\chout,S,\Lambda)$ is defined  as
+\begin{equation} \label{errdefworst}
+\err(A,\cc,\chout,S)
+= \min\{ k \ge 0 : \norm[\chout]{S(f) -  A(f)} \le \sigma_{k}(f) \norm[\pout]{\underline{\gamma}} \ \forall f \in \cc \},
+\end{equation}
+Because the integration problem has real-valued solutions, i.e., $\chout=\reals$, one may also define a one sided error criterion:
+\begin{equation}\label{errpmdefworst}
+\err_{\pm}(A,\cc,\reals,S) =
+\min \{ k \ge 0 : \pm[S(f) -  A(f)] \le \sigma_{k}(f) \norm[\pout]{\underline{\gamma}} \ \forall f \in \cc \}.
+\end{equation}
+
+The complexity of a problem for this set of algorithms, $\ca(\cc,\chout,S,\Lambda)$, is defined as the cost of the cheapest algorithm that satisfies the specified error tolerance, $\varepsilon$:
+\begin{multline} \label{fixcostcomplex}
+\comp(\varepsilon,\ca(\cc,\chout,S,\Lambda)) \\
+= \inf\left\{\cost(A) : \err(A,\cc,\chout,S) \le \varepsilon, \ A  \in \ca(\cc,\chout,S,\Lambda) \right \}.
+\end{multline}
+Here the infimum of an empty set is defined to be $\infty$.  This means that to guarantee that $\norm[\chout]{S(f) -  A(f)} \le \varepsilon$, one needs an algorithm with a cost of at least
+\[
+\comp(\varepsilon/\norm[\pout]{\underline{\gamma}},\ca(\cc,\chout,S,\Lambda)).
+\]
+This cost does not decrease as either $\varepsilon$ decreases or $\ca(\cc,\chout,S,\Lambda)$ increases.
+
+Suppose that there is a sequence of nonadaptive algorithms indexed by their cost, and which converge to the true answer:
+\begin{subequations} \label{algseqdef}
+\begin{gather}
+\{A_n\}_{n \in \ci}, \qquad A_n  \in \ca_{\fix}(\cf,\ch,S,\Lambda), \\
+\lim_{\substack{n \to \infty\\ n \in \ci}} \err(A_n,\cf,\ch,S) = 0, \qquad \cost(A_n) = n,
+\end{gather}
+\end{subequations}
+where the countable, non-negative-valued index set,
+\begin{equation} \label{indexdef}
+\ci=\{n_1, n_2, \ldots\} \quad \text{with } n_i < n_{i+1}, \quad \text{satisfies } \sup_i \frac{n_{i+1}}{n_i} <\infty.
+\end{equation}
+This sequence of algorithms is called \emph{optimal} for the problem $(\cf,\ch,S,\Lambda)$ if it essentially tracks the minimum cost algorithms, namely,
+\begin{equation} \label{nearoptdef}
+\sup_{0 < \varepsilon \le 1} \frac{\min\{n \in \ci : \err(A_n,\cf,\ch,S) \le \varepsilon\}} {\comp(\varepsilon,\ca_{\fix}(\cf,\ch,S,\Lambda))} <\infty.
+\end{equation}
+
+\subsection{Low bounds: fooling functions}
+
+\subsection{Examples}
+
+\bibliographystyle{elsarticle-num.bst}
+\bibliography{FJH22,FJHown22}
+\end{document}
+
+\begin{algo} \label{GenHilbAlg} {\bf (Multistage, Deterministic Automatic Algorithm for \eqref{HilbertS}).}  For the problem defined above in this section, given $tau>0$, error tolerance, $\varepsilon$, and maximum cost budget, $N_{\max}$, let $N_0= \min\{ n : \omega_{n+1} < 1 /\tau\}$. Set $G_0(f)=$ and $A_0(f)=0$.  For $n=1, \ldots, N_{max}$,
+
+\begin{description}
+
+\item [Stage 1.] Evaluate the datum $\ip[\cf]{u_n}{f}$, and compute
+\[
+G_{n}(f)=\sqrt{G_{n-1} + \omega_n^2 \abs{\ip[\cf]{u_n}{f}}^2}, \quad A_n(f)=A_{n-1}(f)+ \lambda_n\omega_n\ip[\cf]{u_n}{f}v_n.
+\]
+If $n<N_0$, increment $n$ and repeat this stage.  Otherwise, proceed to Stage 2.
+
+\item [Stage 2.] Check whether $n$ is large enough to satisfy the error tolerance, i.e.,
+\[
+\frac{\lambda_n \omega_n \tau G_{n}(f)}{\sqrt{1 - \tau^2 \omega_{n+1}^2}} \le \varepsilon.
+\]
+If this is true, then set $W=0$.  Otherwise, if this inequality fails to hold and $n= N_{\max}$ then set the $W=1$.  In both cases, return $(A_{n_i}(f),W)$ and terminate the algorithm.  If the error tolerance is not yet satisfied, and $n < N_{\max}$, then increment $i$ by one and return to Stage 1.
+\end{description}
+\end{algo}
+
+
+\begin{theorem}
+Let $\cc_\tau$ be the cone of functions defined in \eqref{conedef} whose $\cf$-semi-norms are no larger than $\tau$ times their $\cg$-semi-norms.  Assume that $N_0$ as defined in Algorithm \ref{GenHilbAlg} is smaller $N_{\max}$.  Let
+\begin{equation} \label{nicefHilbdef}
+\cn = \left \{ f \in \cc_\tau : \norm[\cg]{f} \le \frac{\varepsilon \sqrt{1 - \tau^2 \omega_{N_{\max}+1}^2}}{\tau \lambda_{N_{\max}} \omega_{N_{\max}}} \right\}
+\end{equation}
+be a subset of the cone $\cc_\tau$ that lies inside a $\cg$-semi-norm ball of rather large radius.  Then it follows that Algorithm \ref{twostagedetalgo} is successful for all functions in this set of \emph{nice} functions $\cn$,  i.e.,  $\success(A,W,\cn,\varepsilon,N_{\max}) = 1$.  Moreover, the cost of this algorithm is bounded above in terms of the $\cg$-semi-norm of the input function as follows:
+\begin{multline} \label{auto2stagedetcost}
+\cost(A,\cn,\varepsilon,N_{\max},\sigma) \\
+\le N_G+ \min\left\{ n \in \ci : n \ge \min\left( \left[\frac{C_1 \fC \fc \sigma }{\varepsilon}\right]^{1/p_1}, \left[\frac{C_2 \tau \fC \fc \sigma}{\varepsilon}\right]^{1/p_2} \right ) \right\}.
+\end{multline}
+The upper bound on the cost of this specific algorithm provides an upper bound on the complexity of the problem, $\comp(\varepsilon,\ca(\cn,\ch,S,\Lambda),N_{\max},\sigma)$.  If the sequence of algorithms $\{A_n\}_{n \in \ci}$, $A_n \in\ca_{\fix}(\cg,\ch,S,\Lambda)$  is nearly optimal for the problems $(\cg,\ch,S,\Lambda)$ and $(\cf,\ch,S,\Lambda)$ as defined in \eqref{nearoptdef}, then Algorithm \ref{twostagedetalgo} does not incur a significant penalty for not knowing $\norm[\cg]{f}$ a priori, i.e., for all $p>0$,
+\begin{equation*}
+\sup_{0 < \varepsilon/\sigma \le 1} \frac{\cost(A,\cn,\varepsilon,\infty,\sigma)} {\comp(\varepsilon/\sigma,\ca_{\fix}(\cj,\ch,S,\Lambda))} \left(\frac{\varepsilon}{\sigma}\right)^p <\infty, \qquad \cj \in \{\cf,\cg\}.
+\end{equation*}
+
+\end{theorem}
+
+\subsection{Tensor Product Spaces and Tractability}
+
+
+
+
+of real-valued functions of interest defined on $\cx \subseteq \reals^d$.  Let $\rho: \cx \to [0,\infty)$ be a non-negative weight used to define the $\cl_2$ norm.  Let $\{\phi_k\}_{k=1}^{\infty}$ be an orthonormal basis for this Hilbert space, i.e.,
+\begin{align*}
+\ip[2]{f}{g} &:= \int_{\cx} \overline{f(\vx)} g(\vx) \, \rho(\vx) \, \dif \vx \qquad \forall f,g \in \cl_2,\\
+\ip[2]{\phi_k}{\phi_{\ell}} &= \int_{\cx} \overline{\phi_k(\vx)} \phi_{\ell}(\vx) \, \rho(\vx) \, \dif \vx = \delta_{k\ell} \qquad \forall k,l \in \naturals,\\
+\hf(k) &: = \ip[2]{\phi_k}{f} \qquad \forall k \in \naturals,\\
+f &= \sum_{k=1}^{\infty} \hf(k) \phi_k, \\
+\ip[2]{f}{g} &= \sum_{k=1}^\infty \overline{\hf(k)}\hg(k).
+\end{align*}
+Let $\ch$ be a Hilbert subspace of $\cl_2$ such that $\{\phi_k\}_{k=1}^{\infty}$ is an orthogonal basis for $\ch$.  Let $w:\naturals \to [0,\infty)$ be a non-increasing function.  The inner product for $\ch$ is defined as
+\begin{gather*}
+\ip[\ch]{f}{g} = \sum_{k=1}^\infty \frac{\overline{\hf(k)}\hg(k)}{w(k)} \\
+\ch=\ch_{w} :=\left \{ f = \sum_{k=1}^{\infty} \hf(k) \phi_k : \norm[\ch]{f}^2 = \sum_{k=1}^\infty \frac{\lvert\hf(k)\rvert^2}{w(k)} < \infty \right\}.
+\end{gather*}
+Note that $\{\sqrt{w(k)}\phi_k\}_{k=1}^{\infty}$ is an orthonormal basis for $\ch_w$.
+
+For now, consider the case where one can obtain any bounded linear functionals.  In that case, the best approximation is the Fourier series truncated at the first $n$ terms.  That is, one should compute the information
+\[
+L_k(f) = \hf(k) = \ip[\ch]{w(k)\phi_k}{f}  = \ip[2]{\phi_k}{f}, \qquad k=1, \ldots, n,
+\]
+and then form the approximation as follows:
+\[
+\tf_{\trunc,n} = A_{\trunc,n}(f) = \sum_{k=1}^{n} L_k(f) \phi_k = \sum_{k=1}^{n} \hf(k) \phi_k.
+\]
+The error of this approximation bounded as follows by H\"older's inequality:
+\begin{gather*}
+\norm[2]{f - \tf_{\trunc,n}}^2 = \norm[2]{\sum_{k=n+1}^{\infty} \hf(k) \phi_k}^2 = \sum_{k=n+1}^{\infty} \abs{\hf(k)}^2 = \sum_{k=n+1}^{\infty} \frac{\abs{\hf(k)}^2}{w(k)} w(k) \le \norm[\ch]{f}^2 \sum_{k=n+1}^{\infty} w(k) \\
+\sup_{0 \ne f \in \ch} \frac{\norm[2]{f - \tf_{\trunc,n}}}{\norm[\ch]{f}} =  \sqrt{\sum_{k=n+1}^{\infty} w(k)} =: W(n) \end{gather*}
+Letting
+
+
+This is approximation is optimal in the following sense:
+\[
+\tf_{\trunc,n} = \argmin_{g \in \cl_2} \sup_{f \in } \norm[2]{f - g}
+\]
