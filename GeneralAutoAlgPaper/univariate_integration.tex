@@ -132,21 +132,21 @@ $$
 has $\int_0^1 f(x) \, \dif x=1$ and $f_1(\xi_i)=0$ for $i=0, \ldots, n+1$.  Moreover, the norms of the first and second derivatives of $f_1$ are
 \begin{align*}
 \norm[1]{f'_1}&=\frac{15}{4(\xi_{j+1}-\xi_{j})}\leq \tg(n),\\
-\norm[1]{f''_1}&=\frac{20}{\sqrt{3}(\xi_{j+1}-\xi_{j})^2}
-=\frac{16\norm[1]{f'_1}}{3\sqrt{3}(\xi_{j+1}-\xi_{j})}
+\norm[1]{f''_1}&=\frac{40}{\sqrt{3}(\xi_{j+1}-\xi_{j})^2}
+=\frac{32\norm[1]{f'_1}}{3\sqrt{3}(\xi_{j+1}-\xi_{j})}
  \leq g(n) \norm[1]{f'_1},
 \end{align*}
 where the inequality $\xi_{j+1} - \xi_j \ge 1/(n+1)$ is used to define $\tg$ and $g$ as
 \[
-\tg(n) = \frac{15(n+1)}{4}, \qquad g(n) = \frac{16(n+1)}{3\sqrt{3}}, \qquad (g\tg)(n) = \frac{20(n+1)^2}{\sqrt{3}}.
+\tg(n) = \frac{15(n+1)}{4}, \qquad g(n) = \frac{32(n+1)}{3\sqrt{3}}, \qquad (g\tg)(n) = \frac{40(n+1)^2}{\sqrt{3}}.
 \]
 Using these choices of $f_0$ and $f_1$, along with the corresponding $\tg$ and $g$ above, one may invoke Proposition \ref{optimalprop}, Theorem \ref{complowbd}, and Corollary \ref{optimcor} to obtain the following theorem.
 
 \begin{theorem} \label{complowbdinteg} The adaptive trapezoidal algorithm is optimal for integration of functions in $\mathcal{W}^{1,1}$ and $\mathcal{W}^{2,1}$. Assuming an infinite cost budget, the complexity of the function recovery problem problem, over the cone of functions $\cc_{\tau}$ defined in \eqref{coneinteg} is
 \begin{align*}
 \comp(\varepsilon,\ca(\cc_{\tau},\ch,S,\Lambda),\infty,\norm[1]{f'})
-&\ge \min\left(\frac{\norm[1]{f'}}{15 \varepsilon}, \sqrt{\frac{\sqrt{3}\tau\norm[1]{f'}}{80\varepsilon}} \right)-1\\
-& \sim \sqrt{\frac{\sqrt{3}\tau\norm[1]{f'}}{80\varepsilon}}  \quad\text{as } \frac{\norm[\infty]{f'}}{\varepsilon} \to \infty.
+&\ge \min\left(\frac{\norm[1]{f'}}{15 \varepsilon}, \sqrt{\frac{\sqrt{3}\tau\norm[1]{f'}}{160\varepsilon}} \right)-1\\
+& \sim \sqrt{\frac{\sqrt{3}\tau\norm[1]{f'}}{160\varepsilon}}  \quad\text{as } \frac{\norm[\infty]{f'}}{\varepsilon} \to \infty.
 \end{align*}
 Moreover, Algorithm \ref{multistageapproalgo} is optimal for approximating functions in $\cc_{\tau}$.
 \end{theorem}
