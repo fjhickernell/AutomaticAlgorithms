@@ -20,7 +20,7 @@
 %\newtheorem{assump}{Assumption}
 \theoremstyle{remark}
 \newtheorem{rem}{Remark}
-
+\newcommand{\Fnorm}[1]{\abs{#1}_{\cf}}
 
 \journal{Journal of Complexity}
 
@@ -39,7 +39,7 @@
 
 This article establishes a framework for automatic, adaptive algorithms that do have rigorous guarantees. Sufficient conditions for success and upper bounds on the computational cost are provided in Theorems \ref{TwoStageDetermThm} and \ref{MultiStageThm}.  Lower bounds on the complexity of the problem are given in Theorem \ref{complowbd} and conditions are given under which the proposed algorithms attain those lower bounds in Corollary \ref{optimcor}. These general theorems are illustrated with automatic algorithms for univariate numerical integration and function recovery.  Both algorithms use linear splines to approximate the input function.  
 
-The key idea behind these automatic algorithms is that the error analysis should be done for \emph{cones} of input functions rather than balls. The existing literature contains certain negative results about the usefulness and reliability of automatic algorithms.  The theory presented does not share the assumptions on which those negative results, and so they are irrelevant.
+The key idea behind these automatic algorithms is that the error analysis should be done for \emph{cones} of input functions rather than balls. The existing literature contains certain negative results about the usefulness and reliability of automatic algorithms.  The theory presented does not share the assumptions on which those negative results are based, and so they are irrelevant.
 \end{abstract}
 
 \begin{keyword}
@@ -93,7 +93,7 @@ Tunable & ? & \ding{51} & \ding{51}
 \caption{Check list of desired features for an algorithm. \label{fig:checklist}}
 \end{figure}
 
-Most existing theory for numerical problems of interest starts with a Banach space, $\cf$, of input functions defined on some set $\cx$, and having a semi-norm, $\norm[\cf]{\cdot}$.  The definition of $(\cf,\norm[\cf]{\cdot})$ contains assumptions about smoothness, periodicity or other qualities of the input functions.  The mathematical problem of interest is defined by a \emph{solution operator} $S:\cf \to \ch$, where $\ch$ is some other Banach space with its norm $\norm[\ch]{\cdot}$.  For integration, $\ch=\reals$, and for function approximation, $\ch$ is some superset of $\cf$, for example, $\cl_{\infty}(\cx)$. One often finds a sequence of algorithms, $\{A_n\}_{n \in \naturals}$, with computational cost $n$, that provides an approximate solution whose error can be bounded as
+Most existing theory for numerical problems of interest starts with a Banach space, $\cf$, of input functions defined on some set $\cx$, and having a semi-norm, $\Fnorm{\cdot}$.  The definition of $(\cf,\norm[\cf]{\cdot})$ contains assumptions about smoothness, periodicity or other qualities of the input functions.  The mathematical problem of interest is defined by a \emph{solution operator} $S:\cf \to \ch$, where $\ch$ is some other Banach space with its norm $\norm[\ch]{\cdot}$.  For integration, $\ch=\reals$, and for function approximation, $\ch$ is some superset of $\cf$, for example, $\cl_{\infty}(\cx)$. One often finds a sequence of algorithms, $\{A_n\}_{n \in \naturals}$, with computational cost $n$, that provides an approximate solution whose error can be bounded as
 \begin{subequations} \label{traditionerr}
 \begin{equation} \label{traditionerra}
 \norm[\ch]{S(f)-A_n(f)} \le \frac{C_{\up} \norm[\cf]{f}}{n^p},
@@ -355,7 +355,7 @@ Given $\tau>0$, let $\cc_{\tau} \subset \cf$ denote a \emph{cone} of functions w
 \renewcommand{\labelenumi}{\roman{enumi}.}
 
 \item \emph{Upper bound on the complexity.}
-Theorems \ref{TwoStageDetermThm}, \ref{MultiStageThm}, \ref{multistageintegthm}, and \ref{multistageappxthm} provide upper bounds on the complexity of solving the problem, $\comp(\cn,\varepsilon,N_{\max},\sigma,\Lambda)$, in terms of some function of $\varepsilon/\sigma$ and for $\cn$, a suitably defined as a subset of the cone $\cc_{\tau}$.
+Theorems \ref{TwoStageDetermThm}, \ref{MultiStageThm}, \ref{multistageintegthm}, and \ref{multistageappxthm} provide upper bounds on the complexity of solving the problem, $\comp(\cn,\varepsilon,N_{\max},\sigma,\Lambda)$, in terms of some function of $\varepsilon/\sigma$ and for $\cn$, which is a suitably defined subset of the cone $\cc_{\tau}$.
 
 \item \emph{An algorithm that achieves the upper bound.}  Upper bounds on the complexity are sometimes found in a non-constructive way.  However, Algorithms \ref{twostagedetalgo} and \ref{multistagealgo} provide explicit frameworks for two kinds of successful algorithms, $(A,W) \in \ca(\cn,\ch,S,\Lambda)$, that achieve these upper bounds.  Algorithms \ref{multistageintegalgo} and \ref{multistageapproalgo} provide concrete cases.
 
@@ -465,9 +465,9 @@ There are a several remarks that may facilitate understanding of this result.
 \begin{rem} Three main conditions must be checked for this theorem to hold.
 \begin{enumerate}
 \renewcommand{\labelenumi}{\roman{enumi}.}
-\item An algorithm, $G$, to approximate the semi-norm in the larger space,  $\norm[\cg]{\cdot}$,  must be identified and its error bound, $h_{\pm}$, must be known explicitly.
+\item One must have an algorithm, $G$, that approximates the weaker semi-norm,  $\norm[\cg]{\cdot}$, and its error bound, $h_{\pm}$, must be known explicitly.
 \item Both the error functions $\tildeh$ and $h$, for the sequence of nonadaptive algorithms, $\{A_n\}_{n \in \ci}$, must be known explicitly.  
-\item The optimality of $\{A_n\}_{n \in \ci}$ must be verified to ensure that there is no significant penalty for not having an a priori upper bound on $\norm[\cg]{f}$.
+\item Condition \eqref{nearoptdef} defining the optimality of $\{A_n\}_{n \in \ci}$ must be satisfied to ensure that there is no significant penalty for not having an a priori upper bound on $\norm[\cg]{f}$.
 \end{enumerate}
 Sections \ref{integsec} and \ref{approxsec} provide concrete examples where these conditions are checked.
 \end{rem}
@@ -819,6 +819,9 @@ While Lyness's argument is correct, it does not apply to the algorithms proposed
 Lyness's warning in \cite{Lyn83} should not be interpreted as an objection to automatic algorithms.  It is a valid objection to stopping criteria that are based on the value of a single functional, in this case, $A_{n_{i}}-A_{n_{i-1}}$.  What Lyness clearly demonstrates is that it one may easily make a functional vanish even though the error of the algorithm is significant.
 
 \subsection{No Advantage in Adaption}
+
+There are limited theoretical results providing conditions under which adaption is useful, in ????????
+
 
 There are rigorous results from information based complexity theory, e.g., \citep[Chapter 4, Theorem 5.2.1]{TraWasWoz88}, stating that adaption does not help, namely adaptive algorithms have no significant advantage over non-adaptive algorithms. The automatic algorithms presented here are by definition adaptive in determining the total number of function data required based on an initial sample of the input function.  The reason that adaption can help in this context is that the cone, $\cc_{\tau}$, of input functions is not a convex set.  This violates one of the assumptions required to prove the negative result that adaption does not help.
 

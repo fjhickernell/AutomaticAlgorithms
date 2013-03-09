@@ -111,7 +111,7 @@ $$
 $$
 be the nice subset of the cone $\cc_\tau$.  Then it follows that Algorithm \ref{multistageintegalgo} is successful for all functions in $\cn$,  i.e.,  $\success(A,W,\cn,\varepsilon,N_{\max}) = 1$.  Moreover, the cost of this algorithm is bounded above as follows:
 \begin{align*}
-\cost(A,\cn,\varepsilon,N_{\max},\norm[\infty]{f'})
+\cost(A,\cn,\varepsilon,N_{\max},\norm[1]{f'})
 &\le 2+2 \left \lceil \sqrt{\frac{\tau \norm[1]{f'}}{8\varepsilon} + \frac{\tau^2 }{16}} + \frac{\tau}{4} \right\rceil \\
 &\le 2+2 \left \lceil\sqrt{\frac{\tau \norm[1]{f'}}{8\varepsilon}} + \frac{\tau}{2} \right \rceil.
 \end{align*}
@@ -146,7 +146,7 @@ Using these choices of $f_0$ and $f_1$, along with the corresponding $\tg$ and $
 \begin{align*}
 \comp(\varepsilon,\ca(\cc_{\tau},\ch,S,\Lambda),\infty,\norm[1]{f'})
 &\ge \min\left(\frac{\norm[1]{f'}}{15 \varepsilon}, \sqrt{\frac{\sqrt{3}\tau\norm[1]{f'}}{160\varepsilon}} \right)-1\\
-& \sim \sqrt{\frac{\sqrt{3}\tau\norm[1]{f'}}{160\varepsilon}}  \quad\text{as } \frac{\norm[\infty]{f'}}{\varepsilon} \to \infty.
+& \sim \sqrt{\frac{\sqrt{3}\tau\norm[1]{f'}}{160\varepsilon}}  \quad\text{as } \frac{\norm[1]{f'}}{\varepsilon} \to \infty.
 \end{align*}
 Moreover, Algorithm \ref{multistageapproalgo} is optimal for approximating functions in $\cc_{\tau}$.
 \end{theorem}
