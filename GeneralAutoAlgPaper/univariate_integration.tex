@@ -13,13 +13,13 @@ The corresponding semi-norms are $\|f\|_{\cf}=\|f''\|_{1}$ and $\|f\|_{\cg}=\|f'
 \end{equation}
 The space of outputs $\ch$ is $\reals$.
 
-The non-adaptive building blocks to construct the adaptive algorithm are the composite trapezoidal rules based on $n-1$ trapezoids:
+We consider algorithms consider algorithms based on function values, and the cost of a function value is one.  The non-adaptive building blocks to construct the adaptive algorithm are the composite trapezoidal rules based on $n-1$ trapezoids:
 \begin{equation*}
     A_{n}(f)
     =\frac{1}{2n}[f(x_1)+2f(x_2)+\cdots+2f(x_{n-1})+f(x_n)], \qquad x_i=\frac{i-1}{n-1},
 \end{equation*}
-defined for $n \in \mathcal{I}=\{2,3,\ldots\}$, and with $\cost(A_n)=n$.  The algorithm $A_n$ is imbedded in the algorithm $A_{2n-1}$, which uses $2n-2$ trapezoids, so the minimum cost multiple is $r=2$.  
-The algorithm for approximating $\|f'\|_{1}$ is the corresponding norm of the linear spline using the same $x_i$ as used in the trapezoidal rule:
+defined for $n \in \mathcal{I}=\{2,3,\ldots\}$, and with $\cost(A_n)=n$.  The algorithm $A_n$ is imbedded in the algorithm $A_{2n-1}$, which uses $2n-2$ trapezoids.  Thus, any trapezoidal rule is embedded in some other trapezoidal rule with cost no more than $r=2$ times the original one.  This is the minimum cost multiple as described just before Algorithm \ref{multistagealgo}.  
+The algorithm for approximating $\|f'\|_{1}$ is the corresponding norm of the derivative of the linear spline using the same $x_i$ as used in the trapezoidal rule:
 \begin{equation}\label{1direst}
     G_n(f)=\sum_{i=0}^{n-1}\left|f(x_{i+1})-f(x_{i})\right|.
 \end{equation} 
@@ -122,7 +122,7 @@ Next, we derive a lower bound on the cost of approximating functions in the cone
 \[
 \norm[1]{f'_0}=2, \qquad \norm[1]{f''_0}=0, \qquad \tau_0=0.
 \]
-For any $n =2, 3, \ldots$, suppose that the one has the data $L_i(f)=f(\xi_i)$, $i=1, \ldots, n$ for arbitrary $\xi_i$, where $0=\xi_0 \le \xi_1 < \cdots < \xi_n \le \xi_{n+1} = 1$.  There must be some $j=0, \ldots, n$ such that $\xi_{j+1} - \xi_j \ge 1/(n+1)$.  The function $f_{1}$, defined as
+For any $n \in \naturals$, suppose that the one has the data $L_i(f)=f(\xi_i)$, $i=1, \ldots, n$ for arbitrary $\xi_i$, where $0=\xi_0 \le \xi_1 < \cdots < \xi_n \le \xi_{n+1} = 1$.  There must be some $j=0, \ldots, n$ such that $\xi_{j+1} - \xi_j \ge 1/(n+1)$.  The function $f_{1}$, defined as
 $$
 f_{1}(x):=\begin{cases} \displaystyle
 \frac{30(x-\xi_{j})^{2}(\xi_{j+1}-x)^{2}}{(\xi_{j+1}-\xi_{j})^5} & \xi_{j} \le x \leq \xi_{j+1},\\

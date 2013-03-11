@@ -8,7 +8,7 @@ The spaces of functions to be recovered are the Sobolev spaces $\cg = \mathcal{W
 \cc_{\tau}=\{f \in  \mathcal{W}^{2,\infty} : \norm[\infty]{f''}\leq \tau\norm[\infty]{f'}\}.
 \end{equation}
 
-The basic non-adaptive algorithm used to approximate functions in the cone $\cc_{\tau}$ is linear interpolation on evenly spaced points.  Letting $\ci=\{2, 3, \ldots\}$ as in the previous section, the sequence of algorithms $\{A_n\}_{n \in \ci},$ is defined by
+Again, we consider algorithms based on function values, and the cost of a function value is one.   The basic non-adaptive algorithm used to approximate functions in the cone $\cc_{\tau}$ is linear interpolation on evenly spaced points.  Letting $\ci=\{2, 3, \ldots\}$ as in the previous section, the sequence of algorithms $\{A_n\}_{n \in \ci},$ is defined by
 \begin{subequations} \label{linearspline}
 \begin{equation}
 x_i=\frac{i-1}{n-1}, \qquad i=1, \ldots, n,
@@ -68,7 +68,7 @@ This implies that we may take
 \tildeh(n) =  \frac{1}{2(n-1)}, \qquad h(n) =  \frac{1}{8(n-1)^2} \leq \frac{1}{4(n-1)^2} = \tilde{h}(n) h_{+}(n).
 \end{equation}
 
-Since $h_{\pm}(n), \tildeh(n)$, and $h(n)$, are the same as in the previous section for integration, the simplifcations in \ref{simpifycond} apply here as well.  Then Algorithm \ref{multistagealgo} and Theorem \ref{MultiStageThm} may be applied directly to  yield the following algorithm for function approximation and its guarantee.
+Since $h_{\pm}(n), \tildeh(n)$, and $h(n)$, are the same as in the previous section for integration, the simplifications in \ref{simpifycond} apply here as well.  Then Algorithm \ref{multistagealgo} and Theorem \ref{MultiStageThm} may be applied directly to  yield the following algorithm for function approximation and its guarantee.
 
 \begin{algo} \label{multistageapproalgo}
 Let the error tolerance $\varepsilon$, the maximum cost budget $N_{\max}$, and the cone constant $\tau$ be given inputs. Let the sequences of algorithms, $\{A_n\}_{n \in \ci}$ and  $\{G_n\}_{n \in \ci}$ be as described above.  Set $i=1$.  Let $n_1=\lceil (\tau+1)/2\rceil + 1$. For any input function $f \in \cf$, do the following:
@@ -113,7 +113,7 @@ Next, we derive a lower bound on the cost of approximating functions in the cone
 \[
 \norm[\infty]{f'_0}=1, \qquad \norm[\infty]{f''_0}=0, \qquad \tau_0=0.
 \]
-For any $n =2, 3, \ldots$, suppose that the one has the data $L_i(f)=f(\xi_i)$, $i=1, \ldots, n$ for arbitrary $\xi_i$, where $0=\xi_0 \le \xi_1 < \cdots < \xi_n \le \xi_{n+1} = 1$.  There must be some $j=0, \ldots, n$ such that $\xi_{j+1} - \xi_j \ge 1/(n+1)$.  The function $f_{1}$, defined as
+For any $n \in \naturals$, suppose that the one has the data $L_i(f)=f(\xi_i)$, $i=1, \ldots, n$ for arbitrary $\xi_i$, where $0=\xi_0 \le \xi_1 < \cdots < \xi_n \le \xi_{n+1} = 1$.  There must be some $j=0, \ldots, n$ such that $\xi_{j+1} - \xi_j \ge 1/(n+1)$.  The function $f_{1}$, defined as
 $$
 f_{1}(x):=\begin{cases} \displaystyle
 \frac{16(x-\xi_{j})^{2}(\xi_{j+1}-x)^{2}}{(\xi_{j+1}-\xi_{j})^4} & \xi_{j} \le x \leq \xi_{j+1},\\
