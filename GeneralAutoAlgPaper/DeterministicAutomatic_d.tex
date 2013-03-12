@@ -1,0 +1,899 @@
+\documentclass[]{elsarticle}
+\setlength{\marginparwidth}{0.5in}
+\usepackage{amsmath,amssymb,amsthm,mathtools,booktabs,array,tikz,pifont,graphicx}
+\input FJHDef.tex
+
+%Requires ApproxUnivariate.tex, univariate_integration.tex, foolbwquadexample.eps 
+
+\DeclareMathOperator{\lin}{lin}
+\DeclareMathOperator{\up}{up}
+\DeclareMathOperator{\lo}{lo}
+\DeclareMathOperator{\fix}{non}
+\DeclareMathOperator{\err}{err}
+\newcommand{\herr}{\widehat{\err}}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{prop}[theorem]{Proposition}
+\newtheorem{lem}{Lemma}
+\newtheorem{cor}{Corollary}
+\theoremstyle{definition}
+\newtheorem{algo}{Algorithm}
+\newtheorem{condit}{Condition}
+%\newtheorem{assump}{Assumption}
+\theoremstyle{remark}
+\newtheorem{rem}{Remark}
+\newcommand{\Fnorm}[1]{\abs{#1}_{\cf}}
+\newcommand{\Gnorm}[1]{\abs{#1}_{\cg}}
+
+\journal{Journal of Complexity}
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{The Complexity of Deterministic Guaranteed Automatic Algorithms:  Cones, Not Balls}
+\author{Nicholas Clancy}
+\author{Yuhan Ding}
+\author{Caleb Hamilton}
+\author{Fred J. Hickernell}
+\author{Yizhi Zhang}
+\address{Room E1-208, Department of Applied Mathematics, Illinois Institute of Technology,\\ 10 W.\ 32$^{\text{nd}}$ St., Chicago, IL 60616}
+\begin{abstract} Automatic numerical algorithms are widely used in practice.  An algorithm that is automatic attempts to provide an approximate solution that differs from the true solution by no more than a user-specified error tolerance, $\varepsilon$. Furthermore, the computational effort required is typically determined adaptively by the algorithm based on function data, e.g., function values.  Ideally, the computational cost should match the difficulty of the problem.  Unfortunately, most automatic algorithms lack \emph{rigorous guarantees}, i.e., sufficient conditions on the input function that ensure the success of the algorithm. 
+
+This article establishes a framework for automatic, adaptive algorithms that do have rigorous guarantees. Sufficient conditions for success and upper bounds on the computational cost are provided in Theorems \ref{TwoStageDetermThm} and \ref{MultiStageThm}.  Lower bounds on the complexity of the problem are given in Theorem \ref{complowbd} and conditions are given under which the proposed algorithms attain those lower bounds in Corollary \ref{optimcor}. These general theorems are illustrated with automatic algorithms for univariate numerical integration and function recovery.  Both algorithms use linear splines to approximate the input function.  
+
+The key idea behind these automatic algorithms is that the error analysis should be done for \emph{cones} of input functions rather than balls. The existing literature contains certain negative results about the usefulness and reliability of automatic algorithms.  The theory presented does not share the assumptions on which those negative results are based, and so they are irrelevant.
+\end{abstract}
+
+\begin{keyword}
+adaptive \sep automatic \sep cones \sep function recovery \sep integration \sep quadrature
+%% keywords here, in the form: keyword \sep keyword
+
+\MSC[2010] 65D05 \sep 65D30 \sep 65G20
+%% MSC codes here, in the form: \MSC code \sep code
+%% or \MSC[2008] code \sep code (2000 is the default)
+
+\end{keyword}
+\end{frontmatter}
+
+\section{Introduction}
+
+One would like to have automatic algorithms for numerical problems that are \emph{guaranteed} to provide answers whose errors do not exceed the user-specified error tolerance.  Such algorithms are generally lacking, even for fundamental problems such as integration and function recovery.  This article shows how to construct such algorithms.
+
+Specifically, we want algorithms with the following properties:
+\begin{description}
+\item[Guaranteed]--- the errors in the answers provided must be no greater than the user-specified \emph{error tolerance}, $\varepsilon$.
+\item[Automatic]--- the computational effort required depends on $\varepsilon$, but \emph{does not require additional user input} beyond a routine for providing function data.
+\item[Adaptive]--- the computational effort depends on the input function, specifically, on the difficulty of the problem as measured by some semi-norm of the input function.  However, the magnitude of this semi-norm of the input function \emph{must be inferred from function data, not specified a priori}.
+\item[Optimal]--- the computational cost of the algorithm, as $\varepsilon \to 0$, does not exceed a constant multiple of the computational complexity of the problem (the computational cost of the best possible algorithm).  Furthermore, the computational cost of this new algorithm, which is not give the semi-norm of the input function a priori, does not exceed a constant multiple of the cost of the best possible algorithm that does knows the semi-norm of the input function a priori.
+\item[Tunable]--- parameters defining the algorithm can be adjusted to change the algorithm's robustness, the maximum allowable computational cost budget, etc.  These parameters are intended to be changed only occasionally, as opposed to inputs, which may change each time that the algorithm is called.
+\end{description}
+The checklist in Figure \ref{fig:checklist} rates some state-of-the-art algorithms and those proposed here against these five criteria.  Nearly all existing algorithms fail to meet one or more of these criteria.  Here we present a general framework for constructing algorithms that satisfy all of the above criteria.  We also present two concrete examples, namely, univariate integration via the composite trapezoidal rule and univariate function recovery via linear splines.
+
+Automatic quadrature algorithms such as MATLAB's {\tt quad} and {\tt quadgk} \cite{MAT7.12} and those in the NAG Library \cite{NAG23} work well in practice for many cases.  But, these popular algorithms do not have rigorous guarantees of success.  The Chebfun toolbox in MATLAB \cite{TrefEtal12} approximates functions by Chebyshev polynomial expansions and uses those expansions to approximate integrals, solve differential equations, etc. Chebfun also works well for many cases, but has no guarantees.  All of these algorithms are adaptive.  The degree to which they are tunable varies.
+
+\begin{figure}[ht]
+\centering 
+\begin{tabular}{r>{\centering}b{2.8cm}>{\centering}b{2.8cm}>{\centering}b{2.8cm}}
+& MATLAB, NAG, and Chebfun
+& Algorithm in Figure \ref{fig:NonadaptAlgo}
+& Algorithm in Figure \ref{fig:AdaptAlgo} \tabularnewline
+\toprule
+Guaranteed & & \ding{51} & \ding{51}  \tabularnewline
+Automatic & \ding{51} & \ding{51} & \ding{51} \tabularnewline
+Adaptive & \ding{51} & & \ding{51} \tabularnewline
+Optimal & & \ding{51} & \ding{51} \tabularnewline
+Tunable & ? & \ding{51} & \ding{51} 
+\end{tabular}
+\caption{Check list of desired features for an algorithm. \label{fig:checklist}}
+\end{figure}
+
+Most existing theory for numerical problems of interest starts with a Banach space, $\cf$, of input functions defined on some set $\cx$, and having a semi-norm, $\Fnorm{\cdot}$.  The definition of $(\cf,\Fnorm{\cdot})$ contains assumptions about smoothness, periodicity or other qualities of the input functions.  The mathematical problem of interest is defined by a \emph{solution operator} $S:\cf \to \ch$, where $\ch$ is some other Banach space with its norm $\norm[\ch]{\cdot}$.  For integration, $\ch=\reals$, and for function approximation, $\ch$ is some superset of $\cf$, for example, $\cl_{\infty}(\cx)$. One often finds a sequence of algorithms, $\{A_n\}_{n \in \naturals}$, with computational cost $n$, that provides an approximate solution whose error can be bounded as
+\begin{subequations} \label{traditionerr}
+\begin{equation} \label{traditionerra}
+\norm[\ch]{S(f)-A_n(f)} \le \frac{C_{\up} \Fnorm{f}}{n^p},
+\end{equation}
+where $C_{\up}$ and $p$ are some known constants independent of $n$.  It is necessary for $A_n$ to be exact if the semi-norm of the input function vanishes, i.e., $S(f)=A_n(f)$ if $\Fnorm{f}=0$.  Error bound \eqref{traditionerra} allows one to compute an approximation that differs from the true solution by no  more than $\varepsilon$, provided that the input functions lie inside a {\em ball}, i.e., 
+\begin{gather}
+\sup_{f \in \cb_{\sigma}} \norm[\ch]{S(f)-A_n(f)} \le \varepsilon, \qquad 
+\cb_\sigma=\{ f \in \cf : \Fnorm{f} \le \sigma\}, \label{balldef} \\
+\label{costupbd}
+n=\cost(A_n) = \left \lceil \left(\frac{C_{\up}\sigma}{\varepsilon}\right)^{1/p} \right \rceil.
+\end{gather}
+\end{subequations}
+Furthermore, there is a simple formula for the computational cost required to meet the error tolerance, $\varepsilon$, for all functions in the ball of radius $\sigma$.
+
+Figure \ref{fig:NonadaptAlgo} provides a diagram of an automatic algorithm based on these ideas.  The parameter $\sigma$ must be fixed initially by the user or algorithm designer and is typically left unchanged each time the algorithm is called.  The algorithm then only requires as input the error tolerance and a routine for evaluating the function at any point desired.  This algorithm is guaranteed.  It is optimal if any algorithm satisfying the error criterion above must have a cost of at least $\Order((\sigma/\varepsilon)^{1/p})$.  However, this algorithm is not adaptive.  The computational cost does not depend on function data, but is determined purely by the input $\varepsilon$ and the parameter $\sigma$.  In the terminology of information-based complexity theory, the computational cost depends on global information but not local information \cite[p.\ 11--12]{TraWer98}.
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}
+[auto,
+block/.style ={rectangle, very thick, fill=black!10, align=center, rounded corners, minimum height=3em}]
+%[auto,
+%block/.style ={rectangle, very thick, fill=red!15, align=center, rounded corners, minimum height=3em}]
+\draw (1.1,0.9) node[block, text width=2.2cm] {\parbox{2.2cm}{\centering {\bf Input}\\[1ex]
+$\vx \mapsto f(\vx)$\\ 
+$\varepsilon = $ tolerance}};
+\draw (1.1,-0.9) node[block, text width=2.2cm] {\parbox{2.2cm}{\centering {\bf Parameter}\\[1ex]
+$\sigma$ such that $\Fnorm{f} \le \sigma$}};
+\draw (4.5,0) node[block, draw=black, text width=2.8cm] {\parbox{2.8cm}{\centering{\bf Algorithm}\\[1ex] to compute $S(f)$ \\[1ex]
+%\draw (4.5,0) node[block, draw=red, text width=2.8cm] {\parbox{2.8cm}{\centering{\bf Algorithm}\\[1ex] to compute $S(f)$ \\[1ex]
+cost $\displaystyle \asymp \left(\frac{\sigma}{\varepsilon}\right)^{1/p}$}};
+\draw (8.6,0) node[block, text width=3.6cm] {\parbox{3.6cm}{\centering {\bf Output}\\[1ex] $A(f) = $ approximation \\[0.5ex] $\norm[\ch]{S(f)-A(f)} \le \varepsilon$}};
+\draw [>->,thick] (2.4,0.9) -- (2.9,0.6);
+\draw [>->,thick] (2.4,-0.9) -- (2.9,-0.6);
+\draw [>->,thick] (6.1,0) -- (6.6,0);
+\end{tikzpicture}
+\caption{Diagram of a guaranteed, non-adaptive algorithm. \label{fig:NonadaptAlgo}}
+\end{figure}
+
+The semi-norm $\Fnorm{f}$ may be thought of as the \emph{difficulty of the problem}.  In practice, it is difficult to know a priori the maximum possible value of $\Fnorm{f}$, so having to determine $\sigma$ in advance is a practical drawback of the algorithm in Figure \ref{fig:NonadaptAlgo}.  Moreover, since the computational cost of this algorithm depends on $\sigma$, not $\Fnorm{f}$, the cost does not decrease if $\Fnorm{f}$ is drastically smaller than $\sigma$.  
+
+Adaptive algorithms use function data to try to bound $\Fnorm{f}$ or to estimate $\norm[\ch]{S(f)-A_n(f)}$, so that the computational cost can be adjusted accordingly. Unfortunately, the bounds on $\Fnorm{f}$ and the estimates of $\norm[\ch]{S(f)-A_n(f)}$ are typically heuristic or valid only in the limit of $n \to \infty$.  Thus, these approaches are not guaranteed to provide the answer to within the specified error tolerance for finite $n$.  Here we show how to construct a \emph{rigorous} upper bound on $\Fnorm{f}$ from data, which then leads to a guaranteed automatic and adaptive algorithm.  
+
+The key idea is to consider functions lying in a \emph{cone} instead of a ball.  A cone is a set with the property that any positive multiple of an element in the set is also in the set.  Let $\cg$ be some superspace of $\cf$ with a weaker semi-norm, and define the cone
+\begin{equation} \label{conedef}
+\cc_{\tau}=\{f \in \cf : \Fnorm{f} \le \tau \Gnorm{f} \}.
+\end{equation}
+Functions inside the cone may have large semi-norms, but their $\cg$-semi-norm can be estimated with reasonable effort.  Our approach to obtaining a reliable approximation to the true solution, $S(f)$, is sketched here:
+
+\begin{itemize}
+\item Since the $\cg$-semi-norm is weaker than the $\cf$-semi-norm, it can be approximated by some algorithm $G_n(f)$, with $\Gnorm{f}-G(f) \le h_+(n)\Fnorm{f}$ for some known $h_+(n)$ that vanishes as $n \to \infty$.  One chooses a sample size $n_G$ such that $h_+(n_G) \le 1/\tau$.
+
+\item The definition of the cone in \eqref{conedef} implies that 
+\[
+\Gnorm{f} \le G_{n_G}(f)+ h_+(n_G)\Fnorm{f} \le G_{n_G}(f)+ \tau h_+(n_G)\Gnorm{f},
+\]
+and so $\Gnorm{f} \le G_{n_G}(f)/(1 - \tau h_+(n_G))$.
+
+\item Applying the cone condition again leads to an upper bound on the $\cf$-semi-norm, namely,  $\Fnorm{f} \le \tau G_{n_G}(f)/(1 - \tau h_+(n_G))$.
+
+\item This data-driven upper bound on $\Fnorm{f}$ can be used with \eqref{costupbd} to guarantee that the error tolerance will be met using $A_n$ with
+\[
+n=\cost(A_n)\le \left \lceil\left(\frac{ C_{\up}\tau G_{n_G}(f)}{\varepsilon(1 - \tau h_+(n_G))}\right)^{1/p} \right \rceil.
+\]
+
+\item If, as often is the case, $G_{n_G}(f)$ does not overestimate the $\cg$-semi-norm of $f$, one can be assured that the above criterion will be met for 
+\[
+n=\cost(A_n)\le \left \lceil\left(\frac{ C_{\up}\tau \Gnorm{f})}{\varepsilon(1 - \tau h_+(n_G))}\right)^{1/p} \right \rceil.
+\]
+Given that $\Fnorm{f} = \tau \Gnorm{f}$ for some $f$, the cost of this algorithm as $\varepsilon \to 0$ is asymptotically the same as if one did know $\Fnorm{f}$ in advance.
+
+\item On top of the above analysis, we allow for a maximum computational cost budget, $N_{\max}$, that allows the user to specify how long he or she is willing to wait for an answer.
+
+\end{itemize} 
+Figure \ref{fig:AdaptAlgo} is a diagram of the automatic algorithm just outlined.
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}
+[auto,
+block/.style ={rectangle, very thick, fill=black!10, align=center, rounded corners, minimum height=3em}]
+%[auto,
+%block/.style ={rectangle, very thick, fill=red!15, align=center, rounded corners, minimum height=3em}]
+\draw (1.2,0.9) node[block, text width=2.4cm] {\parbox{2.4cm}{\centering{\bf Input}\\[0.5ex] 
+$\vx \mapsto f(\vx)$\\ 
+$\varepsilon = $ tolerance}};
+\draw (1.2,-1.2) node[block, text width=2.4cm] {\parbox{2.4cm}{\centering{\bf Parameters}\\[0.5ex] 
+$\tau$ such that $\Fnorm{f} \le \tau\Gnorm{f}$ \\[0.5ex] $N_{\max} = $ cost budget}};
+\draw (4.9,0) node[block, draw=black, text width=3.2cm] {\parbox{3.2cm}{\centering{\bf Algorithm}\\[0.5ex] to compute $S(f)$ \\[1ex]
+%\draw (5.1,0) node[block, draw=red, text width=3.2cm] {\parbox{3.2cm}{\centering{\bf Algorithm}\\[1ex] to compute $S(f)$ \\[1ex]
+cost $\displaystyle \asymp \left(\frac{\tau\Gnorm{f}}{\varepsilon}\right)^{1/p}$ }};
+\draw (9.2,0) node[block, text width=3.6cm] {\parbox{3.6cm}{\centering{\bf Output}\\[0.5ex] $A(f) = $ approximation \\[0.5ex] $\norm[\ch]{S(f)-A(f)} \le \varepsilon$}};
+\draw [>->,thick] (2.6,0.9) -- (3.1,0.6);
+\draw [>->,thick] (2.6,-0.9) -- (3.1,-0.6);
+%\draw [>->,thick] (2.6,0) -- (3.1,0);
+\draw [>->,thick] (6.7,0) -- (7.2,0);
+\end{tikzpicture}
+\caption{Diagram of a guaranteed, adaptive, automatic algorithm. \label{fig:AdaptAlgo}}
+\end{figure}
+
+Section \ref{integsec} presents a concrete example of this approach for the problem of computing the integral $\int_0^1 f(x) \, \dif x$ for all integrands whose second derivatives are absolutely integrable, i.e., $\Fnorm{f}=\norm[1]{f''}$. The trapezoidal rule based on $n$ function values, i.e., $n-1$ trapezoids, computes an approximation with error no greater than $\varepsilon$ using $\bigl\lceil \sqrt{\norm[1]{f''}/(8\varepsilon)} \bigr \rceil +1 $ function values.  However, except for relatively simple integrands, a bound on $\norm[1]{f''}$ is unknown in practice.  
+
+Following the procedure outlined above we choose the weaker semi-norm as $\Gnorm{f} = \norm[1]{f'}$.  This semi-norm may be estimated by an algorithm $G_n$ that takes the one-norm of the derivative of the piecewise linear spline for $f$.  The error for $G_n(f)$ is bounded by $\norm[1]{f''}/(2n-2)$.  Fixing the parameter $\tau > 1$, and assuming that $\norm[1]{f''} \le \tau \norm[1]{f'}$  (the cone condition), then the reliable numerical upper bound on $\norm[1]{f'}$ can be used to obtain an upper bound for $\norm[1]{f''}$.   
+This leads to a guaranteed, automatic (adaptive) algorithm for approximating the integral to the desired accuracy with a computational cost that is $\Theta(\sqrt{\tau \norm[1]{f'}/\varepsilon})$, where $\norm[1]{f'}$ is unknown a priori.  Here $\tau$ represents a minimum sample size, and $1/\tau$ represents a length scale of for possible spikes that one wishes to integrate accurately.
+
+There are limited theoretical results providing conditions under which adaption is useful.  Novak \cite{Nov96a} shows the advantage of adaption in for some problems in the average case and randomized settings.  Plaskota and Wasilkowski \cite{PlaWas05a,PlaEtal08a} demonstrate the advantage of adaption for integrating or approximating functions with singularities. By contrast, here we consider the deterministic setting, and we are not concerned with functions with singularities.
+
+This article starts with the general setting and then moves to two concrete cases.  Section \ref{probdefsec} lays out the problems to be solved.  Section \ref{NonAdaptsec} defines non-adaptive algorithms, their costs, and the complexities of numerical problems for which non-adaptive algorithms are suited.  The algorithm diagrammed in Figure \ref{fig:NonadaptAlgo} is essentially this kind of algorithm.  Non-adaptive algorithms are the building blocks for adaptive algorithms.  Adaptive algorithms, their costs, and the complexity of problems defined on cones of functions are introduced in Section \ref{AutoAlgsec}.  Their costs are defined in terms of the unknown, but estimated, $\cg$-semi-norm of the input function.  The problem definition here allows for a maximum computational cost budget to be imposed so that one never needs to wait an arbitrarily large time for the answer.  
+
+Sections \ref{genthmsec} and \ref{LowBoundSec} describes the automatic algorithms in detail and provides proofs of their success for cones of input functions.  Although the long term goal of this research is to construct good locally adaptive algorithms, where the sampling density varies according to the function data, here we present only globally adaptive algorithms, the sampling density is fixed, but the number of samples is determined adaptively.  In particular, the following results are presented:
+\begin{itemize}
+
+\item Algorithm \ref{twostagedetalgo} is a two stage algorithm: $\Gnorm{f}$ is bounded above once, and  this bound is used to determine the additional computational cost, $n$, so that $A_n(f)$ achieves the desired accuracy. Algorithm \ref{multistagealgo} is a multi-stage algorithm, where the algorithm, $G_n$, used to bound $\Gnorm{f}$, and the algorithm, $A_n$, used to approximate $S(f)$, are based on the same data. Moreover, these are embedded algorithms whose costs increase progressively according to some sequence $n_1, n_2, \ldots$.  Once the number of samples is sufficiently large so that $A_{n_i}(f)$ achieves the desired tolerance, the algorithm terminates.
+
+\item Theorems \ref{TwoStageDetermThm} and \ref{MultiStageThm} in Section \ref{genthmsec} prove that Algorithms \ref{twostagedetalgo} and \ref{multistagealgo}, respectively, are guaranteed to produce answers to within the desired error tolerance, provided that they do not exceed the maximum cost budget.  These theorems also demonstrate that the computational costs of these algorithms do not exceed the costs of algorithms that know $\Fnorm{f}$ or $\Gnorm{f}$ a priori.
+
+\item Theorem \ref{complowbd} in Section \ref{LowBoundSec} provides lower bounds on the computational complexity of the problems defined on cones of input functions by constructing fooling functions.  Corollary \ref{optimcor} shows that Algorithms \ref{twostagedetalgo} and \ref{multistagealgo} are optimal if the non-adaptive algorithms on which they are based are optimal for problems defined on balls of input functions.
+
+\end{itemize}
+
+Section \ref{integsec} illustrates the general theorems in Sections \ref{genthmsec} and \ref{LowBoundSec} for the univariate integration problem.  An explicit automatic algorithm based on the trapezoidal rule is presented and its success and optimality are proved.  Section \ref{approxsec}  considers function approximation with analogous results.  Common concerns about automatic and adaptive algorithms are answered in Section \ref{overcomesec}. The article ends with several suggestions for future work.
+
+\section{General Problem Definition} \label{probdefsec}
+
+\subsection{Problems and Algorithms} The function approximation, integration, or other problem to be solved is defined by a \emph{solution operator} $S:\cf \to \ch$, where $\cf$ is a Banach space of possible input functions defined on $\cx$ with semi-norm $\Fnorm{\cdot}$, and $\ch$ is some other Banach space of possible outputs or solutions with norm $\norm[\ch]{\cdot}$. The solution operator is assumed to have a scale property, i.e., 
+\[
+S(cf) = cS(f) \qquad \forall c\ge 0.
+\]
+Examples include the following:
+\begin{align*}
+\text{Integration:} \quad & S(f) = \int_{\cx} f(\vx) \, \rho(\vx) \, \dif \vx, \quad \rho \text{ is fixed,}\\
+\text{Function Recovery:} \quad & S(f) = f, \\
+\text{Poisson's Equation:} \quad & S(f) = u, \quad \text{where } \begin{array}{c} -\Delta u(\vx) = f(\vx), \ \vx \in \cx, \\ u(\vx)=0 \ \forall \vx \in \partial \cx, \text{ and}\end{array} \\
+\text{Optimization:} \quad & S(f) = \min_{\vx \in \cx} f(\vx).
+\end{align*}
+The first three examples above are linear problems, which automatically have the scale property for $S$, but the last example is a nonlinear problem, which nevertheless also has the scale property.
+
+The goal is to find an algorithm $A:\cf \to \ch$ for which $S(f) \approx A(f)$. Following the definition of algorithms described in \cite[Section 3.2]{TraWasWoz88}, the algorithm takes the form of some function of data derived from the input function:
+\begin{equation}
+\label{algoform}
+A(f) =  \phi(\vL(f)), \quad \vL(f) = \left(L_1(f), \ldots, L_m(f)\right) \qquad \forall f \in \cf.
+\end{equation}
+Here the $L_i \in \Lambda$ are real-valued functions defined on $\cf$ with the following scale property:
+\begin{equation}
+\label{dataassump}
+L(cf) = cL(f) \qquad \forall f \in \cf, \ c \in \reals, \ L \in \Lambda.
+\end{equation}
+One popular choice for $\Lambda$ is the set of all function values, $\Lambda^{\std}$, i.e., $L_i(f) = f(\vx_i)$ for some $\vx_i \in \cx$.  Another common choice is the set of all bounded linear functionals, $\Lambda^{\lin}$.  In general, $m$ may depend on $f$ and the choice of $L_i$ may depend on $L_1(f), \ldots, L_{i-1}(f)$.  In this article, all algorithms are assumed to be deterministic.  There is no random element.
+
+\subsection{Non-Adaptive Algorithms} \label{NonAdaptsec}
+
+The set $\ca_{\fix}(\cf,\ch,S,\Lambda)$ contains algorithms as just described for which the choice of the $L_i$ and the number of function data used by the algorithm, $m$, are both assumed to be independent of the input function, i.e., these algorithms are non-adaptive.  Furthermore, any $A \in \ca_{\fix}(\cf,\ch,S,\Lambda)$ is assumed to satisfy the following scale properties:
+\begin{equation}
+\label{algoscale}
+\vL(cf) = c \vL(f), \quad 
+\phi(c\vy) = c\phi(\vy), \quad A(cf) = cA(f) \qquad \forall c \ge 0, \ \vy \in \reals^m.
+\end{equation}
+
+The cost of a non-adaptive algorithm, $A \in  \ca_{\fix}(\cf,\ch,S,\Lambda)$, is fixed and is defined as the sum of the costs of all the function data:
+\begin{equation} \label{costfix}
+\cost(A) = \$(\vL) = \$(L_1) + \cdots +\$(L_m),
+\end{equation}
+where $\$:\Lambda \to [1,\infty)$, and $\$(L)$ is the cost of acquiring the datum $L(f)$. The cost of $L$ may be the same for all $L \in \Lambda$, e.g, $\$(L)=1$.  Alternatively, the cost might vary with the choice of $L$.  For example, if $f$ is a function of the infinite sequence of real numbers, $(x_1, x_2, \ldots)$, the cost of evaluating the function with arbitrary values of the first $d$ coordinates, $L(f)=f(x_1, \ldots, x_d, 0, 0, \ldots)$, might be $d$.  This cost model has been used by \cite{HicMGRitNiu09a,KuoEtal10a,NiuHic09a,NiuHic09b,PlaWas11a} for integration problems and \cite{Was13a,WasWoz11a,WasWoz11b} for function approximation problems.
+
+The error of a non-adaptive algorithm $A  \in \ca_{\fix}(\cf,\ch,S,\Lambda)$ is defined  as
+\begin{equation} \label{errdefworst}
+\err(A,\cf,\ch,S)
+= \min\{ \delta \ge 0 : \norm[\ch]{S(f) -  A(f)} \le \delta \Fnorm{f} \ \forall f \in \cf \},
+\end{equation}
+When the problem has real-valued solutions, i.e., $\ch=\reals$, one may also define a one sided error criterion:
+\begin{equation}\label{errpmdefworst}
+\err_{\pm}(A,\cf,\reals,S) = 
+\min \{ \delta \ge 0 : \pm[S(f) -  A(f)] \le \delta \Fnorm{f} \ \forall f \in \cf \}. 
+\end{equation}
+A finite error in either of the above definitions assumes that the algorithm is exact, i.e., $S(f)=A(f)$, for all $f$ with $\Fnorm{f}=0$.
+
+The above error criteria are normalized, meaning that the absolute error, $\norm[\ch]{S(f) -  A(f)}$ is measured with respect to the $\cf$-semi-norm of the input function. The complexity of a problem for this set of algorithms, $\ca_{\fix}(\cf,\ch,S,\Lambda)$, is defined as the cost of the cheapest algorithm that satisfies the specified error tolerance, $\varepsilon$:
+\begin{multline} \label{fixcostcomplex}
+\comp(\varepsilon,\ca_{\fix}(\cf,\ch,S,\Lambda)) \\
+= \inf\left\{\cost(A) : \err(A,\cf,\ch,S) \le \varepsilon, \ A \in \ca_{\fix}(\cf,\ch,S,\Lambda) \right \}.
+\end{multline}
+Here the infimum of an empty set is defined to be $\infty$.  So, to guarantee that $\norm[\ch]{S(f) -  A(f)} \le \varepsilon$, one needs an algorithm with a cost of at least 
+\[
+\comp(\varepsilon/\Fnorm{f},\ca_{\fix}(\cf,\ch,S,\Lambda)).
+\]
+This cost is non-increasing as either $\varepsilon$ decreases or $\Fnorm{f}$ increases.
+
+Suppose that there is a sequence of nonadaptive algorithms indexed by their cost, and which converge to the true answer:
+\begin{subequations} \label{algseqdef}
+\begin{gather} 
+\{A_n\}_{n \in \ci}, \qquad A_n  \in \ca_{\fix}(\cf,\ch,S,\Lambda), \\
+\lim_{\substack{n \to \infty\\ n \in \ci}} \err(A_n,\cf,\ch,S) = 0, \qquad \cost(A_n) = n,  
+\end{gather}
+\end{subequations}
+where the countable, non-negative-valued index set, 
+\begin{equation} \label{indexdef}
+\ci=\{n_1, n_2, \ldots\} \quad \text{with } n_i < n_{i+1}, \quad \text{satisfies } \sup_i \frac{n_{i+1}}{n_i} <\infty. 
+\end{equation} 
+This sequence of algorithms is called \emph{optimal} for the problem $(\cf,\ch,S,\Lambda)$ if it essentially tracks the minimum cost algorithms, namely,
+\begin{equation} \label{nearoptdef}
+\sup_{0 < \varepsilon \le 1} \frac{\min\{n \in \ci : \err(A_n,\cf,\ch,S) \le \varepsilon\}} {\comp(\varepsilon,\ca_{\fix}(\cf,\ch,S,\Lambda))} <\infty.
+\end{equation}
+
+\subsection{Automatic, Adaptive Algorithms} \label{AutoAlgsec}
+
+Non-adaptive algorithms, $A \in \ca_{\fix}(\cf,\ch,S,\Lambda)$ need an upper bound on $\Fnorm{f}$ to guarantee that they meet the prescribed error tolerance for the input function $f$.  Adaptive algorithms attempt to estimate $\Fnorm{f}$ and then determine the number of function data needed to meet the error tolerance.  Such automatic, adaptive algorithms are now defined somewhat differently from the non-adaptive algorithms above.  However, in practice automatic algorithms use non-adaptive algorithms as building blocks.
+
+Practical automatic algorithms in $\ca(\cf,\ch,S,\Lambda)$ take the form of ordered pairs of functions
+\[
+(A,W): \cf \times (0,\infty)\times [1,\infty] \to \ch \times \{\text{false},\text{true}\},
+\]
+for which one hopes that $S(f) \approx A(f;\varepsilon,N_{\max})$.  Here $\varepsilon \in (0,\infty)$ is a user-supplied error tolerance, $N_{\max} \in [1,\infty]$ is a user-supplied maximum cost budget, and $W(f;\varepsilon,N_{\max})$ is a Boolean warning flag that is false if the algorithm completed its calculations without attempting to exceed the cost budget, and is true otherwise.  
+
+As in \eqref{algoform}, the algorithm takes the form of some function of function data: $A(f;\varepsilon,N_{\max}) = \phi\left(\vL(f);\varepsilon,N_{\max}\right)$.
+Now, however, the algorithm is allowed to be adaptive. The choice of $L_2$ may depend on the value of $L_1(f)$, the choice of $L_3$ may depend on $L_1(f)$ and $L_2(f)$, etc.  The number of function data used by the algorithm, $m$, may also be determined adaptively. The choice of how many and which function data to use depends on $\varepsilon$ and $N_{\max}$.  Thus, $\vL(c\vy)$ might not equal $c\vL(\vy)$ since the length of the information vector depends on the data recorded.  The goal of the algorithm is to make $\norm[\ch]{S(f) - A(f;\varepsilon,N_{\max})} \le \varepsilon$, but this is not a requirement of the definition.
+
+The cost of the algorithm for a specified input function is defined analogously to \eqref{costfix} as the sum of the costs of all function data.
+\[
+\cost(A,f;\varepsilon,N_{\max}) = \$(\vL) = \$(L_1) + \cdots +\$(L_m).
+\]
+Because of the potentially adaptive nature of the algorithm, namely that $m$ may depend on $f$, it follows that the cost may depend on $f$ as well as $A$. The input parameter $N_{\max}$ tells the algorithm to ensure that $\cost(A,f;\varepsilon,N_{\max}) \le N_{\max}$ for all $f$ and $\varepsilon$.  This is a practical consideration since the user does not want to wait indefinitely for an answer.  
+
+The cost of the algorithm is expected to scale with some $\cg$-semi-norm of the integrand, where the $\cg$-semi-norm is weaker than the $\cf$-semi-norm.  In particular, the cost of an algorithm generally increases as $\Gnorm{f}$ increases.  The cost of the algorithm may also depend on $\cn$, the subset of $\cf$ where the functions of interest lie.  To represent this idea one defines the following cost:
+\begin{equation*}
+\cost(A,\cn,\varepsilon,N_{\max},\sigma)
+= \sup \{ \cost(A,f;\varepsilon,N_{\max}) : f \in \cn, \ \Gnorm{f} \le \sigma \} .
+\end{equation*}
+Here the set $\cn$ is allowed to depend on the algorithm inputs, $\varepsilon$ and $N_{\max}$, but not on $\sigma$.  Moreover, the algorithm, $A$, does not take $\sigma$ as an input.
+
+For automatic algorithms, returning an approximation with the desired error is not enough.  One also wants the algorithm to be confident that the answer is correct.  An  algorithm  $(A,W) \in \ca(\cn,\ch,S,\Lambda)$, is deemed successful provided that it meets the prescribed error tolerance and does not raise the warning flag.  Specifically, success is defined as
+\begin{multline*}
+\success(A,W,\cn,\varepsilon,N_{\max}) \\
+= \begin{cases} \text{true} & \text{if } \displaystyle \norm[\ch]{S(f)-A(f;\varepsilon,N_{\max})} \le \varepsilon \ \& \ W(f;\varepsilon,N_{\max})=\text{false} \quad \forall  f \in \cn, \\
+\displaystyle \text{false} & \text{otherwise}.
+\end{cases}
+\end{multline*}
+The above are absolute error criteria for success.  One might also define relative error criteria instead, but finding successful algorithms for relative error is a non-trivial exercise and will be considered in future work.
+
+The complexity of a problem is defined as the cost of the cheapest successful algorithm for input functions with $\cg$-semi-norm no greater than $\sigma$:
+\begin{multline} \label{complexdef}
+\comp(\varepsilon,\ca(\cn,\ch,S,\Lambda),N_{\max},\sigma) \\
+ = \inf\left\{\cost(A,\cn,\varepsilon,N_{\max},\sigma) : \success(A,W,\cn,\varepsilon,N_{\max}) = \text{true}, \right .\\
+\left.  (A,W) \in \ca(\cn,\ch,S,\Lambda) \right \}.
+\end{multline}
+Here the infimum of an empty set is defined to be $\infty$.  The optimality of adaptive algorithms is defined analogously to \eqref{nearoptdef}.
+
+The set of non-adaptive algorithms, $\ca_{\fix}(\cf,\ch,S,\Lambda)$, defined in the previous subsection is a subset of the automatic algorithms $\ca(\cf,\ch,S,\Lambda)$.  Algorithms in $\ca_{\fix}(\cf,\ch,S,\Lambda)$ are not affected by the error tolerance $\varepsilon$ and do not recognize a cost budget $N_{\max}$.  Moreover, the warning flag for an algorithm in $\ca_{\fix}(\cf,\ch,S,\Lambda)$ is always returned as false.  Whereas the non-adaptive algorithms are inherently impractical by themselves, they are vital components of automatic, adaptive algorithms.
+
+\subsection{Cones of Functions} \label{conesubsec} All algorithms can be fooled by some input functions, even if these functions are sufficiently smooth.  An algorithm and error analysis such as that in \eqref{traditionerr} rules out fooling functions with large error by restricting the size of  $\Fnorm{f}$.  
+
+It is often difficult to know how large $\Fnorm{f}$ is a priori and so practical automatic algorithms try to bound it.  The framework described here rules out fooling functions whose $\cf$-semi-norms cannot be reliably bounded above.  This is done by considering $\cg$, a superspace of $\cf$, with its own semi-norm $\Gnorm{\cdot}$.   The semi-norm $\Gnorm{\cdot}$ is considered to be weaker than $\Fnorm{\cdot}$ in the following sense:
+\begin{subequations} \label{Fspacecond}
+\begin{equation} \label{Fspacecondstrong}
+\min_{f_0 \in \cf_0} \Gnorm{f - f_0} \le C_{\cf} \Fnorm{f} \qquad \forall f \in \cf,
+\end{equation}
+where $\cf_0=\{f \in \cf : \Fnorm{f}=0\}$ is a finite dimensional subspace of $\cf$.  Moreover, it is assumed that any $f \in \cg$ with zero $\cg$-semi-norm must also lie in $\cf$ and have zero $\cf$-semi-norm:
+\begin{equation} \label{Fspacecondzero}
+\cg_0 \subseteq \cf_0.
+\end{equation}
+\end{subequations}
+
+Given $\tau>0$, let $\cc_{\tau} \subset \cf$ denote a \emph{cone} of functions whose $\cf$-semi-norms are no greater than $\tau$ times their $\cg$-semi-norms, as defined in \eqref{conedef}.  For any $f \in \cc_{\tau}$ both $\Fnorm{f}$ and $\Gnorm{f}$ must be finite, but they can be arbitrarily large.  There is no need to assume an upper bound on their sizes, but it is possible to obtain reliable upper bounds for both $\Fnorm{f}$ and $\Gnorm{f}$ by sampling $f$.  This argument appears to be circular, but is in fact valid.  An upper bound on $\Gnorm{f}$ for $f \in \cc_{\tau}$ can be computed in terms of the data $\vL(f)=(L_1(f), \ldots, L_m(f))$ because $\Fnorm{\cdot}$ is a stronger semi-norm than $\Gnorm{\cdot}$ in the sense of \eqref{Fspacecondstrong}, and because $\Fnorm{f}$ is no larger than a multiple of $\Gnorm{f}$ (see Lemma \ref{Gnormlem} below). This upper bound on $\Gnorm{f}$ then automatically implies an upper bound on $\Fnorm{f}$ from the definition of the cone. These reliable bounds on both $\Fnorm{f}$ and $\Gnorm{f}$ may be used to obtain a bound on the error of the algorithm for estimating $S(f)$  (see Theorem \ref{TwoStageDetermThm} below).
+
+\subsection{Results that We Prove}  The previous subsections define the problem to be approximated and the notation describing the difficulty of the problem and the efficiency of the algorithms.  This subsection summarizes the results that are proved in general in the next two sections and illustrated for specific cases in the Sections \ref{integsec} and \ref{approxsec}.
+
+\begin{enumerate}
+
+\renewcommand{\labelenumi}{\roman{enumi}.}
+
+\item \emph{Upper bound on the complexity.}
+Theorems \ref{TwoStageDetermThm}, \ref{MultiStageThm}, \ref{multistageintegthm}, and \ref{multistageappxthm} provide upper bounds on the complexity of solving the problem, $\comp(\cn,\varepsilon,N_{\max},\sigma,\Lambda)$, in terms of some function of $\varepsilon/\sigma$ and for the set $\cn \subset \cc_{\tau}$.
+
+\item \emph{An algorithm that achieves the upper bound.}  Algorithms \ref{twostagedetalgo} and \ref{multistagealgo} provide explicit, constructive frameworks for two kinds of successful algorithms, $(A,W) \in \ca(\cn,\ch,S,\Lambda)$, that achieve these upper bounds.  Algorithms \ref{multistageintegalgo} and \ref{multistageapproalgo} provide concrete cases.
+
+\item \emph{Penalty for not knowing the $\cf$- and $\cg$-semi-norms of $f$.} The optimal successful algorithm must find an upper bound on $\Fnorm{f}$ or $\Gnorm{f}$ rather than assuming such an upper bound.  One hopes that the extra cost relative to the situation of knowing a priori bounds on these semi-norms is not too great.  Positive results are given in Theorems  \ref{TwoStageDetermThm}, \ref{MultiStageThm}, \ref{multistageintegthm}, and \ref{multistageappxthm}.
+
+\item \emph{Lower bound on the complexity and optimality of algorithms.}  The difficulty of the problem is provided by lower bounds on the complexity.  These are given in Theorem \ref{complowbd}.  Conditions under which Algorithms \ref{twostagedetalgo} and \ref{multistagealgo} attain these lower bounds are given in Corollary \ref{optimcor}.  Specific examples for univariate integration and function recovery are given in Theorems \ref{complowbdinteg} and \ref{complowbdappr}.
+
+\end{enumerate}
+
+\section{General Algorithms and Upper Bounds on the Complexity} \label{genthmsec}
+
+This section provides rather general theorems about the complexity of automatic algorithms.  In some sense, these theorems are a road map or an outline because their assumptions are non-trivial and require effort to verify for specific problems of interest.  On the other hand, the assumptions are reasonable as is demonstrated in the Sections \ref{integsec} and \ref{approxsec} where concrete cases are are discussed.  
+
+\subsection{Bounding the $\cg$-Semi-Norm} \label{Galgosec}
+
+As mentioned in Section \ref{conesubsec} automatic algorithms require reliable upper bounds on $\Gnorm{f}$ for all $f$ in the cone $\cc_{\tau}$. These can be obtained using any non-adaptive algorithm $G_n \in \ca_{\fix}(\cf,\reals_+,\Gnorm{\cdot},\Lambda)$ for approximating $\Gnorm{f}$ for $f \in \cf$, provided that one has explicit upper bounds on the errors of these algorithms as in \eqref{errpmdefworst}.  Here, $n=\cost(G_n)$. Namely, there should be non-negative valued, non-increasing functions $h_{\pm}$ defined on some subset of the non-negative numbers such that
+\begin{multline} \label{Gerrbds}
+\err_{\pm}(G_n,\cf,\reals_{+},\Gnorm{\cdot}) \\
+= \min\{\delta \ge 0 : \pm [\Gnorm{f}- G_n(f)] \le \delta \Fnorm{f} \ \forall f \in \cf \} \le h_{ \pm}(n).
+\end{multline}
+Noting that $\Fnorm{f} \le \tau \Gnorm{f}$ for all $f$ in the cone $\cc_{\tau}$ and rearranging the terms in the inequality defining the error for $G_n$ implies the lemma below. 
+
+\begin{lem} \label{Gnormlem} Any nonadaptive algorithm $G_n \in \ca_{\fix}(\cf,\reals_+,\Gnorm{\cdot},\Lambda)$ with cost $n=\cost(G_n)$ and two sided error bounds as in \eqref{Gerrbds} yields an approximation to the $\cg$-semi-norm of functions in the cone $\cc_{\tau}$ with the following upper and lower error bounds:
+\begin{equation} \label{twosidedGineq}
+\frac{G_n(f)}{\fc_n} \le \Gnorm{f} \le \fC_n G_n(f) \qquad \forall f \in \cc_{\tau},
+\end{equation}
+where the deflation factor, $1/\fc_n$, and the inflation factor, $\fC_n$ are defined as follows:
+\begin{gather} \label{normdeflate}
+\fc_n =1 + \tau h_{ -}(n)  \ge 1, \\
+\label{norminflate}
+\fC_n =\frac{1}{1 - \tau h_{ +}(n)} \ge 1, \qquad \text{assuming } h_{ +}(n) < 1/\tau.
+\end{gather}
+\end{lem}
+
+\subsection{Two-Stage Automatic Algorithms} \label{twostagesec}
+
+Computing an approximate solution to the problem $S: \cc_{\tau} \to \ch$, e.g., integration or function approximation, depends on non-adaptive algorithms. Suppose that there is a sequence of such of algorithms, $\{A_n\}_{n \in \ci}$, with $A_n  \in \ca_{\fix}(\cg,\ch,S,\Lambda)$, indexed by their cost as defined in \eqref{algseqdef}, and for which upper error bounds are known for both the spaces $\cg$ and $\cf$:
+\begin{equation}\label{algseqerrbd}
+\err(A_n,\cg,\ch,S) \le \tildeh(n), \qquad \err(A_n,\cf,\ch,S) \le h(n), 
+\end{equation}
+for some \emph{non-increasing} functions $\tildeh$ and $h$.  The definitions of these errors in \eqref{errdefworst} then implies upper bounds on the error of $A_n(f)$ in terms of the $\cg$-semi-norm of $f$:
+\begin{align} \nonumber
+\norm[\ch]{S(f) -  A_n(f)} &\le \min(\err(A_n,\cg,\ch,S)\Gnorm{f},\err(A_n,\cf,\ch,S)\Fnorm{f}) \\
+\label{Anerrbound}
+&\le \min(\tildeh(n),\tau h(n))\Gnorm{f} \qquad \forall f \in \cc_{\tau}.
+\end{align}
+
+\begin{algo} \label{twostagedetalgo} {\bf (Automatic, Adaptive, Two-Stage).} Let $\cf$, $\cg$, and $\ch$ be Banach spaces as described above, let $S$ be the solution operator, and let $N_{\max}$ be the maximum cost allowed.  Let $\tau$ be a fixed positive number, and let $G_{n_G} \in \ca_{\fix}(\cf,\reals_+,\Gnorm{\cdot},\Lambda)$ be an algorithm as described in Lemma \ref{Gnormlem} with cost $n_G$ satisfying $h_{+}(n_G) < 1/\tau$.
+Moreover, let  $\{A_n\}_{n \in \ci}$, $A_n  \in \ca_{\fix}(\cg,\ch,S,\Lambda)$, be a sequence of algorithms as described in \eqref{algseqdef} and \eqref{algseqerrbd}.  Given  a positive error tolerance, $\varepsilon$, and  an input function $f$, do the following:
+
+\begin{description} 
+
+\item[Stage 1.\ Estimate {$\Gnorm{f}$}.] First compute $G_{n_G}(f)$.  Define the inflation factor $\fC=\fC_{n_G}$ according to \eqref{norminflate}.
+Then $\fC G_{n_G}(f)$ provides a reliable upper bound on $\Gnorm{f}$.  
+
+\item [Stage 2.\ Estimate {$S(f)$}.] Choose the sample size need to approximate $S(f)$, namely, $n_A=N_{A}(\varepsilon/(\fC G_{n_G}(f)))$, where 
+\begin{equation} \label{Nmindef}
+N_{A}(a)= \min\left\{ n \in \ci : \min(\tildeh(n),\tau h(n)) \le a \right\}, \quad a \in (0,\infty).
+\end{equation}
+If $n_A \le N_{\max}-n_G$, then $S(f)$ may be approximated within the desired error tolerance and within the cost budget.  Set the warning flag, $W$, to false. 
+Otherwise, recompute $n_A$ to be within budget, $n_A = \tN_{\max} := \max\{n \in \ci : n\le N_{\max} -  n_G\}$, and set the warning flag, $W$ to true.  Finally, compute $A_{n_A}(f)$ as the approximation to $S(f)$.
+\end{description}
+
+Return the result $(A_{n_A}(f),W)$, at a total cost of $n_G+n_A$.  
+\end{algo}
+
+\begin{theorem}  \label{TwoStageDetermThm}  Let  $\cf$, $\cg$, $\ch$,  $\tau$, $N_{\max}$, $\tN_{\max}$, $\fC$, and $\varepsilon$ be given as described in Algorithm \ref{twostagedetalgo}, and assume that $\cf$ satisfies \eqref{Fspacecond}.  Let $\fc=\fc_{n_G}$ be defined as in \eqref{normdeflate}.
+Let $\cc_\tau$ be the cone of functions defined in \eqref{conedef} whose $\cf$-semi-norms are no larger than $\tau$ times their $\cg$-semi-norms.  Let
+\begin{align} 
+\nonumber
+\cn &= \left \{ f \in \cc_\tau : N_{A}\left(\frac{\varepsilon}{\fC \fc \Gnorm{f}} \right) \le \tN_{\max} \right\} \\
+\label{nicefdef}
+&= \left \{ f \in \cc_\tau : \Gnorm{f} \le \frac{\varepsilon}{\fC \fc \min(\tildeh(\tN_{\max}),\tau h(\tN_{\max}))} \right\}
+\end{align}
+be a subset of the cone $\cc_\tau$ that lies inside a $\cg$-semi-norm ball.  Since $\tN_{\max}$ is assumed to be very large, it follows that $\min(\tildeh(\tN_{\max}),\tau h(\tN_{\max}))$ is tiny, and the radius of the $\cg$-semi-norm ball defining $\cn$ is quite large. 
+
+Then it follows that Algorithm \ref{twostagedetalgo} is successful for all functions in this set of \emph{nice} functions $\cn$,  i.e.,  $\success(A,W,\cn,\varepsilon,N_{\max}) = \text{true}$.  Moreover, the cost of this algorithm is bounded above in terms of the unknown $\cg$-semi-norm of the input function as follows:
+\begin{equation} \label{auto2stagedetcost}
+\cost(A,\cn,\varepsilon,N_{\max},\Gnorm{f})
+\le n_G+ N_{A}\left(\frac{\varepsilon}{\fC \fc \Gnorm{f}} \right).
+\end{equation}
+
+Consider the limit of infinite cost budget, i.e., $N_{\max} \to \infty$.  If the sequence of algorithms $\{A_n\}_{n \in \ci}$, $A_n \in\ca_{\fix}(\cg,\ch,S,\Lambda)$  is optimal for the problems $(\cg,\ch,S,\Lambda)$ and $(\cf,\ch,S,\Lambda)$ as defined in \eqref{nearoptdef}, then Algorithm \ref{twostagedetalgo} does not incur a significant penalty for not knowing $\Gnorm{f}$ a priori, i.e.,
+\begin{equation} \label{penalty}
+\sup_{0 < \varepsilon/\sigma \le 1} \frac{\cost(A,\cc_{\tau},\varepsilon,\infty,\sigma)} {\comp(\varepsilon/\sigma,\ca_{\fix}(\cj,\ch,S,\Lambda))} <\infty, \qquad \cj \in \{\cf,\cg\}.
+\end{equation}
+\end{theorem}
+
+\begin{proof} The definition of $\fC$ in \eqref{norminflate} implies that the true $\cg$-semi-norm of $f$ is bounded above by $\fC G_{n_G}(f)$ according to Lemma \ref{Gnormlem}.  The upper bound on the error of the sequence of algorithms $\{A_n\}_{n \in \ci}$ in \eqref{Anerrbound} then implies that 
+\[
+\norm[\ch]{S(f) -  A_n(f)} \le \min(\tildeh(n),\tau h(n)) \fC G_{n_G}(f) \qquad \forall f \in \cc_{\tau}.
+\]
+This error upper bound may be made no greater than the error tolerance, $\varepsilon$, by choosing the algorithm cost, $n$, to satisfy the condition in Stage 2 of Algorithm \ref{twostagedetalgo}, provided that this can be done within the maximum cost budget.  In this case, the algorithm is successful, as claimed in the theorem.
+
+To ensure that the algorithm does not attempt to overrun the cost budget, one must limit the $\cg$-semi-norm of the input function.  The definition of  $\fc$ in \eqref{normdeflate} implies that $G_{n_G}(f) \le \fc\Gnorm{f}$ according to Lemma \ref{Gnormlem}. This means that for any function, $f$, with actual $\cg$-semi-norm $\Gnorm{f}$, the upper bound on its $\cg$-semi-norm computed via Lemma \ref{Gnormlem} is no greater than $\fC \fc \Gnorm{f}$.  Thus, after using $N_G$ samples to estimate $\Gnorm{f}$, functions in $\cn$ as defined in \eqref{nicefdef} never need more than $N_{\max} - n_G$ additional samples to estimate $S(f)$ with the desired accuracy.  This establishes that Algorithm \ref{twostagedetalgo} must be successful for all $f \in \cn$, and also establishes an upper bound on the computational cost as given in \eqref{auto2stagedetcost}.
+
+Now consider the penalty for not knowing $\Gnorm{f}$ a priori.  If the sequence of nonadaptive algorithms, $\{A_n\}_{n \in \ci}$, used to construct Algorithm \ref{twostagedetalgo} are optimal for solving the problem on both $\cf$ and $\cg$, as defined in \eqref{nearoptdef}, then it follows that for $\cj \in \{\cf,\cg\}$,
+\begin{multline*}
+\sup_{0 < \varepsilon/\sigma \le 1} \frac{\cost(A,\cn,\varepsilon,\infty,\sigma)} {\comp(\varepsilon/\sigma,\ca_{\fix}(\cj,\ch,S,\Lambda))} \\
+= \sup_{0 < \varepsilon/\sigma \le 1} \frac{\cost(A,\cn,\varepsilon,\infty,\sigma)}{\min\{n \in \ci : \err(A_n,\cj,\ch,S) \le \varepsilon/\sigma\}} \\
+ \times \sup_{0 < \varepsilon/\sigma \le 1} \frac{\min\{n \in \ci : \err(A_n,\cj,\ch,S) \le \varepsilon/\sigma\}} {\comp(\varepsilon/\sigma,\ca_{\fix}(\cj,\ch,S,\Lambda))}
+\end{multline*} 
+The first of these suprema is finite by comparing the convergence rates of the sequence algorithms, $\{A_n\}_{n \in \ci}$, in \eqref{algseqerrbd} with the cost of the automatic algorithm given by \eqref{auto2stagedetcost}. The second of these suprema is finite by the optimality of $\{A_n\}_{n \in \ci}$.  
+\end{proof}
+
+There are a several remarks that may facilitate understanding of this result.
+
+\begin{rem} Three main conditions must be checked for this theorem to hold.
+\begin{enumerate}
+\renewcommand{\labelenumi}{\roman{enumi}.}
+\item There must be an algorithm, $G_n$, as described in Section \ref{Galgosec} that approximates the weaker semi-norm,  $\Gnorm{\cdot}$, and its error bound, $h_{\pm}$, as defined in \eqref{Gerrbds} must be known explicitly.
+\item There must be a  sequence of nonadaptive algorithms, $\{A_n\}_{n \in \ci}$, as described at the beginning of  Section \ref{twostagesec}, and the error functions $\tildeh$ and $h$, defined in \eqref{algseqerrbd} must be known explicitly.  
+\item Condition \eqref{nearoptdef} defining the optimality of $\{A_n\}_{n \in \ci}$ must be satisfied to ensure that there is no significant penalty for not having an a priori upper bound on $\Gnorm{f}$.
+\end{enumerate}
+Sections \ref{integsec} and \ref{approxsec} provide concrete examples where these conditions are checked.
+\end{rem}
+
+\begin{rem} If $\tildeh$ is unknown, then one may take $\tildeh(n)=\infty$, and the algorithm still satisfies the error tolerance with a cost upper bound given in \eqref{auto2stagedetcost}.  The optimality result in \eqref{penalty} then only holds for $\cf$, and not $\cg$.  The analogy holds if $h$ is unknown.  However, at least one of these two functions $\tildeh$ or $h$, must be known for this theorem to be meaningful.
+\end{rem}
+
+\begin{rem} The cost of Algorithm \ref{twostagedetalgo}, as given by \eqref{auto2stagedetcost}, depends on the $\cg$-semi-norm of the input function, $f$.  However, $\Gnorm{f}$ is not an input parameter for the algorithm, but rather is  conservatively estimated by the algorithm.  The number of samples used to obtain the approximation to $S(f)$ is adjusted accordingly based on the estimate of $\Gnorm{f}$.
+\end{rem}
+
+\begin{rem}
+The definition of the set of algorithms for which the Algorithm \ref{twostagedetalgo} is guaranteed to work, $\cn$, depends somewhat on $\Gnorm{f}$, but only because of the practical constraint of a cost budget of $N_{\max}$.  This dependence disappears if one lifts this constraint by taking $N_{\max} \to \infty$.  The primary constraint determining the success of the algorithm is that $f$ lies in the cone $\cc_{\tau}$.
+\end{rem}
+
+\begin{rem} Instead of choosing $\tau$ as an input parameter for Algorithm \ref{twostagedetalgo}, one may alternatively choose the inflation factor $\fC >1$.  This then implies that 
+\begin{equation} \label{taufromnC}
+\tau = \left(1 - \frac{1}{\fC}\right)\frac{1}{h_{+}(n_G)},
+\end{equation}
+which is equivalent to \eqref{norminflate}.
+\end{rem}
+
+\begin{rem} It is observed in the examples of Sections \ref{integsec} and \ref{approxsec} that for the sequence of algorithms $\{A_n\}_{n \in \ci}$
+\begin{equation} \label{hbest}
+\tau h(n) \le \tildeh(n) \quad \forall n \in \ci.
+\end{equation}
+or equivalently, $\min(\tildeh(n),\tau h(n))=\tau h(n)$.  This then simplifies Algorithm \ref{twostagedetalgo} in the computation of the sample size for $A$ in \eqref{Nmindef} and also in Theorem \ref{TwoStageDetermThm} in the definition of $\cn$ in \eqref{nicefdef} and the upper bound on the cost in \eqref{auto2stagedetcost}. 
+
+A sufficient condition for \eqref{hbest} is
+\begin{equation} \label{hbestverb}
+h(n) \le \tildeh(n) h_{+}(n) \quad \forall n \in \ci,
+\end{equation}
+since the Algorithms \ref{twostagedetalgo} and \ref{multistagealgo} both require that $h_{+}(n) < 1/\tau$, and since $h$ is a non-increasing function.   Another 
+sufficient condition for \eqref{hbest} is finding some sequence of functions $\{f^*_n \in \cf\}_{n \in \ci}$ with non-zero $\cf$- and $\cg$-semi-norms such that 
+\begin{equation} \label{hbestverc}
+h(n) \le \frac{\norm[\ch]{S(f^*_n)-A_n(f_n^*)}}{\Gnorm{f_n^*}} \frac{\Gnorm{f^*_n}-G_n(f^*_n)}{\Fnorm{f^*_n}}   \quad \forall n \in \ci,
+\end{equation}
+since the right hand side above is no greater than the right hand side in \eqref{hbestverb}. An advantage of \eqref{hbestverc} is that it does not require $\tildeh$ to be known explicitly. Finally, suppose that one can construct a sequence of functions $\{f^*_n \in \cf\}_{n \in \ci}$ \emph{with all vanishing data} for both the algorithms $A_n$ and $G_n$ that attains the upper bound on the error of $A_n$ with respect to the $\cf$-semi-norm, i.e.,
+\begin{equation} \label{hbestverd}
+h(n) = \frac{\norm[\ch]{S(f^*_n)}}{\Fnorm{f^*_n}}   \quad \forall n \in \ci.
+\end{equation}
+Then this sequence automatically satisfies \eqref{hbestverc}, which then implies \eqref{hbest}.
+\end{rem}
+
+
+\subsection{Automatic Algorithms Based on Embedded Algorithms $\{A_n\}_{n \in \ci}$}
+
+Suppose that the sequence of nonadaptive algorithms, 
+\[
+\{A_n\}_{n \in \ci} = \{A_{n_1}, A_{n_2}, \ldots \}, 
+\]
+are \emph{embedded}, i.e., $A_{n_{i+1}}$ uses all of the data used by $A_{n_{i}}$ for $i=1, 2, \ldots$.  An example would be a sequence of composite trapezoidal rules for integration where the number of trapezoids is a power of two. Furthermore, it is supposed that the data used by $G_{n_G}$, the algorithm used to estimate the $\cg$-semi-norm of $f$, is the same data used by $A_{n_1}$, and so $n_1=n_G$.  Then the total cost of Algorithm \ref{twostagedetalgo} can be reduced; it is simply $n_A$, as given in Stage 2, instead of $n_G+n_A$.  Moreover, $\tN_{\max}$ may then be taken to be $N_{\max}$, and the cost bound of the automatic algorithm in \eqref{auto2stagedetcost} does not need the term $n_G$.
+
+Again suppose that $\{A_n\}_{n \in \ci}$, $A_n  \in \ca_{\fix}(\cg,\ch,S,\Lambda)$, consists of algorithms as described in  \eqref{algseqdef} and \eqref{algseqerrbd}, but some of which are embedded in others.  An example would be all possible composite trapezoidal rules for integration that use trapezoids of equal widths.   Moreover, suppose that there exists some fixed $r > 1$ such that for all $n \in \ci$, there exists a $\tn \in \ci$ with $n < \tn \le rn$, such that the data for $A_n$ is embedded in the data for $A_{\tn}$. One may think of $r$ as the minimum cost multiple that one must incur when moving to the next more costly algorithm. For trapezoidal rules, where the cost is the number of trapezoids plus one, one may take $\tn-1=2(n-1)$, so one may choose $r=2$.
+
+Suppose also that there exists a sequence of algorithms for approximating the $\cg$-semi-norm, $\{G_n\}_{n \in \ci}$, $G_n  \in \ca_{\fix}(\cg,\reals_+,\Gnorm{\cdot},\Lambda)$, such that for each $n \in \ci$, $A_n$ and $G_n$ use exactly the same data.
+Since $h_{\pm}$ are non-increasing functions, the quantities $\fC_{n}$ and $\fc_n$ do not increase as $n$ increases. These embedded algorithms suggest the following iterative algorithm.
+
+\begin{algo} \label{multistagealgo}  Let the Banach spaces $\cf$, $\cg$, and $\ch$, the solution operator $S$, the maximum cost budget $N_{\max}$, and the positive constant $\tau$ be as described in Algorithm \ref{twostagedetalgo}. Let the sequences of algorithms, $\{A_n\}_{n \in \ci}$ and  $\{G_n\}_{n \in \ci}$ be as described above.  Set $i=1$, and $n_1 = \min\{ n \in \ci : h_+(n) < 1/\tau\}$. For any positive error tolerance $\varepsilon$ and any input function $f$, do the following:
+\begin{description}
+
+\item [Stage 1. Estimate $\| f \| _{\cg}$.] Compute $G_{n_i}(f)$ and $\fC_{n_i} \le \infty$ as defined in \eqref{norminflate}.  
+
+\item [Stage 2. Check for Convergence.] Check whether $n_i$ is large enough to satisfy the error tolerance, i.e., 
+\begin{equation} \label{multistageconv}
+\min(\tildeh(n_i),\tau h(n_i))\fC_{n_i} G_{n_i}(f) \le \varepsilon.
+\end{equation}
+If this is true, then set $W$ to be false, return $(A_{n_i}(f),W)$ and terminate the algorithm.
+
+\item[Stage 3. Compute $n_{i+1}$.]  Otherwise, if \eqref{multistageconv} fails to hold, compute $\fc_{n_i}$ according to \eqref{normdeflate} using $G_{n_i}$. Choose $n_{i+1}$ as the smallest number exceeding $n_i$ and not less than $N_{A}(\varepsilon \fc_{n_i}/G_{n_i}(f))$ such that $A_{n_{i}}$ is embedded in $A_{n_{i+1}}$. If $n_{i+1} \le N_{\max}$, increment $i$ by $1$, and return to Stage 1.  
+
+Otherwise, if $n_{i+1} > N_{\max}$, choose $n_{i+1}$ to be the largest number not exceeding $N_{\max}$ such that $A_{n_{i}}$ is embedded in $A_{n_{i+1}}$, and set $W$ to be true. Return $(A_{n_{i+1}}(f),W)$ and terminate the algorithm.
+\end{description}  
+\end{algo}
+
+This iterative algorithm is guaranteed to converge also, and its cost can be bounded.  The following theorem is analogous to Theorem \ref{TwoStageDetermThm}.
+
+\begin{theorem}  \label{MultiStageThm}  Let  $\cf$, $\cg$, $\ch$, $N_{\max}$, $\tau$, $n_1$, and $\varepsilon$ be given as described in Algorithm \ref{multistagealgo}. Assume that $n_1 \le N_{\max}$. Let $r$ be the minimum cost multiple described in the paragraphs preceding that Algorithm \ref{MultiStageThm} .  Define 
+\begin{equation} \label{tNmindef}
+\tN_A(a) = \min\left\{ n \in \ci : \min(\tildeh(n),\tau h(n))\fC_n\fc_n \le a \right\}, \quad a \in (0,\infty).
+\end{equation}
+Let $\cc_\tau$ be the cone of functions defined in \eqref{conedef} whose $\cf$-semi-norms are no larger than $\tau$ times their $\cg$-semi-norms.  Let
+\begin{align} 
+\nonumber
+\cn &= \left \{ f \in \cc_\tau :r\tN_{A}\left(\frac{\varepsilon}{\Gnorm{f}} \right) \le N_{\max} \right\} \\
+\label{nicefdefmulti}
+&= \left \{ f \in \cc_\tau : \Gnorm{f} \le \frac{\varepsilon}{\fC_{N_{\max}/r} \fc_{N_{\max}/r} \min(\tildeh(N_{\max}/r),\tau h(N_{\max}/r))} \right\}
+\end{align}
+be the nice subset of the cone $\cc_\tau$.  Then it follows that Algorithm \ref{multistagealgo} is successful for all functions in $\cn$,  i.e.,  $\success(A,W,\cn,\varepsilon,N_{\max}) = \text{true}$.  Moreover, the cost of this algorithm is bounded above in terms of the $\cg$-semi-norm of the input function as follows:
+\begin{equation} \label{automultistagedetcost}
+\cost(A,\cn,\varepsilon,N_{\max},\Gnorm{f})
+\le \max \left(n_1, r\tN_{A}\left(\frac{\varepsilon}{\Gnorm{f}} \right) \right).
+\end{equation}
+
+Consider the limit of infinite cost budget, i.e., $N_{\max} \to \infty$.  If the sequence of algorithms $\{A_n\}_{n \in \ci}$, $A_n \in\ca_{\fix}(\cg,\ch,S,\Lambda)$  is optimal for the problems $(\cg,\ch,S,\Lambda)$ and $(\cf,\ch,S,\Lambda)$ as defined in \eqref{nearoptdef}, then Algorithm \ref{multistagealgo} does not incur a significant penalty for not knowing $\Gnorm{f}$ a priori, i.e.,
+\begin{equation*} \label{multistagepenalty}
+\sup_{0 < \varepsilon/\sigma \le 1} \frac{\cost(A,\cc_{\tau},\varepsilon,\infty,\sigma)} {\comp(\varepsilon/\sigma,\ca_{\fix}(\cj,\ch,S,\Lambda))} <\infty, \qquad \cj \in \{\cf,\cg\}.
+\end{equation*}
+\end{theorem}
+
+\begin{proof} Let $n_1, \ldots, n_{j}$ be the sequence of $n_i$ generated by Algorithm \ref{multistagealgo}, $j$ being the number of the iterate where the algorithm either 
+\begin{enumerate}
+\renewcommand{\labelenumi}{\roman{enumi})}
+\item terminates successfully because the convergence criterion, \eqref{multistageconv}, is satisfied for $i=j$, or 
+
+\item terminates with a warning because \eqref{multistageconv} is not satisfied for $i=j$, but the the proposed $n_{j+1}$ exceeds the cost budget, $N_{\max}$. 
+
+\end{enumerate}
+Here $j$ may be any positive integer.  The design of Algorithm \ref{multistagealgo} guarantees that $n_1 < \cdots < n_j$.  It is shown that under the hypotheses of this theorem, that under condition i), the error tolerance is met and that the cost of the algorithm satisfies upper bound \eqref{automultistagedetcost}. It is also shown that condition ii), an unsuccessful termination of the algorithm, in particular, $f \in \cn$, is impossible.  
+
+First, consider possibility i) and recall inequality \eqref{twosidedGineq}.
+Since \eqref{multistageconv} is satisfied, it follows that $\norm[\ch]{S(f)-A_{n_j}(f)} \le \varepsilon$ by the same argument as given in the proof of Theorem \ref{TwoStageDetermThm}.  In this case the algorithm terminates without warning and the approximate value is within the required tolerance.
+
+If $j=1$, then the cost of the algorithm is $n_1$.  If $j>1$, then the convergence criterion was not satisfied for $i=j-1$. Thus, it follows that $n_{j-1} < \tN_A(\varepsilon/\Gnorm{f})$, since $\tildeh(n), h(n), \fC_n$, and $\fc_n$ all do not decrease as $n$ increases. 
+If $n_{j-1} \ge N_{A}(\varepsilon \fc_{n_{j-1}}/G_{n_{j-1}}(f))$, then Stage 3 chooses $n_{j}$ to be the smallest element of $\ci$ that exceeds $n_{j-1}$ and for which $A_{n_{j-1}}$ is embedded in $A_{n_j}$.  By the definition of $r$ it follows that
+\begin{equation*}
+n_{j} \le r  n_{j-1} < r \tN_{A}(\varepsilon/\Gnorm{f}),
+\end{equation*}
+and the upper bound on the cost in \eqref{automultistagedetcost} is satisfied.
+If, on the other hand, $n_{j-1} < N_{A}(\varepsilon \fc_{n_{j-1}}/G_{n_{j-1}}(f))$, then Stage 3 chooses $n_{j}$ to be the smallest element of $\ci$ that is no less than $N_{A}(\varepsilon \fc_{n_{j-1}}/G_{n_{j-1}}(f))$ and for which $A_{n_{j-1}}$ is embedded in $A_{n_j}$.  By the definition of $r$, \eqref{twosidedGineq}, and the definition of $\tN_A$, it follows that
+\begin{equation*}
+n_{j} < r  N_{A}(\varepsilon \fc_{n_{j-1}}/G_{n_{j-1}}(f)) \le r  N_{A}(\varepsilon/\Gnorm{f}) \le r \tN_{A}(\varepsilon/\Gnorm{f}).
+\end{equation*}
+Again, the cost of the algorithm is bounded as in \eqref{automultistagedetcost}.
+
+Second, consider possibility ii), meaning that the convergence criterion, \eqref{multistageconv}, is not satisfied for $i=j$.  Then Stage 3 tries to choose $n_{j+1}$ to satisfy this criterion.  Using similar arguments as in the previous paragraph, it follows that $n_j < \tN_A(\varepsilon/\Gnorm{f})$. 
+If $n_j \ge N_{A}(\varepsilon \fc_{n_j}/G_{n_j}(f))$, then the proposed $n_{j+1}$ satisfies
+\begin{equation*}
+n_{j+1} \le r  n_j < r \tN_{A}(\varepsilon/\Gnorm{f}).
+\end{equation*}
+If, on the other hand, $n_j < N_{A}(\varepsilon \fc_{n_j}/G_{n_j}(f))$, then the proposed $n_{j+1}$ satisfies
+\begin{equation*}
+n_{j+1} < r  N_{A}(\varepsilon \fc_{n_j}/G_{n_j}(f)) \le r  N_{A}(\varepsilon/\Gnorm{f}) \le r \tN_{A}(\varepsilon/\Gnorm{f}).
+\end{equation*}
+In both cases, the $n_{j+1}$ proposed by the algorithm satisfies $n_{j+1} < r \tN_{A}(\varepsilon/\Gnorm{f})$, which does not exceed the cost budget by the  by the definition of $\cn$.  Thus, possibility ii) cannot happen.
+
+The proof of the optimality of the multistage algorithm follows the same line of argument used to prove the optimality of the two-stage algorithm in Theorem \ref{TwoStageDetermThm}.  This completes the proof.
+\end{proof}
+
+\section{Lower Complexity Bounds for the Algorithms} \label{LowBoundSec}
+Lower complexity bounds are typically proved by constructing fooling functions.  First, a lower bound is derived for the complexity of problems defined on $\cf$- and $\cg$-semi-norm balls of input functions.  This technique is generally known, see for example \cite[p.\ 11--12]{TraWer98}.  Then it is shown how to extend this idea for the cone $\cc_{\tau}$.  
+
+Consider the Banach spaces $\cf$, $\cg$, $\ch$, and the \emph{linear} solution operator $S: \cg \to \ch$.  Let $\Lambda$ be the set of bounded linear functionals that can be used as data. Suppose that for any $n\ge 1$, and for all $\vL \in \Lambda^m$, satisfying $\$(\vL)\le n$, there exists an $f_1 \in \cf$, depending on $n$ and the $L_i$, with zero data, solution norm one, and $\cf$ and $\cg$ semi-norms with known upper bounds, namely,
+\begin{equation} \label{assumpfone}
+\norm[\ch]{S(f_1)} = 1, \quad \vL(f_1)= \vzero, \quad
+\Gnorm{f_1} \le \tg(n), \quad \Fnorm{f_1} \le g(n) \Gnorm{f_1}, 
+\end{equation}
+for some positive, unbounded, non-decreasing functions $\tg$ and $g$ defined on $[1,\infty)$.  For example, one might have $\tg(n)=a n ^p$ and $g(n)=b n^q$ with positive $a, b, p$, and $q$.  Since the data for the function $f_1$ are all zero, it follows that $A(f_1)=A(-f_1)$ for any algorithm, $A$, adaptive or not, that is based on the information $\vL(f_1)$.  Then, by the triangle inequality and \eqref{assumpfone} the error for one of the fooling functions $\pm f_1$ must be at least one:
+\begin{align*}
+\MoveEqLeft{\max(\norm[\ch]{S(f_1)-A(f_1)},\norm[\ch]{S(-f_1)-A(-f_1)})} \\
+& = \max(\norm[\ch]{S(f_1)-A(f_1)},\norm[\ch]{-S(f_1)-A(f_1)})\\
+& \ge \frac{1}{2} \left[ \norm[\ch]{S(f_1)-A(f_1)}+ \norm[\ch]{S(f_1)+A(f_1)} \right] \\
+& \ge \frac{1}{2} \norm[\ch]{[S(f_1)-A(f_1)]+[S(f_1)+A(f_1)]} = \norm[\ch]{S(f_1)}=1.
+\end{align*}
+Furthermore, applying \eqref{assumpfone}, for $\cj \in \{\cf,\cg\}$, it follows that any nonadaptive algorithm satisfying the error tolerance $\varepsilon$ must have a cost $n$ satisfying the following inequality:
+\begin{align*}
+\varepsilon & \ge \sup_{f \ne 0} \frac{\norm[\ch]{S(f)-A(f)}}{\norm[\cj]{f}} \\
+& \ge \frac{\max(\norm[\ch]{S(f_1)-A(f_1)},\norm[\ch]{S(-f_1)-A(-f_1)})}{\norm[\cj]{f_1}} \\
+& \ge \frac{1}{\norm[\cj]{f_1}} 
+\ge \begin{cases} \displaystyle \frac{1}{\tg(n)}, & \cj=\cg,\\[2ex]
+ \displaystyle  \frac{1}{g(n)\tg(n)}, & \cj=\cf.
+\end{cases}
+\end{align*}
+This implies lower bounds on the complexity of nonadaptive algorithms, as defined in \eqref{fixcostcomplex}:
+\[
+\comp(\varepsilon,\ca_{\fix}(\cj,\ch,S,\Lambda)) \ge
+\begin{cases} \tg^{-1}(\varepsilon^{-1}), & \cj=\cg,\\
+(g \tg)^{-1}(\varepsilon^{-1}), & \cj=\cf,
+\end{cases}
+\]
+where $\tg^{-1}$ and $(g\tg)^{-1}$ denote the inverse functions of $\tg$ and $g\tg$, respectively:
+\[
+\tg^{-1}(x) = \inf\{ n \ge 1 :  \tg(n) \ge x \}, \qquad
+(g\tg)^{-1}(x) = \inf\{ n \ge 1 :  g(n)\tg(n) \ge x \}.
+\]
+Thus, the cost of solving the problem within error tolerance $\varepsilon$ for input functions in a $\cg$-semi-norm ball of radius $\sigma$ is at least $\tg^{-1}(\sigma\varepsilon^{-1})$ and for input functions in a $\cf$-semi-norm ball of radius $\sigma$ is at least $(g\tg)^{-1}(\sigma\varepsilon^{-1})$.  This leads to a simple check on whether a sequence of non-adaptive algorithms is optimal.
+
+\begin{prop} \label{optimalprop} Suppose that there exist non-adaptive algorithms $\{A_n\}_{n \in \ci}$, with $A_n  \in \ca_{\fix}(\cg,\ch,S,\Lambda)$, for which the upper error bounds satisfy \eqref{algseqerrbd}, for known $\tildeh$ and $h$.  If 
+\begin{subequations} \label{ghcond}
+\begin{equation}
+\sup_{m\ge 1} \inf\{j : jm \in \ci, \ \tg(m)\tildeh(jm) \le 1 \}  < \infty,
+\end{equation}
+then these algorithms are optimal in the sense of \eqref{nearoptdef} for the problem defined on $\cg$. If
+\begin{equation}
+\sup_{m\ge 1} \inf\{j : jm \in \ci, \ g(m)\tg(m)h(jm) \le 1 \}  < \infty,
+\end{equation}
+\end{subequations}
+then these algorithms are optimal for the problem defined on $\cf$.
+\end{prop}
+
+\begin{proof}  For the case of input functions defined on $\cg$ it follows that 
+\begin{align*}
+\MoveEqLeft{\sup_{0 < \varepsilon \le 1} \frac{\min\{n \in \ci : \err(A_n,\cg,\ch,S) \le \varepsilon\}}{\comp(\varepsilon,\ca_{\fix}(\cg,\ch,S,\Lambda))}} \\
+& \le \sup_{0 < \varepsilon \le 1} \frac{\min\{n \in \ci : \tildeh(n) \le \varepsilon\}} {\tg^{-1}(\varepsilon^{-1})} \\
+& \le \sup_{m \ge 1} \frac{\min\{n \in \ci : \tg(m) \tildeh(n) \le 1 \}} {m} \qquad (\varepsilon=\tg(m))\\
+& \le \sup_{m \ge 1} \frac{m \inf\{j : jm \in \ci, \ \tg(m)\tildeh(jm) \le 1 \} } {m} <\infty.
+\end{align*}
+The proof for $\cf$ follows similarly.
+\end{proof}
+
+Turning to the problem of solving functions in the cone $\cc_{\tau}$, the lower bound on the complexity becomes a bit more difficult to derive.  Note that condition \eqref{assumpfone} allows the fooling function $f_1$ to lie \emph{outside} this cone for $g(n) > \tau$.  Thus, when considering the cone of input functions, the fooling function must be constructed as a linear combination of $f_1$ and a function lying in the interior of the cone.
+
+Suppose that there exists a function $f_0$ with non-zero $\cg$-semi-norm lying in the interior of the cone $\cc_{\tau}$, i.e.,
+\begin{equation}
+\label{assumpfzero}
+\Gnorm{f_{0}} > 0, \qquad \Fnorm{f_{0}} \le \tau_0 \Gnorm{f_{0}}, \qquad \tau_0 < \tau.
+\end{equation}
+Furthermore, suppose that for each $n \ge 1$, and for all $\vL \in \Lambda^m$, satisfying $\$(\vL)\le n$, there exists $f_1$ as described above in \eqref{assumpfone}. Linear combinations of $f_0$ and $f_1$ may be used to derive the following lower bound on the complexity of solving the problem $S$ for functions in the cone $\cc_{\tau}$.
+
+\begin{theorem} \label{complowbd} Suppose that functions $f_{0}$ and $f_1$ can be found that satisfy conditions \eqref{assumpfone} and \eqref{assumpfzero}.  It then follows that the complexity of the problem, defined by \eqref{complexdef}, assuming infinite cost budget, over the cone of functions $\cc_{\tau}$ is
+\begin{multline*}
+\comp(\varepsilon,\ca(\cc_{\tau},\ch,S,\Lambda),\infty,\sigma) \\
+\ge \min\left(\tg^{-1}\left(\frac{\sigma(\tau-\tau_0)}{2(2\tau-\tau_0)\varepsilon}\right), (g\tg)^{-1}\left(\frac{\sigma\tau(\tau-\tau_0)}{2(2\tau-\tau_0)\varepsilon}\right) \right).
+\end{multline*}
+\end{theorem}
+
+\begin{proof} Let $A$ be a successful, possibly adaptive, algorithm for all functions lying in the cone $\cc_{\tau}$.  Given an error tolerance, $\varepsilon$, and a positive $\sigma$, let $f_0$ be a function satisfying \eqref{assumpfzero} and choose 
+\begin{subequations}\label{c0c1bumpdef}
+\begin{equation} 
+\label{c0bumpdef}
+c_0 = \frac{\sigma\tau}{\Gnorm{f_0} (2\tau - \tau_0)} > 0.
+\end{equation} 
+Provide the algorithm $A$ with the input function $c_0f_0$, and let $\vL(c_0f_0)$ be the data vector extracted by $A$ to obtain the estimate $A(c_0f_0)$. Let $n=\$(\vL)$ denote the cost of this algorithm for the function $c_0f_0$, and define two fooling functions, $f_{\pm}=c_0f_{0} \pm c_1 f_1$, in terms of $f_1$ satisfying conditions \eqref{assumpfone} with $c_1$ satisfying
+\begin{equation} 
+\label{c1bumpdef}
+c_1= \frac{(\tau-\tau_0)c_0\Gnorm{f_0}}{\Gnorm{f_1} [g(n) + \tau]} = \frac{\sigma \tau (\tau-\tau_0)}{\Gnorm{f_1}(2\tau - \tau_0) [g(n) + \tau]} > 0.
+\end{equation}
+\end{subequations}
+These fooling functions must lie inside the cone $\cc_{\tau}$ because
+\begin{align*}
+\Fnorm{f_{\pm}} - \tau  \Gnorm{f_{\pm}} & \le  c_{0}\Fnorm{f_0} + c_1 \Fnorm{f_1} - \tau (c_{0}\Gnorm{f_0} - c_1 \Gnorm{f_1}) \\
+&\qquad \qquad \qquad \qquad \qquad \qquad \text{by the triangle inequality} \\
+& \le c_1 [g(n)+\tau] \Gnorm{f_1} - (\tau - \tau_0) c_{0} \Gnorm{f_0} \qquad \text{by \eqref{assumpfone}, \eqref{assumpfzero}} \\
+& = 0 \qquad \qquad \text{by \eqref{c0c1bumpdef}}.
+\end{align*}
+Moreover, both fooling functions have $\cg$-semi-norms no greater than $\sigma$, since
+\begin{align*}
+\Gnorm{f_{\pm}} &\le c_{0} \Gnorm{f_0} + c_1 \Gnorm{f_1} \\
+& = \frac{\sigma \tau}{2\tau - \tau_0}\left[1 + \frac{\tau-\tau_0}{g(n) + \tau} \right] \qquad \text{by \eqref{c0c1bumpdef}}\\
+&\le \frac{\sigma\tau}{2\tau - \tau_0}\left[1 + \frac{\tau-\tau_0}{\tau} \right] = \sigma.
+\end{align*}
+
+Following the argument earlier in this section, it is noted that the data used by algorithm $A$ for both fooling functions is the same, i.e., $\vL(f_{\pm})=\vL(c_0f_0)$, and so $A(f_{\pm})=A(c_0f_0)$.  Consequently, by the same argument used above, 
+\[
+\varepsilon  \ge  \max(\norm[\ch]{S(f_+)-A(f_+)},\norm[\ch]{S(f_-)-A(f_-)}) \ge c_1 \norm[\ch]{S(f_1)}=c_1.
+\]
+Since $A$ is successful for these two fooling functions, $c_1$, as defined in \eqref{c0c1bumpdef}, must be no larger than the error tolerance, which implies by \eqref{assumpfone} that 
+\begin{align*}
+\frac{\sigma \tau(\tau-\tau_0)}{\varepsilon} & \le \frac{\sigma \tau(\tau-\tau_0)}{c_1}  = \Gnorm{f_1} (2\tau - \tau_0) [g(n) + \tau] \\
+&\le (2\tau - \tau_0) \tg(n) [g(n) + \tau] \\
+&\le 2 (2\tau - \tau_0) \tg(n)\max(g(n), \tau).
+\end{align*}
+Since $A$ is an arbitrary successful algorithm, this inequality provides a lower bound on the cost, $n$, that any such algorithm requires.  This then implies the lower bound on the complexity of the problem.   
+\end{proof}
+
+Comparing the lower bound on the computational complexity in Theorem \ref{complowbd} to the upper bounds on the cost of the adaptive algorithms in Theorems \ref{TwoStageDetermThm} and \ref{MultiStageThm}, one can see that these adaptive algorithms are optimal for solving the problem for a cone of input functions if their non-adaptive building blocks are also optimal for solving the problem for balls of input functions.
+
+\begin{cor} \label{optimcor}
+Suppose that the functions $g, \tg, h$, and $\tildeh$ satisfy the hypotheses of Proposition \ref{optimalprop}, i.e., conditions \eqref{ghcond}, which means that the non-adaptive algorithms are optimal for solving the problem on $\cf$- and $\cg$-balls of input functions.  It then follows that Algorithms \ref{twostagedetalgo} and \ref{multistagealgo} are both optimal for solving the  problem on the cone $\cc_{\tau}$.  
+\end{cor}
+
+\vspace{0.5cm}
+
+The next two sections illustrate the theorems of Section \ref{genthmsec} by looking at the problems of integration and approximation.  Each section identifies 
+
+\begin{itemize}
+
+\item the Banach spaces of input functions, $\cf$ and $\cg$, and their semi-norms, 
+
+\item the Banach space of outputs, $\ch$, and its norm,
+
+\item the solution operator, $S$,
+
+\item a set of non-adaptive algorithms, $\{A_n\}_{n \in \ci}$, which approximate $S$, are indexed by their cost, $n$, and have the property that some lower cost algorithms are embedded in higher cost algorithms,
+
+\item the minimum cost multiple, $r$, defined just before Algorithm \ref{multistagealgo},
+
+\item the upper bound error functions, $\tildeh$ and h, defined in \eqref{algseqerrbd}, 
+
+\item a set of non-adaptive algorithms, $\{G_n\}_{n \in \ci}$, which approximate $\Gnorm{\cdot}$, such that $G_n$ uses the same function data as $A_n$,
+
+\item the error bounds $h_{\pm}(n)$ and the deflation and inflation factors, $\fc_n$ and $\fC_n$, which are defined in \eqref{normdeflate} and \eqref{norminflate} respectively, and
+
+\item the fooling functions $f_0$ and $f_1$, along with the associated parameter $\tau_0$ and the functions $g$ and $\tg$, all of which satisfy \eqref{assumpfone} and \eqref{assumpfzero}.
+
+\end{itemize}
+This allows one to use Algorithms \ref{twostagedetalgo} and \ref{multistagealgo} with the guarantees provided by Theorems \ref{TwoStageDetermThm} and \ref{MultiStageThm}, the lower bound on complexity provided by Theorem \ref{complowbd}, and the optimality given by Corollary \ref{optimcor}.
+
+
+\section{Approximation of One-Dimensional Integrals} \label{integsec}
+
+\input{univariate_integration.tex}
+
+\section{$\cl_{\infty}$ Approximation of Univariate Functions} \label{approxsec}
+
+\input{ApproxUnivariate.tex}
+
+\section{Addressing Questions and Concerns About Automatic Algorithms} \label{overcomesec}
+
+Automatic algorithms are popular, especially for univariate integration problems.  As mentioned in the introduction, MATLAB \cite{TrefEtal12,MAT7.12} and the NAG \cite{NAG23} library all have one or more automatic integration routines.  In spite of this popularity certain questions, concerns, or even objections have been raised about automatic algorithms.  This section attempts to address them.
+
+
+\subsection{Automatic Algorithms Can Be Fooled}  
+
+In claiming to construct guaranteed automatic algorithms, it must be understood that the guarantees still require certain assumptions on the input functions.  Any algorithm that solves a problem for involving an infinite-dimensional space of input functions can be fooled by a spiky function, i.e., one that yields zero data where probed by the algorithm, but is nonzero elsewhere.  A guaranteed automatic algorithm specifies sufficient conditions for success, and functions that are too spiky violate these conditions.  Thus, the aim is not to have an algorithm that works for all functions, but to know for which functions it is guaranteed to work, and preferably to be able to adjust the algorithm to broaden or narrow that set depending on the relevant application and computational cost budget.
+
+\subsection{Why Cones?}
+
+Traditional error estimates are derived for balls of input functions, $\cb_{\sigma}$, as defined in \eqref{balldef} with radius $\sigma$.  The analysis here uses cones, $\cc_{\tau}$, of the form \eqref{conedef}, instead.  Automatic algorithms proceed by bounding, perhaps conservatively, the approximation error and then increasing the number of function data until that error bound is no larger than the prescribed tolerance.  These error bounds are constructed in such a way that if they are reliable for $f$, then they are also reliable for $cf$, where $c$ is any real number.  Thus, if an algorithm is successful for the input function $f$, then it is also successful for any input of the form $cf$.  By definition a cone is just that set that contains $cf$ for all numbers $c$ if it contains $f$.
+
+One might wonder whether the definition of $\cc_{\tau}$ in \eqref{conedef} is too strict.  Ignoring the cost budget, an alternative would be to define the cone of success, $\cc_{\text{success}}$, consisting of all input functions for which the automatic algorithm successfully approximates the solution within the error tolerance.  Clearly $\cc_{\text{success}}$ contains $\cc_{\tau}$, and likely $\cc_{\text{success}}$ also contains many functions not in $\cc_{\tau}$.  However, the definition of $\cc_{\text{success}}$ does not provide any insight into what kinds of input functions the automatic algorithm can successfully handle.  Moreover, the optimality results that one can often prove, including those in Sections \ref{integsec} and \ref{approxsec}, show that the cost of the automatic algorithm is within a constant multiple of the cost of the best algorithm for $\cc_{\tau}$.
+
+The automatic algorithms described here require that the width of the cone, $\tau$, be specified.  This requires the user's judgement, and its value cannot be determined from the function data.  The choice of $\tau$ reflects how cautious the user wants to be, since a larger $\tau$ leads to an adaptive algorithm with a higher cost. 
+
+The condition defining a ball $\cb_{\sigma}$ involves only one semi-norm, whereas the condition defining the cone $\cc_{\tau}$ involves two semi-norms.  One may wonder whether this makes specifying $\tau$ more difficult than choosing $\sigma$.  As mentioned in the introduction, automatic algorithms based on balls are not adaptive and have fixed cost. There is no savings in computational cost when the actual semi-norm of the input function is much smaller than the radius of the ball. For automatic algorithms designed for balls of input functions, as diagramed in Figure \ref{fig:NonadaptAlgo},  $\sigma$ is a measure of the largest input function that the algorithm is designed to handle.  This size is not necessarily something that is easy to bound a priori.  On the other hand, for automatic algorithms designed for cones of input functions, as diagramed in Figure \ref{fig:AdaptAlgo}, the parameter $\tau$ is a measure of the nastiest input function that the algorithm is designed to handle.  For the examples of univariate integration in Section \ref{integsec} and univariate function recovery in Section \ref{approxsec}, $\tau$ may be interpreted as a minimum sample size, and $1/\tau$ may be interpreted the length scale of the spikiest function that the algorithm can handle. These interpretations facilitate the choice of $\tau$. 
+
+\subsection{Automatic Algorithms that Stop When $A_{n_{i}}(f)-A_{n_{i-1}}(f)$ Is Small}
+
+Many automatic algorithms, especially those for univariate integration, are based on a sequence of non-adaptive algorithms $\{A_{n_i}\}_{i=1}^{\infty}$, and a stopping rule that returns $A_{n_{i}}(f)$ as the answer for the first $i$ where $A_{n_{i}}(f)-A_{n_{i-1}}(f)$ is small enough.  Fundamental texts in numerical algorithms advocate such stopping rules, e.g. \cite[p.\ 223--224]{BurFai10}, \cite[p.\ 233]{CheKin12a}, and \cite[p.\ 270]{Sau12a}.  Unfortunately, such stopping rules are problematic.
+
+For instance, consider the univariate integration problem and the trapezoidal rule algorithm, $A_{n_i}$, based on $n_i=2^i+1$ points, i.e., $n_i-1=2^i$ trapezoids.  It is taught that the trapezoidal rule has the following error estimate:
+\[
+\hE_i(f):=\frac{A_{n_{i}}(f)-A_{n_{i-1}}(f)}{3} \approx \int_0^1 f(x) \, \dif x - A_{n_i}(f) =:E_i(f).
+\]
+Since $A_{n_i}(f)+ \hE_i(f)$ is exactly Simpson's rule, the quality of $\hE_i(f)$ as an error estimate is equivalent to the quality of Simpson's rule. Since $E_i(f) -\hE_i(f) = \Theta(16^{-i} \norm[1]{f^{(4)}})$, the error estimate will often be good even for moderate $i$, but it can only be guaranteed with some a priori knowledge of $\norm[1]{f^{(4)}}$.
+
+In his provocatively titled SIAM Review article, \emph{When Not to Use an Automatic Quadrature Routine} \cite[p.\ 69]{Lyn83}, James Lyness makes the following claim.
+\begin{quote}
+While prepared to take the risk of being misled by chance alignment of zeros in the integrand function, or by narrow peaks which are ``missed,'' the user may wish to be reassured that for ``reasonable'' integrand functions which do not have these characteristics all will be well. It is the purpose of the rest of this section to demonstrate by example that he cannot be reassured on this point. In fact the routine is likely to be unreliable in a significant proportion of the problems it faces (say $1$ to $5\%$) and there is no way of predicting in a straightforward way in which of any set of apparently reasonable problems this will happen.
+\end{quote}
+
+The following is a summary of Lyness's argument using the notation of the present article. To fool an automatic algorithm one constructs an integrand $f_\lambda$, which is parameterized by $\lambda$, such that 
+\begin{itemize}
+\item $f_\lambda$ is ``reasonable'' for all $\lambda \in [0,1]$,
+\item $A_n(f_\lambda)$ is continuous in $\lambda$, and 
+\item for some moderate $n_i$, $A_{n_{i}}(f_\lambda)-A_{n_{i-1}}(f_\lambda)$ has different signs for $\lambda=0,1$.  
+\end{itemize}
+It then follows that $A_{n_{i}}(f_{\lambda_*})-A_{n_{i-1}}(f_{\lambda_*})=0$ for some $\lambda_* \in [0,1]$.  Then this algorithm will likely fail for integrands $f_{\lambda}$ with $\lambda$ nearby $\lambda_*$ since the stopping criterion is satisfied, but $n_i$ is not large enough to satisfy the desired error tolerance.
+
+Lyness's argument, with its pessimistic conclusion, is correct for algorithms that use the size of $A_{n_{i}}(f)-A_{n_{i-1}}(f)$ as a stopping criterion.  Figure \ref{fig:foolquad} depicts an integrand constructed in a manner similarly to that described by Lyness.  We would call this integrand ``fluky''.  MATLAB's {\tt quad}, which is based on adaptive Simpson's rule  \citep{GanGau00a}, gives the answer $\approx 0.1733$, for an absolute error tolerance of $\varepsilon=10^{-14}$, but the true answer is $\approx 0.1925$.  The {\tt quad} routine splits the interval of integration into three separate intervals and initially calculates Simpson's rule with one and two parabolas for each of the three intervals.  The data taken are denoted by $\bullet$ in Figure \ref{fig:foolquad}.  Since this fluky integrand is designed so that the two Simpson's rules match exactly for each of the three intervals, {\tt quad} is fooled into thinking that it knows the correct value of the integral and terminates immediately.
+
+\begin{figure}
+\centering 
+\includegraphics[width=8cm]{foolbwquadexample.eps}
+\caption{Integrand designed to fool MATLAB's {\tt quad} along with the data used by {\tt quad}. \label{fig:foolquad}}
+\end{figure}
+
+While Lyness's argument is correct, it does not apply to the algorithms proposed in this article because their stopping criteria are not based on  $A_{n_{i}}(f)-A_{n_{i-1}}(f)$.  Algorithm \ref{multistageintegalgo} presented in Section \ref{integsec}, always succeeds for ``reasonable'' integrands because such integrands lie in the cone $\cc_{\tau}$.  The analogous statement is true for function approximation Algorithm \ref{multistageapproalgo}, as well as for the general Algorithms \ref{twostagedetalgo} and \ref{multistagealgo}.  All of these algorithms succeed for reasonable input functions.  
+
+Lyness's warning in \cite{Lyn83} should not be interpreted as an objection to automatic algorithms.  It is a valid objection to stopping criteria that are based on the value of a single functional, in this case, $A_{n_{i}}-A_{n_{i-1}}$.  What Lyness clearly demonstrates is that one may easily make a functional vanish even though the error of the algorithm is significant.
+
+\subsection{No Advantage in Adaption}
+
+Although there are some positive results on adaption in \cite{Nov96a,PlaWas05a,PlaEtal08a}, there are also sweeping, rigorous results from information based complexity theory stating that adaptive algorithms have no significant advantage over non-adaptive algorithms (e.g., see \citep[Chapter 4, Theorem 5.2.1]{TraWasWoz88} and \cite{Nov96a}). The automatic algorithms presented here do adaptively determine the total number of samples required based on the function data collected.  The reason that adaption can help in this context is that the cone of input functions, $\cc_{\tau}$, is not a convex set.  This violates one of the assumptions required to prove the negative results that adaption does not help.
+
+To see why $\cc_{\tau}$ is not convex, let $f_{\text{in}}$ and $f_{\text{out}}$ be functions in $\cf$ with nonzero $\cg$-semi-norms, where $f_{\text{in}}$  lies in the interior of this cone, and $f_{\text{out}}$ lies outside the cone.  This means that 
+\[
+\frac{\Fnorm{f_{\text{in}}}} {\Gnorm{f_{\text{in}}}} = \tau_{\text{in}} < \tau < \tau_{\text{out}} =  \frac{\Fnorm{f_{\text{out}}}} {\Gnorm{f_{\text{out}}}}.
+\]
+Next define two functions in terms of $f_{\text{in}}$ and $f_{\text{out}}$ as follows:
+\[
+f_{\pm} = (\tau-\tau_{\text{in}}) \Gnorm{f_{\text{in}}} f_{\text{out}}  \pm (\tau + \tau_{\text{out}}) \Gnorm{f_{\text{out}}} f_{\text{in}},
+\]
+These functions must lie inside  $\cc_{\tau}$ because
+\begin{align*}
+\frac{\Fnorm{f_{\pm}}} {\Gnorm{f_{\pm}}} 
+&= \frac{\Bigl \lVert (\tau-\tau_{\text{in}}) \Gnorm{f_{\text{in}}} f_{\text{out}}  \pm (\tau + \tau_{\text{out}}) \Gnorm{f_{\text{out}}} f_{\text{in}}\Bigr \rVert_{\cf}}
+{\Bigl \lVert (\tau-\tau_{\text{in}}) \Gnorm{f_{\text{in}}} f_{\text{out}}  \pm (\tau + \tau_{\text{out}}) \Gnorm{f_{\text{out}}} f_{\text{in}}\Bigr \rVert_{\cg}}\\
+& \le 
+\frac{(\tau-\tau_{\text{in}}) \Gnorm{f_{\text{in}}} \Fnorm{f_{\text{out}}}  + (\tau + \tau_{\text{out}}) \Gnorm{f_{\text{out}}} \Fnorm{f_{\text{in}}}}
+{-(\tau-\tau_{\text{in}}) \Gnorm{f_{\text{in}}} \Gnorm{f_{\text{out}}}  + (\tau + \tau_{\text{out}}) \Gnorm{f_{\text{out}}} \Gnorm{f_{\text{in}}}}\\
+& =
+\frac{(\tau-\tau_{\text{in}})\tau_{\text{out}}  + (\tau + \tau_{\text{out}}) \tau_{\text{in}} } {-(\tau-\tau_{\text{in}}) + (\tau + \tau_{\text{out}})}
+=
+\frac{\tau (\tau_{\text{out}} +\tau_{\text{in}}) } {\tau_{\text{out}} + \tau_{\text{in}}} =  \tau.
+\end{align*}
+On the other hand, the average of $f_{\pm}$, which is also a convex combination is 
+\[
+\frac{1}{2} f_- + \frac{1}{2} f_+ = (\tau-\tau_{\text{in}}) \Gnorm{f_{\text{in}}} f_{\text{out}}.
+\]
+Since $\tau > \tau_{\text{in}}$, this is a nonzero multiple of $f_{\text{out}}$, and it lies outside $\cc_{\tau}$.  Thus, this cone is not a convex set.
+
+
+\section{Discussion and Further Work} \label{furthersec}
+
+When we consider the landscape of numerical algorithms, it is clear that relatively simple problems have well-developed automatic algorithms that we use without questioning their reliability.  For example, the MATLAB \cite{MAT7.12} algorithms
+\[
+{\tt cos, sin, exp, log, airy, besselj, gamma, gammainc, ellipj, erf,} \text{ and } {\tt  erfinv}
+\] 
+all automatically use the correct number of terms in a suitable expansion needed to provide the corresponding function value with $15$ significant digit accuracy. The only exceptions are cases of unavoidable round-off error, e.g., 
+\[
+{\tt cos(1e47*pi)= -5.432862626006405e-01},
+\]
+whereas the correct answer is {\tt 1}.  
+
+We believe that more complex problems, whose inputs are functions, also deserve to have automatic algorithms with guarantees of their success.  Users ought to be able to integrate functions, approximate functions, optimize functions, etc., without needing to manually tune the sample size.  Here we have shown how this might be done in general, as well as specifically for two case studies.  We hope that this will inspire further research in this direction.
+
+
+
+The results presented here suggest a number of other interesting open problems.  Here is a summary.
+
+\begin{itemize}
+
+\item Here we consider an absolute error tolerance.  This analysis should be extended to relative error, which is work in progress.  
+
+\item The univariate integration and function approximation algorithms in Sections \ref{integsec} and \ref{approxsec} have low order convergence.  Guaranteed automatic algorithms with \emph{higher order convergence rates} for smoother input functions are needed.  These might be based on higher degree piecewise polynomial approximations.
+
+\item There are other types of problems, e.g., differential equations and nonlinear optimization, which fit the general framework presented here.  These problems also have automatic algorithms, but without guarantees.  It would be helpful to develop guaranteed automatic algorithms in these other areas.
+
+\item The algorithms developed here are \emph{globally adaptive}, in the sense that the function data determines the sample size, but not the kinds of data collected or the locations of the sample points, which depend only on the sample size.  Some existing automatic algorithms are \emph{locally adaptive} in that they collect more data in regions of special interest, say where the function has a spike.  Such algorithms need guarantees like the ones that are provided here for globally adaptive algorithms.  The appropriate kinds of spaces $\cg$ and $\cf$, and their semi-norms, need to be identified for locally adaptive algorithms.
+
+\item For some numerical problems the error bound of the non-adaptive algorithm involves a $\cg$- or $\cf$-semi-norm that is very hard to approximate because of its complexity.  An example is multivariate quadrature using quasi-Monte Carlo algorithms, where the error depends on the \emph{variation} of the integrand.  The definition of the variation depends on the definition of $\cg$ or $\cf$, but it is essentially some semi-norm of a mixed partial derivative of the integrand.  To obtain guaranteed automatic algorithms one must either find an efficient way to approximate the variation of the function or find other suitable conservative estimates for the error that can be reliably obtained from the function data.  
+
+\item This article considers only the worst case error of deterministic algorithms.  There are many random algorithms, and they must be analyzed by somewhat different methods.  A guaranteed Monte Carlo algorithm for estimating the mean of a random variable, which includes multivariate integration as a special case, has been proposed in \cite{HicEtal14a}.
+
+\end{itemize}
+
+\section{Acknowledgements}  The authors are grateful for discussions with a number of colleagues. This research is supported in part by grant NSF-DMS-1115392.
+
+\section*{References}
+\bibliographystyle{model1b-num-names.bst}
+%\bibliographystyle{elsarticle-num-names}
+\bibliography{FJH22,FJHown22}
+\end{document}
+
