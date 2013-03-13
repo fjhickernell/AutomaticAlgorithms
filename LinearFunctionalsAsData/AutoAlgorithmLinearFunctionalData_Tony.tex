@@ -189,15 +189,15 @@ Another method for estimating the error of $A_n$ assumes that the decay of the F
 \end{equation}
 and the cone of functions in $\chin$ as those whose Fourier coefficients decay at a given rate:
 \begin{equation} \label{decayconedef}
-\cc = \left\{ f \in \chin : \sigma_{k+r}(f) \le \gamma(r) \sigma_k (f), \ \forall r, k \in \naturals, \ \gamma(r) > 0 \right\}.
+\cc = \left\{ f \in \chin : \sigma_{k+r}(f) \le \gamma(r) \sigma_k (f), \ \forall k,r \in \naturals, \ \gamma(r) > 0 \right\}.
 \end{equation}
 
 The sequence $\gamma(r)$ has to verify $\lim_{n\rightarrow\infty}\gamma(n)=0$ and that
 \begin{equation} \label{constcone}
-\norm[\pout]{\underline{\gamma}}=\norm[\pout]{ \left(\gamma(r)\right)_{r=1}^\infty}<\infty
+\norm[\pout]{\underline{\boldsymbol{\gamma}}}=\norm[\pout]{ \left(\gamma(r)\right)_{r=1}^\infty}<\infty
 \end{equation}
 
-To see how these conditions might arise naturally, consider the case where the terms in the sum defining $\sigma_k(f)$ decay \emph{algebriacally} and the $n_k$ increase \emph{geometrically}:
+To see some examples on how these conditions might arise naturally, consider the case where $\gamma(r)=s_1s_2^{-r}$ with the terms in the sum defining $\sigma_k(f)$ decaying \emph{algebraically} and the $n_k$ increasing \emph{geometrically}:
 \begin{gather*}
 C_{\lo} j^{-p} \le \abs{\lambda_{i_j} \ip[\chin]{u_{i_j}}{f}} \le C_{\up} j^{-p}, \quad  p>1, \ j \in \naturals, \\
 n_k = a b^k  \quad a, b, k \in \naturals, \ b \ge 2.
@@ -255,47 +255,22 @@ From the definition of the cone and \eqref{errsum}, one can show that
 &= \left\{\sum_{r=1}^\infty \sum_{j=n_{k+r-1}+1}^{n_{k+r}}  \abs{\lambda_{i_j}\tf_{i_j} }^{\pout}  \right\}^{1/\pout}\\
 &= \norm[\pout]{ \left(\sigma_{k+r}(f)\right)_{r=1}^{\infty}} \\
 &\le \norm[\pout]{ \left(\gamma(r)\sigma_{k}(f)\right)_{r=1}^{\infty}} \\
-&= \sigma_{k}(f)\norm[\pout]{\underline{\gamma}} \\
+&= \sigma_{k}(f)\norm[\pout]{\underline{\boldsymbol{\gamma}}} \\
 \end{align*}
-Since the right hand side depends on the data, we have a data-driven error bound.  Note also that $\sigma_\kappa(f)$ decays as quickly with respect to $n$ as the true error.  Unlike the earlier method, one does not need to know the decay rate.  In practice, one increases $\kappa$ until the right hand side is smaller than the error tolerance.
+
+Since the right hand side depends on the data, we have a data-driven error bound.  Note also that $\sigma_k(f)$ decays as quickly with respect to $n$ as the true error.  Unlike the earlier method, one does not need to know the decay rate.  In practice, one increases $k$ until the right hand side is smaller than the error tolerance.
 
 \subsection{Algorithm}
 
-Given our error tolerance $\varepsilon$, we choose $k^*$ such that
+Given the error tolerance $\varepsilon$, we will find the $k^*$ such that
 \begin{equation}
-\sigma_{k^*}(f) \le \frac{\varepsilon}{\norm[\pout]{\underline{\gamma}}} < \sigma_{k^*-1}(f)
+         \sigma_{k^*}(f) \le \frac{\varepsilon}{\norm[\pout]{\underline{\boldsymbol{\gamma}}}} < \sigma_{k^*-1}(f)
 \end{equation}
 
-This $k^*$ will ensure
+This $k^*$ is ensuring
 \begin{equation}
 \norm[\chout]{S(f)-A_{n_{k^*}}(f)} \le \varepsilon
 \end{equation}
-
-\subsection{Cost}
-
-\subsection{Optimality}
-
-The error of an algorithm $A  \in \ca(\cc,\chout,S,\Lambda)$ is defined  as
-\begin{equation} \label{errdefworst}
-\err(A,\cc,\chout,S)
-= \sigma_{\min \{ k \in \naturals: \norm[\chout]{S(f) -  A(f)} \le \sigma_{k}(f) \norm[\pout]{\underline{\gamma}} \ \forall f \in \cc \}}(f),
-\end{equation}
-Because the integration problem has real-valued solutions, i.e., $\chout=\reals$, one may also define a one sided error criterion:
-\begin{equation}\label{errpmdefworst}
-\err_{\pm}(A,\cc,\reals,S) =
-\sigma_{\min \{ k \in \naturals: \pm [{S(f) -  A(f)}] \le \sigma_{k}(f) \norm[\pout]{\underline{\gamma}} \ \forall f \in \cc \}}(f).
-\end{equation}
-
-The complexity of a problem for this set of algorithms, $\ca(\cc,\chout,S,\Lambda)$, is defined as the cost of the cheapest algorithm that satisfies the specified error tolerance, $\varepsilon$:
-\begin{multline} \label{fixcostcomplex}
-\comp(\varepsilon,\ca(\cc,\chout,S,\Lambda)) \\
-= \inf\left\{\cost(A) : \err(A,\cc,\chout,S) \le \varepsilon, \ A  \in \ca(\cc,\chout,S,\Lambda) \right \}.
-\end{multline}
-Here the infimum of an empty set is defined to be $\infty$.  This means that to guarantee that $\norm[\chout]{S(f) -  A(f)} \le \varepsilon$, one needs an algorithm with a cost of at least
-\[
-\comp(\varepsilon/\norm[\pout]{\underline{\gamma}},\ca(\cc,\chout,S,\Lambda)).
-\]
-This cost does not decrease as either $\varepsilon$ decreases or $\ca(\cc,\chout,S,\Lambda)$ increases.
 
 Suppose that there is a sequence of algorithms indexed by their cost, and which converge to the true answer:
 \begin{subequations} \label{algseqdef}
@@ -308,14 +283,79 @@ where the countable, non-negative-valued index set,
 \begin{equation} \label{indexdef}
 \ci=\{n_1, n_2, \ldots\} \quad \text{with } n_i < n_{i+1}, \quad \text{satisfies } \sup_i \frac{n_{i+1}}{n_i} <\infty.
 \end{equation}
-This sequence of algorithms is called \emph{optimal} for the problem $(\cc,\chout,S,\Lambda)$ if it essentially tracks the minimum cost algorithms, namely,
+
+\begin{algo}
+Let the Banach spaces $\chin$ and $\chout$, the solution operator $S$, the error tolerance $\varepsilon$, the functions set $\cc$ and the sequence $\{A_n\}_{n \in \ci}$ as described before.
+The algorithm starts by setting $i=1$.
+\begin{description}
+\item[Stage 1. Computing $\sigma(f)$.] First we compute $\sigma_{i}(f)$.
+\item[Stage 2. Check for Convergence.] Check whether $i$ is large enough to satisfy the error tolerance, i.e.,
+    \begin{equation}
+          \sigma_{i}(f) \le \frac{\varepsilon}{\norm[\pout]{\underline{\boldsymbol{\gamma}}}}
+    \end{equation}
+    If this is true, then we return $A_{n_{i}}(f)$ and terminate the algorithm.
+\item[Stage 3. Increasing $i$.] Otherwise, we increase $i$ by $1$ and return to Stage $1$.
+\end{description}
+\end{algo}
+
+\subsection{Cost}
+
+The cost of our algorithm is
+\begin{equation}
+cost(A,f;\varepsilon)=n_{k^*}
+\end{equation}
+
+\subsection{Optimality}
+
+The optimal cost is
+\begin{equation*}
+cost_{opt}(f;\varepsilon)=\min\{n\in\naturals:\,\norm[\pout]{S(f)-A_n(f)} \le \varepsilon \}
+\end{equation*}
+
+The sequence of algorithms defined in \ref{algseqdef} is called \emph{optimal} for the problem $(\cc,\chout,S,\Lambda)$ if it essentially tracks the minimum cost algorithms, namely,
 \begin{equation} \label{nearoptdef}
 \sup_{0 < \varepsilon \le 1} \frac{\min\{n \in \ci : \err(A_n,\cc,\chout,S) \le \varepsilon\}} {\comp(\varepsilon,\ca(\cc,\chout,S,\Lambda))} <\infty.
 \end{equation}
 
+\begin{prop}
+The algorithm proposed is optimal.
+\end{prop}
+\begin{proof}
+Easy to prove taking the function in the boundary of $\cc$. This holds for the equality so:
+\begin{align*}
+\sigma_{0}(f) \norm[\pout]{\underline{\gamma_k}} \le \varepsilon &< \sigma_{0}(f) \norm[\pout]{\underline{\gamma_{k-1}}} \\
+\varepsilon & < \norm[\pout]{S-A_{n_{k^*-1}}}=\sigma_{0}(f) \norm[\pout]{\underline{\gamma_{k-1}}} \\
+\norm[\pout]{S-A_{n^*}} \le \varepsilon &
+\end{align*}
+
+This means that $\frac{n_{k^*-1}}{n^*}<1$.
+\end{proof}
+
+We can extend that to $\frac{n_{k^*-i}}{n^*}<C^i$ where $C=\sup_i\frac{n_{i+1}}{n_i}$.
+
 \subsection{Low bounds: fooling functions}
 
 \subsection{Examples}
+
+For our examples, we first need to index our wavenumbers in $\integers^d$. The Cantor's back-and-forth method is used...
+
+\subsubsection{Computing $e^{<x,a>}$}
+
+The first example is $f(x)=e^{<x,a>}=e^{\sum_{l=1}^dx_la_l}$. In this case, for $n\in\integers^d$ the Fourier coefficients are
+
+\begin{align*}
+c_m&=\int_{[0,1)^d}e^{<x,a>-2\pi\sqrt{-1}<x,m>}dx\\
+    &=\prod_{l=1}^{d}\frac{e^{a_l}-1}{\sqrt{a_l^2+4\pi^2m_l^2}}e^{\sqrt{-1}\arctan{\left(\frac{2\pi m_l}{a_l}\right)}}
+\end{align*}
+
+The indexing of the coefficients are the cubes around the origin
+\begin{align*}
+\ci_0&=\{i_{n_0}\}=\{(0,\dots,0)\} \\
+\ci_k&=\{i_{n_{k-1}+1},\dots,i_{n_k}\}=\{m\in\integers^d: \abs{m_l} \le k,\: m\notin \ci_{k-1}\}
+\end{align*}
+
+\subsubsection{Computing basket options}
+
 
 \bibliographystyle{elsarticle-num.bst}
 \bibliography{FJH22,FJHown22}
