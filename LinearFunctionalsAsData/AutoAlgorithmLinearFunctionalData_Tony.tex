@@ -19,6 +19,7 @@
 \newcommand{\bw}{{\bf w}}
 \newcommand{\bbw}{\bar{\bf w}}
 %\newcommand{\hv}{\hat{v}}
+\newcommand{\bgamma}{\underline{\boldsymbol\gamma}}
 \DeclareMathOperator{\MSE}{MSE}
 \DeclareMathOperator{\RMSE}{RMSE}
 \DeclareMathOperator{\rnd}{rnd}
@@ -194,7 +195,7 @@ and the cone of functions in $\chin$ as those whose Fourier coefficients decay a
 
 The sequence $\gamma(r)$ has to verify $\lim_{n\rightarrow\infty}\gamma(n)=0$ and that
 \begin{equation} \label{constcone}
-\norm[\pout]{\underline{\boldsymbol{\gamma}}}=\norm[\pout]{ \left(\gamma(r)\right)_{r=1}^\infty}<\infty
+\norm[\pout]{\bgamma}=\norm[\pout]{ \left(\gamma(r)\right)_{r=1}^\infty}<\infty
 \end{equation}
 
 To see some examples on how these conditions might arise naturally, consider the case where $\gamma(r)=s_1s_2^{-r}$ with the terms in the sum defining $\sigma_k(f)$ decaying \emph{algebraically} and the $n_k$ increasing \emph{geometrically}:
@@ -255,7 +256,7 @@ From the definition of the cone and \eqref{errsum}, one can show that
 &= \left\{\sum_{r=1}^\infty \sum_{j=n_{k+r-1}+1}^{n_{k+r}}  \abs{\lambda_{i_j}\tf_{i_j} }^{\pout}  \right\}^{1/\pout}\\
 &= \norm[\pout]{ \left(\sigma_{k+r}(f)\right)_{r=1}^{\infty}} \\
 &\le \norm[\pout]{ \left(\gamma(r)\sigma_{k}(f)\right)_{r=1}^{\infty}} \\
-&= \sigma_{k}(f)\norm[\pout]{\underline{\boldsymbol{\gamma}}} \\
+&= \sigma_{k}(f)\norm[\pout]{\bgamma} \\
 \end{align*}
 
 Since the right hand side depends on the data, we have a data-driven error bound.  Note also that $\sigma_k(f)$ decays as quickly with respect to $n$ as the true error.  Unlike the earlier method, one does not need to know the decay rate.  In practice, one increases $k$ until the right hand side is smaller than the error tolerance.
@@ -264,7 +265,7 @@ Since the right hand side depends on the data, we have a data-driven error bound
 
 Given the error tolerance $\varepsilon$, we will find the $k^*$ such that
 \begin{equation}
-         \sigma_{k^*}(f) \le \frac{\varepsilon}{\norm[\pout]{\underline{\boldsymbol{\gamma}}}} < \sigma_{k^*-1}(f)
+         \sigma_{k^*}(f) \le \frac{\varepsilon}{\norm[\pout]{\bgamma}} < \sigma_{k^*-1}(f)
 \end{equation}
 
 This $k^*$ is ensuring
@@ -284,14 +285,14 @@ where the countable, non-negative-valued index set,
 \ci=\{n_1, n_2, \ldots\} \quad \text{with } n_i < n_{i+1}, \quad \text{satisfies } \sup_i \frac{n_{i+1}}{n_i} <\infty.
 \end{equation}
 
-\begin{algo}
+\begin{algo}\label{algo}
 Let the Banach spaces $\chin$ and $\chout$, the solution operator $S$, the error tolerance $\varepsilon$, the functions set $\cc$ and the sequence $\{A_n\}_{n \in \ci}$ as described before.
 The algorithm starts by setting $i=1$.
 \begin{description}
 \item[Stage 1. Computing $\sigma(f)$.] First we compute $\sigma_{i}(f)$.
 \item[Stage 2. Check for Convergence.] Check whether $i$ is large enough to satisfy the error tolerance, i.e.,
     \begin{equation}
-          \sigma_{i}(f) \le \frac{\varepsilon}{\norm[\pout]{\underline{\boldsymbol{\gamma}}}}
+          \sigma_{i}(f) \le \frac{\varepsilon}{\norm[\pout]{\bgamma}}
     \end{equation}
     If this is true, then we return $A_{n_{i}}(f)$ and terminate the algorithm.
 \item[Stage 3. Increasing $i$.] Otherwise, we increase $i$ by $1$ and return to Stage $1$.
@@ -301,39 +302,69 @@ The algorithm starts by setting $i=1$.
 \subsection{Cost}
 
 The cost of our algorithm is
-\begin{equation}
+\begin{equation}\label{costalgo}
 cost(A,f;\varepsilon)=n_{k^*}
 \end{equation}
 
 \subsection{Optimality}
 
-The optimal cost is
+The complexity of a function $f$ is defined as the cheapest cost of all sequence of algorithms
 \begin{equation*}
-cost_{opt}(f;\varepsilon)=\min\{n\in\naturals:\,\norm[\pout]{S(f)-A_n(f)} \le \varepsilon \}
+comp(f;\varepsilon)=\min\{n\in\naturals:\,\norm[\pout]{S(f)-A_n(f)} \le \varepsilon \}
 \end{equation*}
 
 The sequence of algorithms defined in \ref{algseqdef} is called \emph{optimal} for the problem $(\cc,\chout,S,\Lambda)$ if it essentially tracks the minimum cost algorithms, namely,
 \begin{equation} \label{nearoptdef}
-\sup_{0 < \varepsilon \le 1} \frac{\min\{n \in \ci : \err(A_n,\cc,\chout,S) \le \varepsilon\}} {\comp(\varepsilon,\ca(\cc,\chout,S,\Lambda))} <\infty.
+\sup_{0 < \varepsilon \le 1} \frac{cost(A,f;\varepsilon)} {comp(f;\varepsilon)} <\infty.
 \end{equation}
 
 \begin{prop}
-The algorithm proposed is optimal.
+The Algorithm \ref{algo} proposed is optimal.
 \end{prop}
+
 \begin{proof}
-Easy to prove taking the function in the boundary of $\cc$. This holds for the equality so:
+For a given $f$ and $\varepsilon$, consider $k^*$ depending on $\varepsilon$ such that
+\begin{equation*}
+\sigma_{k^*}(f) \le \frac{\varepsilon}{\norm[\pout]{\bgamma}} < \sigma_{k^*-1}(f)
+\end{equation*}
+
+From the definition of complexity of a function, it is clear that $comp(f;\varepsilon)=n^*\le n_{k^*}$.
+
+Because $\lim_{n\rightarrow\infty}\gamma(n)=0$, we can take $r=\min\{n: \gamma(n)\norm[\pout]{\bgamma} \le 1\}$. Define also $\sup_i\frac{n_{i+1}}{n_i}=C$ according to the properties in \ref{indexdef}.
+
+Then, if $k^*>r+1$,
 \begin{align*}
-\sigma_{0}(f) \norm[\pout]{\underline{\gamma_k}} \le \varepsilon &< \sigma_{0}(f) \norm[\pout]{\underline{\gamma_{k-1}}} \\
-\varepsilon & < \norm[\pout]{S-A_{n_{k^*-1}}}=\sigma_{0}(f) \norm[\pout]{\underline{\gamma_{k-1}}} \\
-\norm[\pout]{S-A_{n^*}} \le \varepsilon &
+& \varepsilon \le \frac{\varepsilon}{\gamma(r)\norm[\pout]{\bgamma}} < \frac{\sigma_{k^*-1}(f)}{\gamma(r)} \le \sigma_{k^*-1-r}(f) \le \norm[\pout]{S-A_{n_{k^*-1-r}}} \\
+\norm[\pout]{S-A_{n^*}} \le & \varepsilon
 \end{align*}
 
-This means that $\frac{n_{k^*-1}}{n^*}<1$.
+what implies $n_{k^*-1-r} < n^* \le n_{k^*}$. Therefore,
+
+\begin{equation*}
+\frac{n_{k^*}}{n^*} < \frac{n_{k^*}}{n_{k^*-1}}\times\cdots\times\frac{n_{k^*-r}}{n_{k^*-1-r}} \le C^{r+1}
+\end{equation*}
+
+If $k^* \le r+1$,
+
+\begin{equation*}
+\frac{n_{k^*}}{n^*} \le \frac{n_{k^*}}{n_{k^*-1}}\times\cdots\times\frac{n_{2}}{n_{1}}\times n_{1} \le n_{1}C^{k^*+1}
+\end{equation*}
+
+Thus,
+
+\begin{equation*}
+\sup_{0 < \varepsilon \le 1} \frac{cost(A,f;\varepsilon)} {comp(f;\varepsilon)} \le n_1C^{r+1}.
+\end{equation*}
+
 \end{proof}
 
-We can extend that to $\frac{n_{k^*-i}}{n^*}<C^i$ where $C=\sup_i\frac{n_{i+1}}{n_i}$.
-
 \subsection{Low bounds: fooling functions}
+
+The definition of the cone can be rewritten as
+
+\begin{equation}
+\cc = \left\{ f \in \chin : \sigma_k(f) \le \min_{1 \le i < k}\{\gamma(i)\sigma_{k-i}(f)\}, \ \forall k \in \naturals, \ \gamma(r) > 0 \right\}
+\end{equation}
 
 \subsection{Examples}
 
