@@ -9,6 +9,7 @@
 \newcommand{\pout}{p_{\text{\rm{out}}}}
 %\newcommand{\cc}{\mathcal{C}}
 \newcommand{\cq}{\mathcal{Q}}
+\newcommand{\co}{\mathcal{O}}
 \newcommand{\bbW}{\mathbb{W}}
 %\newcommand{\tP}{\widetilde{P}}
 \newcommand{\bg}{{\bf g}}
@@ -365,6 +366,26 @@ The definition of the cone can be rewritten as
 \begin{equation}
 \cc = \left\{ f \in \chin : \sigma_k(f) \le \min_{1 \le i < k}\{\gamma(i)\sigma_{k-i}(f)\}, \ \forall k \in \naturals, \ \gamma(r) > 0 \right\}
 \end{equation}
+
+One case which fits with the particular cone $\gamma(r)=b^{-r}$: $n_i=i$ and $\sigma_{k}(f)=b^{-k}$ for a given $f$ and $b>1$. Then
+
+\begin{equation*}
+\varepsilon^{\pout} \ge \sum_{j=n^*+1}^{\infty}\sigma_{j}(f)^{\pout} = \frac{(b^{-n^*})^{\pout}}{b^{\pout}-1}
+\end{equation*}
+
+\begin{equation}
+n^* \ge \lceil\log(b)^{-1}\log(\varepsilon^{-1}(b^p-1)^{-p})\rceil
+\end{equation}
+
+We might find worse cases with bigger lower bounds and different $\gamma(r)$.
+
+For one particular case, we proved that $\varepsilon\ge\co(b^{-n})$. However, we want to see that $\varepsilon\ge\co(n^{-b})$ is NEVER possible.
+If $\sum_{j=n}^{\infty}\sigma_{j}(f)\thicksim\co(n^{-b})$, then $\sigma_{n}(f)\thicksim\co(n^{-a})$ (you can see it by writing $\sum_{j=n}^{\infty}\sigma_{j}(f)-\sum_{j=n+1}^{\infty}\sigma_{j}(f)$). In this case,
+\begin{equation*}
+\frac{k^a}{(k+r)^a} \le \gamma(r),\quad \forall r,k\in\naturals
+\end{equation*}
+
+In particular, for $k=r$ so that $\frac{1}{2^a}\le\gamma(r)$ what is a contradiction with $\lim_{r\rightarrow\infty}\gamma(r)=0$. This means that the complexity has to be faster than $\varepsilon^{-\frac{1}{b}}$
 
 \subsection{Examples}
 
