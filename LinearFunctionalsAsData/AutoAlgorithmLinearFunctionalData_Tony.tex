@@ -56,6 +56,8 @@
 \title{The Complexity of Automatic Algorithms Employing Continuous Linear Functionals}
 \author{Fred J. Hickernell}
 \address{Room E1-208, Department of Applied Mathematics, Illinois Institute of Technology,\\ 10 W.\ 32$^{\text{nd}}$ St., Chicago, IL 60616}
+\author{Llu\'{\i}s Antoni Jim\'{e}nez Rugama}
+\address{Room E1-120, Department of Applied Mathematics, Illinois Institute of Technology,\\ 10 W.\ 32$^{\text{nd}}$ St., Chicago, IL 60616}
 \begin{abstract}
 \end{abstract}
 
@@ -76,7 +78,7 @@ f = \sum_{i \in \ci} \hf_i u_i \in \chin, \qquad \norm[\chin]{f}=\big\lVert\big(
 \end{equation*}
 Here the $\hf_i$ denotes the $i^{\text{th}}$ Fourier coefficient of a function $f\in \chin$.  If $\pin=2$, then $\chin$ is a Hilbert space.  Similarly, let $\chout$ be a separable Banach space of outputs  with basis $\{v_i\}_{i \in \ci}$, whose norm may be defined as follows:
 \begin{equation*}
-f = \sum_{i \in \ci} \tf_i v_i \in \chout, \qquad \norm[\chin]{f}=\big\lVert\big(\tf_i\big)_{i\in \ci}\big\rVert_{\pout}, \qquad 1 \le \pout \le \infty.
+f = \sum_{i \in \ci} \tf_i v_i \in \chout, \qquad \norm[\chout]{f}=\big\lVert\big(\tf_i\big)_{i\in \ci}\big\rVert_{\pout}, \qquad 1 \le \pout \le \infty.
 \end{equation*}
 In this case $\tf_i$ denotes the $i^{\text{th}}$ Fourier coefficient of a function $f\in \chout$.  Define the solution operator $S$ by $S(u_i) = \lambda_i v_i$, and so
 \begin{equation} \label{HilbertS}
@@ -96,14 +98,14 @@ This problem definition is rather general in some ways, e.g., allowing the input
 
 For example, if $\chin=\chout=\cl_2[0,1]$, and $S: f \mapsto f$ is the embedding operator, then one may choose a trigonometric polynomial basis:
 \begin{gather*}
-\norm[\chin]{f} = \norm[\chin]{f} = \left[\int_0^1 \abs{f(x)}^2 \, \dif x \right]^{1/2}, \\
+\norm[\chin]{f} = \norm[\chout]{f} = \left[\int_0^1 \abs{f(x)}^2 \, \dif x \right]^{1/2}, \\
 u_{i}(x) = v_i(x) = \me^{2 \pi \sqrt{-1} i x}, \quad \lambda_i=1, \qquad i \in \integers,\\
 \pin=\pout=2,\quad q=\infty.
 \end{gather*}
 If $S$ computes the derivative of a function, $S: f \mapsto f'$, then the space $\chin$ must have a stronger inner product to ensure that the $\lambda_i$ are bounded, e.g.,
 \begin{gather*}
 \norm[\chin]{f} = \left[\int_0^1 \left\{\abs{f(x)}^2 + \abs{f'(x)}^2\right\}\, \dif x\right]^{1/2}, \qquad \\
-u_{i}(x) = \frac{\me^{2 \pi \sqrt{-1} i x}}{\sqrt{1+4 \pi i^2}}, \quad \lambda_i=\frac{2 \pi \sqrt{-1} i}{\sqrt{1+4 \pi i^2}}, \qquad i \in \integers,\\
+u_{i}(x) = \frac{\me^{2 \pi \sqrt{-1} i x}}{\sqrt{1+4 \pi^2 i^2}}, \quad \lambda_i=\frac{2 \pi \sqrt{-1} i}{\sqrt{1+4 \pi^2 i^2}}, \qquad i \in \integers,\\
 \pin=\pout=2,\quad q=\infty.
 \end{gather*}
 
@@ -191,10 +193,10 @@ Another method for estimating the error of $A_n$ assumes that the decay of the F
 \end{equation}
 and the cone of functions in $\chin$ as those whose Fourier coefficients decay at a given rate:
 \begin{equation} \label{decayconedef}
-\cc = \left\{ f \in \chin : \sigma_{k+r}(f) \le \gamma(r) \sigma_k (f), \ \forall k,r \in \naturals, \ \gamma(r) > 0 \right\}.
+\cc = \left\{ f \in \chin : \sigma_{k+r}(f) \le \gamma(r) \sigma_k (f), \ \forall k \in \naturals \right\}.
 \end{equation}
 
-The sequence $\gamma(r)$ has to verify $\lim_{n\rightarrow\infty}\gamma(n)=0$ and that
+The sequence $\gamma(r)$ has to verify $\lim_{n\rightarrow\infty}\gamma(n)=0$, $\gamma(r) > 0$ and that
 \begin{equation} \label{constcone}
 \norm[\pout]{\bgamma}=\norm[\pout]{ \left(\gamma(r)\right)_{r=1}^\infty}<\infty
 \end{equation}
@@ -278,7 +280,7 @@ Suppose that there is a sequence of algorithms indexed by their cost, and which 
 \begin{subequations} \label{algseqdef}
 \begin{gather}
 \{A_n\}_{n \in \ci}, \qquad A_n  \in \ca(\cc,\chout,S,\Lambda), \\
-\lim_{\substack{n \to \infty\\ n \in \ci}} \err(A_n,\cc,\chout,S) = 0, \qquad \cost(A_n) = n,
+\cost(A_n) = n,
 \end{gather}
 \end{subequations}
 where the countable, non-negative-valued index set,
@@ -304,24 +306,30 @@ The algorithm starts by setting $i=1$.
 
 The cost of our algorithm is
 \begin{equation}\label{costalgo}
-cost(A,f;\varepsilon)=n_{k^*}
+\cost(A;f,\varepsilon)=n_{k^*}
 \end{equation}
 
 \subsection{Optimality}
 
-The complexity of a function $f$ is defined as the cheapest cost of all sequence of algorithms
+The optimal number of data needed in our algorithm is defined as
+
 \begin{equation*}
-comp(f;\varepsilon)=\min\{n\in\naturals:\,\norm[\pout]{S(f)-A_n(f)} \le \varepsilon \}
+N_{\opt}(f,\varepsilon)=\min\left\{n\in\naturals:\,\norm[\pout]{\left(\lambda_{i_j} \hf_{i_j} \right)_{j\ge n+1}} \le \varepsilon \right\}
 \end{equation*}
+
+%The complexity of a function $f$ is defined as the cheapest cost of all sequence of algorithms
+%\begin{equation*}
+%\comp(f,\varepsilon)=\min\left\{n\in\naturals:\,\norm[\pout]{S(f)-A_n(f)} \le \varepsilon \right\}
+%\end{equation*}
 
 The sequence of algorithms defined in \ref{algseqdef} is called \emph{optimal} for the problem $(\cc,\chout,S,\Lambda)$ if it essentially tracks the minimum cost algorithms, namely,
 \begin{equation} \label{nearoptdef}
-\sup_{0 < \varepsilon \le 1} \frac{cost(A,f;\varepsilon)} {comp(f;\varepsilon)} <\infty.
+\sup_{0 < \varepsilon \le 1} \frac{\cost(A;f,\varepsilon)} {N_{\opt}(f,\varepsilon)} <\infty.
 \end{equation}
 
-\begin{prop}
+\begin{theorem}
 The Algorithm \ref{algo} proposed is optimal.
-\end{prop}
+\end{theorem}
 
 \begin{proof}
 For a given $f$ and $\varepsilon$, consider $k^*$ depending on $\varepsilon$ such that
@@ -329,7 +337,7 @@ For a given $f$ and $\varepsilon$, consider $k^*$ depending on $\varepsilon$ suc
 \sigma_{k^*}(f) \le \frac{\varepsilon}{\norm[\pout]{\bgamma}} < \sigma_{k^*-1}(f)
 \end{equation*}
 
-From the definition of complexity of a function, it is clear that $comp(f;\varepsilon)=n^*\le n_{k^*}$.
+From the definition of complexity of a function, it is clear that $\comp(f;\varepsilon)=n^*\le n_{k^*}$.
 
 Because $\lim_{n\rightarrow\infty}\gamma(n)=0$, we can take $r=\min\{n: \gamma(n)\norm[\pout]{\bgamma} \le 1\}$. Define also $\sup_i\frac{n_{i+1}}{n_i}=C$ according to the properties in \ref{indexdef}.
 
@@ -354,17 +362,48 @@ If $k^* \le r+1$,
 Thus,
 
 \begin{equation*}
-\sup_{0 < \varepsilon \le 1} \frac{cost(A,f;\varepsilon)} {comp(f;\varepsilon)} \le n_1C^{r+1}.
+\sup_{0 < \varepsilon \le 1} \frac{\cost(A;f,\varepsilon)} {N_{\opt}(f,\varepsilon)} \le n_1C^{r+1}.
 \end{equation*}
-
 \end{proof}
+
+Define now the following sets of functions
+\begin{gather*}
+\cj_{n,\varepsilon}=\left\{f\in\chin:\norm[\pout]{\left(\lambda_{i_j} \hf_{i_j} \right)_{j\ge n+1}} \le \varepsilon \right\},\\
+\cf_n=\spn\{u_{i_1}(x),\ldots,u_{i_n}(x)\}=\{\hf_{i_1}u_{i_1}(x)+\ldots+\hf_{i_n}u_{i_n}(x),\, \hf_{i_j}\in\complex\}.
+\end{gather*}
+
+We can easily see that $\forall\varepsilon,\cf_n\subseteq\cj_{n,\varepsilon}$. For a given $A\in\ca(\chin,\chout,S,\Lambda)$ we also define
+\begin{equation*}
+\cf_{n,A}=\{f\in\cf_n:\, L_1(f)=\ldots=L_m(f)=0,\, m<n\}.
+\end{equation*}
+\begin{rem}
+The set $\cf_{n,A}$ has the following property: if $f\in\cf_{n,A}$, then $A(f)=A(0)$.
+\end{rem}
+
+\begin{theorem}
+   Given $A\in\ca(\chin,\chout,S,\Lambda)$, if $\,$ $\norm[\chout]{S(f)-A(f)}\le\varepsilon$ for all $f\in\cj_{n,\varepsilon}$, then
+ \begin{equation*}
+ \sup_{f\in\cj_{n,\varepsilon}}\cost(A;f,\varepsilon)\ge n
+ \end{equation*}
+\end{theorem}
+
+\begin{proof}
+See that
+\begin{align*}
+\sup_{f\in\cf_{n,A}}\norm[\chout]{S(f)-A(f)}&=\norm[\chout]{S(f)-A(0)}\\
+&\ge\norm[\chout]{S(f)}-\norm[\chout]{A(0)}\\
+&>\varepsilon
+\end{align*}
+\end{proof}
+
+
 
 \subsection{Low bounds: fooling functions}
 
 The definition of the cone can be rewritten as
 
 \begin{equation}
-\cc = \left\{ f \in \chin : \sigma_k(f) \le \min_{1 \le i < k}\{\gamma(i)\sigma_{k-i}(f)\}, \ \forall k \in \naturals, \ \gamma(r) > 0 \right\}
+\cc = \left\{ f \in \chin : \sigma_k(f) \le \min_{1 \le i < k}\{\gamma(i)\sigma_{k-i}(f)\}, \ \forall k \in \naturals \right\}
 \end{equation}
 
 One case which fits with the particular cone $\gamma(r)=b^{-r}$: $n_i=i$ and $\sigma_{k}(f)=b^{-k}$ for a given $f$ and $b>1$. Then
@@ -389,24 +428,53 @@ In particular, for $k=r$ so that $\frac{1}{2^a}\le\gamma(r)$ what is a contradic
 
 \subsection{Examples}
 
-For our examples, we first need to index our wavenumbers in $\integers^d$. The Cantor's back-and-forth method is used...
+We will give examples to show how can we work with this algorithm.
 
-\subsubsection{Computing $e^{<x,a>}$}
+\subsubsection{Integrating $f(x)=\sum_{k\in\integers}b^{-\abs{k}}e^{2\pi\sqrt{-1}kx}$}
 
-The first example is $f(x)=e^{<x,a>}=e^{\sum_{l=1}^dx_la_l}$. In this case, for $n\in\integers^d$ the Fourier coefficients are
+In our example, let $\chin=\cl_2[0,1]$,$\,\chout=\cl_2[0,1]\cap\{\tf_0=0\}$ and $S: f \mapsto \int f$ be the integration operator with:
+\begin{gather*}
+\norm[\chin]{f} = \norm[\chout]{f} = \left[\int_0^1 \abs{f(x)}^2 \, \dif x \right]^{1/2}, \\
+u_{i}(x) = v_i(x) = \me^{2 \pi \sqrt{-1} i x},\\
+\lambda_0=0, \quad \lambda_i=\frac{1}{2\pi\sqrt{-1}i}, \qquad i \in \integers\setminus\{0\},\\
+\pin=\pout=2,\quad q=\infty.
+\end{gather*}
 
-\begin{align*}
-c_m&=\int_{[0,1)^d}e^{<x,a>-2\pi\sqrt{-1}<x,m>}dx\\
-    &=\prod_{l=1}^{d}\frac{e^{a_l}-1}{\sqrt{a_l^2+4\pi^2m_l^2}}e^{\sqrt{-1}\arctan{\left(\frac{2\pi m_l}{a_l}\right)}}
-\end{align*}
+For our index set $\ci=\integers=\{0,1,-1,2,-2,\ldots\}$,
+\begin{gather*}
+i_j=(-1)^{j+1}\left\lceil\frac{j}{2}\right\rceil,\qquad j\in\naturals_0,\\
+n_0=-1,\quad n_k=2k, \qquad k\in\naturals.
+\end{gather*}
 
-The indexing of the coefficients are the cubes around the origin
-\begin{align*}
-\ci_0&=\{i_{n_0}\}=\{(0,\dots,0)\} \\
-\ci_k&=\{i_{n_{k-1}+1},\dots,i_{n_k}\}=\{m\in\integers^d: \abs{m_l} \le k,\: m\notin \ci_{k-1}\}
-\end{align*}
+Then,
+\begin{equation*} \sigma_k(f)=b^{-k}\left(\abs{\lambda_{k}}^2+\abs{\lambda_{-k}}^2\right)^{\frac{1}{2}}=\frac{1}{\sqrt{2}\pi b^kk}, \qquad k \in\naturals.
+\end{equation*}
 
-\subsubsection{Computing basket options}
+In our example, $f\in\cc$ for $\gamma(r)=b^{-r}$ since
+\begin{equation*}
+\sigma_k(f)=\frac{1}{\sqrt{2}\pi b^kk} \le \min_{1 \le i <k}\{\gamma(i)\sigma_{k-i}(f)\}=\min_{1 \le i <k}\left\{\frac{1}{\sqrt{2}\pi b^k(k-i)}\right\}
+\end{equation*}
+
+Considering that $\norm[\pout]{\bgamma}=\frac{1}{\sqrt{b^2-1}}$, we can use our algorithm to say that,
+\begin{equation*}
+k^*=\min\left\{k\in\naturals:\frac{1}{\sqrt{2(b^2-1)}\pi\varepsilon} \le b^kk \right\}
+\end{equation*}
+
+\subsubsection{Approximating the divergence of a vector field}
+
+In this case, $\chin=\{f:\reals^n\mapsto\reals^m,\, f\in C^1(\Omega)\}$ and $\chout=\{g:\reals^n\mapsto\reals,\, g\in C^0(\Omega)\}$ and $S: f\mapsto \nabla\cdot f=\sum_{j=1}^{m}\partial_{x_j}f_j$.
+
+\begin{gather*}
+\norm[\chin]{f} =\left[\int_\Omega \sum_{j=1}^{m}\abs{f_j(x)}^2+\sum_{j=1}^{m}\abs{f'_j(x)}^2 \, \dif x \right]^{1/2},\\
+\norm[\chout]{g} = \left[\int_\Omega \abs{g(x)}^2 \, \dif x \right]^{1/2}, \\
+u_{i}(x) = \frac{\me^{2 \pi \sqrt{-1} <i,x>}}{\sqrt{mV(\omega)+4\pi<i,i>}}, \\
+v_i(x) = \me^{2 \pi \sqrt{-1} <i,x>},\\
+ \lambda_i=\frac{2\pi\sqrt{-1}\sum_{j=1}^{m}i_j}{\sqrt{mV(\omega)+4\pi<i,i>}}, \qquad i \in \integers^m,\\
+\pin=\pout=2,\quad q=\infty.
+\end{gather*}
+
+
+
 
 
 \bibliographystyle{elsarticle-num.bst}
