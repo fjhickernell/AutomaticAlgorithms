@@ -1,0 +1,212 @@
+\documentclass[final]{elsarticle}
+\setlength{\marginparwidth}{0.5in}
+\usepackage{amsmath,amssymb,amsthm,natbib,mathtools,bbm,graphicx}
+\input FJHDef.tex
+
+\newcommand{\chin}{\ch_{\text{\rm{in}}}}
+\newcommand{\chout}{\ch_{\text{\rm{out}}}}
+\newcommand{\pin}{p_{\text{\rm{in}}}}
+\newcommand{\pout}{p_{\text{\rm{out}}}}
+%\newcommand{\cc}{\mathcal{C}}
+\newcommand{\cq}{\mathcal{Q}}
+\newcommand{\bbW}{\mathbb{W}}
+%\newcommand{\tP}{\widetilde{P}}
+\newcommand{\bg}{{\bf g}}
+\newcommand{\bu}{{\bf u}}
+\newcommand{\bbu}{\bar{\bf u}}
+\newcommand{\bv}{{\bf v}}
+\newcommand{\bbv}{\bar{\bf v}}
+\newcommand{\bw}{{\bf w}}
+\newcommand{\bbw}{\bar{\bf w}}
+%\newcommand{\hv}{\hat{v}}
+\newcommand{\Fnorm}[1]{\abs{#1}_{\cf}}
+\newcommand{\FYnorm}[1]{\abs{#1}_{\cf_{\cy}}}
+\newcommand{\Gnorm}[1]{\abs{#1}_{\cg}}
+\newcommand{\GYnorm}[1]{\abs{#1}_{\cg_{\cy}}}
+\newcommand{\Hnorm}[1]{\norm[\ch]{#1}}
+\newtheorem{theorem}{Theorem}
+\newtheorem{prop}[theorem]{Proposition}
+\newtheorem{lem}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{algo}{Algorithm}
+\newtheorem{condit}{Condition}
+%\newtheorem{assump}{Assumption}
+\theoremstyle{remark}
+\newtheorem{rem}{Remark}
+\DeclareMathOperator{\err}{err}
+\DeclareMathOperator{\fix}{fix}
+\DeclareMathOperator{\up}{up}
+\DeclareMathOperator{\lo}{lo}
+
+\journal{Journal of Complexity}
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{Locally Adaptive Automatic Algorithms}
+\author{Fred J. Hickernell}
+\address{Room E1-208, Department of Applied Mathematics, Illinois Institute of Technology,\\ 10 W.\ 32$^{\text{nd}}$ St., Chicago, IL 60616}
+\begin{abstract}
+\end{abstract}
+
+\begin{keyword}
+%% keywords here, in the form: keyword \sep keyword
+
+%% MSC codes here, in the form: \MSC code \sep code
+%% or \MSC[2008] code \sep code (2000 is the default)
+
+\end{keyword}
+\end{frontmatter}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{The Basic Problem}
+Let $\cf$ be a separable Banach space of real-valued input functions with domain $\cx$, and let $\cf$ have a semi-norm $\Fnorm{\cdot}$.  Let $\ch$ be a separable Banach space of output functions with norm $\Hnorm{\cdot}$, and let $S$ be a solution operator, $S:\cf \to \ch$.  We have three examples in mind for this setting.  Let $a, b$ be two fixed real numbers with $a<b$, and $\cx=[a,b]$.  Here are three problems:
+\begin{align*}
+\text{Integration (INT)} \qquad &  S: f \mapsto \int_a^b f(x) \, \dif x, \qquad S:\cw^{4,1}[a,b] \to \reals, \\ 
+\text{Approximation (APP)} \qquad &  S: f \mapsto f, \qquad S:\cw^{3,\infty}[a,b] \to \cl_{\infty}[a,b], \\ 
+\text{Optimization (OPT)} \qquad & S: f \mapsto \min_{a \le x  \le b} f(x) \qquad S:\cw^{3,\infty}[a,b] \to \reals. 
+\end{align*}
+The Sobolev and Lebesgue spaces and their (semi-)norms are defined as follows.  For all real numbers $\alpha, \beta$ with $\alpha < \beta$,
+\begin{gather*}
+\cw^{k,p}:=\cw^{k,p}[a,b], \qquad \cw^{k,p}[\alpha,\beta]:=\{f\in C[\alpha,\beta]: \bigl \lVert f^{(k)} \bigr \rVert_{p,[\alpha,\beta]} <\infty\}, \\
+\cl_p:=\cl_p[a,b], \qquad 
+\cl_p[\alpha,\beta]:=\cw^{0,p}[\alpha,\beta],\\
+\abs{f}_{\cw^{k,p}[\alpha,\beta]} :=  \bigl \lVert f^{(k)} \bigr \rVert_{p,[\alpha,\beta]}, \qquad 
+\bigl \lVert f \bigr \rVert_{\cl_p[\alpha,\beta]} :=  \bigl \lVert f \bigr \rVert_{p,[\alpha,\beta]}, \\
+\bigl \lVert f \bigr \rVert_{p,[\alpha,\beta]} := \begin{cases} \Bigl [ \int_\alpha^\beta \abs{f(x)}^p \, \dif x \Bigr ]^{1/p} , & 1 \le p < \infty, \\
+\displaystyle \max_{\alpha \le x  \le \beta} \abs{f(x)}, & p=\infty. \end{cases}
+\end{gather*} 
+Although these are problems involving univariate functions, one could extend these to multivariate problems, and the general analysis would still apply.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Solving the Problems on Partitions}
+For any $\cy \subset \cx$, let let $f_{\cy}$ denote $f$ restricted to the set $\cy$, i.e., 
+\begin{equation*}
+f_{\cy}:\cy \to \reals, \qquad f_{\cy} :\vx \mapsto f(\vx).
+\end{equation*}
+Moreover, let $\cf_{\cy}$ denote the space of functions in $\cf$ restricted to the set $\cy$, i.e., $\cf_{\cy} = \{f_{\cy} : f \in \cf \}$.  
+
+It is also assumed that their exists, $\ct$, some sets of measurable subsets of $\cx$ for which one can define norms, solution operators, and approximation operators.  It is assumed that 
+\begin{itemize}
+\item For each $\cy \in \ct$, the subspace  $\cf_{\cy}$ has a semi-norm, $\FYnorm{\cdot}$ satisfying $\FYnorm{f_{\cy}} \le \Fnorm{f}$. For simplicity of notation, we let $\FYnorm{f} = \FYnorm{f_{\cy}}$
+
+\item For each $\cy \in \ct$ there exists a solution operator $S(\cdot;\cy) : \cf \to \ch$, for which $S(f,\cy)$ is actually only a function of $f_{\cy}$.
+
+\end{itemize}
+Partitions of $\cx$ are finite subsets of $\ct$ such that the following conditions hold:
+\begin{itemize}
+\item There exists a function $\Phi(\cdot; \cp): \ch^{\abs{\cp}} \to \ch$ that combines the solutions defined on the subsets to reconstruct the true solution:
+\[
+S(f) = \Phi(\vS_{\cp}(f)), \quad \vS_{\cp}(f):= \{S(f;\cy)\}_{\cy \in \cp}, \qquad \forall f \in \cf.
+\]
+Here $\abs{\cp}$ denotes the cardinality of $\cp$.  
+
+\item There exists a pair of functions $(\tPhi,\err)(\cdot,\cdot; \cp): \ch^{\abs{\cp}} \times [0,\infty)^{\abs{\cp}} \to \ch \times [0,\infty)$ that combine approximate solutions defined on the subsets with error bounds to reconstruct an approximation to the true solution. If $\bignorm[\ch]{S(f;\cy) - \tS_{\cy}} \le \varepsilon_{\cy}$ for all $\cy \in \cp$, $\tvS_{\cp} := \{\tS_{\cy}\}_{\cy \in \cp}$,  and $\tveps_{\cp} := \{\tvareps_{\cy}\}_{\cy \in \cp}$, then
+\begin{equation*}
+\Hnorm{S(f) -  \tPhi(\tvS_{\cp}, \tveps_{\cp} ;\cp)} \le \err(\tvS_{\cp}, \tveps_{\cp} ;\cp) \qquad \forall f \in \cf.
+\end{equation*}
+Here $\abs{\cp}$ denotes the cardinality of $\cp$. Moreover, 
+\[
+\err(\tvS_{\cp}, \vzero ;\cp) = 0, \qquad \tPhi(\tvS_{\cp}, \vzero ;\cp) = \Phi(\vS_{\cp}(f)) = S(f).
+\]
+\end{itemize}
+Note that the subsets of $\cx$ comprising the partition $\cp$ need not have nonempty intersection.
+
+For our three problems, these partitions take the form of subintervals of $[a,b]$:
+\begin{gather*}
+\ct=\{[\alpha,\beta] : a \le \alpha < \beta \le b \} \\
+\cp=\{[t_0,t_1], [t_1,t_2],  \ldots, [t_{L-1},t_L]\}, \qquad a=t_0 < t_1 < \cdots < t_L=b.
+\end{gather*}
+The semi-norms and solution operators defined on the elements of $\ct$, and the functions $\Phi$, $\tPhi$, and $\err$ that combine the solutions on the sets in the partition into the full solution, the approximate, and the upper error bound are the following:
+\begin{align*}
+\text{INT} \qquad &  \norm[\cf_{[\alpha,\beta]}]{f_{[\alpha,\beta]}} = \bigl \lVert f^{(4)} \bigr \rVert_{1,[\alpha,\beta]}, \qquad S_{[\alpha,\beta]}: f \mapsto \int_\alpha^\beta f(x) \, \dif x, \\
+& \Phi(\tvS_{\cp};\cp) = \tPhi(\tvS_{\cp},\veps_{\cp};\cp) = \sum_{l=1}^L  \tS_{[t_{l-1},t_l]}, \\
+&\err(\tvS_{\cp},\veps_{\cp};\cp) = \norm[1]{\veps_{\cp}}, \displaybreak[1]
+\displaybreak[1]
+\\ 
+\text{APP} \qquad &  \norm[\cf_{[\alpha,\beta]}]{f_{[\alpha,\beta]}} = \bigl \lVert f^{(3)} \bigr \rVert_{\infty,[\alpha,\beta]}, \qquad S_{[\alpha,\beta]}: f \mapsto f \bbone_{[\alpha,\beta]}, \\
+& \Phi(\tvS_{\cp};\cp) = \tPhi(\tvS_{\cp},\veps_{\cp};\cp) = \sum_{l=1}^L  \tS_{[t_{l-1},t_l]}, \\
+&\err(\tvS_{\cp},\veps_{\cp};\cp) = \norm[\infty]{\veps_{\cp}}, \displaybreak[1]\\ 
+\text{OPT} \qquad &  \norm[\cf_{[\alpha,\beta]}]{f_{[\alpha,\beta]}} = \bigl \lVert f^{(3)} \bigr \rVert_{\infty,[\alpha,\beta]}, \qquad S_{[\alpha,\beta]}: f \mapsto \min_{\alpha \le x \le \beta} f(x), \\
+& \Phi(\tvS_{\cp};\cp) =  \min  \tvS_{\cp}, \\
+& \tPhi(\tvS_{\cp},\veps_{\cp};\cp) =  \frac{1}{2} \left \{ \min  (\tvS_{\cp} + \veps_{\cp}) + \min  (\tvS_{\cp} - \veps_{\cp})\right \}, \\ 
+& \err(\tvS_{\cp},\veps_{\cp};\cp) =  \frac{1}{2} \left \{ \min  (\tvS_{\cp} + \veps_{\cp}) - \min  (\tvS_{\cp} - \veps_{\cp})\right \}.
+\end{align*}
+Here the operator ``$\min$'' applied to a vector takes the minimum of the elements.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Algorithms}
+Now we consider numerical algorithms for solving the problems on a subset of the whole domain.  Suppose that 
+\begin{itemize}
+
+\item For each $\cy \in \ct$ and each $n \in \ci$ there exists a non-adaptive approximation operator $A_n(\cdot;\cy) : \cf \to \ch$ that uses $n$ function values sampled only in $\cy$.
+
+\item There exists an error bound function $h:\ci \times \ct \to [0,\infty)$ such that $h(\cdot,\cy)$ is non-increasing, and
+\[
+\Hnorm{S(f;\cy) - A_n(f;\cy)} \le h(n,\cy) \FYnorm{f}, \qquad \forall f \in \cf.
+\]
+\end{itemize}
+For our three problems, the non-adaptive algorithms $A_n$ are based on piecewise quadratic polynomial approximation of the function.  
+
+For the integration problem this corresponds to Simpson's rule.  The number of possible function values is the odd integers $\ci=\{2i-1 : i \in \naturals\}$
+\begin{subequations} \label{Simpson}
+\begin{equation} 
+x_i= \alpha + (\beta-\alpha) \frac{i-1}{n-1}, \qquad i=1, \ldots, n,
+\end{equation}
+\begin{multline}
+A_n(f,[\alpha,\beta]) = \frac{\beta-\alpha}{3(n-1)} \left [ f(x_1) + 4 f(x_2) + 2f(x_3)  + 4 f(x_4) +  \cdots \right .\\
+\left . + 4 f(x_{n-1}) + f(x_n) \right].
+\end{multline}
+From ??? it is known that discretization error of Simpson's rule is
+\begin{gather} 
+\abs{\int_{\alpha}^{\beta} f(x) \, \dif x - A_n(f,[\alpha,\beta])} \le \bignorm[1,{[\alpha,\beta]}]{f^{(4)}} h(n,[\alpha,\beta]), \\ 
+h(n,[\alpha,\beta]) = ???.
+\end{gather}
+\end{subequations}
+
+For approximation
+
+For optimization
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Functions in Cones} 
+The challenge in applying the error bounds for the non-adaptive integration, function recovery, and optimization algorithms is that $\FYnorm{f}$ is not known a priori.  Our approach is to assume that the input functions lie inside cones. For partitions $\cp$ suppose that 
+\begin{itemize}
+
+\item For each $\cy \in \ct$ there exists a semi-norm $\GYnorm{\cdot}$ defined on the space $\cf_{\cy}$ that is weaker than $\FYnorm{\cdot}$.
+
+\item For a fixed function non-increasing $\tau: (0,1) \to (0,\infty)$, define the cone 
+\begin{equation} \label{defcone}
+\cc_{\tau} = \{ f \in \cf : \FYnorm{f} \le \tau(\vol(\cy)) \GYnorm{f} \},
+\end{equation}
+where $\vol(\cy)$ denotes relative volume of $\cy$, i.e., the Lebesgue measure $\cy$ divided by the Lebesgue measure of $\cx$.
+
+\item For each $\cy \in \ct$ and each $n \in \ci$ there exists a non-adaptive approximation operator $G_n(\cdot;\cy) : \cf \to \ch$ that uses $n$ function values sampled only in $\cy$.
+
+\item There exists error bound functions $g_{\pm}:\ci \times \ct \to [0,\infty)$ such that $g(\cdot,\cy)$ is non-increasing, and
+\[
+-g_{-}(n,\cy) \FYnorm{f} \le \GYnorm{f} - G_n(f;\cy) \le g_{+}(n,\cy) \FYnorm{f}, \qquad \forall f \in \cf.
+\]
+Invoking the definition of the cone implies a two sided bound for  $\GYnorm{f}$ and $\GYnorm{f}$ in terms of $G_n(f;\cy)$:
+\begin{multline*}
+-\tau(\vol(\cy)) g_{-}(n,\cy) \GYnorm{f} \le \GYnorm{f} - G_n(f;\cy) \le \tau(\vol(\cy)) g_{+}(n,\cy) \GYnorm{f}, \\ \forall f \in \cc_{\tau}.
+\end{multline*}
+\begin{gather*}
+\frac{G_n(f;\cy)}{1+\tau(\vol(\cy)) g_{-}(n,\cy)} \le \GYnorm{f} \le \frac{G_n(f;\cy)}{1-\tau(\vol(\cy)) g_{+}(n,\cy)}, \quad \forall f \in \cc_{\tau}, \\
+\frac{\tau(\vol(\cy))G_n(f;\cy)}{1+\tau(\vol(\cy)) g_{-}(n,\cy)} \le \FYnorm{f} \le \frac{\tau(\vol(\cy))G_n(f;\cy)}{1-\tau(\vol(\cy)) g_{+}(n,\cy)}, \quad \forall f \in \cc_{\tau}.
+\end{gather*}
+
+\end{itemize}
+
+
+\begin{algo} Given \ldots.  
+
+
+\end{algo}
+
+
+\bibliographystyle{elsarticle-num.bst}
+\bibliography{FJH22,FJHown22}
+\end{document}
+
