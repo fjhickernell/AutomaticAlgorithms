@@ -31,7 +31,7 @@ Constructing the adaptive algorithm for integration requires upper bounds on the
 To find an upper bound on $\|f'\|_{1}-G_{n}(f)$, note that for $x_i \le x_{i+1}$
 \begin{subequations} \label{foneasinteg}
 \begin{equation}
-f'(x)=(n-1)\left\{[f(x_{x+1})-f(x_{i})]+\int_{x_i}^{x_{i+1}}(n-1)v(t,x)f''(t) \, \dif t \right\}
+f'(x)=(n-1)\left\{[f(x_{i+1})-f(x_{i})]+\int_{x_i}^{x_{i+1}}(n-1)v(t,x)f''(t) \, \dif t \right\}
 \end{equation}
 where 
 \begin{equation}
@@ -52,7 +52,7 @@ Applying this inequality over the entire interval, $[0,1]$ leads to
 \begin{align*}
 \norm[1]{f'} - G_n(f)  &  = \sum_{i=1}^{n-1} \left \{  \int_{x_i}^{x_{i+1}}|f'(x)|\, \dif x - |f(x_{i+1})-f(x_i)| \right \} \\
 & \le \frac{1}{2(n-1)} \sum_{i=1}^{n-1} \int_{x_i}^{x_{i+1}} |f''(t)| \, \dif t = 
-\frac{\|f''(t)\|_{1}}{2(n-1)}.
+\frac{\|f''\|_{1}}{2(n-1)}.
  \end{align*}
 According to \eqref{Gerrbds} and , we have $h_{+}(n)=1/[2(n-1)]$ and an inflation factor of 
 \begin{equation}\label{factor}
@@ -120,7 +120,7 @@ be the nice subset of the cone $\cc_\tau$.  Then it follows that Algorithm \ref{
 \subsection{Lower Bound on the Computational Cost}
 Next, we derive a lower bound on the cost of approximating functions in the cone $\cc_{\tau}$ by constructing fooling functions. Following the arguments of Section \ref{LowBoundSec}, we choose  $f_0(x)=x.$ Then
 \[
-\norm[1]{f'_0}=2, \qquad \norm[1]{f''_0}=0, \qquad \tau_0=0.
+\norm[1]{f'_0}=1, \qquad \norm[1]{f''_0}=0, \qquad \tau_0=0.
 \]
 For any $n \in \naturals$, suppose that the one has the data $L_i(f)=f(\xi_i)$, $i=1, \ldots, n$ for arbitrary $\xi_i$, where $0=\xi_0 \le \xi_1 < \cdots < \xi_n \le \xi_{n+1} = 1$.  There must be some $j=0, \ldots, n$ such that $\xi_{j+1} - \xi_j \ge 1/(n+1)$.  The function $f_{1}$, defined as
 $$
