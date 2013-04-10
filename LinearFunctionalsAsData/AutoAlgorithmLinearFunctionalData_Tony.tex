@@ -196,6 +196,12 @@ Thus, one increases $n$ until the right hand side falls below some tolerance, $\
 \end{algo}
 
 
+\begin{theorem}
+Let $\cf$, $\cg$, $\chout$, $\varepsilon$, $\fC_n$ and $\tau$ given as described above.
+\begin{equation*}
+\sup_{0 < \varepsilon \le 1}\frac{\cost(A^\ref{algo1},\cc_\tau,\varepsilon)} {\comp(\varepsilon,\ca(\cj,\chout,S,\Lambda))} <\infty,\quad \cj\in\{\cf,\cg\}
+\end{equation*}
+\end{theorem}
 
 \section{Assuming a Gentle Decay in the Terms of the Series}
 
@@ -410,10 +416,12 @@ For the last last inequality we are using
 \end{proof}
 
 The complexity of a problem for the set of algorithms $\ca(\cb,\chout,S,\Lambda)$ is defined as the cost of the cheapest algorithm that satisfies the specified error tolerance, $\varepsilon$:
-\begin{align*}
+\begin{equation}\label{complexity2}
+\begin{aligned}
 \comp(\varepsilon,&\ca(\cb,\chout,S,\Lambda))\\
 &=\inf_{A\in\ca(\cb,\chout,S,\Lambda)}\left\{\cost(A,\cb,\varepsilon):\norm[\chout]{S(f)-A(f)}\le\varepsilon,\; \forall f\in\cb\right\}
-\end{align*}
+\end{aligned}
+\end{equation}
 
 According to notation in equation \ref{indexdef}, if $n\in\cn$, $\forall f\in\cc\cap\cj_{n,\varepsilon}$ we have that $n\ge\cost(A^\ref{algo2};f,\varepsilon)\ge N_{\opt}(f,\varepsilon)$. Thus, using Theorem \ref{supcost} we know that
 \begin{equation*}
@@ -453,10 +461,41 @@ See that
 Then we can apply Proposition \ref{optimcost}.
 \end{proof}
 
-\subsection{Lower Complexity Bounds for the Algorithm \ref{algo2}}
-...........
+\subsection{Lower Complexity Bounds for Algorithms \ref{algo1} and \ref{algo2}}
 
-\subsubsection{Integrating $f(x)=\sum_{k\in\integers}b^{-\abs{k}}e^{2\pi\sqrt{-1}kx}$}
+Suppose that for any $n > 0$, and for all $\boldsymbol{L}\in\Lambda^m$, satisfying $\$(\boldsymbol{L})\le n$, there exists an $f_1\in\chin$, depending on $n$ and the $L_i$, with solution bounded under, i.e.,
+\begin{equation}
+\norm[\chout]{S(f_1)}\ge \frac{1}{g(n)},\quad \boldsymbol{L}(f_1)=0
+\end{equation}
+for some positive, non-decreasing functions $g$ defined in $(0,\infty)$. Since the data for the function $f_1$ are all zero, it follows that $A(f_1)=A(-f_1)$ for any algorithm, $A$, that is based on the information $\boldsymbol{L}(f_1)$. Then,
+\begin{align*}
+\varepsilon & \ge \sup_{f\in\chin}\norm[\chout]{S(f)-A(f)}\\
+& \ge \norm[\chout]{S(f_1)-A(f_1)}\\
+& = \frac{1}{2}\left(\norm[\chout]{S(f_1)-A(f_1)}+\norm[\chout]{S(f_1)+A(f_1)}\right)\\
+& \ge \frac{1}{2}\norm[\chout]{S(f_1)-A(f_1)+S(f_1)+A(f_1)}\\
+& \ge \frac{1}{g(n)}
+\end{align*}
+
+This implies lower bounds on the complexity, as defined in \ref{complexity2}:
+\begin{equation*}
+\comp(\varepsilon,\ca(\chin,\chout,S,\Lambda))\ge g^{-1}(\varepsilon^{-1})
+\end{equation*}
+
+\begin{rem}
+The function $f_1$ we defined can be adjusted by taking $\hf_{1,{i_j}}=\frac{a_{j,n}}{\lambda_{i_j}}$ such that
+\begin{equation*}
+\norm[\chout]{S(f_1)}=\norm[\pout]{\left(a_{j,n}\right)_{j\in\naturals_0}}\ge \frac{1}{g(n)}
+\end{equation*}
+with the following conditions for all $n$ when the may apply,
+\begin{align*}
+f&\in\chin\Longrightarrow\norm[\chin]{f_1}=\norm[\pin]{\left(\frac{a_{j,n}}{\lambda_{i_j}}\right)_{j\in\naturals_0}}<\infty\\
+f&\in\cg\Longrightarrow\norm[\cg]{f_1}=\norm[\pin]{\left(\frac{a_{j,n}}{\lambda_{i_j}\omega_{i_j}}\right)_{j\in\naturals_0}}<\infty\\
+f&\in\cf\Longrightarrow\norm[\cf]{f_1}=\norm[\pin]{\left(\frac{a_{j,n}}{\lambda_{i_j}\nu_{i_j}\omega_{i_j}}\right)_{j\in\naturals_0}}<\infty\\
+f&\in\cc\Longrightarrow\norm[\pout]{\left(a_{j,n}\right)_{j=n_{k+r-1}+1}^{n_{k+r}}}\le\gamma(r)\norm[\pout]{\left(a_{j,n}\right)_{j=n_{k-1}+1}^{n_{k}}}
+\end{align*}
+\end{rem}
+
+\subsection{Examples: Integrating $f(x)=\sum_{k\in\integers}b^{-\abs{k}}e^{2\pi\sqrt{-1}kx}$}
 
 In our example, let $\chin=\cl_2[0,1]$,$\,\chout=\cl_2[0,1]\cap\{\tf_0=0\}$ and $S: f \mapsto \int f$ be the integration operator with:
 \begin{gather*}
@@ -509,7 +548,7 @@ If $b=3$, below there is a table of the values for this example,
 \end{tabular}
 \end{center}
 
-\subsubsection{Approximating the divergence of a vector field}
+\subsection{Examples: Approximating the divergence of a vector field}
 
 In this case, $\chin=\{f:\reals^n\mapsto\reals^m,\, f\in C^1(\Omega)\}$ and $\chout=\{g:\reals^n\mapsto\reals,\, g\in C^0(\Omega)\}$ and $S: f\mapsto \nabla\cdot f=\sum_{j=1}^{m}\partial_{x_j}f_j$.
 
