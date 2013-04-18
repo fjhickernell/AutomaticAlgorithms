@@ -11,6 +11,8 @@
 \DeclareMathOperator{\lo}{lo}
 \DeclareMathOperator{\fix}{non}
 \DeclareMathOperator{\err}{err}
+\DeclareMathOperator{\maxcost}{maxcost}
+\DeclareMathOperator{\mincost}{mincost}
 \newcommand{\herr}{\widehat{\err}}
 
 \newtheorem{theorem}{Theorem}
@@ -191,10 +193,10 @@ cost $\displaystyle \asymp \left(\frac{\tau\Gnorm{f}}{\varepsilon}\right)^{1/p}$
 \caption{Diagram of a guaranteed, adaptive, automatic algorithm. \label{fig:AdaptAlgo}}
 \end{figure}
 
-Section \ref{integsec} presents a concrete example of this approach for the problem of computing the integral $\int_0^1 f(x) \, \dif x$ for all integrands whose second derivatives are absolutely integrable, i.e., $\Fnorm{f}=\norm[1]{f''}$. The trapezoidal rule based on $n$ function values, i.e., $n-1$ trapezoids, computes an approximation with error no greater than $\varepsilon$ using $\bigl\lceil \sqrt{\norm[1]{f''}/(8\varepsilon)} \bigr \rceil +1 $ function values.  However, except for relatively simple integrands, a bound on $\norm[1]{f''}$ is unknown in practice.  
+Section \ref{integsec} presents a concrete example of this approach for the problem of computing the integral $\int_0^1 f(x) \, \dif x$ for all integrands whose second derivatives are absolutely integrable, i.e., $\Fnorm{f}=\norm[1]{f''}$. The trapezoidal rule based on $n$ function values, i.e., $n-1$ trapezoids, computes an approximation with error no greater than $\varepsilon$ using $2+ \sqrt{\norm[1]{f''}/(8\varepsilon)}$ function values.  However, except for relatively simple integrands, a bound on $\norm[1]{f''}$ is unknown in practice.  
 
 Following the procedure outlined above we choose the weaker semi-norm as $\Gnorm{f} = \norm[1]{f'-f(1)+f(0)}$.  This semi-norm may be estimated by an algorithm $G_n$ that takes the $\cg$-semi-norm of the piecewise linear spline for $f$.  The error for $G_n(f)$ is bounded by $\norm[1]{f''}/(2n-2)$.  Fixing the parameter $\tau > 1$, and assuming that $\norm[1]{f''} \le \tau \norm[1]{f'-f(1)+f(0)}$  (the cone condition), then the reliable numerical upper bound on $\norm[1]{f'}$ can be used to obtain an upper bound for $\norm[1]{f''}$.   
-This leads to a guaranteed, automatic (adaptive) algorithm for approximating the integral to the desired accuracy with a computational cost that is $\Theta(\sqrt{\tau \norm[1]{f'-f(1)+f(0)}/\varepsilon})$, where $\norm[1]{f'-f(1)+f(0)}$ is unknown a priori.  Here $\tau$ represents a minimum sample size, and $1/\tau$ represents a length scale of for possible spikes that one wishes to integrate accurately.
+This leads to a guaranteed, automatic (adaptive) algorithm for approximating the integral to the desired accuracy with a computational cost that is {\bf Fix this to be inequality} $\Theta(\sqrt{\tau \norm[1]{f'-f(1)+f(0)}/\varepsilon})$, where $\norm[1]{f'-f(1)+f(0)}$ is unknown a priori.  Here $\tau$ represents a minimum sample size, and $1/\tau$ represents a length scale of for possible spikes that one wishes to integrate accurately.
 
 There are limited theoretical results providing conditions under which adaption is useful.  Novak \cite{Nov96a} shows the advantage of adaption in for some problems in the average case and randomized settings.  Plaskota and Wasilkowski \cite{PlaWas05a,PlaEtal08a} demonstrate the advantage of adaption for integrating or approximating functions with singularities. By contrast, here we consider the deterministic setting, and we are not concerned with functions with singularities.
 
@@ -313,12 +315,22 @@ The cost of the algorithm for a specified input function is defined analogously 
 \]
 Because of the potentially adaptive nature of the algorithm, namely that $m$ may depend on $f$, it follows that the cost may depend on $f$ as well as $A$. The input parameter $N_{\max}$ tells the algorithm to ensure that $\cost(A,f;\varepsilon,N_{\max}) \le N_{\max}$ for all $f$ and $\varepsilon$.  This is a practical consideration since the user does not want to wait indefinitely for an answer.  
 
-The cost of the algorithm is expected to scale with some $\cg$-semi-norm of the integrand, where the $\cg$-semi-norm is weaker than the $\cf$-semi-norm.  In particular, the cost of an algorithm generally increases as $\Gnorm{f}$ increases.  The cost of the algorithm may also depend on $\cn$, the subset of $\cf$ where the functions of interest lie.  To represent this idea one defines the following cost:
+The computational cost of the algorithm is expected to scale with some $\cg$-semi-norm of the integrand, where the $\cg$-semi-norm is weaker than the $\cf$-semi-norm.  In particular, the cost of an algorithm generally increases as $\Gnorm{f}$ increases.  The cost of the algorithm may also depend on $\cn$, the subset of $\cf$ where the functions of interest lie.  To represent this idea one defines the following \emph{maximum} cost:
 \begin{equation*}
-\cost(A,\cn,\varepsilon,N_{\max},\sigma)
+\maxcost(A,\cn,\varepsilon,N_{\max},\sigma)
 = \sup \{ \cost(A,f;\varepsilon,N_{\max}) : f \in \cn, \ \Gnorm{f} \le \sigma \} .
 \end{equation*}
 Here the set $\cn$ is allowed to depend on the algorithm inputs, $\varepsilon$ and $N_{\max}$, but not on $\sigma$.  Moreover, the algorithm, $A$, does not take $\sigma$ as an input.
+
+One would prefer an algorithm where the costs for input functions with the same $\cg$-semi-norm do not vary widely.  To understand this one defines the  \emph{minimum} cost:
+\begin{equation*}
+\mincost(A,\cn,\varepsilon,N_{\max},\sigma)
+= \inf \{ \cost(A,f;\varepsilon,N_{\max}) : f \in \cn, \ \Gnorm{f} \ge \sigma \} .
+\end{equation*}
+An algorithm is said to have stable computational cost if 
+\begin{equation*}
+\sup_{\varepsilon, \sigma > 0} \frac{\maxcost(A,\cn,\varepsilon,N_{\max},\sigma)}{\mincost(A,\cn,\varepsilon,N_{\max},\sigma)} < \infty
+\end{equation*}
 
 For automatic algorithms, returning an approximation with the desired error is not enough.  One also wants the algorithm to be confident that the answer is correct.  An  algorithm  $(A,W) \in \ca(\cn,\ch,S,\Lambda)$, is deemed successful provided that it meets the prescribed error tolerance and does not raise the warning flag.  Specifically, success is defined as
 \begin{multline*}
@@ -332,7 +344,7 @@ The above are absolute error criteria for success.  One might also define relati
 The complexity of a problem is defined as the cost of the cheapest successful algorithm for input functions with $\cg$-semi-norm no greater than $\sigma$:
 \begin{multline} \label{complexdef}
 \comp(\varepsilon,\ca(\cn,\ch,S,\Lambda),N_{\max},\sigma) \\
- = \inf\left\{\cost(A,\cn,\varepsilon,N_{\max},\sigma) : \success(A,W,\cn,\varepsilon,N_{\max}) = \text{true}, \right .\\
+ = \inf\left\{\maxcost(A,\cn,\varepsilon,N_{\max},\sigma) : \success(A,W,\cn,\varepsilon,N_{\max}) = \text{true}, \right .\\
 \left.  (A,W) \in \ca(\cn,\ch,S,\Lambda) \right \}.
 \end{multline}
 Here the infimum of an empty set is defined to be $\infty$.  The optimality of adaptive algorithms is defined analogously to \eqref{nearoptdef}.
@@ -439,14 +451,19 @@ Let $\cc_\tau$ be the cone of functions defined in \eqref{conedef} whose $\cf$-s
 be a subset of the cone $\cc_\tau$ that lies inside a $\cg$-semi-norm ball.  Since $\tN_{\max}$ is assumed to be very large, it follows that $\min(\tildeh(\tN_{\max}),\tau h(\tN_{\max}))$ is tiny, and the radius of the $\cg$-semi-norm ball defining $\cn$ is quite large. 
 
 Then it follows that Algorithm \ref{twostagedetalgo} is successful for all functions in this set of \emph{nice} functions $\cn$,  i.e.,  $\success(A,W,\cn,\varepsilon,N_{\max}) = \text{true}$.  Moreover, the cost of this algorithm is bounded above in terms of the unknown $\cg$-semi-norm of the input function as follows:
-\begin{equation} \label{auto2stagedetcost}
-\cost(A,\cn,\varepsilon,N_{\max},\Gnorm{f})
-\le n_G+ N_{A}\left(\frac{\varepsilon}{\fC \fc \Gnorm{f}} \right).
-\end{equation}
+\begin{subequations}  \label{auto2stagedetcost}
+\begin{gather}
+\maxcost(A,\cn,\varepsilon,N_{\max},\Gnorm{f})
+\le n_G+ \max\left(\tN_{\max}, N_{A}\left(\frac{\varepsilon}{\fC \fc \Gnorm{f}} \right)\right), \\
+\mincost(A,\cn,\varepsilon,N_{\max},\Gnorm{f})
+\ge n_G+ \min\left(\tN_{\max}, N_{A}\left(\frac{\varepsilon}{\Gnorm{f}} \right) \right).
+\end{gather}
+\end{subequations}
+If $N_A(a)$ is polynomial in $a^{-1}$, then this algorithm is computationally stable in the sense that the maximum cost is no greater than some constant times the minimum cost.
 
 Consider the limit of infinite cost budget, i.e., $N_{\max} \to \infty$.  If the sequence of algorithms $\{A_n\}_{n \in \ci}$, $A_n \in\ca_{\fix}(\cg,\ch,S,\Lambda)$  is optimal for the problems $(\cg,\ch,S,\Lambda)$ and $(\cf,\ch,S,\Lambda)$ as defined in \eqref{nearoptdef}, then Algorithm \ref{twostagedetalgo} does not incur a significant penalty for not knowing $\Gnorm{f}$ a priori, i.e.,
 \begin{equation} \label{penalty}
-\sup_{0 < \varepsilon/\sigma \le 1} \frac{\cost(A,\cc_{\tau},\varepsilon,\infty,\sigma)} {\comp(\varepsilon/\sigma,\ca_{\fix}(\cj,\ch,S,\Lambda))} <\infty, \qquad \cj \in \{\cf,\cg\}.
+\sup_{0 < \varepsilon/\sigma \le 1} \frac{\maxcost(A,\cc_{\tau},\varepsilon,\infty,\sigma)} {\comp(\varepsilon/\sigma,\ca_{\fix}(\cj,\ch,S,\Lambda))} <\infty, \qquad \cj \in \{\cf,\cg\}.
 \end{equation}
 \end{theorem}
 
@@ -460,8 +477,8 @@ To ensure that the algorithm does not attempt to overrun the cost budget, one mu
 
 Now consider the penalty for not knowing $\Gnorm{f}$ a priori.  If the sequence of nonadaptive algorithms, $\{A_n\}_{n \in \ci}$, used to construct Algorithm \ref{twostagedetalgo} are optimal for solving the problem on both $\cf$ and $\cg$, as defined in \eqref{nearoptdef}, then it follows that for $\cj \in \{\cf,\cg\}$,
 \begin{multline*}
-\sup_{0 < \varepsilon/\sigma \le 1} \frac{\cost(A,\cn,\varepsilon,\infty,\sigma)} {\comp(\varepsilon/\sigma,\ca_{\fix}(\cj,\ch,S,\Lambda))} \\
-= \sup_{0 < \varepsilon/\sigma \le 1} \frac{\cost(A,\cn,\varepsilon,\infty,\sigma)}{\min\{n \in \ci : \err(A_n,\cj,\ch,S) \le \varepsilon/\sigma\}} \\
+\sup_{0 < \varepsilon/\sigma \le 1} \frac{\maxcost(A,\cn,\varepsilon,\infty,\sigma)} {\comp(\varepsilon/\sigma,\ca_{\fix}(\cj,\ch,S,\Lambda))} \\
+= \sup_{0 < \varepsilon/\sigma \le 1} \frac{\maxcost(A,\cn,\varepsilon,\infty,\sigma)}{\min\{n \in \ci : \err(A_n,\cj,\ch,S) \le \varepsilon/\sigma\}} \\
  \times \sup_{0 < \varepsilon/\sigma \le 1} \frac{\min\{n \in \ci : \err(A_n,\cj,\ch,S) \le \varepsilon/\sigma\}} {\comp(\varepsilon/\sigma,\ca_{\fix}(\cj,\ch,S,\Lambda))}
 \end{multline*} 
 The first of these suprema is finite by comparing the convergence rates of the sequence algorithms, $\{A_n\}_{n \in \ci}$, in \eqref{algseqerrbd} with the cost of the automatic algorithm given by \eqref{auto2stagedetcost}. The second of these suprema is finite by the optimality of $\{A_n\}_{n \in \ci}$.  

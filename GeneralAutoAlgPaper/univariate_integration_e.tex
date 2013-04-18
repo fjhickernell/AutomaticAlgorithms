@@ -172,8 +172,8 @@ $$
 be the nice subset of the cone $\cc_\tau$.  Then it follows that Algorithm \ref{multistageintegalgo} is successful for all functions in $\cn$,  i.e.,  $\success(T,W,\cn,\varepsilon,N_{\max}) = 1$.  Moreover, the cost of this algorithm is bounded above as follows:
 \begin{align*}
 \cost(A,\cn,\varepsilon,N_{\max},\norm[1]{f'})
-&\le 2+2 \left \lceil \sqrt{\frac{\tau \norm[1]{f'}}{8\varepsilon} + \frac{\tau^2 }{16}} + \frac{\tau}{4} \right\rceil \\
-&\le 2+2 \left \lceil\sqrt{\frac{\tau \norm[1]{f'}}{8\varepsilon}} + \frac{\tau}{2} \right \rceil.
+&\le 2+2 \left \lceil \sqrt{\frac{\tau \norm[1]{f'-f(1)+f(0)}}{8\varepsilon} + \frac{\tau^2 }{16}} + \frac{\tau}{4} \right\rceil \\
+&\le 4+ \tau + \sqrt{\frac{\tau \norm[1]{f'-f(1)+f(0)}}{2\varepsilon}}.
 \end{align*}
 \end{theorem}
 
