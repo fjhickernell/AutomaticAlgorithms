@@ -93,7 +93,16 @@ According to \eqref{Gerrbds} and , we have $h_{+}(n)=1/[2(n-1)]$ and an inflatio
 \mathfrak{C}_n =\frac{1}{1 - \tau/(2n-2)} \qquad \text{for } n>1+\tau/2.
 \end{equation}
 
-An algorithm that provides a lower bound on $\Fnorm{f}=\norm[1]{f''}$ is now derived to use as a necessary condition that $f$ lies in $\cc_\tau$ as described in Remark \ref{neccondrem}.  Given $n =2, 3, \ldots$
+An algorithm that provides a lower bound on $\Fnorm{f}=\norm[1]{f''}$ is now derived to use as a necessary condition that $f$ lies in $\cc_\tau$ as described in Remark \ref{neccondrem}.  Given $n =2, 3, \ldots$, define 
+\begin{equation} \label{Fnormalg}
+F_n(f) = (n-1)\sum_{i=1}^{n-2} \abs{f(x_i) - 2 f(x_{i+1})+f(x_{i+2})}
+\end{equation}
+It follows using the mean value theorem that 
+\begin{align*}
+F_n(f) &= (n-1)\sum_{i=1}^{n-1} \abs{[f(x_{i+2}) - f(x_{i+1})] - [f(x_{i+1}) - f(x_{i})]} \\
+&= \sum_{i=1}^{n-1} \abs{f'(\xi_{i+1}) - f'(\xi_{i})} = \sum_{i=1}^{n-1} \abs{\int_{\xi_i}^{\xi_{i+1}} f''(x) \, \dif x} \le \norm[1]{f''},
+\end{align*}
+where $\xi_i$ is some point in $[x_i,x_{i+1}]$.
 
 The errors of the trapezoidal rule for integrands in the spaces $\mathcal{W}^{2,1}$ and $\mathcal{W}^{1,1}$ given in \cite[(7.14) and (7.15)]{BraPet11a}. The derivations are repeated here for completeness. Integrating \eqref{fintermsfdoubprime} leads to the formula for $h(n)$ defined in \eqref{algseqerrbd}
 \begin{align*}
@@ -126,7 +135,7 @@ By condition \eqref{hbestverb}, it follows that $\min(\tildeh(n),\tau h(n))=\tau
 \end{equation}
 The function $N_A$ defined in \eqref{Nmindef} is
 \begin{equation}
-N_{A}(a)= \min\left\{ n \in \ci : \tau h(n) \le a \right\} = 1+ \left \lceil \sqrt{a/(8\tau)}\right \rceil.
+N_{A}(a)= \min\left\{ n \in \ci : \tau h(n) \le a \right\} = 1+ \left \lceil \sqrt{\tau/(8a)}\right \rceil.
 \end{equation}
 The denominator in the definition of the set of integrands $\cn$ in \eqref{nicefdefmulti} is
 \begin{multline}
@@ -138,7 +147,7 @@ The function $\tN_A$ defined in \eqref{tNmindef} is
 \begin{align}
 \nonumber
 \tN_A(a) &= \min\left\{ n \in \ci : \min(\tildeh(n),\tau h(n))\fC_n\fc_n \le a \right\} \\
-&= 1+ \left \lceil \sqrt{\frac{\tau}{8a} + \frac{\tau^2}{16}} +\frac{\tau}{4} \right \rceil \le 1+ \left \lceil\sqrt{\frac{\tau}{8a}} + \frac{\tau}{2} \right \rceil.
+&= 1+ \left \lceil \sqrt{\frac{\tau}{8a} + \frac{\tau^2}{16}} +\frac{\tau}{4} \right \rceil \le 2 + \frac{\tau}{2} + \sqrt{\frac{\tau}{8a}}.
 \end{align}
 \end{subequations}
 With these preliminaries, Algorithm \ref{multistagealgo} and Theorem \ref{MultiStageThm} may be applied directly to  yield the following automatic, adaptive integration algorithm and its guarantee.
@@ -146,43 +155,57 @@ With these preliminaries, Algorithm \ref{multistagealgo} and Theorem \ref{MultiS
 \begin{algo}[Univariate Integration] \label{multistageintegalgo}
 Let the error tolerance $\varepsilon$, the maximum cost budget $N_{\text{max}}$ and the cone constant $\tau$ be given inputs. Let the sequence of algorithms $\{A_n\}_{n\in \mathcal{I}}$, $\{G_n\}_{n\in \mathcal{I}}$ be described above. Set $i=1$. Let $n_1=\lceil(\tau+1)/2\rceil+1$. For any input function $f\in \mathcal{W}^{2,1}$, do the following:
 \begin{description}
-\item[Stage 1.\ Estimate {$\|f'-f(1)+f(0)\|_{1}$}.] Compute $G_{n_i}(f)$ in \eqref{1direst}.
+\item[Stage 1.\ Estimate {$\norm[1]{f'-f(1)+f(0)}$} and {$\norm[2]{f''}$}.] Compute $G_{n_i}(f)$ in \eqref{1direst} and $F_{n_i}(f)$ in \eqref{Fnormalg}.
 
-\item[Stage 2. Check for convergence.] Check whether $n_i$ is large enough to satisfy the error tolerance, i.e.
+\item[Stage 2. Check necessary condition for $f \in \cc_{\tau}$.] Compute 
     \begin{align*}
-     G_{n_i}(f) \le \frac{4\varepsilon(n_i-1)(2n_i-2 - \tau)}{\tau}.
+     \tau_{\min,n_i} =  \frac{F_{n_i}(f)}{G_{n_i}(f)+F_{n_i}(f)/(2n_i-2)}.
     \end{align*}
-    If this is true, then set $W$ to be false, return $(T_{n_i}(f),W)$ and terminate the algorithm. If this is not true, go to Stage 3.
+If $\tau \ge \tau_{\min,n_i}$, then go to stage 3.  Otherwise, set $\tau = 2\tau_{\min,n_i}$.  If $n_i \ge (\tau+1)/2$, then go to stage 3.  Otherwise, choose 
+$$
+n_{i+1}=1+ (n_i-1)\left\lceil\frac{\tau+1}{2n_i-2}\right\rceil.
+$$
+Go to Stage 4.
 
-\item[Stage 3. Compute $n_{i+1}$.] Choose
+\item[Stage 3. Check for convergence.] Check whether $n_i$ is large enough to satisfy the error tolerance, i.e.
+    \begin{equation*}
+     G_{n_i}(f) \le \frac{4\varepsilon(n_i-1)(2n_i-2 - \tau)}{\tau}.
+    \end{equation*}
+If this is true, then set $W$ to be false, return $(T_{n_i}(f),W)$ and terminate the algorithm.   If this is not true, choose
 $$
 n_{i+1}=1+ (n_i-1)\max\left\{2,\left\lceil\frac{1}{(n_i-1)}\sqrt{\frac{\tau G_{n_i}(f)}{8\varepsilon}}\right\rceil\right\}.
 $$
-If $n_{i+1} \le N_{\max}$, increment $i$ by $1$, and return to Stage 1.
+Go to Stage 4.
 
-Otherwise, if $n_{i+1} > N_{\max}$, choose $n_{i+1}$ to be the largest number not exceeding $N_{\max}$ such that $T_{n_{i}}$ is embedded in $T_{n_{i+1}}$, and set $W$ to be true. Return $(T_{n_{i+1}}(f),W)$ and terminate the algorithm.
+\item[Stage 4. Check whether $n_{i+1}$ is within budget.] If $n_{i+1} \le N_{\max}$, increment $i$ by $1$, and return to Stage 1.  Otherwise, if $n_{i+1} > N_{\max}$, choose 
+$$
+n_{i+1}=1+ (n_i-1)\max\left\lfloor\frac{N_{\max}-1}{(n_i-1)}\right\rfloor,
+$$
+and set $W$ to be true. Return $(T_{n_{i+1}}(f),W)$ and terminate the algorithm.
 \end{description}
 \end{algo}
 
-\begin{theorem} \label{multistageintegthm} Let $(T,W)$ be the automatic trapezoidal rule defined by Algorithm \ref{multistageintegalgo}, and let  $N_{\max}$, $\tau$, $n_1$, and $\varepsilon$ be the parameters described there.  Assume that $n_1 \le N_{\max}$.  Let $\cc_\tau$ be the cone of functions defined in \eqref{coneinteg}.  Let
+\begin{theorem} \label{multistageintegthm} Let $(T,W)$ be the automatic trapezoidal rule defined by Algorithm \ref{multistageintegalgo}, and let  $N_{\max}$, $\tau$, $n_1$, and $\varepsilon$ be the inputs and parameters described there.  Assume that $n_1 \le N_{\max}$.  Let $\cc_\tau$ be the cone of functions defined in \eqref{coneinteg}.  Let
 $$
 \cn
-= \left \{ f \in \cc_\tau : \norm[1]{f'} \le \frac{2\varepsilon (N_{\max}-2)(N_{\max}-2 -\tau)}{\tau} \right\}
+= \left \{ f \in \cc_\tau : \norm[1]{f'-f(1)+f(0)} \le \frac{2\varepsilon (N_{\max}-2)(N_{\max}-2 -\tau)}{\tau} \right\}
 $$
 be the nice subset of the cone $\cc_\tau$.  Then it follows that Algorithm \ref{multistageintegalgo} is successful for all functions in $\cn$,  i.e.,  $\success(T,W,\cn,\varepsilon,N_{\max}) = 1$.  Moreover, the cost of this algorithm is bounded above as follows:
 \begin{align*}
-\cost(A,\cn,\varepsilon,N_{\max},\norm[1]{f'})
+\MoveEqLeft{\maxcost(A,\cn,\varepsilon,N_{\max},\norm[1]{f'-f(1)+f(0)})}\\
 &\le 2+2 \left \lceil \sqrt{\frac{\tau \norm[1]{f'-f(1)+f(0)}}{8\varepsilon} + \frac{\tau^2 }{16}} + \frac{\tau}{4} \right\rceil \\
-&\le 4+ \tau + \sqrt{\frac{\tau \norm[1]{f'-f(1)+f(0)}}{2\varepsilon}}.
+&\le 4+ \tau + \sqrt{\frac{\tau \norm[1]{f'-f(1)+f(0)}}{2\varepsilon}}, \\
+\MoveEqLeft{\mincost(A,\cn,\varepsilon,N_{\max},\norm[1]{f'-f(1)+f(0)})}\\ 
+& \ge 1+ \max\left(\frac{\tau+1}{2}, \sqrt{\frac{\tau \norm[1]{f'-f(1)+f(0)}}{8 \varepsilon}} \right) .
 \end{align*}
 \end{theorem}
 
 
 \subsection{Lower Bound on the Computational Cost}
 Next, we derive a lower bound on the cost of approximating functions in the cone $\cc_{\tau}$ by constructing fooling functions. Following the arguments of Section \ref{LowBoundSec}, we choose  $f_0(x)=x(1-x).$ Then
-\[
-\Gnorm{f_0}=\int_0^1 \abs{1-2x} \, \dif x = \frac{1}{2}, \qquad \Fnorm{f_0}=\norm[1]{f''_0}=2, \qquad \tau_0=4.
-\]
+\begin{gather*}
+\Gnorm{f_0}=\norm[1]{f'_0-f_0(1)+f_0(0)}=\int_0^1 \abs{1-2x} \, \dif x = \frac{1}{2}, \\ \Fnorm{f_0}=\norm[1]{f''_0}=2, \qquad \tau_0=4.
+\end{gather*}
 For any $n \in \naturals$, suppose that the one has the data $L_i(f)=f(\xi_i)$, $i=1, \ldots, n$ for arbitrary $\xi_i$, where $0=\xi_0 \le \xi_1 < \cdots < \xi_n \le \xi_{n+1} = 1$.  There must be some $j=0, \ldots, n$ such that $\xi_{j+1} - \xi_j \ge 1/(n+1)$.  The function $f_{1}$, defined as
 $$
 f_{1}(x):=\begin{cases} \displaystyle
@@ -192,7 +215,7 @@ f_{1}(x):=\begin{cases} \displaystyle
 $$
 has $\int_0^1 f(x) \, \dif x=1$ and $f_1(\xi_i)=0$ for $i=0, \ldots, n+1$.  Moreover, the norms of the first and second derivatives of $f_1$ are
 \begin{align*}
-\Gnorm{f}&=\norm[1]{f'_1}=\frac{15}{4(\xi_{j+1}-\xi_{j})}\leq \tg(n),\\
+\Gnorm{f}&=\norm[1]{f'_1-f_1(1)+f_1(0)}=\norm[1]{f'_1}=\frac{15}{4(\xi_{j+1}-\xi_{j})}\leq \tg(n),\\
 \Fnorm{f}&=\norm[1]{f''_1}=\frac{40}{\sqrt{3}(\xi_{j+1}-\xi_{j})^2}
 =\frac{32\norm[1]{f'_1}}{3\sqrt{3}(\xi_{j+1}-\xi_{j})}
  \leq g(n) \norm[1]{f'_1},
@@ -205,7 +228,7 @@ Using these choices of $f_0$ and $f_1$, along with the corresponding $\tg$ and $
 
 \begin{theorem} \label{complowbdinteg} The adaptive trapezoidal algorithm is optimal for integration of functions in $\mathcal{W}^{1,1}$ and $\mathcal{W}^{2,1}$. Assuming an infinite cost budget and for $\tau>4$, the complexity of the integration problem, over the cone of functions $\cc_{\tau}$ defined in \eqref{coneinteg} is bounded below as
 \begin{align*}
-\MoveEqLeft{\comp(\varepsilon,\ca(\cc_{\tau},\ch,\INT,\Lambda),\infty,\norm[1]{f'})}\\
+\MoveEqLeft{\comp(\varepsilon,\ca(\cc_{\tau},\ch,\INT,\Lambda),\infty,\norm[1]{f'-f(1) + f(0)})}\\
 &\ge -1+ \min\left(\frac{(\tau-4)\norm[1]{f'-f(1)+f(0)}}{15(\tau-2) \varepsilon}, \right .\\
 &\qquad \qquad \left . \sqrt{\frac{\sqrt{3}\tau(\tau-4)\norm[1]{f'-f(1)+f(0)}}{160(\tau-2)\varepsilon}} \right)\\
 & \sim \sqrt{\frac{\sqrt{3}\tau(\tau-4)\norm[1]{f'-f(1)+f(0)}}{160(\tau-2)\varepsilon}}   \quad\text{as } \frac{\norm[1]{f'-f(1)+f(0)}}{\varepsilon} \to \infty.
