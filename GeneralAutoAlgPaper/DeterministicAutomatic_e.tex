@@ -310,23 +310,23 @@ The cost of the algorithm for a specified input function is defined analogously 
 \[
 \cost(A,f;\varepsilon,N_{\max}) = \$(\vL) = \$(L_1) + \cdots +\$(L_m).
 \]
-Because of the potentially adaptive nature of the algorithm, namely that $m$ may depend on $f$, it follows that the cost may depend on $f$ as well as $A$. The input parameter $N_{\max}$ tells the algorithm to ensure that $\cost(A,f;\varepsilon,N_{\max}) \le N_{\max}$ for all $f$ and $\varepsilon$.  This is a practical consideration since the user does not want to wait indefinitely for an answer.  
+Because of the potentially adaptive nature of the algorithm, namely that $m$ may depend on $f$, it follows that the cost may depend on $f$ as well as $A$. The input parameter $N_{\max}$ tells the algorithm to ensure that $\cost(A,f;\varepsilon,N_{\max}) \le N_{\max}$ for all $f$ and $\varepsilon$.  This is a practical consideration since the user does not want to wait indefinitely for an answer. 
 
-The computational cost of the algorithm is expected to scale with some $\cg$-semi-norm of the integrand, where the $\cg$-semi-norm is weaker than the $\cf$-semi-norm.  In particular, the cost of an algorithm generally increases as $\Gnorm{f}$ increases.  The cost of the algorithm may also depend on $\cn$, some subset of $\cf$ where the functions of interest lie.  To represent this idea one defines the following \emph{maximum} cost of the algorithm:
+The automatic, adaptive algorithms developed here are valid for subsets of $\cf$ that may be unbounded, e.g., cones of functions, $\cc_{\tau}$, as described in Section \ref{conesubsec}, or their subsets, $\cn$.  The design of the algorithm depends on the definition of $\cn$.  The computational cost of the adaptive algorithm for $f$ in $\cn$ may be quite large or even arbitrarily large, depending on the $\cf$-semi-norm of $f$.  We want to find upper and lower bounds on the cost of the algorithm that take into account more information about $f$, say that it lies in some ball. However, the definition of the ball is not used by the algorithm, but only as a device to measure computational cost. Let $\{\cb_{\sigma}\}_{\sigma \ge 0}$ be some collection of nested subsets of $\cf$, namely, $\cb_{\sigma_1} \subseteq \cb_{\sigma_2}$ for $\sigma_1 \le \sigma_2$, and $\cup_{\sigma \ge 0} \cb_{\sigma} = \cf$.  For automatic algorithms defined with respect to some set of functions $\cn \subset \cf$, we define the \emph{maximum} cost of the algorithm relative to $\cb_{\sigma} \subset \cf$ as follows:
 \begin{equation*}
-\maxcost(A,\cn,\varepsilon,N_{\max},\sigma)
-= \sup \{ \cost(A,f;\varepsilon,N_{\max}) : f \in \cn, \ \Gnorm{f} \le \sigma \} .
+\maxcost(A,\cn,\varepsilon,N_{\max},\cb_{\sigma})
+= \sup \{ \cost(A,f;\varepsilon,N_{\max}) : f \in \cn \cap \cb_{\sigma} \} .
 \end{equation*}
-Here the set $\cn$ is allowed to depend on the algorithm inputs, $\varepsilon$ and $N_{\max}$, but not on $\sigma$.  Moreover, the algorithm, $A$, does not take $\sigma$ as an input.
+Here the set $\cn$ is allowed to depend on the algorithm inputs, $\varepsilon$ and $N_{\max}$, but not on $\sigma$.  Again we stress that $A$ knows $\cn$ but not $\cb$.
 
-One would prefer an algorithm where the costs for different input functions with the same $\cg$-semi-norm are similar.  To understand this one defines the  \emph{minimum} cost:
+One would prefer an algorithm where the costs for different input functions with the same size or norm to be similar.  To make this precise we define the  \emph{minimum} cost:
 \begin{equation*}
-\mincost(A,\cn,\varepsilon,N_{\max},\sigma)
-= \inf \{ \cost(A,f;\varepsilon,N_{\max}) : f \in \cn, \ \Gnorm{f} \ge \sigma \} .
+\mincost(A,\cn,\varepsilon,N_{\max},\cb_\sigma)
+= \inf \{ \cost(A,f;\varepsilon,N_{\max}) : f \in \cn\setminus \cb_{\sigma} \} .
 \end{equation*}
 An algorithm is said to have \emph{stable computational cost} if 
 \begin{equation*}
-\sup_{\varepsilon, \sigma > 0} \frac{\maxcost(A,\cn,\varepsilon,N_{\max},\sigma)}{\mincost(A,\cn,\varepsilon,N_{\max},\sigma)} < \infty
+\sup_{\varepsilon, \sigma > 0} \frac{\maxcost(A,\cn,\varepsilon,N_{\max},\cb_\sigma)}{\mincost(A,\cn,\varepsilon,N_{\max},\cb_\sigma)} < \infty
 \end{equation*}
 
 For automatic algorithms, returning an approximation with the desired error is not enough.  One also wants the algorithm to be confident that the answer is correct.  An  algorithm  $(A,W) \in \ca(\cn,\ch,S,\Lambda)$, is deemed successful provided that it meets the prescribed error tolerance and does not raise the warning flag.  Specifically, success is defined as
@@ -351,17 +351,14 @@ The set of non-adaptive algorithms, $\ca_{\fix}(\cf,\ch,S,\Lambda)$, defined in 
 \subsection{Cones of Functions} \label{conesubsec} All algorithms can be fooled by some input functions, even if these functions are sufficiently smooth.  An algorithm and error analysis such as that in \eqref{traditionerr} rules out fooling functions with large error by restricting the size of  $\Fnorm{f}$.  
 
 It is often difficult to know how large $\Fnorm{f}$ is a priori and so practical automatic algorithms try to bound it.  The framework described here rules out fooling functions whose $\cf$-semi-norms cannot be reliably bounded above.  This is done by considering $\cg$, a superspace of $\cf$, with its own semi-norm $\Gnorm{\cdot}$.   The semi-norm $\Gnorm{\cdot}$ is considered to be weaker than $\Fnorm{\cdot}$ in the following sense:
-\begin{subequations} \label{Fspacecond}
 \begin{equation} \label{Fspacecondstrong}
-\min_{f_0 \in \cf_0} \Gnorm{f - f_0} \le C_{\cf} \Fnorm{f} \qquad \forall f \in \cf,
+\tau_{\min} \Gnorm{f} \le \Fnorm{f} \qquad \forall f \in \cf,
 \end{equation}
-where $\cf_0=\{f \in \cf : \Fnorm{f}=0\}$ is a finite dimensional subspace of $\cf$.  Moreover, it is assumed that any $f \in \cg$ with zero $\cg$-semi-norm must also lie in $\cf$ and have zero $\cf$-semi-norm:
-\begin{equation} \label{Fspacecondzero}
-\cg_0 \subseteq \cf_0.
-\end{equation}
-\end{subequations}
+where $\tau_{\min}$ is some positive constant.  Here, the subspace of functions in $\cg$ with vanishing $\cg$-semi-norm, $\cg_0=\{f \in \cg : \Gnorm{f}=0\}$, is assumed to be a finite dimensional subspace of $\cf$ as well, and by the above condition must be identical to the subspace of of functions with vanishing $\cf$-semi-norm.
 
-Given $\tau>0$, let $\cc_{\tau} \subset \cf$ denote a \emph{cone} of functions whose $\cf$-semi-norms are no greater than $\tau$ times their $\cg$-semi-norms, as defined in \eqref{conedef}.  For any $f \in \cc_{\tau}$ both $\Fnorm{f}$ and $\Gnorm{f}$ must be finite, but they can be arbitrarily large.  There is no need to assume an upper bound on their sizes, but it is possible to obtain reliable upper bounds for both $\Fnorm{f}$ and $\Gnorm{f}$ by sampling $f$.  This argument appears to be circular, but is in fact valid.  An upper bound on $\Gnorm{f}$ for $f \in \cc_{\tau}$ can be computed in terms of the data $\vL(f)=(L_1(f), \ldots, L_m(f))$ because $\Fnorm{\cdot}$ is a stronger semi-norm than $\Gnorm{\cdot}$ in the sense of \eqref{Fspacecondstrong}, and because $\Fnorm{f}$ is no larger than a multiple of $\Gnorm{f}$ (see Lemma \ref{Gnormlem} below). This upper bound on $\Gnorm{f}$ then automatically implies an upper bound on $\Fnorm{f}$ from the definition of the cone. These reliable bounds on both $\Fnorm{f}$ and $\Gnorm{f}$ may be used to obtain a bound on the error of the algorithm for estimating $S(f)$  (see Theorem \ref{TwoStageDetermThm} below).
+Given $\tau>0$, let $\cc_{\tau} \subset \cf$ denote a \emph{cone} of functions whose $\cf$-semi-norms are no greater than $\tau$ times their $\cg$-semi-norms, as defined in \eqref{conedef}.  Note that one must choose $\tau \ge \tau_{\min}$ for $\cc_{\tau}$ to contain functions outside $\cg_0$.
+
+For any $f \in \cc_{\tau}$ both $\Fnorm{f}$ and $\Gnorm{f}$ must be finite, but they can be arbitrarily large.  There is no need to assume an upper bound on their sizes, but it is possible to obtain reliable upper bounds for both $\Fnorm{f}$ and $\Gnorm{f}$ by sampling $f$.  This argument appears to be circular, but is in fact valid.  An upper bound on $\Gnorm{f}$ for $f \in \cc_{\tau}$ can be computed in terms of the data $\vL(f)=(L_1(f), \ldots, L_m(f))$ because $\Fnorm{\cdot}$ is a stronger semi-norm than $\Gnorm{\cdot}$ in the sense of \eqref{Fspacecondstrong}, and because $\Fnorm{f}$ is no larger than a multiple of $\Gnorm{f}$ (see Lemma \ref{Gnormlem} below). This upper bound on $\Gnorm{f}$ then automatically implies an upper bound on $\Fnorm{f}$ from the definition of the cone. These reliable bounds on both $\Fnorm{f}$ and $\Gnorm{f}$ may be used to obtain a bound on the error of the algorithm for estimating $S(f)$  (see Theorem \ref{TwoStageDetermThm} below).
 
 \subsection{Results that We Prove}  The previous subsections define the problem to be approximated and the notation describing the difficulty of the problem and the efficiency of the algorithms.  This subsection summarizes the results that are proved in general in the next two sections and illustrated for specific cases in the Sections \ref{integsec} and \ref{approxsec}.
 
@@ -439,7 +436,7 @@ Otherwise, recompute $n_A$ to be within budget, $n_A = \tN_{\max} := \max\{n \in
 Return the result $(A_{n_A}(f),W)$, at a total cost of $n_G+n_A$.  
 \end{algo}
 
-\begin{theorem}  \label{TwoStageDetermThm}  Let  $\cf$, $\cg$, $\ch$,  $\tau$, $N_{\max}$, $\tN_{\max}$, $\fC$, and $\varepsilon$ be given as described in Algorithm \ref{twostagedetalgo}, and assume that $\cf$ satisfies \eqref{Fspacecond}.  Let $\fc=\fc_{n_G}$ be defined as in \eqref{normdeflate}.
+\begin{theorem}  \label{TwoStageDetermThm}  Let  $\cf$, $\cg$, $\ch$,  $\tau$, $N_{\max}$, $\tN_{\max}$, $\fC$, and $\varepsilon$ be given as described in Algorithm \ref{twostagedetalgo}, and assume that $\cf$ satisfies \eqref{Fspacecondstrong}.  Let $\fc=\fc_{n_G}$ be defined as in \eqref{normdeflate}.
 Let $\cc_\tau$ be the cone of functions defined in \eqref{conedef} whose $\cf$-semi-norms are no larger than $\tau$ times their $\cg$-semi-norms.  Let
 \begin{align} 
 \nonumber
