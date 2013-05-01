@@ -33,6 +33,7 @@
 \DeclareMathOperator{\prob}{prob}
 \DeclareMathOperator{\trunc}{trc}
 \DeclareMathOperator{\third}{third}
+\DeclareMathOperator{\non}{non}
 %\DeclareMathOperator{\fourth}{fourth}
 \newtheorem{theorem}{Theorem}
 \newtheorem{prop}[theorem]{Proposition}
@@ -104,8 +105,8 @@ u_{i}(x) = v_i(x) = \me^{2 \pi \sqrt{-1} i x}, \quad \lambda_i=1, \qquad i \in \
 \end{gather*}
 If $S$ computes the derivative of a function, $S: f \mapsto f'$, then the space $\chin$ must have a stronger inner product to ensure that the $\lambda_i$ are bounded, e.g.,
 \begin{gather*}
-\norm[\chin]{f} = \left[\int_0^1 \left\{\abs{f(x)}^2 + \abs{f'(x)}^2\right\}\, \dif x\right]^{1/2}, \qquad \\
-u_{i}(x) = \frac{\me^{2 \pi \sqrt{-1} i x}}{\sqrt{1+4 \pi^2 i^2}}, \quad \lambda_i=\frac{2 \pi \sqrt{-1} i}{\sqrt{1+4 \pi^2 i^2}}, \qquad i \in \integers,\\
+\norm[\chin]{f} = \left[\int_0^1 \left\{\abs{f(x)}^2 + \abs{f'(x)}^2\right\}\, \dif x\right]^{1/2}, \quad \norm[\chout]{f} = \left[\int_0^1 \abs{f(x)}^2 \, \dif x \right]^{1/2}, \\
+u_{i}(x) = \frac{\me^{2 \pi \sqrt{-1} i x}}{\sqrt{1+4 \pi^2 i^2}}, \quad v_i(x) = \me^{2 \pi \sqrt{-1} i x}, \quad \lambda_i=\frac{2 \pi \sqrt{-1} i}{\sqrt{1+4 \pi^2 i^2}}, \qquad i \in \integers,\\
 \pin=\pout=2,\quad q=\infty.
 \end{gather*}
 
@@ -161,8 +162,8 @@ Assuming $f$ lies in the specified cone of functions, defined by
 \end{equation}
 the arguments of \cite{HicEtal14b} lead to a two-sided bound on the $\cg$-semi-norm $f$ in terms of $G_n(f)$.  Specifically, if $\norm[\infty]{\left(\nu_{i_j} \right)_{j\ge n+1}} < 1/\tau$, then for all $f \in \cc_{\tau}$,  it follows that
 \begin{gather*}
-G_n(f)  \le \norm[\cg]{f} \le \fC G_n(f)\\
-\fC=\begin{cases}\displaystyle \left[1 - \tau^{\pin} \norm[\infty]{\left(\nu_{i_j} \right)_{j\ge n+1}}^{\pin}\right]^{-1/\pin}, & 1 \le \pin <  \infty, \\
+G_n(f)  \le \norm[\cg]{f} \le \fC_n G_n(f)\\
+\fC_n=\begin{cases}\displaystyle \left[1 - \tau^{\pin} \norm[\infty]{\left(\nu_{i_j} \right)_{j\ge n+1}}^{\pin}\right]^{-1/\pin}, & 1 \le \pin <  \infty, \\
 1, & \pin =  \infty.
 \end{cases}
 \end{gather*}
@@ -177,31 +178,77 @@ The case $\pin=\infty$ follows from the $\pin < \infty$ case by taking the limit
 This strict inequality implies the existence of some $j \le n$ such that $\lvert\hf_{i_j}/\omega_{i_j} \rvert = \norm[\cg]{f}$, and so $G_n(f)$ has no error.
 
 Combining this upper bound on $\norm[\cg]{f}$, the cone condition, and error bound \eqref{erreigweakF}, implies that
-\begin{equation*}
-\norm[\chout]{S(f)-A_n(f)} \le \tau \fC G_n(f) \norm[\infty]{\left(\nu_{i_j} \omega_{i_j} \lambda_{i_j} \right)_{j\ge n+1}}.
-\end{equation*}
+\begin{equation}\label{ineqalgo1}
+\norm[\chout]{S(f)-A_n(f)} \le \tau \fC_n G_n(f) \norm[\infty]{\left(\nu_{i_j} \omega_{i_j} \lambda_{i_j} \right)_{j\ge n+1}}.
+\end{equation}
 Thus, one increases $n$ until the right hand side falls below some tolerance, $\varepsilon$.  The drawback of this approach is that one needs to choose the weights $\nu_i$ and $\omega_i$, which define the spaces $\cf$ and $\cg$.
 
+\subsection{Embedded Non-Adaptive Algorithms}
+
+According to \cite{HicEtal14b}, the upper bound in (\ref{ineqalgo1}) can be used to define an algorithm using \textit{Embedded Nonadaptive Algorithms}. Thus, with the same notation, we recall that the error of an algorithm $A$ of this kind is:
+\begin{equation} \label{errdefworst}
+\err(A,\cf,\chout,S)
+= \min\{ \delta \ge 0 : \norm[\chout]{S(f) -  A(f)} \le \delta \norm[\cf]{f} \ \forall f \in \cf \},
+\end{equation}
+while the complexity of a problem for the set of algorithms $\ca_{\non}(\cf,\ch,S,\Lambda)$ becomes,
+\begin{multline} \label{fixcostcomplex}
+\comp(\varepsilon,\ca_{\non}(\cf,\ch,S,\Lambda)) \\
+= \inf\left\{\cost(A) : \err(A,\cf,\chout,S) \le \varepsilon, \ A \in \ca_{\non}(\cf,\ch,S,\Lambda) \right \}.
+\end{multline}
+
+Remember that in order to build our algorithm, we need to define a countable, non-negative-valued index set such that,
+\begin{equation} \label{indexdef}
+\cn=\{n_1, n_2, \ldots\} \quad \text{with } n_k < n_{k+1}, \quad \text{satisfying } \sup_k \frac{n_{k+1}}{n_k} <\infty.
+\end{equation}
+
 \begin{algo}\label{algo1}
- Let the Banach spaces $\cg$ and $\cg$, the solution operator $S$, the error tolerance $\varepsilon$ and the positive constant $\tau$. Let the sequences of algorithms, $\{A_n\}_{n\in\ci}$ and $\{G_n\}_{n\in\ci}$ be as described above. Set $n=1$. For any input function $f\in\cf$, do the following:
+ Consider the Banach spaces $\cf$, $\cg$, $\chin$ and $\chout$, the solution operator $S$ and the error tolerance $\varepsilon$ as described above. Fix $\tau$ a positive number satisfying $\norm[\infty]{\left(\nu_{i_j} \right)_{j\ge n_1+1}} < 1/\tau$. Moreover, let $\{A_n\}_{n\in\ci}$, $A_n\in\ca_{\non}(\cg,\chout,S,\Lambda)$, be a sequence of algorithms as described in \cite{HicEtal14b} and set $k=1$. For any input function $f\in\cc_\tau$, do the following:
 \begin{description}
-\item[Stage 1. Computing the bound.] First we compute $G_n(f)$ and $\fC_n$.
-\item[Stage 2. Check for Convergence.] Check whether $n$ is large enough to satisfy the error tolerance, i.e.,
+\item[Stage 1. Estimate the Bound.] Compute $G_{n_k}(f)$ and $\fC_{n_k}$. The $\tau$ chosen guarantees that $\fC_{n_k}G_{n_k}(f)$ provides a reliable upper bound on $\norm[\cg]{f}$.
+\item[Stage 2. Check for Convergence.] Check whether $k$ is large enough to satisfy the error tolerance, i.e.,
     \begin{equation}
-          \tau \fC_n G_n(f) \norm[\infty]{\left(\nu_{i_j} \omega_{i_j} \lambda_{i_j} \right)_{j\ge n+1}} \le \varepsilon
+          \tau \fC_{n_k} G_{n_k}(f) \norm[\infty]{\left(\nu_{i_j} \omega_{i_j} \lambda_{i_j} \right)_{j\ge n_k+1}} \le \varepsilon
     \end{equation}
-    If this is true, then we return $A_n(f)$ and terminate the algorithm.
-\item[Stage 3. Increasing $n$.] Otherwise, we increase $n$ by $1$ and return to Stage $1$.
+    If this is true, then return $A_{n_k}(f)$ and terminate the algorithm.
+\item[Stage 3. Compute $k+1$.] Otherwise, increase $k$ by $1$ and return to Stage $1$.
 \end{description}
 \end{algo}
 
+For the sequence of algorithms defined in Algorithm \ref{algo1}, assuming that $\err(A,\{0\},\chout,S)=0$, the equalities in (\ref{erreigweakF}) imply
+\begin{gather}
+\err(A_{n_k},\cg,\chout,S) = \norm[q]{\left(\omega_{i_j} \lambda_{i_j} \right)_{j\ge n_k+1}},\\
+\err(A_{n_k},\cf,\chout,S) = \norm[q]{\left(\nu_{i_j} \omega_{i_j} \lambda_{i_j} \right)_{j\ge n_k+1}},
+\end{gather}
 
-\begin{theorem}
-Let $\cf$, $\cg$, $\chout$, $\varepsilon$, $\fC_n$ and $\tau$ given as described above.
+\begin{theorem}\label{algo1opt}
+The sequence of algorithms $A_n$ defined in Algorithm \ref{algo1} is \textit{optimal} for the problem $(\cj,\chout,S,\Lambda)$, i.e. ,
 \begin{equation*}
-\sup_{0 < \varepsilon \le 1}\frac{\cost(A^\ref{algo1},\cc_\tau,\varepsilon)} {\comp(\varepsilon,\ca(\cj,\chout,S,\Lambda))} <\infty,\quad \cj\in\{\cf,\cg\}
+\sup_{0 < \varepsilon \le 1}\frac{\min\{k\in\naturals:\err(A_n,\cj,\chout,S)\le\varepsilon\}} {\comp(\varepsilon,\ca_{\non}(\cj,\chout,S,\Lambda))} <\infty, \qquad \cj \in \{\cf,\cg\}
 \end{equation*}
 \end{theorem}
+\begin{proof}
+Not yet. For $\cf$,
+\begin{gather}
+\sup_{0 < \varepsilon \le 1}\frac{\min\{k\in\naturals:\err(A_n,\cf,\chout,S)\le\varepsilon\}} {\comp(\varepsilon,\ca_{\non}(\cf,\chout,S,\Lambda))} <\infty\\
+=\sup_{0 < \varepsilon \le 1}\frac{\min\{k\in\naturals:\norm[q]{\left(\nu_{i_j} \omega_{i_j} \lambda_{i_j} \right)_{j\ge n_k+1}}\le\varepsilon\}} {\comp(\varepsilon,\ca_{\non}(\cf,\chout,S,\Lambda))} <\infty
+\end{gather}
+\end{proof}
+
+Because the cost of an algorithm generally increases with $\norm[\cg]{f}$, in \cite{HicEtal14b} the cost was also defined as:
+\begin{equation*}
+\cost(A,\cn,\varepsilon,N_{\max},\sigma)
+= \sup \{ \cost(A,f;\varepsilon,N_{\max}) : f \in \cn, \ \norm[\cg]{f} \le \sigma \} .
+\end{equation*}
+
+\begin{theorem}
+Let $\cf$, $\cg$, $\chout$, $\varepsilon$, $\fC_n$ and $\tau$ be given as described above. Then the Algorithm \ref{algo1} satisfies
+\begin{equation*}
+\sup_{0 < \varepsilon \le 1}\frac{\cost(A,\cc_\tau,\varepsilon,\infty,\tau)} {\comp(\varepsilon,\ca_{\non}(\cj,\chout,S,\Lambda))} <\infty, \qquad \cj \in \{\cf,\cg\}
+\end{equation*}
+\end{theorem}
+\begin{proof}
+Using theorem \ref{algo1opt} and the proof of \cite{HicEtal14b}.
+\end{proof}
 
 \section{Assuming a Gentle Decay in the Terms of the Series}
 
@@ -213,11 +260,17 @@ and the cone of functions in $\chin$ as those whose Fourier coefficients decay a
 \begin{equation} \label{decayconedef}
 \cc = \left\{ f \in \chin : \sigma_{k+r}(f) \le \gamma(r) \sigma_k (f), \ \forall k \in \naturals \right\}.
 \end{equation}
-
-The sequence $\gamma(r)$ has to verify $\lim_{n\rightarrow\infty}\gamma(n)=0$, $\gamma(r) > 0$ and that
+where the sequence $\gamma(r)$ has to verify $\lim_{n\rightarrow\infty}\gamma(n)=0$, $\gamma(r) > 0$ and that
 \begin{equation} \label{constcone}
 \norm[\pout]{\bgamma}=\norm[\pout]{ \left(\gamma(r)\right)_{r=1}^\infty}<\infty
 \end{equation}
+
+\begin{rem}
+The definition of the cone can be rewritten as
+\begin{equation}\label{coneredef}
+\cc = \left\{ f \in \chin : \sigma_k(f) \le \min_{1 \le i < k}\{\gamma(i)\sigma_{k-i}(f)\}, \ \forall k \in \naturals \right\}.
+\end{equation}
+\end{rem}
 
 To see some examples on how these conditions might arise naturally, consider the case where $\gamma(r)=s_1s_2^{-r}$ with the terms in the sum defining $\sigma_k(f)$ decaying \emph{algebraically} and the $n_k$ increasing \emph{geometrically}:
 \begin{gather*}
@@ -239,10 +292,10 @@ These two bounds can be used to prove that $f$ lies in the cone \eqref{decaycone
 = C_{\up}\left\{\frac{[ab^{k-1}]^{1-p \pout} (1 - b^{1-p \pout})}{p \pout-1}\right\}^{1/p} ,
 \end{multline*}
 \begin{align*}
-\frac{\sigma_k(f)}{\sigma_\kappa(f)} &\le \frac{C_{\up}}  {C_{\lo}}
-\left\{\frac{ (1 - b^{1-p \pout}) b^{(p \pout-1)(\kappa-k)} }  {(1+a^{-1}b^{1-\kappa})^{1-p\pout} - (b+a^{-1}b^{1-\kappa})^{1-p\pout}} \right\}^{1/\pout}\\
+\frac{\sigma_{k+r}(f)}{\sigma_k(f)} &\le \frac{C_{\up}}  {C_{\lo}}
+\left\{\frac{ (1 - b^{1-p \pout}) b^{(p \pout -1)(-r)} }  {(1+a^{-1}b^{1-k})^{1-p\pout} - (b+a^{-1}b^{1-k})^{1-p\pout}} \right\}^{1/\pout}\\
 & \le \frac{C_{\up}}  {C_{\lo}}
-\left\{\frac{(1 - b^{1-p\pout}) b^{(p\pout-1)(\kappa-k)} }  {(1+a^{-1})^{1-p\pout} - (b+a^{-1})^{1-p\pout}} \right\}^{1/\pout}   = s_1 s_2^{\kappa-k},
+\left\{\frac{(1 - b^{1-p\pout}) b^{(p \pout -1)(-r)} }  {(1+a^{-1})^{1-p\pout} - (b+a^{-1})^{1-p\pout}} \right\}^{1/\pout}   = s_1 s_2^{-r},
 \end{align*}
 where
 \[
@@ -260,11 +313,11 @@ The geometric sum that now arises in a bound on the  definition of $\sigma_k(f)$
 \end{equation*}
 which implies that
 \begin{align*}
-\frac{\sigma_k(f)}{\sigma_\kappa(f)} & \le
-\frac{C_{\up}}  {C_{\lo}} \left\{\frac{p^{-\pout( n_{k-1}-1} - p^{- \pout(n_{k}-1)}]}  {C_{\lo}^2[p^{-\pout(n_{\kappa-1}-1)} - p^{-\pout(n_{\kappa}-1)}]}\right\}^{1/\pout} \\
+\frac{\sigma_{k+r}(f)}{\sigma_k(f)} & \le
+\frac{C_{\up}}  {C_{\lo}} \left\{\frac{p^{-\pout( n_{k+r-1}-1} - p^{- \pout(n_{k+r}-1)}]}  {C_{\lo}^2[p^{-\pout(n_{k-1}-1)} - p^{-\pout(n_{k}-1)}]}\right\}^{1/\pout} \\
 & =
-\frac{C_{\up} p^{n_{\kappa-1}-n_{k-1}}} {C_{\lo}}  \left\{\frac{1 - p^{\pout(n_{k-1}-n_{k})}} {1 - p^{\pout(n_{\kappa-1}-n_{\kappa})}]} \right\}^{1/p}\\
-& = \frac{ C_{\up} p^{b(\kappa-k)}}  {C_{\lo}}  = s_1 s^{\kappa-k},
+\frac{C_{\up} p^{n_{k-1}-n_{k+r-1}}} {C_{\lo}}  \left\{\frac{1 - p^{\pout(n_{k+r-1}-n_{k+r})}} {1 - p^{\pout(n_{k-1}-n_{k})}]} \right\}^{1/p}\\
+& = \frac{ C_{\up} p^{b(-r)}}  {C_{\lo}}  = s_1 s^{-r},
 \end{align*}
 where
 \[
@@ -272,39 +325,30 @@ s_1 = \frac{ C_{\up}}  {C_{\lo}} , \qquad s_2 = p^b.
 \]
 
 From the definition of the cone and \eqref{errsum}, one can show that
-\begin{align*}
+\begin{equation}\label{algoineq}
+\begin{aligned}
 \norm[\chout]{S(f)-A_{n_k}(f)} &= \norm[\pout]{\left(\lambda_{i_j} \hf_{i_j} \right)_{j\ge n_k+1}} \\
 &= \left\{\sum_{r=1}^\infty \sum_{j=n_{k+r-1}+1}^{n_{k+r}}  \abs{\lambda_{i_j}\tf_{i_j} }^{\pout}  \right\}^{1/\pout}\\
 &= \norm[\pout]{ \left(\sigma_{k+r}(f)\right)_{r=1}^{\infty}} \\
 &\le \norm[\pout]{ \left(\gamma(r)\sigma_{k}(f)\right)_{r=1}^{\infty}} \\
-&= \sigma_{k}(f)\norm[\pout]{\bgamma} \\
-\end{align*}
+&= \sigma_{k}(f)\norm[\pout]{\bgamma}
+\end{aligned}
+\end{equation}
 
 Since the right hand side depends on the data, we have a data-driven error bound.  Note also that $\sigma_k(f)$ decays as quickly with respect to $n$ as the true error.  Unlike the earlier method, one does not need to know the decay rate.  In practice, one increases $k$ until the right hand side is smaller than the error tolerance.
 
-\subsection{Algorithm}
+\subsection{Adaptive algorithm}
 
+The approximate solution to the problem $S:\cc\rightarrow\chout$ depends on
 Given the error tolerance $\varepsilon$, we have to find $k^*$ such that
 \begin{equation*}
          \sigma_{k^*}(f) \le \frac{\varepsilon}{\norm[\pout]{\bgamma}} < \sigma_{k^*-1}(f)
 \end{equation*}
 
-According to the inequality above, this $k^*$ is ensuring
+According to the inequality (\ref{algoineq}) above, this $k^*$ is ensuring
 \begin{equation*}
 \norm[\chout]{S(f)-A_{n_{k^*}}(f)} \le \varepsilon
 \end{equation*}
-
-In order to build our algorithm, we need to suppose that there is a sequence of algorithms indexed by their cost:
-\begin{subequations} \label{algseqdef}
-\begin{gather}
-\{A_n\}_{n \in \cn}, \qquad A_n  \in \ca(\cc,\chout,S,\Lambda), \\
-\cost(A_n) = n,
-\end{gather}
-\end{subequations}
-where the countable, non-negative-valued index set,
-\begin{equation} \label{indexdef}
-\cn=\{n_1, n_2, \ldots\} \quad \text{with } n_k < n_{k+1}, \quad \text{satisfies } \sup_k \frac{n_{k+1}}{n_k} <\infty.
-\end{equation}
 
 \begin{algo}\label{algo2}
  Consider the set of functions $\cc$, the error tolerance $\varepsilon$ and the sequence $\{A_n\}_{n \in \ci}$ as described before.
@@ -322,25 +366,25 @@ The algorithm starts by setting $k=1$.
 
  By construction, the cost of this Algorithm \ref{algo2} is
 \begin{equation}\label{costalgo}
-\cost(A^1,f;\varepsilon)=n_{k^*}
+\cost(A,f;\varepsilon)=n_{k^*}
 \end{equation}
 
 \subsection{Optimality of the Algorithm \ref{algo2}}
 
-The sequence $\cn$ is used to gather the Fourier coefficients into groups to smooth the peaks we could encounter if we take these coefficients one by one. Flattening the peaks is a must to fit functions into the cone. Nevertheless, the solution of our algorithm is in this set $\cn$ which means that the sequence does not have to distance the optimal number of data needed in our algorithm more than a constant.
+The sequence $\cn$ is used to gather the Fourier coefficients into groups to smooth the peaks we could encounter if we take these coefficients one by one. Flattening the peaks is a must to fit functions into the cone. Nevertheless, the solution of our algorithm is in this set $\cn$ which means that the sequence does not have to distance the optimal number of data needed in our algorithm (defined below) more than a constant.
 
 We define the optimal number of data needed in our algorithm as
 \begin{equation*}
 N_{\opt}(f,\varepsilon)=\min\left\{n\in\naturals:\,\norm[\pout]{\left(\lambda_{i_j} \hf_{i_j} \right)_{j\ge n+1}} \le \varepsilon \right\}
 \end{equation*}
 
-The sequence of algorithms defined in \ref{algseqdef} is called \emph{optimal} for the problem $(\cc,\chout,S,\Lambda^\ref{algo2})$ if it essentially tracks the optimal number of data needed,
+The index set for our algorithm defined in (\ref{indexdef}) is called \emph{optimal} for the Algorithm \ref{algo2} and the problem $(\cc,\chout,S,\Lambda)$ if it essentially tracks the optimal number of data needed,
 \begin{equation} \label{nearoptdef}
-\sup_{0 < \varepsilon \le 1} \frac{\cost(A^\ref{algo2},f;\varepsilon)} {N_{\opt}(f,\varepsilon)} <\infty.
+\sup_{0 < \varepsilon \le 1} \frac{\cost(A,f;\varepsilon)} {N_{\opt}(f,\varepsilon)} <\infty.
 \end{equation}
 
 \begin{theorem}\label{nopt}
-The sequence of algorithms in \ref{algseqdef} is optimal for the Algorithm \ref{algo2}.
+The index set defined in (\ref{indexdef}) is optimal for Algorithm \ref{algo2}.
 \end{theorem}
 \begin{proof}
 For a given $f$ and $\varepsilon$, consider $k^*$ depending on $\varepsilon$ such that
@@ -350,14 +394,14 @@ For a given $f$ and $\varepsilon$, consider $k^*$ depending on $\varepsilon$ suc
 
 From the definition of $N_{\opt}(f,\varepsilon)$, it is clear that $N_{\opt}(f,\varepsilon)=n^*\le n_{k^*}$.
 
-Because $\lim_{n\rightarrow\infty}\gamma(n)=0$, we can take $r=\min\{n: \gamma(n)\norm[\pout]{\bgamma} \le 1\}$. Define also $\sup_k\frac{n_{k+1}}{n_k}=C$ according to the properties in \ref{indexdef}.
+Because $\lim_{n\rightarrow\infty}\gamma(n)=0$, we can take $r=\min\{n: \gamma(n)\norm[\pout]{\bgamma} \le 1\}$. Define also $\sup_k\frac{n_{k+1}}{n_k}=C$ according to the properties in (\ref{indexdef}).
 
 Then, if $k^*>r+1$,
 \begin{align*}
 & \varepsilon \le \frac{\varepsilon}{\gamma(r)\norm[\pout]{\bgamma}} < \sigma_{k^*-1-r}(f) \le \norm[\pout]{S(f)-A_{n_{k^*-1-r}}(f)} \\
 \norm[\pout]{S(f)-A_{n^*}(f)} \le & \varepsilon
 \end{align*}
-what implies $n_{k^*-1-r} < n^* \le n_{k^*}$. Therefore,
+what means that $n_{k^*-1-r} < n^* \le n_{k^*}$. Therefore,
 \begin{equation*}
 \frac{n_{k^*}}{n^*} < \frac{n_{k^*}}{n_{k^*-1}}\times\cdots\times\frac{n_{k^*-r}}{n_{k^*-1-r}} \le C^{r+1}
 \end{equation*}
@@ -369,22 +413,22 @@ If $k^* \le r+1$,
 
 Thus,
 \begin{equation*}
-\sup_{0 < \varepsilon \le 1} \frac{\cost(A^\ref{algo2},f;\varepsilon)} {N_{\opt}(f,\varepsilon)} \le n_1C^{r+1}.
+\sup_{0 < \varepsilon \le 1} \frac{\cost(A,f;\varepsilon)} {N_{\opt}(f,\varepsilon)} \le n_1C^{r+1}.
 \end{equation*}
 \end{proof}
 
-The cost of any algorithm $A\in\ca(\chin,\chout,S,\Lambda)$ may also depend on a set of functions $\cb\subseteq\chin$. To represent this idea one defines
+The cost of any algorithm $A\in\ca(\chin,\chout,S,\Lambda)$ may also depend not only on a function, but on a set of functions $\cb\subseteq\chin$. To represent this idea one defines
 \begin{equation*}
 \cost(A,\cb,\varepsilon)=\sup_{f\in\cb}\{\cost(A,f;\varepsilon)\}.
 \end{equation*}
 
-The next step is comparing our Algorithm \ref{algo2} to the whole set of possible algorithms in $\ca(\cc,\chout,S,\Lambda)$. If the conditions describing the cone $\cc$ are well stated, then $A^\ref{algo2}$ will not have a greater cost than a constant times the best algorithm in $\ca(\cc,\chout,S,\Lambda)$.
+The next step is comparing our Algorithm \ref{algo2} to the whole set of possible algorithms in $\ca(\cc,\chout,S,\Lambda)$. If the conditions describing the cone $\cc$ are well stated, then our algorithm will not have a greater cost than a constant times the best algorithm in $\ca(\cc,\chout,S,\Lambda)$.
 
 Lets define now the following set of functions,
 \begin{equation*}
 \cj_{n,\varepsilon}=\left\{f\in\chin:\norm[\pout]{\left(\lambda_{i_j} \hf_{i_j} \right)_{j\ge n+1}} \le \varepsilon \right\}
 \end{equation*}
-where $\cj_{n,\varepsilon}\subseteq\cj_{m,\varepsilon}$ if $n\le m$, and $\lim_{n\rightarrow\infty}\cj_{n,\varepsilon}=\chin$.
+One can see that $\cj_{n,\varepsilon}\subseteq\cj_{m,\varepsilon}$ if $n\le m$, and $\lim_{n\rightarrow\infty}\cj_{n,\varepsilon}=\chin$.
 \begin{theorem}\label{supcost}
    Given $A\in\ca(\cj_{n,\varepsilon},\chout,S,\Lambda)$, if $\,$ $\norm[\chout]{S(f)-A(f)}\le\varepsilon$ $\forall f\in\cj_{n,\varepsilon}$, then
  \begin{equation*}
@@ -423,15 +467,15 @@ The complexity of a problem for the set of algorithms $\ca(\cb,\chout,S,\Lambda)
 \end{aligned}
 \end{equation}
 
-According to notation in equation \ref{indexdef}, if $n\in\cn$, $\forall f\in\cc\cap\cj_{n,\varepsilon}$ we have that $n\ge\cost(A^\ref{algo2};f,\varepsilon)\ge N_{\opt}(f,\varepsilon)$. Thus, using Theorem \ref{supcost} we know that
+According to notation in equation (\ref{indexdef}), if $n\in\cn$, $\forall f\in\cc\cap\cj_{n,\varepsilon}$, for Algorithm \ref{algo2} we have that $n\ge\cost(A;f,\varepsilon)\ge N_{\opt}(f,\varepsilon)$. Thus, using Theorem \ref{supcost} we know that
 \begin{equation*}
 \comp(\varepsilon,\ca(\cc\cap\cj_{n,\varepsilon},\chout,S,\Lambda))=n
 \end{equation*}
 
 \begin{prop}[for Theorem \ref{optimality}]\label{optimcost}
-The cost of our algorithm tracks the optimal cost for all $f\in\cc$
+The cost of our second algorithm tracks the optimal cost for all $f\in\cc$
 \begin{equation*}
-\sup_{0 < \varepsilon \le 1}\sup_{f\in\cc} \frac{\cost(A^\ref{algo2},f;\varepsilon)} {\min\{n:f\in\cj_{n,\varepsilon}\}} <\infty
+\sup_{0 < \varepsilon \le 1}\sup_{f\in\cc} \frac{\cost(A,f;\varepsilon)} {\min\{n:f\in\cj_{n,\varepsilon}\}} <\infty
 \end{equation*}
 \end{prop}
 \begin{proof}
@@ -441,128 +485,194 @@ First of all
 \end{equation*}
 Recalling the proof of Theorem \ref{nopt}, remark that $r=\min\{n: \gamma(n)\norm[\pout]{\bgamma} \le 1\}$ does not depend on $k^*$ which means that $r$ does not depend on $f$
 \begin{equation*}
-\sup_{0 < \varepsilon \le 1} \frac{\cost(A^\ref{algo2},f;\varepsilon)} {N_{\opt}(f,\varepsilon)} \le n_1C^{r+1},\quad\forall f\in\cc
+\sup_{0 < \varepsilon \le 1} \frac{\cost(A,f;\varepsilon)} {N_{\opt}(f,\varepsilon)} \le n_1C^{r+1},\quad\forall f\in\cc
 \end{equation*}
 \end{proof}
 
 \begin{theorem}\label{optimality}
 Our Algorithm $\ref{algo2}$ is optimal for the problem $(\cc,\chout,S,\Lambda)$,
 \begin{equation*}
-\sup_{0 < \varepsilon \le 1}\frac{\cost(A^\ref{algo2},\cc,\varepsilon)} {\comp(\varepsilon,\ca(\cc,\chout,S,\Lambda))} <\infty
+\sup_{0 < \varepsilon \le 1}\frac{\cost(A,\cc,\varepsilon)} {\comp(\varepsilon,\ca(\cc,\chout,S,\Lambda))} <\infty
 \end{equation*}
 \end{theorem}
 \begin{proof}
-See that
+Because $\lim_{n\rightarrow\infty}\cj_{n,\varepsilon}=\chin$, there is $m$ such that $\cc\cap\cj_{m,\varepsilon}\neq\emptyset$. Then,
 \begin{align*}
-\comp(\varepsilon,\ca(\cc,\chout,S,\Lambda))&\ge\comp(\varepsilon,\ca(\cc\cap\cj_{n,\varepsilon},\chout,S,\Lambda))\\
-&\ge\inf_{f\in\cc}\min\{m:f\in\cj_{m,\varepsilon}\}
+\comp(\varepsilon,\ca(\cc,\chout,S,\Lambda))&\ge\comp(\varepsilon,\ca(\cc\cap\cj_{m,\varepsilon},\chout,S,\Lambda))\\
+&\ge\inf_{f\in\cc}\min\{j\in\naturals:f\in\cj_{j,\varepsilon}\}
 \end{align*}
-
-Then we can apply Proposition \ref{optimcost}.
+The first inequality comes from the fact that $\cc\supseteq\cc\cap\cj_{m,\varepsilon}$ and for the second one, $m\ge\inf_{f\in\cc}\min\{j\in\naturals:f\in\cj_{j,\varepsilon}\}$ as there exists $f\in\cc\cap\cj_{m,\varepsilon}$.
+.........................................
+%Then we can apply Proposition \ref{optimcost} to obtain the proof:
+%\begin{equation*}
+%\sup_{0 < \varepsilon \le 1}\frac{\cost(A,\cc,\varepsilon)} {\comp(\varepsilon,\ca(\cc,\chout,S,\Lambda))} <\infty
+%\end{equation*}
 \end{proof}
 
 \subsection{Lower Complexity Bounds for Algorithms \ref{algo1} and \ref{algo2}}
 
-Suppose that for any $n > 0$, and for all $\boldsymbol{L}\in\Lambda^m$, satisfying $\$(\boldsymbol{L})\le n$, there exists an $f_1\in\chin$, depending on $n$ and the $L_i$, with solution bounded under, i.e.,
-\begin{equation}
-\norm[\chout]{S(f_1)}\ge \frac{1}{g(n)},\quad \boldsymbol{L}(f_1)=0
-\end{equation}
-for some positive, non-decreasing functions $g$ defined in $(0,\infty)$. Since the data for the function $f_1$ are all zero, it follows that $A(f_1)=A(-f_1)$ for any algorithm, $A$, that is based on the information $\boldsymbol{L}(f_1)$. Then,
-\begin{align*}
-\varepsilon & \ge \sup_{f\in\chin}\norm[\chout]{S(f)-A(f)}\\
-& \ge \norm[\chout]{S(f_1)-A(f_1)}\\
-& = \frac{1}{2}\left(\norm[\chout]{S(f_1)-A(f_1)}+\norm[\chout]{S(f_1)+A(f_1)}\right)\\
-& \ge \frac{1}{2}\norm[\chout]{S(f_1)-A(f_1)+S(f_1)+A(f_1)}\\
-& \ge \frac{1}{g(n)}
-\end{align*}
 
-This implies lower bounds on the complexity, as defined in \ref{complexity2}:
-\begin{equation*}
-\comp(\varepsilon,\ca(\chin,\chout,S,\Lambda))\ge g^{-1}(\varepsilon^{-1})
-\end{equation*}
 
-\begin{rem}
-The function $f_1$ we defined can be adjusted by taking $\hf_{1,{i_j}}=\frac{a_{j,n}}{\lambda_{i_j}}$ such that
-\begin{equation*}
-\norm[\chout]{S(f_1)}=\norm[\pout]{\left(a_{j,n}\right)_{j\in\naturals_0}}\ge \frac{1}{g(n)}
-\end{equation*}
-with the following conditions for all $n$ when the may apply,
-\begin{align*}
-f&\in\chin\Longrightarrow\norm[\chin]{f_1}=\norm[\pin]{\left(\frac{a_{j,n}}{\lambda_{i_j}}\right)_{j\in\naturals_0}}<\infty\\
-f&\in\cg\Longrightarrow\norm[\cg]{f_1}=\norm[\pin]{\left(\frac{a_{j,n}}{\lambda_{i_j}\omega_{i_j}}\right)_{j\in\naturals_0}}<\infty\\
-f&\in\cf\Longrightarrow\norm[\cf]{f_1}=\norm[\pin]{\left(\frac{a_{j,n}}{\lambda_{i_j}\nu_{i_j}\omega_{i_j}}\right)_{j\in\naturals_0}}<\infty\\
-f&\in\cc\Longrightarrow\norm[\pout]{\left(a_{j,n}\right)_{j=n_{k+r-1}+1}^{n_{k+r}}}\le\gamma(r)\norm[\pout]{\left(a_{j,n}\right)_{j=n_{k-1}+1}^{n_{k}}}
-\end{align*}
-\end{rem}
+\subsection{Examples}
+\subsubsection{The embedding of $f(x)=\frac{(b^2-1)}{b^2+1-2b\cos(2\pi x)}$}
 
-\subsection{Examples: Integrating $f(x)=\sum_{k\in\integers}b^{-\abs{k}}e^{2\pi\sqrt{-1}kx}$}
-
-In our example, let $\chin=\cl_2[0,1]$,$\,\chout=\cl_2[0,1]\cap\{\tf_0=0\}$ and $S: f \mapsto \int f$ be the integration operator with:
+In our example, consider $\chin=\chout=\cl_2[0,1]$, and $S: f \mapsto f$ the embedding operator with:
 \begin{gather*}
 \norm[\chin]{f} = \norm[\chout]{f} = \left[\int_0^1 \abs{f(x)}^2 \, \dif x \right]^{1/2}, \\
-u_{i}(x) = v_i(x) = \me^{2 \pi \sqrt{-1} i x},\\
-\lambda_0=0, \quad \lambda_i=\frac{1}{2\pi\sqrt{-1}i}, \qquad i \in \integers\setminus\{0\},\\
+u_{i}(x) = v_i(x) = \me^{2 \pi \sqrt{-1} i x},\quad \lambda_i=1, \qquad i \in \integers,\\
 \pin=\pout=2,\quad q=\infty.
 \end{gather*}
 
 For our index set $\ci=\integers=\{0,1,-1,2,-2,\ldots\}$,
 \begin{gather*}
-i_j=(-1)^{j+1}\left\lceil\frac{j}{2}\right\rceil,\qquad j\in\naturals_0,\\
-n_0=-1,\quad n_k=2k, \qquad k\in\naturals.
+i_j=(-1)^{j}\left\lfloor\frac{j}{2}\right\rfloor,\qquad j\in\naturals,\\
+n_0=0,\quad n_k=2k+1, \qquad k\in\naturals.
 \end{gather*}
 
-Then,
-\begin{equation*} \sigma_k(f)=b^{-k}\left(\abs{\lambda_{k}}^2+\abs{\lambda_{-k}}^2\right)^{\frac{1}{2}}=\frac{1}{\sqrt{2}\pi b^kk}, \qquad k \in\naturals.
-\end{equation*}
+The Fourier coefficients of this function can be easily found:
+\begin{align*}
+f(x)&=\frac{b^2-1}{b^2+1-2b\cos(2\pi x)}\\
+&=\frac{1-b^{-2}+b^{-1}(\me^{-2\pi\sqrt{-1}x}-\me^{-2\pi\sqrt{-1}x})}{1+b^{-2}-b^{-1}(\me^{2\pi\sqrt{-1}x}+\me^{-2\pi\sqrt{-1}x})}\\
+&=\frac{(1-b^{-1}\me^{-2\pi\sqrt{-1}x})+(1-b^{-1}\me^{2\pi\sqrt{-1}x})b^{-1}\me^{-2\pi\sqrt{-1}x}}{(1-b^{-1}\me^{2\pi\sqrt{-1}x})(1-b^{-1}\me^{-2\pi\sqrt{-1}x})}\\
+&=\frac{1}{1-b^{-1}\me^{2\pi\sqrt{-1}x}}+\frac{b^{-1}\me^{-2\pi\sqrt{-1}x}}{1-b^{-1}\me^{-2\pi\sqrt{-1}x}}\\
+&=\sum_{k\in\naturals_0}\left(b^{-1}\me^{2\pi\sqrt{-1}x}\right)^k+\sum_{k\in\naturals}\left(b^{-1}\me^{-2\pi\sqrt{-1}x}\right)^k\\
+&=\sum_{k\in\integers}b^{-\abs{k}}\me^{2\pi\sqrt{-1}kx}\Longrightarrow\hf_{i_j}=b^{-\abs{i_j}}
+\end{align*}
 
-Remark that the definition of the cone can be rewritten as
-\begin{equation}
-\cc = \left\{ f \in \chin : \sigma_k(f) \le \min_{1 \le i < k}\{\gamma(i)\sigma_{k-i}(f)\}, \ \forall k \in \naturals \right\}
-\end{equation}
-which means that for our example, $f\in\cc$ when $\gamma(r)=b^{-r}$ since
+Because we are interested in seeing how far the approximation is from the real solution, the norm of the exact solution has to be found. Knowing the Fourier coefficients leads us to an easy way to calculate it:
+\begin{align*}
+\norm[\chout]{S(f)}&=\left(\sum_{j\in\integers}\lambda_{i_j}^2\hf_{i_j}^2\right)^{\frac{1}{2}} =\left(1+2\sum_{k\in\naturals}b^{-2k}\right)^{\frac{1}{2}}=\left(\frac{b^2+1}{b^2-1}\right)^{\frac{1}{2}}
+\end{align*}
+
+We can also give the sums of coefficients,
+\begin{align*}
+&\sigma_1(f)=\sqrt{1+2b^{-2}}\\
+&\sigma_k(f)=\sqrt{2}b^{-k}, \qquad k \in\naturals\setminus\{1\}.
+\end{align*}
+Recalling the alternative definition of the cone in (\ref{coneredef}), with these sums, $f\in\cc$ for $\gamma(r)=b^{-r}$ since
 \begin{equation*}
-\sigma_k(f)=\frac{1}{\sqrt{2}\pi b^kk} \le \min_{1 \le i <k}\{\gamma(i)\sigma_{k-i}(f)\}=\min_{1 \le i <k}\left\{\frac{1}{\sqrt{2}\pi b^k(k-i)}\right\}
+\sigma_k(f) \le \min_{1 \le i <k}\{\gamma(i)\sigma_{k-i}(f)\}=\min\left\{1 \; , \; \sqrt{1+\frac{b^2}{2}} \right\}\sigma_k(f)
 \end{equation*}
 
-Considering that $\norm[\pout]{\bgamma}=\frac{1}{\sqrt{b^2-1}}$, we can use our algorithm to say that,
+In this case, $\norm[\pout]{\bgamma}=\frac{1}{\sqrt{b^2-1}}$. If we use our Algorithm \ref{algo2}, we have to check first whether $\sqrt{\frac{b^2+2}{b^4-b^2}}\le\varepsilon$. If this inequality states, then $k^*=1$. If not,
 \begin{equation*}
-k^*=\min\left\{k\in\naturals:\frac{1}{\sqrt{2(b^2-1)}\pi\varepsilon} \le b^kk \right\}
+k^*=\min\left\{k\in\naturals\setminus\{1\}:\frac{1}{2\log(b)}\log\left(\frac{2}{(b^2-1)\varepsilon^2}\right) \le k \right\}
 \end{equation*}
 
-If $b=3$, below there is a table of the values for this example,
+For a numerical application, set $b=3$ and find below a table of results for this example,
+
 \begin{center}
-\begin{tabular}{|c|c|c|}
+\begin{tabular}{|c|c|c|c|}
   \hline
   % after \\: \hline or \cline{col1-col2} \cline{col3-col4} ...
-  $\varepsilon$ & $k^*$ & $\norm[\chout]{A_{n_{k^*}}(f)}$ \\
+  $\varepsilon$ & $k^*$ & $n_{k^*}$ & $\operatorname{error}=\norm[\chout]{S(f)}-\norm[\chout]{A_{n_{k^*}}(f)}$ \\
   \hline
-  $1$ & $1$ & $0.053051647697298$ \\
-  $10^{-2}$ & $2$ & $0.075026359679759$ \\
-  $10^{-4}$ & $6$ & $0.076111996243921$ \\
-  $10^{-6}$ & $9$ & $0.076115279170478$ \\
-  $10^{-8}$ & $13$ & $0.076115409990877$ \\
-  $10^{-10}$ & $17$ & $0.076115410826951$ \\
-  $10^{-12}$ & $21$ & $0.076115410833251$ \\
-  $10^{-14}$ & $25$ & $0.076115410833304$ \\
+  $1$ & $1$ & $3$ & $1.2492\cdot10^{-2}$ \\
+  $10^{-1}$ & $2$ & $5$ & $1.3811\cdot10^{-3}$ \\
+  $10^{-2}$ & $4$ & $9$ & $1.7041\cdot10^{-5}$ \\
+  $10^{-3}$ & $6$ & $13$ & $2.1038\cdot10^{-7}$ \\
+  $10^{-4}$ & $8$ & $17$ & $2.5973\cdot10^{-9}$ \\
+  $10^{-5}$ & $10$ & $21$ & $3.2065\cdot10^{-11}$ \\
+  $10^{-6}$ & $12$ & $25$ & $3.9591\cdot10^{-13}$ \\
+  $10^{-7}$ & $15$ & $31$ & $4.4409\cdot10^{-16}$ \\
   \hline
 \end{tabular}
 \end{center}
 
-\subsection{Examples: Approximating the divergence of a vector field}
+\subsubsection{Derivation of the Bernoulli polynomials}
 
-In this case, $\chin=\{f:\reals^n\mapsto\reals^m,\, f\in C^1(\Omega)\}$ and $\chout=\{g:\reals^n\mapsto\reals,\, g\in C^0(\Omega)\}$ and $S: f\mapsto \nabla\cdot f=\sum_{j=1}^{m}\partial_{x_j}f_j$.
-
+The properties we will use for these particular polynomials can be found in \cite{AbrSte64}: derivatives, explicit Fourier coefficients, etc. To deal with this example, now $\chin=\chout=\cl_2[0,1]$, and $S: f \mapsto f'$ with,
 \begin{gather*}
-\norm[\chin]{f} =\left[\int_\Omega \sum_{j=1}^{m}\abs{f_j(x)}^2+\sum_{j=1}^{m}\abs{f'_j(x)}^2 \, \dif x \right]^{1/2},\\
-\norm[\chout]{g} = \left[\int_\Omega \abs{g(x)}^2 \, \dif x \right]^{1/2}, \\
-u_{i}(x) = \frac{\me^{2 \pi \sqrt{-1} <i,x>}}{\sqrt{mV(\omega)+4\pi<i,i>}}, \\
-v_i(x) = \me^{2 \pi \sqrt{-1} <i,x>},\\
- \lambda_i=\frac{2\pi\sqrt{-1}\sum_{j=1}^{m}i_j}{\sqrt{mV(\omega)+4\pi<i,i>}}, \qquad i \in \integers^m,\\
+\norm[\chin]{f} = \left[\int_0^1 \left\{\abs{f(x)}^2 + \abs{f'(x)}^2\right\}\, \dif x\right]^{1/2}, \quad \norm[\chout]{f} = \left[\int_0^1 \abs{f(x)}^2 \, \dif x \right]^{1/2}, \\
+u_{i}(x) = \frac{\me^{2 \pi \sqrt{-1} i x}}{\sqrt{1+4 \pi^2 i^2}}, \quad v_i(x) = \me^{2 \pi \sqrt{-1} i x}, \quad \lambda_i=\frac{2 \pi \sqrt{-1} i}{\sqrt{1+4 \pi^2 i^2}}, \qquad i \in \integers,\\
 \pin=\pout=2,\quad q=\infty.
 \end{gather*}
 
+Like in the previous example, the index set $\ci=\integers=\{0,1,-1,2,-2,\ldots\}$ has the following ordering
+\begin{gather*}
+i_j=(-1)^{j}\left\lfloor\frac{j}{2}\right\rfloor,\qquad j\in\naturals,\\
+n_0=0,\quad n_k=2^k, \qquad k\in\naturals.
+\end{gather*}
 
+For this case,
+\begin{equation*}
+B_n(x)=-\frac{n!}{(2\pi\sqrt{-1})^n}\sum_{k\in\integers\setminus\{0\}}\frac{\me^{2\pi\sqrt{-1}kx}}{k^n}\Longrightarrow
+\left\{\begin{array}{l}
+\widehat{B_n}_0=0 \\
+\widehat{B_n}_{i_j}=-\frac{n!\sqrt{1+4 \pi^2 i_j^2}}{(2\pi\sqrt{-1}i_j)^n},\quad i_j\in\integers\setminus\{0\}
+\end{array}\right.
+\end{equation*}
 
+Using that $B'_n(x)=nB_{n-1}(x)$ and $\int_0^1B_n(t)B_m(t)\dif t=(-1)^{n-1}\frac{m!n!}{(m+n)!}B_{n+m}$, the real solution comes automatically,
+\begin{equation*}
+\norm[\chout]{S(B_n(x))}=n\norm[\chout]{B_{n-1}(x)}=n!\sqrt{\frac{\abs{B_{2(n-1)}}}{[2(n-1)]!}}
+\end{equation*}
+where $B_n=B_n(0)$ are the Bernoulli numbers.
+
+If we consider $\gamma(r)=s_1s_2^{-r}$ and that
+\begin{equation}\label{bound}
+\frac{n!}{\sqrt{2}\pi^n}j^{-n} \le \abs{\lambda_{i_j}\widehat{B_n}_{i_j}} \le \frac{n!2^n}{\pi^n}j^{-n},\quad j\in\naturals\setminus\{1\}
+\end{equation}
+then $C_{\up}=2^{n+\frac{1}{2}}C_{\lo}=\frac{n!2^n}{\pi^n}$. Thus, as shown in the example example at the beginning of this section we can take
+\begin{equation*}
+s_1=2\times11^{n-\frac{1}{2}},\quad s_2=2^{n-\frac{1}{2}}
+\end{equation*}
+There is still one thing to check because $j=1$ was not taken into account in the inequality (\ref{bound}). However, see that $\sigma_1(f) \ge C_{\lo}\left(\frac{5}{36}\right)^{n-\frac{1}{2}}$ what means that the $\gamma(r)=s_1s_2^{-r}$ found satisfies our needs.
+
+For a numerical application, find below the results for the case $n=5$ and $n=10$,
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+  \hline
+  % after \\: \hline or \cline{col1-col2} \cline{col3-col4} ...
+  \multicolumn{4}{|c|}{$B_5(x)=x^5-\frac{5}{2}x^4+\frac{5}{3}x^3-\frac{1}{6}x$} \\
+  \hline
+  $\varepsilon$ & $k^*$ & $n_{k^*}$ & $\operatorname{error}=\norm[\chout]{S(B_5(x))}-\norm[\chout]{A_{n_{k^*}}(B_5(x))}$ \\
+  \hline
+  $1$ & $5$ & $32$ & $2.9439\cdot10^{-11}$ \\
+  $10^{-1}$ & $6$ & $64$ & $2.2703\cdot10^{-13}$ \\
+  $10^{-2}$ & $7$ & $128$ & $1.8735\cdot10^{-15}$ \\
+  $10^{-3}$ & $7$ & $128$ & $1.8735\cdot10^{-15}$ \\
+  $10^{-4}$ & $8$ & $256$ & $1.1102\cdot10^{-16}$ \\
+  $10^{-5}$ & $9$ & $512$ & $9.7145\cdot10^{-17}$ \\
+  \hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+  \hline
+  % after \\: \hline or \cline{col1-col2} \cline{col3-col4} ...
+  \multicolumn{4}{|c|}{$B_{10}(x)=x^{10}-5x^9+\frac{15}{2}x^8-7x^6+5x^4-\frac{3}{2}x^2+\frac{5}{66}$} \\
+  \hline
+  $\varepsilon$ & $k^*$ & $n_{k^*}$ & $\operatorname{error}=\norm[\chout]{S(B_{10}(x))}-\norm[\chout]{A_{n_{k^*}}(B_{10}(x))}$ \\
+  \hline
+  $1$ & $5$ & $32$ & $7.7716\cdot10^{-16}$ \\
+  $10^{-1}$ & $5$ & $32$ & $7.7716\cdot10^{-16}$ \\
+  $10^{-2}$ & $6$ & $64$ & $7.7716\cdot10^{-16}$ \\
+  $10^{-3}$ & $6$ & $64$ & $7.7716\cdot10^{-16}$ \\
+  $10^{-4}$ & $7$ & $128$ & $7.7716\cdot10^{-16}$ \\
+  $10^{-5}$ & $7$ & $128$ & $7.7716\cdot10^{-16}$ \\
+  \hline
+\end{tabular}
+\end{center}
+
+\begin{rem}
+MATLAB's machine epsilon is $2.2204\cdot10^{-16}$.
+\end{rem}
+
+%\subsection{Examples: Approximating the divergence of a vector field}
+%
+%In this case, $\chin=\{f:\reals^n\mapsto\reals^m,\, f\in C^1(\Omega)\}$ and $\chout=\{g:\reals^n\mapsto\reals,\, g\in C^0(\Omega)\}$ and $S: f\mapsto \nabla\cdot f=\sum_{j=1}^{m}\partial_{x_j}f_j$.
+%
+%\begin{gather*}
+%\norm[\chin]{f} =\left[\int_\Omega \sum_{j=1}^{m}\abs{f_j(x)}^2+\sum_{j=1}^{m}\abs{f'_j(x)}^2 \, \dif x \right]^{1/2},\\
+%\norm[\chout]{g} = \left[\int_\Omega \abs{g(x)}^2 \, \dif x \right]^{1/2}, \\
+%u_{i}(x) = \frac{\me^{2 \pi \sqrt{-1} <i,x>}}{\sqrt{mV(\omega)+4\pi<i,i>}}, \\
+%v_i(x) = \me^{2 \pi \sqrt{-1} <i,x>},\\
+% \lambda_i=\frac{2\pi\sqrt{-1}\sum_{j=1}^{m}i_j}{\sqrt{mV(\omega)+4\pi<i,i>}}, \qquad i \in \integers^m,\\
+%\pin=\pout=2,\quad q=\infty.
+%\end{gather*}
 
 
 \bibliographystyle{elsarticle-num.bst}
@@ -579,7 +689,7 @@ G_{n}(f)=\sqrt{G_{n-1} + \omega_n^2 \abs{\ip[\cf]{u_n}{f}}^2}, \quad A_n(f)=A_{n
 \]
 If $n<N_0$, increment $n$ and repeat this stage.  Otherwise, proceed to Stage 2.
 
-\item [Stage 2.] Check whether $n$ is large enough to satisfy the error tolerance, i.e.,
+\item [Stage 2.] We check whether $n$ is large enough to satisfy the error tolerance, i.e.,
 \[
 \frac{\lambda_n \omega_n \tau G_{n}(f)}{\sqrt{1 - \tau^2 \omega_{n+1}^2}} \le \varepsilon.
 \]
