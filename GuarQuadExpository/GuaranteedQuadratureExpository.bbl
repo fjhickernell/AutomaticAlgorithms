@@ -1,0 +1,94 @@
+\def\Ignore#1{}\def\notesupp#1{}\def\Ignore#1{}\def\notesupp#1{}\def\Ignore#1{}\def\notesupp#1{}\def\Ignore#1{}\def\notesupp#1{}\def\Ignore#1{}\def\notesupp#1{}\def\Ignore#1{}\def\notesupp#1{}
+% \bib, bibdiv, biblist are defined by the amsrefs package.
+\begin{bibdiv}
+\begin{biblist}
+
+\bib{AbrSte64}{book}{
+      editor={Abramowitz, M.},
+      editor={Stegun, I.~A.},
+       title={Handbook of mathematical functions with formulas, graphs and
+  mathematical tables},
+   publisher={U. S. Government Printing Office},
+     address={Washington, DC},
+        date={1964},
+}
+
+\bib{BurFai10}{book}{
+      author={Burden, R.~L.},
+      author={Faires, J.~D.},
+       title={Numerical analysis},
+     edition={Ninth},
+   publisher={Cengage Brooks/Cole},
+     address={Belmont, CA},
+        date={2010},
+}
+
+\bib{CheKin12a}{book}{
+      author={Cheney, W.},
+      author={Kincaid, D.},
+       title={Numerical mathematics and computing},
+     edition={Seventh},
+   publisher={Brooks/Cole},
+     address={Boston},
+        date={2013},
+}
+
+\bib{HicEtal14b}{misc}{
+      author={Clancy, N.},
+      author={Ding, Y.},
+      author={Hamilton, C.},
+      author={Hickernell, F.~J.},
+      author={Zhang, Y.},
+       title={The complexity of guaranteed automatic algorithms: Cones, not
+  balls},
+        date={2013},
+        note={submitted for publication, arXiv.org:1303.2412 [math.NA]},
+}
+
+\bib{Lyn83}{article}{
+      author={Lyness, J.~N.},
+       title={When not to use an automatic quadrature routine},
+        date={1983},
+     journal={SIAM Rev.},
+      volume={25},
+       pages={63\ndash 87},
+}
+
+\bib{R2512}{misc}{
+      author={{R Development Core Team}},
+       title={{The R Project for Statistical Computing}},
+         how={GNU Project},
+        date={2012},
+}
+
+\bib{Sau12a}{book}{
+      author={Sauer, T.},
+       title={Numerical analysis},
+   publisher={Pearson},
+        date={2012},
+}
+
+\bib{MAT8.1}{manual}{
+      author={{The MathWorks, Inc.}},
+       title={{MATLAB} 8.1},
+     address={Natick, MA},
+        date={2013},
+}
+
+\bib{NAG23}{manual}{
+      author={{The Numerical Algorithms Group}},
+       title={The {NAG} library},
+     edition={{M}ark 23},
+     address={Oxford},
+        date={2012},
+}
+
+\bib{Mat9a}{manual}{
+      author={{Wolfram Research Inc.}},
+       title={Mathematica 9},
+     address={Champaign, IL},
+        date={2012},
+}
+
+\end{biblist}
+\end{bibdiv}
