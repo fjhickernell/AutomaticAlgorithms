@@ -13,6 +13,17 @@
         date={1964},
 }
 
+\bib{BraPet11a}{book}{
+      author={Brass, H.},
+      author={Petras, K.},
+       title={Quadrature theory: the theory of numerical integration on a
+  compact interval},
+     edition={First},
+   publisher={American Mathematical Society},
+     address={Rhode Island},
+        date={2011},
+}
+
 \bib{BurFai10}{book}{
       author={Burden, R.~L.},
       author={Faires, J.~D.},
