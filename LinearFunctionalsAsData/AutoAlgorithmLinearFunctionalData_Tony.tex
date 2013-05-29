@@ -140,9 +140,9 @@ If $\inf_{i \in \ci} \omega_i = 0$, then the $\cg$-norm is stronger than the $\c
 For these two new norms the worst-case error can be bounded tightly as in \eqref{erreig} as follows:
 \begin{gather}
 \nonumber \label{erreigweakG}
-\sup_{0 \ne f \in \cg}\frac{\norm[\chout]{S(f)-A_n(f)}}{\norm[\cg]{f}} = \norm[q]{\left(\omega_{i_j} \lambda_{i_j} \right)_{j\ge n+1}}, \\
+\tilde{h}(n)=\sup_{0 \ne f \in \cg}\frac{\norm[\chout]{S(f)-A_n(f)}}{\norm[\cg]{f}} = \norm[q]{\left(\omega_{i_j} \lambda_{i_j} \right)_{j\ge n+1}}, \\
 \label{erreigweakF}
-\sup_{0 \ne f \in \cf}\frac{\norm[\chout]{S(f)-A_n(f)}}{\norm[\cf]{f}} = \norm[q]{\left(\nu_{i_j} \omega_{i_j} \lambda_{i_j} \right)_{j\ge n+1}},
+h(n)=\sup_{0 \ne f \in \cf}\frac{\norm[\chout]{S(f)-A_n(f)}}{\norm[\cf]{f}} = \norm[q]{\left(\nu_{i_j} \omega_{i_j} \lambda_{i_j} \right)_{j\ge n+1}},
 \end{gather}
 where again $q$ is given in terms of $\pin$ and $\pout$ by \eqref{lamcond}.
 
@@ -156,17 +156,29 @@ The error of this approximation is given by the two-sided inequality
 &= \bigg\lVert\bigg(\frac{\hf_{i_j}}{\omega_{i_j}}\bigg)_{j\ge n+1}\bigg\rVert_{\pin}^{\pin} \\
 & \le \norm[\infty]{\left(\nu_{i_j} \right)_{j\ge n+1}}^{\pin} \norm[\cf]{f}^{\pin}, \quad 1 \le \pin <  \infty.
 \end{align*}
-Assuming $f$ lies in the specified cone of functions, defined by
+
+We assume $f$ lies in the specified cone of functions, defined by
 \begin{equation} \label{FGconedef}
-\cc_{\tau} = \{f \in \cf : \norm[\cf]{f} \le \tau \norm[\cg]{f} \},
+\cc_{\tau} = \{f \in \cf : \tau_{min}\norm[\cg]{f} \le \norm[\cf]{f} \le \tau \norm[\cg]{f} \},
 \end{equation}
-the arguments of \cite{HicEtal14b} lead to a two-sided bound on the $\cg$-semi-norm $f$ in terms of $G_n(f)$.  Specifically, if $\norm[\infty]{\left(\nu_{i_j} \right)_{j\ge n+1}} < 1/\tau$, then for all $f \in \cc_{\tau}$,  it follows that
-\begin{gather*}
+where $\tau_{min}=\frac{1}{\norm[\infty]{\left(\nu_{i} \right)_{i\in\ci}}}$ is a low bound on $\norm[\cf]{f}$ that arises naturally since,
+\begin{equation*}
+\norm[\cg]{f}\le\norm[\cf]{f}\norm[\infty]{\left(\nu_{i} \right)_{i\in\ci}}
+\end{equation*}
+
+Note that one has to choose $\tau_{min}\le\tau$ for $\cc_{\tau}$ to contain functions with $\norm[\cf]{f}\neq 0$. This means
+\begin{equation*}
+\frac{1}{\norm[\infty]{\left(\nu_{i_j} \right)_{j\ge1}}}\le\tau<\frac{1}{\norm[\infty]{\left(\nu_{i_j} \right)_{j\ge n_\tau+1}}}
+\end{equation*}
+where $n_\tau$ is the minimum natural integer satisfying the inequality.
+
+If we consider $\cc_\tau$, the arguments of \cite{HicEtal14b} lead to a two-sided bound on the $\cg$-semi-norm $f$ in terms of $G_n(f)$.  Specifically, if $\norm[\infty]{\left(\nu_{i_j} \right)_{j\ge n+1}} < 1/\tau$, then for all $f \in \cc_{\tau}$,  it follows that
+\begin{gather}\label{ineqnormg}
 G_n(f)  \le \norm[\cg]{f} \le \fC_n G_n(f)\\
 \fC_n=\begin{cases}\displaystyle \left[1 - \tau^{\pin} \norm[\infty]{\left(\nu_{i_j} \right)_{j\ge n+1}}^{\pin}\right]^{-1/\pin}, & 1 \le \pin <  \infty, \\
 1, & \pin =  \infty.
 \end{cases}
-\end{gather*}
+\end{gather}
 The case $\pin=\infty$ follows from the $\pin < \infty$ case by taking the limit as $\pin \to \infty$.  Alternatively, the case $\pin=\infty$ may be proven directly by choosing a positive $\delta$ strictly less than $1/\big(\tau \big\lVert\left(\nu_{i_j} \right)_{j\ge n+1}\big\rVert_{\infty}\big)$ and then noting that there exists $j^* \ge n+1$ with
 \begin{align*}
 \bigg\lVert\bigg(\frac{\hf_{i_j}}{\omega_{i_j}}\bigg)_{j\ge n+1}\bigg\rVert_{\infty}
@@ -177,15 +189,27 @@ The case $\pin=\infty$ follows from the $\pin < \infty$ case by taking the limit
 \end{align*}
 This strict inequality implies the existence of some $j \le n$ such that $\lvert\hf_{i_j}/\omega_{i_j} \rvert = \norm[\cg]{f}$, and so $G_n(f)$ has no error.
 
-Combining this upper bound on $\norm[\cg]{f}$, the cone condition, and error bound \eqref{erreigweakF}, implies that
+Combining the upper bound on $\norm[\cg]{f}$ (\ref{ineqnormg}), the cone condition (\ref{FGconedef}), and error bound \eqref{erreigweakF}, implies that
 \begin{equation}\label{ineqalgo1}
-\norm[\chout]{S(f)-A_n(f)} \le \tau \fC_n G_n(f) \norm[\infty]{\left(\nu_{i_j} \omega_{i_j} \lambda_{i_j} \right)_{j\ge n+1}}.
+\norm[\chout]{S(f)-A_n(f)} \le \fC_n G_n(f) \tau h(n). %\norm[\infty]{\left(\nu_{i_j} \omega_{i_j} \lambda_{i_j} \right)_{j\ge n+1}}
 \end{equation}
-Thus, one increases $n$ until the right hand side falls below some tolerance, $\varepsilon$.  The drawback of this approach is that one needs to choose the weights $\nu_i$ and $\omega_i$, which define the spaces $\cf$ and $\cg$.
+Thus, for $n\ge n_\tau$, one increases $n$ until the right hand side falls below some tolerance, $\varepsilon$.  The drawback of this approach is that one needs to choose the weights $\nu_i$ and $\omega_i$, which define the spaces $\cf$ and $\cg$.
+
+\begin{rem}
+It is important to see that a better bound could be
+\begin{equation*}
+\norm[\chout]{S(f)-A_n(f)} \le \fC_n G_n(f) \min(\tilde{h}(n) , \tau h(n))
+\end{equation*}
+However, if $n\ge n_\tau$,
+\begin{equation*}
+\tau h(n) \le \tilde{h}(n) \tau \norm[\infty]{\left(\nu_{i_j} \right)_{j\ge n+1}} < \tilde{h}(n),
+\end{equation*}
+implying $\min(\tilde{h}(n) , \tau h(n))=\tau h(n)$.
+\end{rem}
 
 \subsection{Embedded Non-Adaptive Algorithms}
 
-According to \cite{HicEtal14b}, the upper bound in (\ref{ineqalgo1}) can be used to define an algorithm using \textit{Embedded Nonadaptive Algorithms}. Thus, with the same notation, we recall that the error of an algorithm $A$ of this kind is:
+According to \cite{HicEtal14b}, the upper bound in (\ref{ineqalgo1}) can be used to define an algorithm based on \textit{Embedded Nonadaptive Algorithms}. Thus, with the same notation, we recall that the error of an algorithm $A$ of this kind is:
 \begin{equation} \label{errdefworst}
 \err(A,\cf,\chout,S)
 = \min\{ \delta \ge 0 : \norm[\chout]{S(f) -  A(f)} \le \delta \norm[\cf]{f} \ \forall f \in \cf \},
@@ -193,62 +217,110 @@ According to \cite{HicEtal14b}, the upper bound in (\ref{ineqalgo1}) can be used
 while the complexity of a problem for the set of algorithms $\ca_{\non}(\cf,\ch,S,\Lambda)$ becomes,
 \begin{multline} \label{fixcostcomplex}
 \comp(\varepsilon,\ca_{\non}(\cf,\ch,S,\Lambda)) \\
-= \inf\left\{\cost(A) : \err(A,\cf,\chout,S) \le \varepsilon, \ A \in \ca_{\non}(\cf,\ch,S,\Lambda) \right \}.
+= \inf\left\{\cos
+t(A) : \err(A,\cf,\chout,S) \le \varepsilon, \ A \in \ca_{\non}(\cf,\ch,S,\Lambda) \right \}.
 \end{multline}
 
-Remember that in order to build our algorithm, we need to define a countable, non-negative-valued index set such that,
-\begin{equation} \label{indexdef}
-\cn=\{n_1, n_2, \ldots\} \quad \text{with } n_k < n_{k+1}, \quad \text{satisfying } \sup_k \frac{n_{k+1}}{n_k} <\infty.
-\end{equation}
+Indeed, the equalities in (\ref{erreigweakF}) imply
+\begin{gather}
+\err(A_{n},\cg,\chout,S) = \tilde{h}(n),\\
+\err(A_{n},\cf,\chout,S) = h(n).
+\end{gather}
 
 \begin{algo}\label{algo1}
- Consider the Banach spaces $\cf$, $\cg$, $\chin$ and $\chout$, the solution operator $S$ and the error tolerance $\varepsilon$ as described above. Fix $\tau$ a positive number satisfying $\norm[\infty]{\left(\nu_{i_j} \right)_{j\ge n_1+1}} < 1/\tau$. Moreover, let $\{A_n\}_{n\in\ci}$, $A_n\in\ca_{\non}(\cg,\chout,S,\Lambda)$, be a sequence of algorithms as described in \cite{HicEtal14b} and set $k=1$. For any input function $f\in\cc_\tau$, do the following:
+ Consider the Banach spaces $\cf$, $\cg$, $\chin$ and $\chout$, the solution operator $S$, $\tau$, $n_\tau$ and the error tolerance $\varepsilon$ as described above. Moreover, let $\{A_n\}_{n\in\naturals}$, $A_n\in\ca_{\non}(\chin,\chout,S,\Lambda)$, be the sequence of non adaptive algorithms defined in (\ref{Andef}) and set $k=n_\tau$. For any input function $f\in\cc_\tau$, do the following:
 \begin{description}
-\item[Stage 1. Estimate the Bound.] Compute $G_{n_k}(f)$ and $\fC_{n_k}$. The $\tau$ chosen guarantees that $\fC_{n_k}G_{n_k}(f)$ provides a reliable upper bound on $\norm[\cg]{f}$.
+\item[Stage 1. Estimate the Bound.] Compute $G_{k}(f)$ and $\fC_{k}$. The $\tau$ chosen guarantees that $\fC_{k}G_{k}(f)$ provides a reliable upper bound on $\norm[\cg]{f}$.
 \item[Stage 2. Check for Convergence.] Check whether $k$ is large enough to satisfy the error tolerance, i.e.,
     \begin{equation}
-          \tau \fC_{n_k} G_{n_k}(f) \norm[\infty]{\left(\nu_{i_j} \omega_{i_j} \lambda_{i_j} \right)_{j\ge n_k+1}} \le \varepsilon
+          \tau \fC_{k} G_{k}(f) h(n) \le \varepsilon
     \end{equation}
-    If this is true, then return $A_{n_k}(f)$ and terminate the algorithm.
+    If this is true, then return $A_{k}(f)$ and terminate the algorithm.
 \item[Stage 3. Compute $k+1$.] Otherwise, increase $k$ by $1$ and return to Stage $1$.
 \end{description}
 \end{algo}
 
-For the sequence of algorithms defined in Algorithm \ref{algo1}, assuming that $\err(A,\{0\},\chout,S)=0$, the equalities in (\ref{erreigweakF}) imply
+Following with the notation in \cite[p.\ 20]{HicEtal14b}, we define $f_1$ with $\hat{f_1}_{i_j}=0$ if $j\ge n+2$ and such that for all $\$(\vL)\le n$, $\norm[\ch]{S(f_1)} = 1$ and $\vL(f_1)= \vzero$. Thus,
+\begin{align*}
+\norm[\cg]{f_1} & \le \norm[\pout]{\left(\lambda_{i_j} \hf_{i_j} \right)_{j = 1}^{n+1}}\norm[\bar{q}]{\left(\frac{1}{\lambda_{i_j} \omega_{i_j}} \right)_{j = 1}^{n+1}},\quad \bar{q}= \frac{\pin\pout}{\max(\pout-\pin,0)} \\
+\norm[\cf]{f_1} & \le \norm[\infty]{\left(\frac{1}{\nu_{i_j}} \right)_{j = 1}^{n+1}} \norm[\cg]{f_1}.
+\end{align*}
+Then,
 \begin{gather}
-\err(A_{n_k},\cg,\chout,S) = \norm[q]{\left(\omega_{i_j} \lambda_{i_j} \right)_{j\ge n_k+1}},\\
-\err(A_{n_k},\cf,\chout,S) = \norm[q]{\left(\nu_{i_j} \omega_{i_j} \lambda_{i_j} \right)_{j\ge n_k+1}},
+\tg(n) = \norm[\bar{q}]{\left(\frac{1}{\lambda_{i_j} \omega_{i_j}} \right)_{j = 1}^{n+1}}\\
+g(n) = \norm[\infty]{\left(\frac{1}{\nu_{i_j}} \right)_{j = 1}^{n+1}}.
 \end{gather}
 
-\begin{theorem}\label{algo1opt}
-The sequence of algorithms $A_n$ defined in Algorithm \ref{algo1} is \textit{optimal} for the problem $(\cj,\chout,S,\Lambda)$, i.e. ,
+\begin{prop}\label{optalgoseq}
+The sequences $g(n)$, $\tg(n)$ and $h(n)$ satisfy
 \begin{equation*}
-\sup_{0 < \varepsilon \le 1}\frac{\min\{k\in\naturals:\err(A_n,\cj,\chout,S)\le\varepsilon\}} {\comp(\varepsilon,\ca_{\non}(\cj,\chout,S,\Lambda))} <\infty, \qquad \cj \in \{\cf,\cg\}
+\sup_{m\ge 1} \inf\{j : j \in \naturals, \ g(m)\tg(m)h(jm) \le 1 \}  < \infty
 \end{equation*}
-\end{theorem}
+\end{prop}
 \begin{proof}
-Not yet. For $\cf$,
-\begin{gather}
-\sup_{0 < \varepsilon \le 1}\frac{\min\{k\in\naturals:\err(A_n,\cf,\chout,S)\le\varepsilon\}} {\comp(\varepsilon,\ca_{\non}(\cf,\chout,S,\Lambda))} <\infty\\
-=\sup_{0 < \varepsilon \le 1}\frac{\min\{k\in\naturals:\norm[q]{\left(\nu_{i_j} \omega_{i_j} \lambda_{i_j} \right)_{j\ge n_k+1}}\le\varepsilon\}} {\comp(\varepsilon,\ca_{\non}(\cf,\chout,S,\Lambda))} <\infty
-\end{gather}
+Non-increasing subsequence.
 \end{proof}
-
-Because the cost of an algorithm generally increases with $\norm[\cg]{f}$, in \cite{HicEtal14b} the cost was also defined as:
-\begin{equation*}
-\cost(A,\cn,\varepsilon,N_{\max},\sigma)
-= \sup \{ \cost(A,f;\varepsilon,N_{\max}) : f \in \cn, \ \norm[\cg]{f} \le \sigma \} .
-\end{equation*}
 
 \begin{theorem}
-Let $\cf$, $\cg$, $\chout$, $\varepsilon$, $\fC_n$ and $\tau$ be given as described above. Then the Algorithm \ref{algo1} satisfies
+The Algorithm \ref{algo1} satisfies
 \begin{equation*}
-\sup_{0 < \varepsilon \le 1}\frac{\cost(A,\cc_\tau,\varepsilon,\infty,\tau)} {\comp(\varepsilon,\ca_{\non}(\cj,\chout,S,\Lambda))} <\infty, \qquad \cj \in \{\cf,\cg\}
+\sup_{0 < \varepsilon/\sigma \le 1}\frac{\cost(A,\cc_\tau,\varepsilon,\infty,\sigma)} {\comp(\varepsilon/\sigma,\ca_{\non}(\cf,\chout,S,\Lambda))} <\infty
 \end{equation*}
 \end{theorem}
 \begin{proof}
-Using theorem \ref{algo1opt} and the proof of \cite{HicEtal14b}.
+Using proposition \ref{optalgoseq} and the proof of \cite{HicEtal14b}.........
 \end{proof}
+
+For the lower bound on the complexity, $\tau_0=\frac{1}{\norm[\infty]{\left(\nu_{i_j} \right)_{j=1}^{n_\tau}}}$. Then we can apply theorem $5$ in \cite{HicEtal14b} to affirm that:
+
+\begin{equation*}
+\comp(\varepsilon,\ca(\cc_{\tau},\ch,S,\Lambda),\infty,\sigma) \ge  (g\tg)^{-1}\left(\frac{\sigma\tau(\tau-\tau_0)}{2(2\tau-\tau_0)\varepsilon}\right).
+\end{equation*}
+
+\subsection{Example: the embedding operator applied to the parabola $f(x)=x^2-x+\frac{1}{4}$}
+
+Lets consider $\chin=\chout=\cl_2[0,1]$, and $S: f \mapsto f$ the embedding operator with:
+\begin{gather*}
+\norm[\chin]{f} = \norm[\chout]{f} = \left[\int_0^1 \abs{f(x)}^2 \, \dif x \right]^{1/2}, \\
+u_{i}(x) = v_i(x) = \me^{2 \pi \sqrt{-1} i x},\quad \lambda_i=1, \qquad i \in \integers,\\
+\pin=\pout=2,\quad q=\infty.
+\end{gather*}
+
+In this case, our index set $\ci=\integers=\{0,1,-1,2,-2,\ldots\}$ and we define,
+\begin{gather*}
+\omega_{i_j} = 1,\quad \nu_{0}=0,\quad \nu_{i_j} = \frac{1}{\abs{i_j}}, \qquad i \in \ci\setminus\{0\},\\
+i_j=(-1)^{j}\left\lfloor\frac{j}{2}\right\rfloor,\qquad j\in\naturals.
+\end{gather*}
+Therefore, one must have $n_\tau=2\lfloor\tau\rfloor+1$. Setting $\tau=2$, $n_\tau=5$ and $\tau_0=1$.
+
+Using integration by parts, Fourier coefficients are as follows,
+\begin{gather*}
+\hf_{0}=\frac{1}{12},\\
+\hf_{i_j}=\int_{[0,1)}x^2e^{2\pi\sqrt{-1}i_jx}dx-\int_{[0,1)}xe^{2\pi\sqrt{-1}i_jx}dx=\frac{1}{2\pi^2{i_j}^2}, \quad i_j\neq 0
+\end{gather*}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+  \hline
+  % after \\: \hline or \cline{col1-col2} \cline{col3-col4} ...
+  \multicolumn{3}{|c|}{$f(x)=x^2-x+\frac{1}{4}$} \\
+  \hline
+  $\varepsilon$ & $n$ & $\operatorname{error}=\norm[\chout]{S(f(x))}-\norm[\chout]{A_{n}(f(x))}$ \\
+  \hline
+  $1$ & $5$ & $4.5598\cdot10^{-4}$ \\
+  $10^{-1}$ & $29$ & $2.5040\cdot10^{-6}$ \\
+  $10^{-2}$ & $297$ & $2.3365\cdot10^{-9}$ \\
+  $10^{-3}$ & $2961$ & $2.3579\cdot10^{-12}$ \\
+  $10^{-4}$ & $29601$ & $5.5511\cdot10^{-15}$ \\
+  $10^{-5}$ & $296003$ & $2.5951\cdot10^{-15}$ \\
+  $10^{-6}$ & $2960021$ & $2.5951\cdot10^{-15}$ \\
+  \hline
+\end{tabular}
+\end{center}
+
+\begin{rem}
+For this weights $\omega_i$ and $\nu_i$, our bound is of $\Theta(\varepsilon^{-1})$ as the complexity so we cannot do better.
+\end{rem}
 
 \section{Assuming a Gentle Decay in the Terms of the Series}
 
@@ -349,6 +421,11 @@ According to the inequality (\ref{algoineq}) above, this $k^*$ is ensuring
 \begin{equation*}
 \norm[\chout]{S(f)-A_{n_{k^*}}(f)} \le \varepsilon
 \end{equation*}
+
+Remember that in order to build our algorithm, we need to define a countable, non-negative-valued index set such that,
+\begin{equation} \label{indexdef}
+\cn=\{n_1, n_2, \ldots\} \quad \text{with } n_k < n_{k+1}, \quad \text{satisfying } \sup_k \frac{n_{k+1}}{n_k} <\infty.
+\end{equation}
 
 \begin{algo}\label{algo2}
  Consider the set of functions $\cc$, the error tolerance $\varepsilon$ and the sequence $\{A_n\}_{n \in \ci}$ as described before.
@@ -674,83 +751,10 @@ MATLAB's machine epsilon is $2.2204\cdot10^{-16}$.
 %\pin=\pout=2,\quad q=\infty.
 %\end{gather*}
 
-
-\bibliographystyle{elsarticle-num.bst}
+\section*{References}
+%\nocite{*}
+\bibliographystyle{elsarticle-num}
 \bibliography{FJH22,FJHown22}
+
+
 \end{document}
-
-\begin{algo} \label{GenHilbAlg} {\bf (Multistage, Deterministic Automatic Algorithm for \eqref{HilbertS}).}  For the problem defined above in this section, given $tau>0$, error tolerance, $\varepsilon$, and maximum cost budget, $N_{\max}$, let $N_0= \min\{ n : \omega_{n+1} < 1 /\tau\}$. Set $G_0(f)=$ and $A_0(f)=0$.  For $n=1, \ldots, N_{max}$,
-
-\begin{description}
-
-\item [Stage 1.] Evaluate the datum $\ip[\cf]{u_n}{f}$, and compute
-\[
-G_{n}(f)=\sqrt{G_{n-1} + \omega_n^2 \abs{\ip[\cf]{u_n}{f}}^2}, \quad A_n(f)=A_{n-1}(f)+ \lambda_n\omega_n\ip[\cf]{u_n}{f}v_n.
-\]
-If $n<N_0$, increment $n$ and repeat this stage.  Otherwise, proceed to Stage 2.
-
-\item [Stage 2.] We check whether $n$ is large enough to satisfy the error tolerance, i.e.,
-\[
-\frac{\lambda_n \omega_n \tau G_{n}(f)}{\sqrt{1 - \tau^2 \omega_{n+1}^2}} \le \varepsilon.
-\]
-If this is true, then set $W=0$.  Otherwise, if this inequality fails to hold and $n= N_{\max}$ then set the $W=1$.  In both cases, return $(A_{n_i}(f),W)$ and terminate the algorithm.  If the error tolerance is not yet satisfied, and $n < N_{\max}$, then increment $i$ by one and return to Stage 1.
-\end{description}
-\end{algo}
-
-
-\begin{theorem}
-Let $\cc_\tau$ be the cone of functions defined in \eqref{conedef} whose $\cf$-semi-norms are no larger than $\tau$ times their $\cg$-semi-norms.  Assume that $N_0$ as defined in Algorithm \ref{GenHilbAlg} is smaller $N_{\max}$.  Let
-\begin{equation} \label{nicefHilbdef}
-\cn = \left \{ f \in \cc_\tau : \norm[\cg]{f} \le \frac{\varepsilon \sqrt{1 - \tau^2 \omega_{N_{\max}+1}^2}}{\tau \lambda_{N_{\max}} \omega_{N_{\max}}} \right\}
-\end{equation}
-be a subset of the cone $\cc_\tau$ that lies inside a $\cg$-semi-norm ball of rather large radius.  Then it follows that Algorithm \ref{twostagedetalgo} is successful for all functions in this set of \emph{nice} functions $\cn$,  i.e.,  $\success(A,W,\cn,\varepsilon,N_{\max}) = 1$.  Moreover, the cost of this algorithm is bounded above in terms of the $\cg$-semi-norm of the input function as follows:
-\begin{multline} \label{auto2stagedetcost}
-\cost(A,\cn,\varepsilon,N_{\max},\sigma) \\
-\le N_G+ \min\left\{ n \in \ci : n \ge \min\left( \left[\frac{C_1 \fC \fc \sigma }{\varepsilon}\right]^{1/p_1}, \left[\frac{C_2 \tau \fC \fc \sigma}{\varepsilon}\right]^{1/p_2} \right ) \right\}.
-\end{multline}
-The upper bound on the cost of this specific algorithm provides an upper bound on the complexity of the problem, $\comp(\varepsilon,\ca(\cn,\ch,S,\Lambda),N_{\max},\sigma)$.  If the sequence of algorithms $\{A_n\}_{n \in \ci}$, $A_n \in\ca_{\fix}(\cg,\ch,S,\Lambda)$  is nearly optimal for the problems $(\cg,\ch,S,\Lambda)$ and $(\cf,\ch,S,\Lambda)$ as defined in \eqref{nearoptdef}, then Algorithm \ref{twostagedetalgo} does not incur a significant penalty for not knowing $\norm[\cg]{f}$ a priori, i.e., for all $p>0$,
-\begin{equation*}
-\sup_{0 < \varepsilon/\sigma \le 1} \frac{\cost(A,\cn,\varepsilon,\infty,\sigma)} {\comp(\varepsilon/\sigma,\ca_{\fix}(\cj,\ch,S,\Lambda))} \left(\frac{\varepsilon}{\sigma}\right)^p <\infty, \qquad \cj \in \{\cf,\cg\}.
-\end{equation*}
-
-\end{theorem}
-
-\subsection{Tensor Product Spaces and Tractability}
-
-
-
-
-of real-valued functions of interest defined on $\cx \subseteq \reals^d$.  Let $\rho: \cx \to [0,\infty)$ be a non-negative weight used to define the $\cl_2$ norm.  Let $\{\phi_k\}_{k=1}^{\infty}$ be an orthonormal basis for this Hilbert space, i.e.,
-\begin{align*}
-\ip[2]{f}{g} &:= \int_{\cx} \overline{f(\vx)} g(\vx) \, \rho(\vx) \, \dif \vx \qquad \forall f,g \in \cl_2,\\
-\ip[2]{\phi_k}{\phi_{\ell}} &= \int_{\cx} \overline{\phi_k(\vx)} \phi_{\ell}(\vx) \, \rho(\vx) \, \dif \vx = \delta_{k\ell} \qquad \forall k,l \in \naturals,\\
-\hf(k) &: = \ip[2]{\phi_k}{f} \qquad \forall k \in \naturals,\\
-f &= \sum_{k=1}^{\infty} \hf(k) \phi_k, \\
-\ip[2]{f}{g} &= \sum_{k=1}^\infty \overline{\hf(k)}\hg(k).
-\end{align*}
-Let $\ch$ be a Hilbert subspace of $\cl_2$ such that $\{\phi_k\}_{k=1}^{\infty}$ is an orthogonal basis for $\ch$.  Let $w:\naturals \to [0,\infty)$ be a non-increasing function.  The inner product for $\ch$ is defined as
-\begin{gather*}
-\ip[\ch]{f}{g} = \sum_{k=1}^\infty \frac{\overline{\hf(k)}\hg(k)}{w(k)} \\
-\ch=\ch_{w} :=\left \{ f = \sum_{k=1}^{\infty} \hf(k) \phi_k : \norm[\ch]{f}^2 = \sum_{k=1}^\infty \frac{\lvert\hf(k)\rvert^2}{w(k)} < \infty \right\}.
-\end{gather*}
-Note that $\{\sqrt{w(k)}\phi_k\}_{k=1}^{\infty}$ is an orthonormal basis for $\ch_w$.
-
-For now, consider the case where one can obtain any bounded linear functionals.  In that case, the best approximation is the Fourier series truncated at the first $n$ terms.  That is, one should compute the information
-\[
-L_k(f) = \hf(k) = \ip[\ch]{w(k)\phi_k}{f}  = \ip[2]{\phi_k}{f}, \qquad k=1, \ldots, n,
-\]
-and then form the approximation as follows:
-\[
-\tf_{\trunc,n} = A_{\trunc,n}(f) = \sum_{k=1}^{n} L_k(f) \phi_k = \sum_{k=1}^{n} \hf(k) \phi_k.
-\]
-The error of this approximation bounded as follows by H\"older's inequality:
-\begin{gather*}
-\norm[2]{f - \tf_{\trunc,n}}^2 = \norm[2]{\sum_{k=n+1}^{\infty} \hf(k) \phi_k}^2 = \sum_{k=n+1}^{\infty} \abs{\hf(k)}^2 = \sum_{k=n+1}^{\infty} \frac{\abs{\hf(k)}^2}{w(k)} w(k) \le \norm[\ch]{f}^2 \sum_{k=n+1}^{\infty} w(k) \\
-\sup_{0 \ne f \in \ch} \frac{\norm[2]{f - \tf_{\trunc,n}}}{\norm[\ch]{f}} =  \sqrt{\sum_{k=n+1}^{\infty} w(k)} =: W(n) \end{gather*}
-Letting
-
-
-This is approximation is optimal in the following sense:
-\[
-\tf_{\trunc,n} = \argmin_{g \in \cl_2} \sup_{f \in } \norm[2]{f - g}
-\]
