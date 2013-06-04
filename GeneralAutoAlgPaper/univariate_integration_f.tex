@@ -9,153 +9,173 @@ A_{n}(f)(x)=(n-1) \left[ f(x_{i})(x_{i+1}-x) +f(x_{i+1})(x-x_i) \right] \\ \text
 \end{subequations}
 The cost of each function value is one and so the cost of  $A_n$ is $n$.
 
-The first example we consider is univariate integration on the unit interval, $S(f)=\INT(f)=\int_{0}^{1}f(x) \, \dif x$.  The two spaces of input functions are Sobolev spaces of different degrees of smoothness:
-\begin{equation*}
-  \cf=\mathcal{W}^{2,1} \quad \text{and} \quad
-  \cg=\mathcal{W}^{1,1},
-\end{equation*}
-where the general Sobolev spaces with smoothness of degree $k$ are defined as 
-\begin{equation} \label{defSobolev}
-  \mathcal{W}^{k,p}=\mathcal{W}^{k,p}[0,1]=\{f\in C[0,1]: \|f^{(k)}\|_{p}<\infty\}.
-\end{equation}
-The $\cf$-semi-norm is defined as $\Fnorm{f}=\norm[1]{f''}$, which corresponds to the total variation of $f'$.  Note that $A_2(f): x \mapsto f(0)(1-x)+f(1)x$ is the linear interpolant of $f$ using the two endpoints of the interval.  The $\cg$-semi-norm is defined as $\Gnorm{f}=\norm[1]{f'-A_2(f)'}=\norm[1]{f'-f(1)+f(0)}$, which corresponds to the total variation of $f-A_2(f)$.  The reason for defining $\Gnorm{f}$ in this way, rather than as $\norm[1]{f'}$, is that $\Gnorm{f}$ vanishes if $f$ is a linear function, and of course linear functions are integrated exactly by the trapezoidal rule.  The cone of integrands is defined as  
+The first example we consider is univariate integration on the unit interval, $S(f)=\INT(f)=\int_{0}^{1}f(x) \, \dif x$.  The two spaces of input functions are $\cf=\mathcal{V}^{1}$, the space of functions whose first derivatives have finite total variation, and and $\cg=\mathcal{W}^{1,1}$, the Sobolev space with smoothness of degree $1$.  The general definition of these spaces are as follows:
+\begin{subequations} \label{defSobolev}
+\begin{gather} 
+  \cv^{k}: =\cv^{k}[0,1]=\{f\in C[0,1]: \Var(f^{(k)}) < \infty \}, \\
+  \Var(f) := \sup_{\substack{n \in \naturals\\ 0 = x_0 < x_1 < \cdots < x_{n} =1}} \sum_{i=1}^n \abs{f(x_i)-f(x_{i-1})}, \\
+  \mathcal{W}^{k,p}=\mathcal{W}^{k,p}[0,1]=\{f\in C[0,1]: \|f^{(k)}\|_{p}<\infty\}, \\
+\norm[p]{f}:= \begin{cases} \displaystyle \left[\int_0^1 \abs{f(x)}^p \, \dif x \right]^{1/p}, & 1 \le p < \infty,\\[1ex]
+\displaystyle  \sup_{0 \le x \le 1} \abs{f'(x)}, & p=\infty.
+\end{cases}
+\end{gather}
+\end{subequations}
+Note that $\Var(f)=\norm[1]{f'}$ when the latter is finite.  The space of outputs $\ch$ is $\reals$.
+
+The $\cf$-semi-norm is defined as $\Fnorm{f}=\Var(f')$.  Note that $A_2(f): x \mapsto f(0)(1-x)+f(1)x$ is the linear interpolant of $f$ using the two endpoints of the integration interval.  The $\cg$-semi-norm is defined as $\Gnorm{f}=\norm[1]{f'-A_2(f)'}=\norm[1]{f'-f(1)+f(0)}$, which corresponds to the total variation of $f-A_2(f)$.  The reason for defining $\Gnorm{f}$ this way is that $\Gnorm{f}$ vanishes if $f$ is a linear function, and of course linear functions are integrated exactly by the trapezoidal rule.  The cone of integrands is defined as  
 \begin{equation}\label{coneinteg}
-\cc_{\tau}=\{f\in \mathcal{W}^{2,1}:\|f''\|_1\leq\tau\|f'-f(1)+f(0)\|_1\}.
+\cc_{\tau}=\{f\in \cv^{1}:\Var(f')\leq\tau\|f'-f(1)+f(0)\|_1\}.
 \end{equation}
-The space of outputs $\ch$ is $\reals$.
 
 The non-adaptive building blocks to construct the adaptive integration algorithm are the composite trapezoidal rules based on $n-1$ trapezoids:
 \begin{equation*}
     T_{n}(f) = \int_0^1 A_n(f) \, \dif x 
-    =\frac{1}{2n}[f(x_1)+2f(x_2)+\cdots+2f(x_{n-1})+f(x_n)],
+    =\frac{1}{2n-2}[f(x_1)+2f(x_2)+\cdots+2f(x_{n-1})+f(x_n)],
 \end{equation*}
 with $\cost(T_n)=n$.  The algorithm $T_n$ is imbedded in the algorithm $T_{2n-1}$, which uses $2n-2$ trapezoids.  Thus, any trapezoidal rule is embedded in some other trapezoidal rule with cost no more than $r=2$ times the original one.  This is the minimum cost multiple as described just before Algorithm \ref{multistagealgo}.  
 
 The algorithm for approximating $\Gnorm{f}=\norm[1]{f'-f(1)+f(0)}$ is the $\cg$-semi-norm of the linear spline, $A_n(f)$:
 \begin{multline}\label{1direst}
-    G_n(f)=\Gnorm{A_n(f)}=\norm[1]{A_n(f)'-A_2(f)'} \\
-    =\sum_{i=0}^{n-2}\left|f(x_{i+1})-f(x_{i}) - \frac{f(1)-f(0)}{n-1}\right|.
+    G_n(f)=\Gnorm{A_n(f)}=\bignorm[1]{A_n(f)'-A_2(f)'} \\
+    =\sum_{i=1}^{n-1}\left|f(x_{i+1})-f(x_{i}) - \frac{f(1)-f(0)}{n-1}\right|.
 \end{multline} 
 
 \subsection{Adaptive Algorithm and Upper Bound on the Cost}
 
 Constructing the adaptive algorithm for integration requires upper bounds on the errors of the $T_n$ and $G_n$.  Note that $G_{n}(f)$ never overestimates $\Gnorm{f}$ because 
 \begin{align*}
-\Gnorm{f} & = \norm[1]{f'-A_2(f)'} 
+\Gnorm{f} & = \bignorm[1]{f'-A_2(f)'} 
 = \sum_{i=1}^{n-1} \int_{x_i}^{x_{i+1}} \abs{f'(x) - A_2(f)'(x)} \, \dif x \\
 & \ge \sum_{i=1}^{n-1} \abs{\int_{x_i}^{x_{i+1}} [f'(x) - A_2(f)'(x)] \, \dif x}=\norm[1]{A_n(f)'-A_2(f)'} = G_n(f).
 \end{align*}
-Thus, $h_{-}(n)=0$ and $\mathfrak{c}_n=1$. 
+Thus, $h_{-}(n)=0$ and $\fc_n=\tfc_n=1$. 
 
 To find an upper bound on $\Gnorm{f}-G_{n}(f)$, note that 
 \begin{equation*}
 \Gnorm{f} - G_{n}(f) = \Gnorm{f} - \bigabs{A_n(f)}_{\cg} \le \bigabs{f-A_n(f)}_{\cg} = \bignorm[1]{f' -A_n(f)'},
 \end{equation*}
-since $(f-A_n(f))(x)$ vanishes for $x=0,1$.  Thus, we need bounds on $f-A_n(f)$.
+since $(f-A_n(f))(x)$ vanishes for $x=0,1$.  Moreover, 
+\begin{equation} \label{onenormfp}
+\bignorm[1]{f' -A_n(f)'} = \sum_{i=1}^{n-1} \int_{x_i}^{x_{i+1}} \abs{f'(x) -(n-1)[f(x_{i+1})-f(x_i)]} \, \dif x.
+\end{equation}
+Now we bound each integral in the summation.  For $i=1, \ldots, n-1$, let $\eta_i(x) = f'(x) -(n-1)[f(x_{i+1})-f(x_i)]$, and let $p_i$ denote the probability that $\eta_i(x)$ is non-negative:
+\[
+p_i = (n-1)\int_{x_i}^{x_{i+1}} \bbone_{[0,\infty)} (\eta_i(x)) \, \dif x,
+\]
+and so $1-p_i$ is the probability that $\eta_i(x)$ is negative.  Since $\int_{x_i}^{x_{i+1}} \eta_i(x) \, \dif x =0$, we know that $\eta_i$ must take on both non-positive and non-negative values.  Invoking the mean value theorem, it follows that 
+\begin{multline*}
+\frac{p_i}{n-1} \max_{x_i \le x \le x_{i+1}} \eta_i(x) \ge \int_{x_i}^{x_{i+1}} \max(\eta_i(x),0) \, \dif x \\
+= \int_{x_i}^{x_{i+1}} \max(-\eta_i(x),0) \, \dif x \le \frac{-(1-p_i)}{n-1} \min_{x_i \le x \le x_{i+1}} \eta_i(x) .
+\end{multline*}
+These bounds allow us to derive bounds on the integrals in \eqref{onenormfp}:
+\begin{align*}
+\int_{x_i}^{x_{i+1}} \abs{\eta_i(x)} \, \dif x &= \int_{x_i}^{x_{i+1}} \max(\eta_i(x),0) \, \dif x + \int_{x_i}^{x_{i+1}} \max(-\eta_i(x),0) \, \dif x\\
+&=2(1-p_i) \int_{x_i}^{x_{i+1}} \max(\eta_i(x),0) \, \dif x \\
+& \qquad \qquad + 2p_i\int_{x_i}^{x_{i+1}} \max(-\eta_i(x),0) \, \dif x\\
+&\le \frac{2p_i(1-p_i)}{n-1} \left[ \max_{x_i \le x \le x_{i+1}} \eta_i(x) - \min_{x_i \le x \le x_{i+1}} \eta_i(x) \right]\\
+&=\frac{2p_i(1-p_i)}{n-1} \left[ \max_{x_i \le x \le x_{i+1}} f'(x) - \min_{x_i \le x \le x_{i+1}} f'(x) \right], \\
+&=\frac{1}{2(n-1)} \left[ \max_{x_i \le x \le x_{i+1}} f'(x) - \min_{x_i \le x \le x_{i+1}} f'(x) \right],
+\end{align*}
+since $p_i(1-p_i)\le 1/4$.  
 
-Using integration by parts, one can write the difference between $f$ and its linear spline in terms of an integral kernel.  For $x \in [x_i,x_{i+1}]$, 
-\begin{align}
-\nonumber
-f(x)-A_n (f)(x)
-&= f(x) - (n-1) \left[f(x_{i})(x_{i+1}-x) +f(x_{i+1})(x-x_i) \right]\\
-&= (n-1) \int_{x_i}^{x_{i+1}} v_i(t,x) f'(t) \, \dif t \label{fintermsfprime}\\
-& = (n-1) \int_{x_i}^{x_{i+1}} u_i(t,x) f''(t) \, \dif t, \label{fintermsfdoubprime}\\
-f'(x)-A_n(f)'(x) & = (n-1) \int_{x_i}^{x_{i+1}} w_i(t,x) f''(t) \, \dif t, \label{fprimeintermsfdoubprime}
-\end{align}
-where the kernels are defined as
+Plugging this bound into \eqref{onenormfp} yields
 \begin{align*}
-u_i(t,x)& =\begin{cases} (x_{i+1}-x)(x_i-t), & x_i\leq t\leq x,\\
-(x-x_{i})(t- x_{i+1}), & x< t \leq x_{i+1},
-\end{cases} \\
-v_i(t,x)& =- \frac{\partial u_i}{\partial t}(t,x) = \begin{cases}  x_{i+1}-x, & x_i\leq t\leq x,\\
-x_{i}-x, & x< t \leq x_{i+1},
-\end{cases} \\
-w_i(t,x)& = \frac{\partial u_i}{\partial x}(t,x) = \begin{cases}  t-x_i, & x_i\leq t\leq x,\\
-t-x_{i+1}, & x< t \leq x_{i+1}.
-\end{cases}
+\bignorm[1]{f'-f(1)+f(0)} - G_n(f) &= \Gnorm{f} - G_{n}(f)\\
+ & \le \bignorm[1]{f' -A_n(f)'}\\
+&\le \frac{1}{2n-2} \sum_{i=1}^{n-1} \left[ \max_{x_i \le x \le x_{i+1}} f'(x) - \min_{x_i \le x \le x_{i+1}} f'(x) \right] \\
+& \le \frac{\Var(f')}{2n-2} = \frac{\Fnorm{f}}{2n-2},
 \end{align*}
-This implies the following upper bound on a piece of $\|f'\|_{1}$:
-\begin{align*}
-\MoveEqLeft{\int_{x_i}^{x_{i+1}}|f'(x)-A_n(f)'(x)| \, \dif x}\\
-& \le (n-1) \int_{x_i}^{x_{i+1}} \int_{x_i}^{x_{i+1}}|w(t,x)||f''(t)| \dif t \, \dif x\\
-& \le  (n-1)\int_{x_i}^{x_{i+1}}2(t-x_i)(x_{i+1}-t)|f''(t)| \, \dif t \\
-& \le  (n-1) \max_{x_i \le t \le x_{i+1}} \abs{2(t-x_i)(x_{i+1}-t)} \int_{x_i}^{x_{i+1}} |f''(t)| \, \dif t \\
-&  \le \frac{1}{2(n-1)}\int_{x_i}^{x_{i+1}} |f''(t)| \, \dif t .
-\end{align*}
-Applying this inequality for $i=1, \ldots, n-1$ leads to 
-\begin{align*}
-\Gnorm{f} - G_{1,n}(f) &  \le \bignorm[1]{f' -A_n(f)'} \\
-& = \sum_{i=1}^{n-1} \left \{  \int_{x_i}^{x_{i+1}}|f'(x)-A_n(f)'(x)|\, \dif x \right \} \\
-& \le \frac{1}{2(n-1)} \sum_{i=1}^{n-1} \int_{x_i}^{x_{i+1}} |f''(t)| \, \dif t = \frac{\|f''\|_{1}}{2(n-1)}.
-\end{align*}
-According to \eqref{Gerrbds} and , we have $h_{+}(n)=1/[2(n-1)]$ and an inflation factor of 
+and so 
 \begin{equation}\label{factor}
-\mathfrak{C}_n =\frac{1}{1 - \tau/(2n-2)} \qquad \text{for } n>1+\tau/2.
+h_{+}(n)= \frac{1}{2n-2}, \qquad \mathfrak{C}_n =\frac{1}{1 - \tau/(2n-2)} \qquad \text{for } n>1+\tau/2.
+\end{equation}
+Since $G_2(f)=0$ by definition, the above inequality for $\Gnorm{f} - G_{2}(f)$ implies that
+\begin{equation} \label{taumininteg}
+2\bignorm[1]{f'-f(1)+f(0)} = 2 \Gnorm{f} \le \Fnorm{f} = \Var(f'), \qquad \tau_{\min}=2.
 \end{equation}
 
-An algorithm that provides a lower bound on $\Fnorm{f}=\norm[1]{f''}$ is now derived to use as a necessary condition that $f$ lies in $\cc_\tau$ as described in Remark \ref{neccondrem}.  Given $n =2, 3, \ldots$, define 
+
+%Using integration by parts, one can write the difference between $f$ and its linear spline in terms of an integral kernel.  For $x \in [x_i,x_{i+1}]$, 
+%\begin{align}
+%\nonumber
+%f(x)-A_n (f)(x)
+%&= f(x) - (n-1) \left[f(x_{i})(x_{i+1}-x) +f(x_{i+1})(x-x_i) \right]\\
+%&= (n-1) \int_{x_i}^{x_{i+1}} v_i(t,x) f'(t) \, \dif t \label{fintermsfprime}\\
+%& = (n-1) \int_{x_i}^{x_{i+1}} u_i(t,x) f''(t) \, \dif t, \label{fintermsfdoubprime}\\
+%f'(x)-A_n(f)'(x) & = (n-1) \int_{x_i}^{x_{i+1}} w_i(t,x) f''(t) \, \dif t, \label{fprimeintermsfdoubprime}
+%\end{align}
+%where the kernels are defined as
+%\begin{align*}
+%u_i(t,x)& =\begin{cases} (x_{i+1}-x)(x_i-t), & x_i\leq t\leq x,\\
+%(x-x_{i})(t- x_{i+1}), & x< t \leq x_{i+1},
+%\end{cases} \\
+%v_i(t,x)& =- \frac{\partial u_i}{\partial t}(t,x) = \begin{cases}  x_{i+1}-x, & x_i\leq t\leq x,\\
+%x_{i}-x, & x< t \leq x_{i+1},
+%\end{cases} \\
+%w_i(t,x)& = \frac{\partial u_i}{\partial x}(t,x) = \begin{cases}  t-x_i, & x_i\leq t\leq x,\\
+%t-x_{i+1}, & x< t \leq x_{i+1}.
+%\end{cases}
+%\end{align*}
+%This implies the following upper bound on a piece of $\|f'\|_{1}$:
+%\begin{align*}
+%\MoveEqLeft{\int_{x_i}^{x_{i+1}}|f'(x)-A_n(f)'(x)| \, \dif x}\\
+%& \le (n-1) \int_{x_i}^{x_{i+1}} \int_{x_i}^{x_{i+1}}|w(t,x)||f''(t)| \dif t \, \dif x\\
+%& \le  (n-1)\int_{x_i}^{x_{i+1}}2(t-x_i)(x_{i+1}-t)|f''(t)| \, \dif t \\
+%& \le  (n-1) \max_{x_i \le t \le x_{i+1}} \abs{2(t-x_i)(x_{i+1}-t)} \int_{x_i}^{x_{i+1}} |f''(t)| \, \dif t \\
+%&  \le \frac{1}{2(n-1)}\int_{x_i}^{x_{i+1}} |f''(t)| \, \dif t .
+%\end{align*}
+%Applying this inequality for $i=1, \ldots, n-1$ leads to 
+%\begin{align*}
+%\Gnorm{f} - G_{1,n}(f) &  \le \bignorm[1]{f' -A_n(f)'} \\
+%& = \sum_{i=1}^{n-1} \left \{  \int_{x_i}^{x_{i+1}}|f'(x)-A_n(f)'(x)|\, \dif x \right \} \\
+%& \le \frac{1}{2(n-1)} \sum_{i=1}^{n-1} \int_{x_i}^{x_{i+1}} |f''(t)| \, \dif t = \frac{\|f''\|_{1}}{2(n-1)}.
+%\end{align*}
+%According to \eqref{Gerrbds} and , we have $h_{+}(n)=1/[2(n-1)]$ and an inflation factor of 
+%\begin{equation}\label{factor}
+%\mathfrak{C}_n =\frac{1}{1 - \tau/(2n-2)} \qquad \text{for } n>1+\tau/2.
+%\end{equation}
+
+An algorithm that provides a lower bound on $\Fnorm{f}=\Var(f')$ is now derived to use as a necessary condition that $f$ lies in $\cc_\tau$ as described in Remark \ref{neccondrem}.  Given $n =2, 3, \ldots$, define 
 \begin{equation} \label{Fnormalg}
-F_n(f) = (n-1)\sum_{i=1}^{n-2} \abs{f(x_i) - 2 f(x_{i+1})+f(x_{i+2})}
+F_n(f) = (n-1)\sum_{i=1}^{n-2} \abs{f(x_i) - 2 f(x_{i+1})+f(x_{i+2})}.
 \end{equation}
 It follows using the mean value theorem that 
 \begin{align*}
 F_n(f) &= (n-1)\sum_{i=1}^{n-1} \abs{[f(x_{i+2}) - f(x_{i+1})] - [f(x_{i+1}) - f(x_{i})]} \\
-&= \sum_{i=1}^{n-1} \abs{f'(\xi_{i+1}) - f'(\xi_{i})} = \sum_{i=1}^{n-1} \abs{\int_{\xi_i}^{\xi_{i+1}} f''(x) \, \dif x} \le \norm[1]{f''},
+&= \sum_{i=1}^{n-1} \abs{f'(\xi_{i+1}) - f'(\xi_{i})} \le \Var(f'),
 \end{align*}
 where $\xi_i$ is some point in $[x_i,x_{i+1}]$.
 
-The errors of the trapezoidal rule for integrands in the spaces $\mathcal{W}^{2,1}$ and $\mathcal{W}^{1,1}$ given in \cite[(7.14) and (7.15)]{BraPet11a}. The derivations are repeated here for completeness. Integrating \eqref{fintermsfdoubprime} leads to the formula for $h(n)$ defined in \eqref{algseqerrbd}
-\begin{align*}
-\int_0^1 f(x) \, dx - T_n(f) & = \int_0^ 1 [f-A_n (f)](x) \, dx\\
-& = (n-1) \sum_{i=1}^n \int_{x_i}^{x_{i+1}} \int_{x_i}^{x_{i+1}} u_i(t,x) f''(t) \, \dif t \, \dif x \\
-& = \frac{1}{2} \sum_{i=1}^n \int_{x_i}^{x_{i+1}} (t-x_i)(t-x_{i+1}) f''(t) \, \dif t \, \dif x \\
-\abs{\int_0^1 f(x) \, dx - T_n(f)} & \le \frac{1}{2} \sum_{i=1}^n \biggl [\sup_{x_i \le t \le x_{i+1}} \abs{(t-x_i)(t-x_{i+1})} \int_{x_i}^{x_{i+1}} \abs{f''(t)} \, \dif t \, \dif x \biggr ] \\
-& = \frac{1}{8(n-1)^2} \sum_{i=1}^n \int_{x_i}^{x_{i+1}} \abs{f''(t)} \, \dif t \, \dif x = \frac{\norm[1]{f''}}{8(n-1)^2}, \\
-h(n)&= \frac{1}{8(n-1)^2}.
-\end{align*}
-On the other hand, integrating \eqref{fintermsfprime} leads to the formula for $\tildeh(n)$ defined in \eqref{algseqerrbd}:
-\begin{align*}
-\int_0^1 f(x) \, dx - T_n(f) & = \int_0^ 1 [f-A_n (f)](x) \, dx\\
-& = (n-1) \sum_{i=1}^n \int_{x_i}^{x_{i+1}} \int_{x_i}^{x_{i+1}} v_i(t,x) f'(t) \, \dif t \, \dif x \\
-& = \frac{1}{2} \sum_{i=1}^n \int_{x_i}^{x_{i+1}} (x_i-2t+x_{i+1}) f'(t) \, \dif t \, \dif x \\
-\abs{\int_0^1 f(x) \, dx - T_n(f)} & \le \frac{1}{2} \sum_{i=1}^n \biggl [\sup_{x_i \le t \le x_{i+1}} \abs{x_i-2t+x_{i+1}} \int_{x_i}^{x_{i+1}} \abs{f'(t)} \, \dif t \, \dif x \biggr ] \\
-& = \frac{1}{2(n-1)} \sum_{i=1}^n \int_{x_i}^{x_{i+1}} \abs{f'(t)} \, \dif t \, \dif x = \frac{\norm[1]{f'}}{2(n-1)}.
-\end{align*}
-The right hand side is not quite what is needed, but what we want can be obtained by replacing the integrand by the difference between it and its linear approximation.
-\begin{align*}
-\abs{\int_0^1 f(x) \, dx - T_n(f)} & =\abs{\int_0^1 (f-A_2(f))(x) \, dx - T_n(f-A_2(f))} \\
-&\le \frac{\norm[1]{f'-A_2(f)'}}{2(n-1)}=\frac{\Gnorm{f}}{2(n-1)}, \\
-\tildeh(n)&= \frac{1}{2(n-1)}.
-\end{align*}
+The errors of the trapezoidal rule for integrands in the spaces $\cv^{1}$ and $\mathcal{W}^{1,1}$ are given in \cite[(7.14) and (7.15)]{BraPet11a}:
+\begin{subequations} \label{integhhtilde}
+\begin{gather}
+\int_0^1 f(x) \, dx - T_n(f) \le 
+\begin{cases} h(n) \Var(f') \\ \tildeh(n) \norm[1]{f'-f(1)+f(0)}
+\end{cases} \\
+h(n)= \frac{1}{8(n-1)^2}, \qquad h^{-1}(\varepsilon) = \left \lceil \sqrt{\frac{1}{8\varepsilon}} \right \rceil +1, \qquad
+\tildeh(n)= \frac{1}{2(n-1)}.
+\end{gather}
+\end{subequations}
+By condition \eqref{hbestverb}, it follows that the error bound on the trapezoidal rule is of no use for the adaptive algorithm as noted in Remark \ref{htilderem}.
 
-By condition \eqref{hbestverb}, it follows that $\min(\tildeh(n),\tau h(n))=\tau h(n)$, which then simplifies some of the expressions in Algorithm \ref{multistagealgo} and Theorem \ref{MultiStageThm}.  Specifically, the left side of the inequality in \eqref{multistageconv} becomes
+
+Given the above definitions of $h, \fC_n, \fc_n$, and $\tfc_n$, it is now possible to also specify
 \begin{subequations} \label{simpifycond}
+\begin{gather}
+h_1(n) = h_2(n) = \fC_n h(n) = \frac{1}{4(n-1)(2n-2-\tau)}, \\
+h_1^{-1}(\varepsilon) = h_2^{-1}(\varepsilon) = 1+ \left \lceil \sqrt{\frac{\tau}{8 \varepsilon} + \frac{\tau^2}{16}} +\frac{\tau}{4} \right \rceil \le 2 + \frac{\tau}{2} + \sqrt{\frac{\tau}{8\varepsilon}}.
+\end{gather}
+Moreover, the left side of \eqref{multistageconv}, the stoping criterion inequality in the multistage algorithm, becomes
 \begin{equation}
-\min(\tildeh(n_i),\tau h(n_i))\fC_{n_i} G_{n_i}(f) = \frac{\tau  G_{n_i}(f) } {4(n_i-1)(2n_i-2 -\tau)}.
+\tau h(n_i)\fC_{n_i} G_{n_i}(f) = \frac{\tau  G_{n_i}(f) } {4(n_i-1)(2n_i-2 -\tau)}.
 \end{equation}
-The function $N_A$ defined in \eqref{Nmindef} is
-\begin{equation}
-N_{A}(a)= \min\left\{ n \in \ci : \tau h(n) \le a \right\} = 1+ \left \lceil \sqrt{\tau/(8a)}\right \rceil.
-\end{equation}
-The denominator in the definition of the set of integrands $\cn$ in \eqref{nicefdefmulti} is
-\begin{multline}
-\fC_{N_{\max}/r} \fc_{N_{\max}/r} \min(\tildeh(N_{\max}/r),\tau h(N_{\max}/r)) \\
-=
-\frac{\tau}{2 (N_{\max}-2)(N_{\max}-2 -\tau)}.
-\end{multline}
-The function $\tN_A$ defined in \eqref{tNmindef} is
-\begin{align}
-\nonumber
-\tN_A(a) &= \min\left\{ n \in \ci : \min(\tildeh(n),\tau h(n))\fC_n\fc_n \le a \right\} \\
-&= 1+ \left \lceil \sqrt{\frac{\tau}{8a} + \frac{\tau^2}{16}} +\frac{\tau}{4} \right \rceil \le 2 + \frac{\tau}{2} + \sqrt{\frac{\tau}{8a}}.
-\end{align}
 \end{subequations}
 With these preliminaries, Algorithm \ref{multistagealgo} and Theorem \ref{MultiStageThm} may be applied directly to  yield the following automatic, adaptive integration algorithm and its guarantee.
 
 \begin{algo}[Univariate Integration] \label{multistageintegalgo}
-Let the error tolerance $\varepsilon$, the maximum cost budget $N_{\text{max}}$ and the cone constant $\tau$ be given inputs. Let the sequence of algorithms $\{A_n\}_{n\in \mathcal{I}}$, $\{G_n\}_{n\in \mathcal{I}}$ be described above. Set $i=1$. Let $n_1=\lceil(\tau+1)/2\rceil+1$. For any input function $f\in \mathcal{W}^{2,1}$, do the following:
+Let the error tolerance $\varepsilon$, the maximum cost budget $N_{\text{max}}$ and the cone constant $\tau>2$ be given inputs. Let the sequence of algorithms $\{A_n\}_{n\in \mathcal{I}}, \{G_n\}_{n\in \mathcal{I}}$, and $\{F_n\}_{n\in \mathcal{I}}$ be described above. Set $i=1$. Let $n_1=\lceil(\tau+1)/2\rceil+1$. For any input function $f\in \mathcal{W}^{2,1}$, do the following:
 \begin{description}
-\item[Stage 1.\ Estimate {$\norm[1]{f'-f(1)+f(0)}$} and bound {$\norm[1]{f''}$}.] Compute $G_{n_i}(f)$ in \eqref{1direst} and $F_{n_i}(f)$ in \eqref{Fnormalg}.
+\item[Stage 1.\ Estimate {$\norm[1]{f'-f(1)+f(0)}$} and bound {$\Var(f')$}.] Compute $G_{n_i}(f)$ in \eqref{1direst} and $F_{n_i}(f)$ in \eqref{Fnormalg}.
 
 \item[Stage 2. Check the necessary condition for $f \in \cc_{\tau}$.] Compute 
     \begin{align*}
@@ -185,58 +205,58 @@ and set $W$ to be true. Return $(T_{n_{i+1}}(f),W)$ and terminate the algorithm.
 \end{description}
 \end{algo}
 
+{\bf fix it}
+
 \begin{theorem} \label{multistageintegthm} Let $(T,W)$ be the automatic trapezoidal rule defined by Algorithm \ref{multistageintegalgo}, and let  $N_{\max}$, $\tau$, $n_1$, and $\varepsilon$ be the inputs and parameters described there.  Assume that $n_1 \le N_{\max}$.  Let $\cc_\tau$ be the cone of functions defined in \eqref{coneinteg}.  Let
-$$
+\begin{multline*}
 \cn
-= \left \{ f \in \cc_\tau : \norm[1]{f'-f(1)+f(0)} \le \frac{2\varepsilon (N_{\max}-2)(N_{\max}-2 -\tau)}{\tau} \right\}
-$$
+:= \left \{ f \in \cc_\tau : \norm[1]{f'-f(1)+f(0)} \le \frac{2\varepsilon (N_{\max}-2)(N_{\max}-2 -\tau)}{\tau} \right\} \\
+\supset \left \{ f \in \cc_\tau : \Var(f') \le \frac{\varepsilon (N_{\max}-2)(N_{\max}-2 -\tau)}{\tau} \right\} 
+\end{multline*}
 be the nice subset of the cone $\cc_\tau$.  Then it follows that Algorithm \ref{multistageintegalgo} is successful for all functions in $\cn$,  i.e.,  $\success(T,W,\cn,\varepsilon,N_{\max}) = 1$.  Moreover, the cost of this algorithm is bounded above as follows:
-\begin{align*}
-\MoveEqLeft{\maxcost(A,\cn,\varepsilon,N_{\max},\norm[1]{f'-f(1)+f(0)})}\\
-&\le 2+2 \left \lceil \sqrt{\frac{\tau \norm[1]{f'-f(1)+f(0)}}{8\varepsilon} + \frac{\tau^2 }{16}} + \frac{\tau}{4} \right\rceil \\
-&\le 4+ \tau + \sqrt{\frac{\tau \norm[1]{f'-f(1)+f(0)}}{2\varepsilon}}, \\
-\MoveEqLeft{\mincost(A,\cn,\varepsilon,N_{\max},\norm[1]{f'-f(1)+f(0)})}\\ 
-& \ge 1+ \max\left(\frac{\tau+1}{2}, \sqrt{\frac{\tau \norm[1]{f'-f(1)+f(0)}}{8 \varepsilon}} \right) .
-\end{align*}
+\begin{multline}
+\max \left(\left \lceil\frac{\tau+1}{2} \right \rceil, \left \lceil \sqrt{\frac{ \Var(f')}{8\varepsilon}} \right \rceil \right) +1 \\
+\max \left(\left \lceil\frac{\tau+1}{2} \right \rceil, \left \lceil \sqrt{\frac{\tau \norm[1]{f'-f(1)+f(0)}}{8\varepsilon}} \right \rceil \right) +1 \\
+\le 
+\cost(A,f;\varepsilon,N_{\max}) \\
+\le \sqrt{\frac{\tau \norm[1]{f'-f(1)+f(0)}}{2\varepsilon}} + \tau + 4 
+\le \sqrt{\frac{\tau \Var(f') }{4\varepsilon}} + \tau + 4.
+\end{multline}
+The algorithm is computationally stable, meaning that the minimum and maximum costs for all integrands, $f$, with fixed $\norm[1]{f'-f(1)+f(0)}$ or $\Var(f')$ are an $\varepsilon$-dependent constant of each other.
 \end{theorem}
 
 
 \subsection{Lower Bound on the Computational Cost}
-Next, we derive a lower bound on the cost of approximating functions in the cone $\cc_{\tau}$ by constructing fooling functions. Following the arguments of Section \ref{LowBoundSec}, we choose  $f_0(x)=x(1-x).$ Then
+Next, we derive a lower bound on the cost of approximating functions in the cone $\cc_{\tau}$ by constructing fooling functions. Following the arguments of Section \ref{LowBoundSec}, we choose  the triangle shaped function $f_0: x \mapsto 1-\abs{1-2x}$. Then
 \begin{gather*}
-\Gnorm{f_0}=\norm[1]{f'_0-f_0(1)+f_0(0)}=\int_0^1 \abs{1-2x} \, \dif x = \frac{1}{2}, \\ \Fnorm{f_0}=\norm[1]{f''_0}=2, \qquad \tau_0=4.
+\Gnorm{f_0}=\norm[1]{f'_0-f_0(1)+f_0(0)}=\int_0^1 \abs{2\sign(1-2x)} \, \dif x = 2, \\ \Fnorm{f_0}=\Var(f'_0)=4= 2 \norm[1]{f'_0-f_0(1)+f_0(0)}, \qquad \tau_{\min}=2.
 \end{gather*}
-For any $n \in \naturals$, suppose that the one has the data $L_i(f)=f(\xi_i)$, $i=1, \ldots, n$ for arbitrary $\xi_i$, where $0=\xi_0 \le \xi_1 < \cdots < \xi_n \le \xi_{n+1} = 1$.  There must be some $j=0, \ldots, n$ such that $\xi_{j+1} - \xi_j \ge 1/(n+1)$.  The function $f_{1}$, defined as
+For any $n \in \naturals$, suppose that the one has the data $L_i(f)=f(\xi_i)$, $i=1, \ldots, n$ for arbitrary $\xi_i$, where $0=\xi_0 \le \xi_1 < \cdots < \xi_n \le \xi_{n+1} = 1$.  There must be some $j=0, \ldots, n$ such that $\xi_{j+1} - \xi_j \ge 1/(n+1)$.  The function $f_{1}$ is defined as a triangle function on the interval $[\xi_j, \xi_{j+1}]$:
 $$
 f_{1}(x):=\begin{cases} \displaystyle
-\frac{30(x-\xi_{j})^{2}(\xi_{j+1}-x)^{2}}{(\xi_{j+1}-\xi_{j})^5} & \xi_{j} \le x \leq \xi_{j+1},\\
+\frac{2[\xi_{j+1}-\xi_{j}-\abs{\xi_{j+1}+\xi_{j}-2x}]}{(\xi_{j+1}-\xi_{j})^2} & \xi_{j} \le x \leq \xi_{j+1},\\
 0 & \text{otherwise},
 \end{cases}
 $$
-has $\int_0^1 f_1(x) \, \dif x=1$ and $f_1(\xi_i)=0$ for $i=0, \ldots, n+1$.  Moreover, the norms of the first and second derivatives of $f_1$ are
-\begin{align*}
-\Gnorm{f_1}&=\norm[1]{f'_1-f_1(1)+f_1(0)}=\norm[1]{f'_1}=\frac{15}{4(\xi_{j+1}-\xi_{j})}\leq \tg(n),\\
-\Fnorm{f_1}&=\norm[1]{f''_1}=\frac{40}{\sqrt{3}(\xi_{j+1}-\xi_{j})^2}
-=\frac{32\norm[1]{f'_1}}{3\sqrt{3}(\xi_{j+1}-\xi_{j})}
- \leq g(n) \norm[1]{f'_1},
-\end{align*}
-where the inequality $\xi_{j+1} - \xi_j \ge 1/(n+1)$ is used to define $\tg$ and $g$ as
+which satisfies $\int_0^1 f_1(x) \, \dif x=1$ and $f_1(\xi_i)=0$ for $i=0, \ldots, n+1$.  Moreover, the total variation of the first derivative of $f_1$ is bounded by
+\begin{equation*}
+\Fnorm{f_1}=\Var(f'_1)\le\frac{16}{(\xi_{j+1}-\xi_{j})^2},
+\end{equation*}
+with inequality holding if $0 < j < n$.  The inequality $\xi_{j+1} - \xi_j \ge 1/(n+1)$ is used to define $g$ as
 \[
-\tg(n) = \frac{15(n+1)}{4}, \qquad g(n) = \frac{32(n+1)}{3\sqrt{3}}, \qquad (g\tg)(n) = \frac{40(n+1)^2}{\sqrt{3}}.
+g(n) := \frac{1}{16(n+1)^2}, \qquad \Fnorm{f_1}=\Var(f'_1) \le \frac{1}{g(n)}.
 \]
 Using these choices of $f_0$ and $f_1$, along with the corresponding $\tg$ and $g$ above, one may invoke Proposition \ref{optimalprop}, Theorem \ref{complowbd}, and Corollary \ref{optimcor} to obtain the following theorem.
 
-\begin{theorem} \label{complowbdinteg} The adaptive trapezoidal algorithm is optimal for integration of functions in $\mathcal{W}^{1,1}$ and $\mathcal{W}^{2,1}$. Assuming an infinite cost budget and for $\tau>4$, the complexity of the integration problem, over the cone of functions $\cc_{\tau}$ defined in \eqref{coneinteg} is bounded below as
-\begin{align*}
-\MoveEqLeft{\comp(\varepsilon,\ca(\cc_{\tau},\ch,\INT,\Lambda),\infty,\norm[1]{f'-f(1) + f(0)})}\\
-&\ge -1+ \min\left(\frac{(\tau-4)\norm[1]{f'-f(1)+f(0)}}{15(\tau-2) \varepsilon}, \right .\\
-&\qquad \qquad \left . \sqrt{\frac{\sqrt{3}\tau(\tau-4)\norm[1]{f'-f(1)+f(0)}}{160(\tau-2)\varepsilon}} \right)\\
-& \sim \sqrt{\frac{\sqrt{3}\tau(\tau-4)\norm[1]{f'-f(1)+f(0)}}{160(\tau-2)\varepsilon}}   \quad\text{as } \frac{\norm[1]{f'-f(1)+f(0)}}{\varepsilon} \to \infty.
-\end{align*}
-Moreover, Algorithm \ref{multistageintegalgo} is optimal for approximating functions in $\cc_{\tau}$.
+\begin{theorem} \label{complowbdinteg} Assuming an infinite cost budget and for $\tau>2$, the complexity of the integration problem, over the cone of functions $\cc_{\tau}$ defined in \eqref{coneinteg} is bounded below as
+\begin{multline*}
+\comp(\varepsilon,\ca(\cc_{\tau},\ch,\INT,\Lambda),\infty,\cb_{\sigma}) \\ \ge \comp(\varepsilon,\ca(\cc_{\tau}\cap \cb_{\sigma},\ch,\INT,\Lambda),\infty,\cb_{\sigma})
+\ge \sqrt{\frac{(\tau-2)\sigma}{32 \tau \varepsilon}} -1 .
+\end{multline*}
+The adaptive trapezoidal Algorithm \ref{multistageintegalgo} is optimal for integration of functions in $\cc_{\tau}$ in the sense that the maximum cost of the algorithm is only an $\varepsilon$ and $\sigma$ independent constant multiple of the computational complexity of the problem. 
 \end{theorem}
 
-{\bf FIX BELOW with new $\cg$-semi-norm, $A_n$, $T_n$}
+{\bf FIX BELOW with new $\cg$- and $\cf$-semi-norms, $A_n$, $T_n$}
 
 \subsection{Numerical Example}
 Consider the family of test functions defined by 
