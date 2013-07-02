@@ -1,0 +1,1347 @@
+\documentclass[12pt]{article}
+\usepackage{mathrsfs}
+\usepackage{pifont}
+\usepackage{amsmath}
+\usepackage{cases}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{graphicx}
+\setlength{\oddsidemargin}{0.0cm}
+\setlength{\evensidemargin}{0.0cm}
+\setlength{\topmargin}{-10mm}
+\advance\headheight by 2pt
+\setlength{\footskip}{8mm}
+\setlength{\textheight}{225mm}
+\advance\textheight by-\headheight
+\advance\textheight by-\headsep
+\setlength{\textwidth}{165mm}
+\def\baselinestrech{1.0}
+\pagenumbering{arabic}
+\pagestyle{headings}
+\author{Yizhi Zhang}
+\title{Title}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\DeclareMathOperator{\Prob}{Pr}
+
+\begin{document}
+
+
+\newcommand{\Fs}{{\mathcal {F}(s)}}
+\newcommand{\Ft}{{\mathcal {F}(t)}}
+\newcommand{\FT}{{\mathcal {F}(T)}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\EE}{{\mathbb{E}}}
+\newcommand{\EEE}{{\widetilde{\mathbb{E}}}}
+\newcommand{\EEEE}{{\widehat{\mathbb{E}}}}
+\newcommand{\PP}{{\mathbb{P}}}
+\newcommand{\PPP}{{\widetilde{\mathbb{P}}}}
+\newcommand{\PPPP}{{\widehat{\mathbb{P}}}}
+\newcommand{\BBB}{{\widetilde{B}}}
+\newcommand{\WWW}{{\widetilde{W}}}
+\newcommand{\session}[2]{{\color{red}{\bf In Session:} #2, organized by #1}}
+\newcommand{\talktitle}[1]{{\Large\bf #1}\\[12pt]}
+\newcommand{\authors}[1]{\emph{#1}\\[8pt]}
+\newcommand{\affiliations}[1]{{#1}\\[6pt]}
+\newcommand{\contacts}[1]{{#1}\\}
+\newcommand{\veczero}{\mathbf{0}}
+\newtheorem{mydef}{Definition}
+\newtheorem{mylemma}{Lemma}
+\newtheorem{mythm}{Theorem}
+\newtheorem{myexample}{Example}
+\newtheorem{mycor}{Corollary}
+\newtheorem{myremark}{Remark}
+\newcommand{\calH}{\mathcal{H}}
+\newcommand{\ddet}{\text{det}}
+\newcommand{\rnd}{\text{rnd}}
+\newcommand{\pr}{\text{Pr}}
+\newcommand{\calA}{\mathcal{A}}
+\newcommand{\calG}{\mathcal{G}}
+\newcommand{\calF}{\mathcal{F}}
+\newcommand{\kerK}{\mathsf{K}}
+\newcommand{\calX}{\mathcal{X}}
+\newcommand{\veps}{\boldsymbol{\varepsilon}}
+\newcommand{\vy}{\boldsymbol{y}}
+\newcommand{\vone}{\boldsymbol{1}}
+\newcommand{\vzero}{\boldsymbol{0}}
+\newcommand{\vx}{\boldsymbol{x}}
+\newcommand{\va}{\boldsymbol{a}}
+\newcommand{\vc}{\boldsymbol{c}}
+\newcommand{\vK}{\boldsymbol{K}}
+\newcommand{\vg}{\boldsymbol{g}}
+\newcommand{\vG}{\boldsymbol{G}}
+\newcommand{\vf}{\boldsymbol{f}}
+\newcommand{\vbeta}{\boldsymbol{\beta}}
+\newcommand{\hatf}{\hat{\vf}}
+\newcommand{\hateps}{\hat{\veps}}
+\newcommand{\hatbeta}{\hat{\vbeta}}
+\newcommand{\vI}{\boldsymbol{I}}
+\newcommand{\tldf}{\tilde{\vf}}
+\newcommand{\calS}{\mathcal{S}}
+\newcommand{\calT}{\mathcal{T}}
+\newtheorem{algo}{Algorithm}
+\newcommand{\cf}{\mathcal{F}}
+\newcommand{\cg}{\mathcal{G}}
+\newcommand{\ch}{\mathcal{H}}
+\newcommand{\ca}{\mathcal{A}}
+\newcommand{\reals}{\mathcal{R}}
+\newcommand{\err}{\text{err}}
+\newcommand{\cost}{\text{cost}}
+\newcommand{\ci}{\mathcal{I}}
+\newcommand{\fC}{C}
+\newcommand{\tN}{\tilde{N}}
+
+
+%\begin{center}
+%\vspace*{0.5cm}
+%%
+%\talktitle{Title}
+%%
+%\authors{Yizhi Zhang}
+%%
+%\affiliations{Department of Applied Mathematics, Illinois Institute
+%of Technology}
+%%
+%\contacts{yzhang97@iit.edu}
+%%
+%\vspace*{0.3cm}
+%\end{center}
+\section{$\mathcal{L}_{1} Approximation of Integrations$}
+In the following cases, we focus on approximation of upper bounds for truncation errors. The approximation is about the integral $S(f)=\int_{0}^{1}f(x)dx$ and $\ch=\R$. In the investigation of the truncation error of approximate integration, we usually treat the error:
+$$E=E(f)=\left|\int_{0}^{1}f(x)dx-\ca(f)\right|$$
+%-\sum_{i=0}^{n}f(x_i)\right|$$
+as a linear functional defined over a certain class of functions.Moreover, consider using the composite trapezoidal rule, we approximate the integral piece by piece:
+$\int_{0}^{1}f(x)dx\approx\sum_{i=0}^{n-1}\int_{x_{i}}^{x_{i+1}}f(x)dx,$ so the error of each term can be written as $E_i(f)=|\int_{x_{i}}^{x_{x+1}}f(x)dx-f(x_i)|$.
+
+Let $\cg\in C^{1}[0,1]$ be a space which all integrands' first derivative are absolutely integrable, i.e. $\|f\|_{\cg}=\|f'\|_{1}$, and $\cf\subset C^{1}[0,1]$ be a space which all integrands' second derivative are absolutely integrable, i.e. $\|f\|_{\cf}=\|f''\|_{1}$.
+
+Given $\tau > 0$, we have the conic space $\mathfrak{C}_{\tau} \subset \cf$ as $$\mathfrak{C}_{\tau}=\{f\in C^{1}[0,1]:\forall x,t \in[0,1], |f'{x}-f'(t)|\leq\tau|x-t|\|f'\|_1\}.$$
+
+Suppose one wants to approxiamte the integration of functions in $\mathfrak{C}_{\tau}$ based on function values, the goal is to make the $\mathcal{L}_1$ error small, i.e. to find an algorithm $\mathcal{A}$, for which $|\int_{0}^{1}f(x)dx-\mathcal{A}(f)|\leq \varepsilon$.
+\subsection{Upper Bounds}
+%By the Peano's Theorem:
+%\begin{mythm}
+%  Let $E(p(x))=0$, whenever $p(x)\in \mathbb{P}_{n}$. Then, for all $f(x)\in \mathbb{C}^{m+1}[a,b]$, $$E(f)=\int_{a}^{b}f^{m+1}(t)K(t)dt,$$ where $K(t)=K_{m}(t)=\frac{1}{m!}E_{x}[(x-t)_{+}^{m}]$. $E_{x}$ means the linear functional $E$ is applied to the $x$ variable in $(x-t)_{+}^{m}$.
+%\end{mythm}
+%
+%And its corollary:
+%\begin{mycor}
+%  $$|E(f)| \leq \max_{a\leq x \leq b}|f^{(m+1)}(x)|\int_{a}^{b}|K(t)|dt.$$
+%\end{mycor}
+%
+%%We usually treat the error $$E=E(f)=\int_{0}^{1}f(x)dx-\sum_{i=0}^{n}f(x_i)$$ as a linear functional.
+%
+%We can achieve the result that considering the result of trapezoidal rule using the first derivative and second derivative respectively.
+%
+%Firstly, take $m=0$, it is shown that the error can be expressed as the following term:
+%$$E(f(x)) \leq \frac{1}{2n}\|f'\|_{\infty}$$ with respect to the first derivative of $f$:
+%applying the Peano's theorem, $$\sum_{i=0}^{n-1}E_i(f)=\sum_{i=0}^{n-1}\int_{x_i}^{x_{i+1}}f'(t)K_i(t)dt,$$ where
+%\begin{align*}
+%  K_i(t)&=\frac{1}{0!}\int_{x_i}^{x_{i+1}}(x-t)_{+}^{0}dx-\frac{x_{i+1}-x_i}{2}[(x_{i+1}-t)_{+}^{0}+(x_i-t)_{+}^{0}],\\
+%  &=\int_{t}^{x_{i+1}}(x-t)^0dx-\frac{x_{i+1}-x_i}{2}(1+1),\\
+%  &=x_i-t.
+%\end{align*}
+%
+%So \begin{align*}
+%  |\sum_{i=0}^{n-1}E_i(f)|&=|\sum_{i=0}^{n-1}\int_{x_i}^{x_{i+1}}f'(t)K_i(t)dt|,\\
+%  &=|\sum_{i=0}^{n-1}\int_{x_i}^{x_{i+1}}f'(t)(x_i-t)dt|,\\
+%  &\leq |f'(\xi_1)\sum_{i=0}^{n-1}\int_{x_i}^{x_{i+1}}(x_i-t)dt|,\quad \xi_1 \in (0,1),\\
+%  &=|f'(\xi_1)\sum_{i=0}^{n-1}(-\frac{1}{2}(x_{i+1}-x_i)^2)|,\\
+%  &\leq |\frac{1}{2n}f'(\xi_1)|,\\
+%  &\leq \frac{1}{2n}\|f'\|_{\infty}.
+%\end{align*}
+%
+%Secondly, take $m=1$, it is shown that the error can be expressed as the following term:
+%$$E(f(x)) \leq \frac{1}{12n^2}\|f''\|_{\infty}$$ with respect to the second derivative of $f$:
+%similarly, Applying the Peano's theorem, $$\sum_{i=0}^{n-1}E_i(f)=\sum_{i=0}^{n-1}\int_{x_i}^{x_{i+1}}f''(t)K_i(t)dt,$$ where
+%\begin{align*}
+%  K_i(t)&=\frac{1}{1!}\int_{x_i}^{x_{i+1}}(x-t)_{+}^{1}dx-\frac{x_{i+1}-x_i}{2}[(x_{i+1}-t)_{+}^{1}+(x_i-t)_{+}^{1}],\\
+%  &=\int_{t}^{x_{i+1}}(x-t)^1dx-\frac{x_{i+1}-x_i}{2}(x_{i+1}-t),\\
+%  &=-\frac{1}{2}(x_{i+1}-t)(t-x_i).
+%\end{align*}
+%
+%
+%
+%So \begin{align*}
+%  |\sum_{i=0}^{n-1}E_i(f)|&=|\sum_{i=0}^{n-1}\int_{x_i}^{x_{i+1}}f''(t)K_i(t)dt|,\\
+%  &=|-\frac{1}{2}\sum_{i=0}^{n-1}\int_{x_i}^{x_{i+1}}f''(t)(x_{i+1}-t)(t-x_i)dt|,\\
+%  &\leq |-\frac{1}{2}f''(\xi_2)\sum_{i=0}^{n-1}\int_{x_i}^{x_{i+1}}(x_{i+1}-t)(t-x_i)dt|,\quad \xi_2 \in (0,1),\\
+%  &=|-\frac{1}{2}f''(\xi_2)\sum_{i=0}^{n-1}(\frac{1}{6}(x_{i+1}-x_i)^3)|,\\
+%  &\leq |\frac{1}{12n^2}f''(\xi_2)|,\\
+%  &\leq \frac{1}{12n^2}\|f''\|_{\infty}.
+%\end{align*}
+By the fundamental theorem in calculus, if we consider the integral $\int_{0}^{1}f(x)dx$,
+\begin{align*}
+  \int_{0}^{1}f(x)dx&=(x-1/2)f(x)\left|\right._{0}^{1}-\int_{0}^{1}(x-1/2)f'(x)dx,\\
+  &=\frac{1}{2}[f(1)+f(0)]-\{[\frac{(x-1/2)^2}{2}-\frac{1}{8}]f'(x)\left|_{0}^{1}\right.\}+\int_{0}^{1}[\frac{(x-1/2)^2}{2}-\frac{1}{8}]f''(x)dx,\\
+  &=\frac{1}{2}[f(1)+f(0)]+\frac{1}{2}\int_{0}^{1}x(x-1)f''(x)dx,\\
+  &=\frac{1}{2}[f(1)+f(0)]-\frac{1}{2}\int_{0}^{1}x(1-x)f''(x)dx.
+\end{align*}
+\begin{align*}
+  |\int_{0}^{1}f(x)dx-\frac{1}{2}[f(1)+f(0)]|&=|-\frac{1}{2}\int_{0}^{1}x(1-x)f''(x)dx|,\\
+  &\leq\frac{1}{2}\sup_x|x(1-x)|\|f''\|_1,\\
+  &=\frac{1}{8}\|f''\|_1.
+\end{align*}
+
+So
+\begin{align*}
+  \left|\int_{0}^{1}f(x)dx-T_n(f)\right|&=\left|\sum_{i=1}^{n}\{\int_{x_{i-1}}^{x_i}f(x)dx-\frac{f(x_i)+f(x_{i-1})}{2}\}\right|,\\
+  &=\left|\frac{1}{n}\sum_{i=1}^{n}\{\int_{0}^{1}g_i(t)-\frac{g_i(0)+g_i(1)}{2}\}\right|,\\
+  &\leq\frac{1}{n}\sum_{i=1}^{n}\frac{1}{8}\|g''_i\|_1,\\
+  &=\frac{1}{8n^2}\|f''\|_1.
+\end{align*}
+
+Furthermore, by the Peano's theorem, the error with respect to the first derivative can be represented as:
+
+$$\left|\int_{0}^{1}f(x)dx-T_n(f)\right|\leq\frac{1}{2n}\|f'\|_{1}.$$
+%
+%Furthermore,
+%\begin{align*}
+%  0&\leq\int_{0}^{1}|g'(x)|dx-|g(1)-g(0)|,\\
+%  &=\int_{0}^{1}[|g'(x)|-g'(\xi)]dx, \quad \xi \in (0,1),\\
+%  &=\int_{0}^{1}\left|\int_{\xi}^{x}g''(t)dt\right|dx,\\
+%  &\leq\int_{0}^{1}\|g''\|_1dx,\\
+%  &=\|g''\|_1.
+%\end{align*}
+%
+%\begin{align*}
+%  \|f'\|_1-\sum_{i=1}^{n}|f(x_i)-f(x_{i-1})|&=\sum_{i=1}^{n}[\int_{x_{i-1}}^{x_i}|f'(x)|dx-|f(x_i)-f(x_{i-1})|],\\
+%  &=\sum_{i=1}^{n}[\int_{0}^{1}n|g'(t)|\frac{dt}{n}-|g_i(1)-g_i(0)|],\\
+%  &\leq\sum_{i=1}^{n}\|g''_i\|_1,\\
+%  &=\sum_{i=1}^{n}\int_{0}^{1}|g''_i(t)dt|,\\
+%  &=\sum_{i=1}^{n}\int_{x_{i-1}}^{x_i}\frac{1}{n^2}|f''(x)|ndx,\\
+%  &=\frac{1}{n}\sum_{i=1}^{n}\int_{x_{i-1}}^{x_i}|f''(x)|dx,\\
+%  &=\frac{1}{n}\|f''\|_1.
+%\end{align*}
+
+In our case, set $\|f'\|_{1}<\sigma$, also $\frac{\|f''\|_{1}}{\|f'\|_{1}}\leq\tau$, from the derivation above, we have that
+\begin{align*}
+  E(f(x)) &\leq \frac{1}{2n}\|f'\|_{1},\\
+  E(f(x)) &\leq \frac{1}{8n^2}\|f''\|_{1}.
+\end{align*}
+So, let $\hat{\sigma_n}=\sup_i\left|\frac{f(x_{i+1})-f(x_i)}{1/n}\right|$,
+\begin{align*}
+  E(f) &\leq \min\left\{\frac{\|f'\|_{1}}{2n},\frac{\|f''\|_{1}}{8n^2}\right\},\\
+  &\leq \min\left\{\frac{1}{2n},\frac{\tau}{8n^2}\right\}\|f'\|_{1},\\
+  &= \min(1,\frac{\tau}{4n})\frac{\|f'\|_{1}}{2n},\\
+  &\leq \frac{\tau\|f'\|_{1}}{8n^2}, \quad (n\geq \tau \Rightarrow \frac{\tau}{4n}<1),\\
+  &\leq \frac{\tau\hat{\sigma_n}}{8n^2(1-\tau/n)}.
+\end{align*}
+
+%
+%In our case, set $\|f'\|_{\infty}<\sigma$, also $\frac{\|f''\|_{\infty}}{\|f'\|_{\infty}}\leq\tau$, from the derivation above, we have that
+%\begin{align*}
+%  E(f(x)) &\leq \frac{1}{2n}\|f'\|_{\infty},
+%  E(f(x)) &\leq \frac{1}{12n^2}\|f''\|_{\infty}.
+%\end{align*}
+%So, let $\hat{\sigma_n}=\sup_i\left|\frac{f(x_{i+1})-f(x_i)}{1/n}\right|$,
+%\begin{align*}
+%  E(f) &\leq \min\left\{\frac{\|f'\|_{\infty}}{2n},\frac{\|f''\|_{\infty}}{12n^2}\right\},\\
+%  &\leq \min\left\{\frac{1}{2n},\frac{\tau}{12n^2}\right\}\|f'\|_{\infty},\\
+%  &= \min(1,\frac{\tau}{6n})\frac{\|f'\|_{\infty}}{2n},\\
+%  &\leq \frac{\tau\|f'\|_{\infty}}{12n^2}, \quad (n\geq \tau \Rightarrow \frac{\tau}{6n}<1),\\
+%  &\leq \frac{\tau\hat{\sigma_n}}{12n^2(1-\tau/n)}.
+%\end{align*}
+
+We can then derive the automatic algorithm.
+\begin{algo} \label{twostagedetalgo} {\bf (Automatic, Adaptive, Two-Stage).} 
+%Let $\mathcal{F}$, $\mathcal{G}$, and $\mathcal{H}$ be Banach spaces as described above, let $S$ be the solution operator, let $\varepsilon$ be a positive error tolerance, and let $N_{\max}$ be the maximum cost allowed.  Let $\tau$ be a fixed positive number, and let $G \in \ca_{\text{non}}(\cf,\reals_+,\|\cdot\|_{\cg},\Lambda)$ be an algorithm as described in Lemma 1 with
+%$\err_{+}(G,\cf,\reals,\|\cdot\|_{\cg}) < 1/\tau.$
+%Moreover, let  $\{A_n\}_{n \in \ci}$, $A_n  \in \ca_{\text{non}}(\cg,\ch,S,\Lambda)$, be a sequence of algorithms as described in  (9) and (15).  Given an input function $f$, do the following:
+
+\begin{description}
+
+\item[Stage 1.\ Estimate {$\|\cdot\|_{\cg}$}.] First compute $G(f)$ at a cost of $N_{G} = \cost(G)$.   Define the inflation factor
+\begin{equation}\label{norminflate}
+\mathfrak{C} =\left\lceil\frac{\sqrt{\frac{\tau \hat{\sigma}_{N_G}}{\varepsilon(1 - \tau/ N_G)}}}{N_{G}}\right\rceil \ge 1. \text{need 2 fix}
+\end{equation}
+Then $\mathfrak{C} G(f)$ provides a reliable upper bound on $\|f\|_{\cg}$.
+
+\item [Stage 2.\ Estimate {$S(f)$}.] Choose the sample size need to approximate $S(f)$, namely,
+\[
+N \geq \left(\frac{\tau \hat{\sigma}_{N_G}}{12\varepsilon(1-\tau/N_G)}\right)^{\frac{1}{2}} \text{need 2 fix}
+\]
+If $N \le N_{\max}-N_G$, then $S(f)$ may be approximated within the desired error tolerance and within the cost budget.  Set the warning flag to false, $W=0$. Otherwise, recompute $N$ to be within budget, $N = \tN_{\max} := \max\{N \in \ci : N\le N_{\max} -  N_G\}$, and set the warning flag to true, $W=1$.  Compute $A_N(f)$ as the approximation to $S(f)$.
+\end{description}
+
+%\begin{description}
+%
+%\item [Stage 1.] Compute $G_{n_i}(f)$ as in Stage 1, and then $\fC_{i}$ as in 17.
+%
+%\item [Stage 2.] Check whether $n_i$ is large enough to satisfy the error tolerance, i.e.,
+%\[
+%\frac{\min(C_1,C_2\tau n_i^{p_1-p_2})\fC_i G_{n_i}(f)}{n_i^{p_1}} \le \varepsilon.
+%\]
+%If this is true, then set $W=0$.  Otherwise, if this inequality fails to hold and $n_{i+1} > N_{\max}$, then set the $W=1$.  In both cases, return $(A_{n_i}(f),W)$ and terminate the algorithm.  If the error tolerance is not yet satisfied, and $n_{i+1} \le N_{\max}$, then increment $i$ by one and return to Stage 1.
+%\end{description}
+\end{algo}
+
+% Prof. Hickernell's derivation in one norm.
+
+\subsection{Lower Bounds}
+Now we consider the lower bound. We define the fooling function as $f_{\pm}=c_0f_0\pm c_1f_1$. Let $f_0=x$, then $\|f_0\|_{\mathcal{G}}=\|f'_0\|_1=1>0$, $\|f_0\|_{\mathcal{F}}=\|f''_0\|_1=0=\tau_0*1$. It satisfies (23) in the paper.
+
+Moreover, let $f_1(x)=\frac{30(x-l^2)(x-u)^2}{(u-l)^5}$ when $l \leq x \leq u$, where $u-l\geq\frac{1}{n+1}$ and $f_1(x)=0$ anywhere else. Then, $\int_{0}^{1}f_1(x)dx=1$, namely $\|S(f_1)\|_{\mathcal{H}}$. Also $\|f_1\|_{\mathcal{G}}=\|f'_{1}\|_1=\frac{15}{4(u-l)}\leq \frac{15}{4}(n+1)=g(n)$ and $\|f_1\|_{\mathcal{F}}=\|f''_{1}\|_1=\frac{40}{\sqrt{3}(u-l)^2}\leq \frac{40}{\sqrt{3}}(n+1)^2=\frac{32}{3\sqrt{3}}(n+1)g(n)=\tilde{g}(n)g(n)$. Condition (22) is satisfied. We can easil get that $g^{-1}(n)=\frac{4}{15}x-1$ and $(\tilde{g}(g))^{-1}(x)=\sqrt{\frac{\sqrt{3}}{40}x}-1$. So according to the Theorem 3 in the paper, $$\text{comp}\geq \min\left(\frac{4}{15}(\frac{\sigma}{4\varepsilon})-1,\sqrt{\frac{\sqrt{3}}{40}\frac{\sigma\tau}{4\varepsilon}}-1\right)\geq\min\left(\frac{4}{15}(\frac{\sigma}{4\varepsilon}),\sqrt{\frac{\sqrt{3}}{40}\frac{\sigma\tau}{4\varepsilon}}\right)-1$$
+
+\end{document}
+\documentclass[final]{elsarticle}
+\setlength{\marginparwidth}{0.5in}
+\usepackage{amsmath,amssymb,amsthm,natbib,mathtools,graphicx}
+\input FJHDef.tex
+
+\newcommand{\sphere}{\mathbb{S}}
+\newcommand{\cc}{\mathcal{C}}
+\newcommand{\cq}{\mathcal{Q}}
+\newcommand{\bbW}{\mathbb{W}}
+%\newcommand{\tP}{\widetilde{P}}
+\newcommand{\bg}{{\bf g}}
+\newcommand{\bu}{{\bf u}}
+\newcommand{\bbu}{\bar{\bf u}}
+\newcommand{\bv}{{\bf v}}
+\newcommand{\bbv}{\bar{\bf v}}
+\newcommand{\bw}{{\bf w}}
+\newcommand{\bbw}{\bar{\bf w}}
+\newcommand{\hv}{\hat{v}}
+\DeclareMathOperator{\MSE}{MSE}
+\DeclareMathOperator{\RMSE}{RMSE}
+\DeclareMathOperator{\rnd}{rnd}
+\DeclareMathOperator{\abso}{abs}
+\DeclareMathOperator{\rel}{rel}
+\DeclareMathOperator{\nor}{nor}
+\DeclareMathOperator{\err}{err}
+\DeclareMathOperator{\lin}{lin}
+%\DeclareMathOperator{\std}{std}
+\DeclareMathOperator{\prob}{prob}
+\DeclareMathOperator{\trunc}{trc}
+\DeclareMathOperator{\third}{third}
+%\DeclareMathOperator{\fourth}{fourth}
+\newtheorem{theorem}{Theorem}
+\newtheorem{prop}[theorem]{Proposition}
+\newtheorem{lem}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{algo}{Algorithm}
+\newtheorem{condit}{Condition}
+%\newtheorem{assump}{Assumption}
+\theoremstyle{remark}
+\newtheorem{rem}{Remark}
+\DeclareMathOperator{\sMC}{sMC}
+\DeclareMathOperator{\aMC}{aMC}
+\DeclareMathOperator{\size}{size}
+\DeclareMathOperator{\guile}{guile}
+\DeclareMathOperator{\scale}{scale}
+\DeclareMathOperator{\fix}{fix}
+\DeclareMathOperator{\up}{up}
+\DeclareMathOperator{\lo}{lo}
+
+\journal{Journal of Complexity}
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{The Complexity of Automatic Algorithms}
+\author{Yuhan Ding}
+\author{Fred J. Hickernell}
+\author{Yizhi Zhang}
+\address{Room E1-208, Department of Applied Mathematics, Illinois Institute of Technology,\\ 10 W.\ 32$^{\text{nd}}$ St., Chicago, IL 60616}
+\begin{abstract}
+\end{abstract}
+
+\begin{keyword}
+%% keywords here, in the form: keyword \sep keyword
+
+%% MSC codes here, in the form: \MSC code \sep code
+%% or \MSC[2008] code \sep code (2000 is the default)
+
+\end{keyword}
+\end{frontmatter}
+
+\section{Introduction}
+Function recovery and integration are two fundamental examples of numerical problems that arise often in practice.  It is desirable to have \emph{automatic} algorithms for solving these problems, i.e., the algorithm should decide adaptively how many and which pieces of function data are needed and then use those data to construct an approximate solution.  The error of this approximation should be guaranteed not to exceed the prescribed tolerance, $\varepsilon$, and the number of data required by the algorithm should be reasonable, given the assumptions made about the problem and the error tolerance required.
+
+Most existing theory starts with a Banach space, $\cg$, of input functions defined on $\cx \subseteq \reals^d$, and having a semi-norm, $\norm[\cg]{\cdot}$.  The definition of $(\cg,\norm[\cg]{\cdot})$ contains assumptions about smoothness, periodicity or other qualities of the input function.  The mathematical problem of interest is defined by a solution operator $S:\cg \to \ch$, where $\ch$ is some other Banach space with its norm $\norm[\ch]{\cdot}$.  For integration, $\ch=\reals$, and for function approximation, $\ch$ is some superset of $\cg$, for example, $\cl_{\infty}(\cx)$. One then shows that there exists an algorithm, $A$, that provides an approximate solution differing from the true solution by no  more than $\varepsilon$.  Furthermore, the number of function data needed, $\cost(A)$, is bounded in terms of $\varepsilon$:
+\begin{equation} \label{traditionerr}
+\sup_{\substack{f \in \cg\\ \norm[\cg]{f} \le \sigma}} \norm[\ch]{S(f)-A(f)} \le \varepsilon, \qquad \cost(A)\le C_{\up}\left(\frac{\sigma}{\varepsilon}\right)^{p}.
+\end{equation}
+Here it is necessarily assumed that the algorithm is exact if the semi-norm of the input function vanishes, i.e., $S(f)=A(f)$ if $\norm[\cg]{f}=0$. Algorithm $A$ is said to be optimal if any algorithm satisfying the error criterion above must have a cost of at least $\Order((\sigma/\varepsilon)^{p})$.
+
+A practical drawback of the analysis summarized above is that the definition of the algorithm, at least as far as its cost is concerned, depends a priori on an upper bound on $\norm[\cg]{f}$. Specifically, the theory is derived for functions in a \emph{ball}, $\cb_\sigma=\{ f \in \cg : \norm[\cg]{f} \le \sigma\}$, and the algorithm needs to know the radius, $\sigma$. Automatic algorithms try to estimate $\sigma$ so that the number of function data needed can be determined adaptively.  This is the approach taken here.  Unfortunately, there is a lack of theory to rigorously justify the estimate of $\sigma$ and the resulting adaptive algorithm.  A general framework for doing so is developed here and some illustrative examples are provided. The key is to look at functions in a \emph{cone} instead of a ball.
+
+A simple example of the kind of practical problem addressed here is computing $\int_0^1 f(x) \, \dif x$ for $f \in C^1[0,1]$.  The left rectangle rule computes an approximation with error no greater than $\varepsilon$ using with $\Order(\norm[\infty]{f'}/\varepsilon)$ function values (rectangles).  However, except for relatively simple integrands, $\norm[\infty]{f'}$ is not available.  After evaluating $f$, at $0 = x_1 < x_2 < \cdots < x_n < 1$, one may estimate  $\norm[\infty]{f'}$ via difference quotients, $\max_i\abs{[f(x_{i+1})-f(x_i)]/(x_{i+1}-x_i)}$, but this is an underestimate.  A rigorous upper bound requires additional assumptions about how quickly $f'$ changes.  Those assumptions are made explicit in ???
+
+
+\section{General Problem Definition}
+
+\subsection{Fixed-Cost Algorithms} The function approximation, integration, or other problem to be solved is defined by a \emph{solution operator} $S:\cg \to \ch$, where $\cg$ is a Banach space of input functions with norm $\norm[\cg]{\cdot}$, and $\ch$ is some other Banach with norm $\norm[\ch]{\cdot}$. The solution operator is assumed to have a scale property, i.e.,
+\[
+S(cf) = cS(f) \qquad \forall c\ge 0.
+\]
+Linear problems satisfy this condition, and so do some nonlinear problems, such as finding the norm of a function.  The goal is to find an algorithm $A:\cg \to \ch$ for which $S(f) \approx A(f)$. Following the definition of algorithms described in \cite[Section 3.2]{TraWasWoz88}, the algorithm takes the form of some function of data derived from the input function:
+\begin{gather}
+\label{algoform}
+A(f) = \phi\left(L_1(f), \ldots, L_m(f)\right) \qquad \forall f \in \cg, \\
+\nonumber
+\phi(cy_1, \ldots, cy_m) = c\phi(y_1, \ldots, y_m), \quad A(cf) = cA(f) \qquad \forall c \ge 0, \ \vy \in \reals^m.
+\end{gather}
+Here the $L_i \in \Lambda$ are real-valued functions defined on $\cg$ obeying $L_i(cf) = c L_i(f)$ for all $c\ge 0$.  One popular choice for $\Lambda$ is the set of all function values, $\Lambda^{\std}$, i.e., $L_i(f) = f(\vx_i)$ for some $\vx_i \in \cx$.  Another common choice is the set of all bounded linear functionals, $\Lambda^{\lin}$.  The set $\ca_{\fix}(\cg,\ch,S,\Lambda)$ contains algorithms as just described for which the choice of the $L_i$ and the number of function data used by the algorithm, $n$, are both assumed to be independent of the input function.  The cost of an algorithm, $A \in  \ca_{\fix}(\cg,\ch,S,\Lambda)$, which is also fixed, is defined by
+\begin{equation} \label{costfix}
+\cost(A) = \$(L_1) + \cdots +\$(L_m),
+\end{equation}
+where $\$:\Lambda \to (0,\infty)$, and $\$(L)$ is the cost of acquiring the data $L(f)$. The cost of $L$ may be a constant for all $L \in \Lambda$ or it might be a function of some other parameter inherent in the problem, such as the number of scalar variables, $d$, taken as inputs to $f$. Algorithms considered here may be deterministic or random, but the algorithms in $\ca_{\fix}(\cg,\ch,S,\Lambda)$ have fixed deterministic cost.
+
+The error of an algorithm $A  \in \ca_{\fix}(\cg,\ch,S,\Lambda)$ is defined for deterministic algorithms in the worst case as
+\begin{subequations} \label{errdef}
+\begin{equation} \label{errdefworst}
+\err(A,\cg,\ch,S)
+= \min\{ \delta \ge 0 : \norm[\ch]{S(f) -  A(f)} \le \delta \norm[\cg]{f} \ \forall f \in \cg \},
+\end{equation}
+and for random algorithms in the probabilistic case as
+\begin{multline*}
+\err(A,\cg,\ch,S)\\
+= \min \left\{\delta \ge 0 : \Prob\left[\norm[\ch]{S(f) -  A(f)} \le \delta \norm[\cg]{f} \right] \ge 1 - \alpha \ \forall f \in \cg \right\},
+\end{multline*}
+\end{subequations}
+where $\alpha$ is a level of uncertainty. The notation here suppresses the dependence on $\alpha$ and the specification of whether one is considering deterministic or random algorithms.  When the problem to be solved has real-valued solutions, $\ch=\reals$, one may also define a one sided error criterion in the worst case:
+\begin{subequations} \label{errpmdef}
+\begin{equation}\label{errpmdefworst}
+\err_{\pm}(A,\cg,\reals,S) =
+\min \{ \delta \ge 0 : \pm[S(f) -  A(f)] \le \delta \norm[\cg]{f} \ \forall f \in \cg \}
+\end{equation}
+and in the probabilistic case:
+\begin{multline} \label{errpmdefprob}
+\err_{\pm}(A,\cg,\reals,S) \\
+= \min \left\{\delta \ge 0 : \Prob\left[\pm[S(f) -  A(f)] \le \delta \norm[\cg]{f} \right] \ge 1 - \alpha \ \forall f \in \cg \right\}.
+\end{multline}
+\end{subequations}
+Since $\norm[\cg]{\cdot}$ may be a semi-norm, but not a norm, a finite error in any of the above definitions assumes that the algorithm is exact, i.e., $S(f)=A(f)$, for all $f$ with $\norm[\cg]{f}=0$.
+
+The above error criteria are normalized, meaning that the absolute error, $S(f) -  A(f)$ is divided by the $\cg$-semi-norm of the input function. The complexity of a problem for this set of algorithms, $\ca_{\fix}(\cg,\ch,S,\Lambda)$, is defined as the cost of the cheapest algorithm that satisfies the specified error tolerance, $\varepsilon$:
+\begin{multline} \label{fixcostcomplex}
+\comp(\varepsilon,\ca_{\fix}(\cg,\ch,S,\Lambda)) \\
+= \inf\left\{\cost(A) : \err(A,\cg,\ch,S) \le \varepsilon, \ A \in \ca_{\fix}(\cg,\ch,S,\Lambda) \right \}.
+\end{multline}
+Here the infimum of an empty set is defined to be $\infty$.  This means that to guarantee that $\norm[\ch]{S(f) -  A(f)} \le \varepsilon$, either definitely (worst case) or very likely (probabilistic case), one needs an algorithm with a cost of at least
+\[
+\comp(\varepsilon/\norm[\cg]{f},\ca_{\fix}(\cg,\ch,S,\Lambda)).
+\]
+This cost increases as either $\varepsilon$ decreases or $\norm[\cg]{f}$ increases.
+
+Suppose that there is a sequence of fixed-cost algorithms indexed by their cost, and which converge to the true answer:
+\begin{subequations} \label{algseqdef}
+\begin{gather}
+\{A_n\}_{n \in \ci}, \qquad A_n  \in \ca_{\fix}(\cg,\ch,S,\Lambda), \\
+\lim_{\substack{n \to \infty\\ n \in \ci}} \err(A_n,\cg,\ch,S) = 0, \qquad \cost(A_n) = n,
+\end{gather}
+\end{subequations}
+where the countable, non-negative-valued index set,
+\begin{equation} \label{indexdef}
+\ci=\{n_1, n_2, \ldots\} \quad \text{with } n_i < n_{i+1}, \quad \text{satisfies } \sup_i \frac{n_{i+1}}{n_i} <\infty.
+\end{equation}
+This sequence of algorithms is called \emph{nearly optimal} for the problem $(\cg,\ch,S,\Lambda)$ if
+\begin{equation} \label{nearoptdef}
+\sup_{0 < \varepsilon \le 1} \frac{\min\{n \in \ci : \err(A_n,\cg,\ch,S) \le \varepsilon\} \varepsilon^p}{\comp(\varepsilon,\ca_{\fix}(\cg,\ch,S,\Lambda))} <\infty, \qquad \forall p>0.
+\end{equation}
+The sequence is called optimal if above inequality holds fo $p=0$.  A near optimal algorithm may differ in its convergence rate from an optimal algorithm by powers of $\log(\varepsilon^{-1})$, for example.
+
+
+\subsection{Automatic Algorithms}
+
+Algorithms with fixed cost, $A \in \ca_{\fix}(\cg,\ch,S,\Lambda)$ need an upper bound on $\norm[\cg]{f}$ to guarantee that they meet the prescribed error tolerance.  Automatic algorithms attempt to estimate $\norm[\cg]{f}$ and then determine the number of function data needed to meet the error tolerance.  Such automatic, adaptive algorithms are now defined somewhat differently from those above.  However, in practice the automatic algorithms use fixed-cost algorithms as building blocks.
+
+Practical automatic algorithms in $\ca(\cg,\ch,S,\Lambda)$ take the form of ordered pairs of functions
+\[
+(A,W): \cg \times (0,\infty)\times (0,\infty] \to \ch \times \{\text{false},\text{true}\},
+\]
+for which $S(f) \approx A(f;\varepsilon,N_{\max})$.  Here $\varepsilon \in (0,\infty)$ is a user-supplied error tolerance, $N_{\max} \in (0,\infty]$ is a user-supplied maximum cost budget, and $W(f;\varepsilon,N_{\max})$ is a Boolean warning flag that is false if the algorithm completed its calculations without attempting to exceed the cost budget, and is true otherwise.
+
+Analogous to \eqref{algoform}, the algorithm takes takes the form of some function of function data:
+\[
+A(f;\varepsilon,N_{\max}) = \phi\left(L_1(f), \ldots, L_m(f);\varepsilon,N_{\max}\right).
+\]
+Now, however, the algorithm is allowed to be adaptive. The choice of $L_2$ may depend on the value of $L_1(f)$, the choice of $L_3$ may depend on $L_1(f)$ and $L_2(f)$, etc.  The number of function data used by the algorithm, $m$, may also be determined adaptively. Again, the algorithms may be random.  The choice of how many and which function data to use depends on $\varepsilon$ and $N_{\max}$.  The goal of the algorithm is to make $\norm[\ch]{S(f) - A(f;\varepsilon,N_{\max})} \le \varepsilon$, but this is not a requirement of the definition.
+
+The cost of the algorithm for a specified input function is defined analogously to \eqref{costfix}:
+\[
+\cost(A,f;\varepsilon,N_{\max}) = \$(L_1) + \cdots +\$(L_m).
+\]
+Because of the potentially adaptive nature of the algorithm, namely, that $m$ may depend on $f$, it follows that the cost may depend on $f$ as well as $A$. The cost may also vary randomly for random algorithms.  The input parameter $N_{\max}$ tells the algorithm to ensure that $\cost(A,f;\varepsilon,N_{\max}) \le N_{\max}$ with probability one for all $f$ and $\varepsilon$.  This is a practical consideration since the user does not want to wait indefinitely for an answer.
+
+The cost of the algorithm is expected to scale with the $\cg$-semi-norm of the integrand.  This means that the cost of an algorithm generally increases as $\norm[\cg]{f}$ increases.  The cost of the algorithm may also depend on $\cn$, the subset of $\cg$ where the functions of interest lie.  To represent this idea one defines
+\begin{multline*}
+\cost(A,\cn,\varepsilon,N_{\max},\sigma) \\
+= \begin{cases} \displaystyle \sup \{ \cost(A,f;\varepsilon,N_{\max}) : f \in \cn, \ \norm[\cg]{f} \le \sigma \} \qquad \text{worst case},\\
+\displaystyle \inf \{N \in (0,N_{\max}] : \Prob[\cost(A,f;\varepsilon,N_{\max}) \le N] \ge 1 - \beta \\
+\qquad \qquad  \forall f \in \cn , \ \norm[\cg]{f} \le \sigma^2\}
+\hfill \hfill \text{probabilistic case}.
+\end{cases}
+\end{multline*}
+The first definition is for deterministic algorithms, the second is for random algorithms, and $\beta$ is some user-defined quantity between $0$ and $1$.  Here the set $\cn$ is allowed to depend on $\varepsilon$, $N_{\max}$, $\alpha$, and $\beta$, but not on $\sigma$.
+
+For automatic algorithms, returning an approximation with the desired error is not enough.  One also wants the algorithm to be confident that the answer is correct.  A successful algorithm for $\cn \subseteq \cg$, denoted $(A,W) \in \ca(\cn,\ch,S,\Lambda)$, is one that meets the prescribed error tolerance and does not raise the warning flag.  Specifically, in the worst case setting for deterministic algorithms success is defined as
+\begin{multline*}
+\success(A,W,\cn,\varepsilon,N_{\max}) \\
+= \begin{cases} \text{true} & \text{if } \displaystyle \norm[\ch]{S(f)-A(f;\varepsilon,N_{\max})} \le \varepsilon \ \& \ W(f;\varepsilon,N_{\max})=\text{false} \quad \forall  f \in \cn, \\
+\displaystyle \text{false} & \text{otherwise}.
+\end{cases}
+\end{multline*}
+In the probabilistic setting for random algorithms success is defined as
+\begin{multline*}
+\success(A,W,\cn,\varepsilon,N_{\max}) \\
+= \begin{cases} \text{true} & \text{if } \displaystyle \Prob[\norm[\ch]{S(f)-A(f;\varepsilon,N_{\max})} \le \varepsilon  \
+\& \ W(f;\varepsilon,N_{\max})=\text{false}] \\
+& \hfill \ge 1 - \alpha \quad \forall  f \in \cn, \\
+\displaystyle \text{false} & \text{otherwise}.
+\end{cases}
+\end{multline*}
+The above are absolute error criteria for success.  One might also define relative error criteria instead, but finding successful algorithms for relative error is a non-trivial exercise.
+
+The complexity of a problem is defined as the cost of the cheapest successful algorithm that satisfying error tolerance $\varepsilon$ for all input functions in $\cn \subseteq \cg$ with $\cg$-semi-norm no greater than $\sigma$:
+\begin{multline} \label{complexdef}
+\comp(\varepsilon,\ca(\cn,\ch,S),\Lambda,N_{\max},\sigma) \\
+ = \inf\left\{\cost(A,\cn,\varepsilon,N_{\max},\sigma) : \success(A,W,\cn,\varepsilon,N_{\max}) = \text{true}, \right .\\
+\left.  (A,W) \in \ca(\cn,\ch,S,\Lambda) \right \}.
+\end{multline}
+Here the infimum of an empty set is defined to be $\infty$.
+
+The set of algorithms with fixed cost, $\ca_{\fix}(\cg,\ch,S,\Lambda)$, defined in the previous subsection are a subset of the automatic algorithms $\ca(\cg,\ch,S,\Lambda)$.  Algorithms in $\ca_{\fix}(\cg,\ch,S,\Lambda)$ are not affected by the error tolerance $\varepsilon$ and do not recognize a cost budget $N_{\max}$.  Moreover, the warning flag for an algorithm in $\ca_{\fix}(\cg,\ch,S,\Lambda)$ is always returned as false.  Whereas the fixed cost algorithms are inherently impractical by themselves, they turn out to be vital components of automatic algorithms.
+
+\subsection{Cones of Functions} \label{conesubsec} All algorithms can be fooled by some input functions, even if these functions are sufficiently smooth.  Error analysis such as that outlined in \eqref{traditionerr} rule out fooling functions with large error by restricting the size of  $\norm[\cg]{f}$.
+
+As mentioned above, it is often difficult to know how large $\norm[\cg]{f}$ is a priori and so practical automatic algorithms try to estimate it.  The framework described here takes rules out fooling functions for which one cannot estimate $\norm[\cg]{f}$ well.  This is done by considering $\cf$, a subspace of $\cg$, with its semi-norm $\norm[\cf]{\cdot}$.   The semi-norm $\norm[\cf]{\cdot}$ is considered to be stronger than $\norm[\cf]{\cdot}$ in the following sense:
+\begin{subequations} \label{Fspacecond}
+\begin{equation} \label{Fspacecondstrong}
+\min_{f_0 \in \cf_0} \norm[\cg]{f - f_0} \le C_{\cf} \norm[\cf]{f} \qquad \forall f \in \cf,
+\end{equation}
+where $\cf_0$ is the finite dimensional subspace of $\cf$ on which the $\cf$-semi-norm vanishes.  Moreover, it is assumed that any $f \in \cg$ with zero $\cg$-semi-norm must also lie in $\cf$ and have zero $\cf$-semi-norm:
+\begin{equation} \label{Fspacecondzero}
+\norm[\cg]{f} = 0 \implies f \in \cf \text{ and } \norm[\cf]{f} = 0.
+\end{equation}
+\end{subequations}
+
+Given $\tau>0$, let $\cc_{\tau} \subset \cf$ denote a \emph{cone} of functions whose $\cf$-semi-norms are not more than $\tau$ times their $\cg$-semi-norms:
+\begin{equation} \label{conedef}
+\cc_{\tau}=\{f \in \cf : \norm[\cf]{f} \le \tau \norm[\cg]{f} \}.
+\end{equation}
+For any $f \in \cc_{\tau}$ both $\norm[\cf]{f}$ and $\norm[\cg]{f}$ must be finite, but they can be arbitrarily large.  There is no need to assume an upper bound on their sizes, but it is possible to obtain reliable upper bounds for both $\norm[\cf]{f}$ and $\norm[\cg]{f}$ by sampling $f$.  An upper bound on $\norm[\cg]{f}$ for $f \in \cc_{\tau}$ can be computed in terms of the data $L_1(f), \ldots, L_m(f)$ because $\norm[\cf]{\cdot}$ is a stronger semi-norm than $\norm[\cg]{\cdot}$ in the sense of \eqref{Fspacecondstrong}, and because $\norm[\cf]{f}$ is no larger than a multiple of $\norm[\cg]{f}$ (see Lemma \ref{Gnormlem} below). This upper bound on $\norm[\cg]{f}$ then automatically implies an upper bound on $\norm[\cf]{f}$ from the definition of the cone. These reliable bounds on both $\norm[\cf]{f}$ and $\norm[\cg]{f}$ may be used to obtain a bound on the error of the algorithm for estimating $S(f)$  (see Theorem \ref{TwoStageDetermThm} below).
+
+\subsection{Results that One Wishes to Prove}  The previous subsections define the problem to be approximated and the notation describing the difficulty of the problem and the efficiency of the algorithms.  This subsection summarizes the results that are proved in general in the next section and illustrated for specific cases in the following sections.
+
+\begin{enumerate}
+
+\renewcommand{\labelenumi}{\roman{enumi}.}
+
+\item \emph{Upper bound on the complexity.}
+One wishes to bound the complexity of solving the problem successfully as
+\begin{subequations}
+\begin{equation}
+\comp(\cn,\varepsilon,N_{\max},\sigma,\Lambda) \le C_{\up} \left(\frac{\sigma}{\varepsilon}\right)^{p} \le N_{\max},
+\end{equation}
+where $p>0$, and $C_{\up}$ may depend on $\tau$ and $p$, but not on $\sigma$, $\varepsilon$, or $N_{\max}$.  Here $\cn$ is a set of nice functions defined as the intersection of the cone $\cc_{\tau}$ with a large ball whose radius depends on the maximum algorithm cost allowed, $N_{\max}$, and the error tolerance $\varepsilon$:
+\begin{equation}
+\cn = \cc_{\tau} \cap \{f \in \cg : \norm[\cg]{f} \le \varepsilon(N_{\max}/C_{\up})^{1/p}\} .
+\end{equation}
+\end{subequations}
+
+\item \emph{An algorithm that achieves the upper bound.}  Upper bounds on the complexity are sometimes found in a non-constructive way.  However, it is desirable to identify an explicit successful algorithm, $(A,W) \in \ca(\cn,\ch,S,\Lambda)$, that achieves these upper bounds, i.e.
+\begin{subequations}
+\begin{gather}
+\success(A,W,\cn,\varepsilon,N_{\max}) = 1, \\
+\cost(A,\cn,\varepsilon,N_{\max},\sigma) \le C_{\up} \left(\frac{\sigma}{\varepsilon}\right)^{p} \le N_{\max}.
+\end{gather}
+\end{subequations}
+
+\item \emph{Penalty for not knowing the $\cf$- and $\cg$-semi-norms of $f$.}  Mimicking what happens in practice, the optimal successful algorithm for this problem on the set $\cn$, as described above, does not know an a priori upper bound on $\norm[\cf]{f}$ or $\norm[\cg]{f}$.  Therefore, one expects this algorithm to cost no less than the optimal algorithms for the balls $\cb_\sigma=\{ f \in \cg : \norm[\cg]{f} \le \sigma\}$ or $\tcb_{\sigma \tau}=\{ f \in \cf : \norm[\cf]{f} \le \sigma \tau\}$, where upper bounds on    $\norm[\cf]{f}$ or $\norm[\cg]{f}$ are known.   However, one hopes that extra cost is not much.  Ignoring the maximum cost constraint, $N_{\max}$ and assuming fixed $\tau$, one wishes to prove that
+\begin{subequations}
+\begin{gather}
+\sup_{\substack{ \varepsilon \in (0,\infty) \\ \sigma \in [0,\infty) } } \frac{\comp(\cn,\varepsilon,\infty,\sigma,\Lambda)}
+{\comp(\cb_{\sigma},\varepsilon,\infty,\sigma,\Lambda)} < \infty, \\
+\sup_{\substack{ \varepsilon \in (0,\infty) \\ \sigma \in [0,\infty) } } \frac{\comp(\cn,\varepsilon,\infty,\sigma,\Lambda)}
+{\comp(\tcb_{\sigma\tau},\varepsilon,\infty,\sigma,\Lambda)} < \infty.
+\end{gather}
+\end{subequations}
+
+\item \emph{Lower bound on the complexity.}  The difficulty of the problem is provided by lower bounds on the complexity.  One would like to show that
+\begin{equation}
+\comp(\cn,\varepsilon,N_{\max},\sigma,\Lambda) \ge C_{\lo} \left(\frac{\sigma}{\varepsilon}\right)^{p_{\lo}},
+\end{equation}
+and furthermore, ideally show that $p_{\lo}=p$.
+
+\item \emph{Tractability.}  If there is a natural sequence of problems for functions with increasing number variables, $d=1, 2, \ldots$, one would like to know if the complexity of a successful algorithm is bounded, or grows at worst polynomially in $d$, or perhaps grows faster than polynomially but sub-exponentially in $d$.
+
+\end{enumerate}
+
+\section{General Theorems}
+
+This section provides a roadmap or outline of how one can demonstrate the key results needed to prove the desired results for successful automatic algorithms as described in the previous subsection.  The automatic algorithms proposed here are built from several fixed cost algorithms.  The theorems in this section are quite general.  The assumptions they make need to be checked in detail --- perhaps tedious detail --- for the specific problem of interest.  However, once these assumptions are checked, the conclusions follow directly.
+
+\subsection{Bounding the $\cg$-Semi-Norm}
+
+As mentioned in Section \ref{conesubsec} automatic algorithms require a reliable upper bound on $\norm[\cg]{f}$ for all $f$ in the cone $\cc_{\tau}$. This can be obtained using a fixed-cost algorithm $G \in \ca_{\fix}(\cf,\reals_+,\norm[\cg]{\cdot},\Lambda)$, provided that one has error bounds, $\err_{\pm}(G,\cf,\reals_+,\norm[\cg]{\cdot})$, as defined in $\eqref{errpmdef}$.  For deterministic algorithms these upper and lower error bounds imply
+\begin{multline*}
+-\err_{-}(G,\cf,\reals_{+},\norm[\cg]{\cdot}) \norm[\cf]{f} \le \norm[\cg]{f}-G(f) \le \err_{+}(G,\cf,\reals_{+},\norm[\cg]{\cdot}) \norm[\cf]{f} \\ \forall f \in \cf.
+\end{multline*}
+Noting that $\norm[\cf]{f} \le \tau \norm[\cg]{f}$ for all $f$ in the cone $\cc_{\tau}$ implies the lemma below.  The probabilistic case has a similar proof.
+
+\begin{lem} \label{Gnormlem} Any fixed-cost algorithm $G \in \ca_{\fix}(\cf,\reals_+,\norm[\cg]{\cdot},\Lambda)$ yields an approximation to the $\cg$-semi-norm of functions in the cone $\cc_{\tau}$ with the following upper and lower error bounds in the worst case:
+\begin{equation*}
+\frac{G(f)}{1 + \tau \err_{-}(G,\cf,\reals_+,\norm[\cg]{\cdot})} \le \norm[\cg]{f} \le \frac{G(f)}{1 - \tau \err_{+}(G,\cf,\reals_+,\norm[\cg]{\cdot})} \qquad \forall f \in \cc_{\tau}.
+\end{equation*}
+For random algorithms there are analogous probabilistic error bounds:
+\begin{gather*}
+\Prob\left[\frac{G(f)}{1 + \tau \err_{-}(G,\cf,\reals,\norm[\cg]{\cdot})} \le \norm[\cg]{f} \right] \ge 1 - \alpha \qquad \forall f \in \cc_{\tau}, \\
+\Prob\left[\frac{G(f)}{1 - \tau \err_{+}(G,\cf,\reals,\norm[\cg]{\cdot})} \ge \norm[\cg]{f} \right] \ge 1 - \alpha \qquad \forall f \in \cc_{\tau}.
+\end{gather*}
+In both the worst case and probabilistic case the upper bound assumes that  $\err_{+}(G,\cf,\reals,\norm[\cg]{\cdot}) < 1/\tau$.
+\end{lem}
+
+\subsection{Two-Stage, Deterministic Automatic Algorithms}
+
+Computing an approximate solution to the problem $S: \cc_{\tau} \to \ch$, e.g., integration or function approximation, depends on fixed cost algorithms. Deterministic algorithms under a worst case analysis are treated first.  Suppose that one there is a sequence of such of algorithms, $\{A_n\}_{n \in \ci}$, $A_n  \in \ca_{\fix}(\cg,\ch,S,\Lambda)$, indexed by their cost as defined in \eqref{algseqdef}, and for which upper error bounds are known for both the spaces $\cg$ and $\cf$:
+\begin{equation}\label{algseqerrbd}
+\err(A_n,\cg,\ch,S) \le C_{1} n^{-p_1}, \qquad \err(A_n,\cf,\ch,S) \le C_{2} n^{-p_2},
+\end{equation}
+for some positive constants $C_1$, $C_2$, $p_1$, and $p_2$.  Since $\cf$ is a subspace of $\cg$, the exponents $p_1$ and $p_2$ may be different.  The definitions of these errors in \eqref{errdefworst} then implies upper bounds on the error of $A_n(f)$ in terms of the $\cg$-semi-norm of $f$:
+\begin{align} \nonumber
+\norm[\ch]{S(f) -  A_n(f)} &\le \min(\err(A_n,\cg,\ch,S)\norm[\cg]{f},\err(A_n,\cf,\ch,S)\norm[\cf]{f}) \\
+\label{Anerrbound}
+&\le \frac{\min(C_1,C_2\tau n^{p_1-p_2})\norm[\cg]{f}}{n^{p_1}} \qquad \forall f \in \cc_{\tau}.
+\end{align}
+
+\begin{algo} \label{twostagedetalgo} {\bf (Automatic, Adaptive, Two-Stage, Deterministic).} Let $\cf$, $\cg$, and $\ch$ be Banach spaces as described above, let $S$ be the solution operator, let $\varepsilon$ be a positive error tolerance, and let $N_{\max}$ be the maximum cost allowed.  Let $\tau$ be a fixed positive number, and let $G \in \ca_{\fix}(\cf,\reals_+,\norm[\cg]{\cdot},\Lambda)$ be an algorithm as described in Lemma \ref{Gnormlem} with
+$\err_{+}(G,\cf,\reals,\norm[\cg]{\cdot}) < 1/\tau.$
+Moreover, let  $\{A_n\}_{n \in \ci}$, $A_n  \in \ca_{\fix}(\cg,\ch,S,\Lambda)$, be a sequence of algorithms as described in  \eqref{algseqdef} and \eqref{algseqerrbd}.  Given an input function $f$, do the following:
+
+\begin{description}
+
+\item[Stage 1.\ Estimate {$\norm[\cg]{f}$}.] First compute $G(f)$ at a cost of $N_{G} = \cost(G)$.   Define the inflation factor
+\begin{equation}\label{norminflate}
+\fC =\frac{1}{1 - \tau \err_{+}(G,\cf,\reals_+,\norm[\cg]{\cdot})} \ge 1.
+\end{equation}
+Then $\fC G(f)$ provides a reliable upper bound on $\norm[\cg]{f}$.
+
+\item [Stage 2.\ Estimate {$S(f)$}.] Choose the sample size need to approximate $S(f)$, namely,
+\[
+N= \min\left\{ n \in \ci : n \ge \min\left( \left[\frac{C_1 \fC G(f)}{\varepsilon}\right]^{1/p_1}, \left[\frac{C_2 \tau \fC G(f)}{\varepsilon}\right]^{1/p_2} \right ) \right\}.
+\]
+If $N \le N_{\max}-N_G$, then $S(f)$ may be approximated within the desired error tolerance and within the cost budget.  Set the warning flag to false, $W=0$. Otherwise, recompute $N$ to be within budget, $N = \tN_{\max} := \max\{N \in \ci : N\le N_{\max} -  N_G\}$, and set the warning flag to true, $W=1$.  Compute $A_N(f)$ as the approximation to $S(f)$.
+\end{description}
+
+Return the result $(A_N(f),W)$, at a cost of $N_G+N$.
+\end{algo}
+
+
+
+\begin{theorem}  \label{TwoStageDetermThm}  Let  $\cf$, $\cg$, $\ch$, $\varepsilon$, $N_{\max}$, $\tN_{\max}$, $\fC$, and $\tau$ be given as described in Algorithm \ref{twostagedetalgo}, and assume that $\cf$ satisfies \eqref{Fspacecond}.  Let
+\begin{equation} \label{normdeflate}
+\fc =1 + \tau \err_{-}(G,\cf,\reals_+,\norm[\cg]{\cdot})  \ge 1.
+\end{equation}
+Let $\cc_\tau$ be the cone of functions defined in \eqref{conedef} whose $\cf$-semi-norms are no larger than $\tau$ times their $\cg$-semi-norms.  Let
+\begin{equation} \label{nicefdef}
+\cn = \left \{ f \in \cc_\tau : \norm[\cg]{f} \le \frac{\varepsilon \tN_{\max}^{p_1}}{\fC \fc} \max\left( \frac{1}{C_1}, \frac{\tN_{\max}^{p_2-p_1}}{C_2 \tau} \right ) \right\}
+\end{equation}
+be a subset of the cone $\cc_\tau$ that lies inside a $\cg$-semi-norm ball of rather large radius.  Then it follows that Algorithm \ref{twostagedetalgo} is successful for all functions in this set of \emph{nice} functions $\cn$,  i.e.,  $\success(A,W,\cn,\varepsilon,N_{\max}) = 1$.  Moreover, the cost of this algorithm is bounded above in terms of the $\cg$-semi-norm of the input function as follows:
+\begin{multline} \label{auto2stagedetcost}
+\cost(A,\cn,\varepsilon,N_{\max},\sigma) \\
+\le N_G+ \min\left\{ n \in \ci : n \ge \min\left( \left[\frac{C_1 \fC \fc \sigma }{\varepsilon}\right]^{1/p_1}, \left[\frac{C_2 \tau \fC \fc \sigma}{\varepsilon}\right]^{1/p_2} \right ) \right\}.
+\end{multline}
+The upper bound on the cost of this specific algorithm provides an upper bound on the complexity of the problem, $\comp(\varepsilon,\ca(\cn,\ch,S,\Lambda),N_{\max},\sigma)$.  If the sequence of algorithms $\{A_n\}_{n \in \ci}$, $A_n \in\ca_{\fix}(\cg,\ch,S,\Lambda)$  is nearly optimal for the problems $(\cg,\ch,S,\Lambda)$ and $(\cf,\ch,S,\Lambda)$ as defined in \eqref{nearoptdef}, then Algorithm \ref{twostagedetalgo} does not incur a significant penalty for not knowing $\norm[\cg]{f}$ a priori, i.e., for all $p>0$,
+\begin{equation*}
+\sup_{0 < \varepsilon/\sigma \le 1} \frac{\cost(A,\cn,\varepsilon,\infty,\sigma)} {\comp(\varepsilon/\sigma,\ca_{\fix}(\cj,\ch,S,\Lambda))} \left(\frac{\varepsilon}{\sigma}\right)^p <\infty, \qquad \cj \in \{\cf,\cg\}.
+\end{equation*}
+\end{theorem}
+
+\begin{proof} The definition of $\fC$ in \eqref{norminflate} implies that the true $\cg$-semi-norm of $f$ is bounded above by $\fC G(f)$ according to Lemma \ref{Gnormlem}.  The upper bound on the error of the sequence of algorithms $\{A_n\}_{n \in \ci}$ in \eqref{Anerrbound} then implies that
+\[
+\norm[\ch]{S(f) -  A_n(f)} \le \frac{\min(C_1,C_2\tau n^{p_1-p_2})\fC G(f)}{n^{p_1}} \qquad \forall f \in \cc_{\tau}.
+\]
+This upper bound may be made no greater than the error tolerance, $\varepsilon$, by choosing the algorithm cost, $n$, to satisfy
+\[
+n \ge \min\left( \left[\frac{C_1 \fC G(f)}{\varepsilon}\right]^{1/p_1}, \left[\frac{C_2 \tau \fC G(f)}{\varepsilon}\right]^{1/p_2} \right ) .
+\]
+Stage 2.\ of Algorithm \ref{twostagedetalgo} chooses the algorithm with the smallest such cost, provided that it can be done within the maximum cost budget.  In this case, the algorithm is successful, as claimed in the theorem.
+
+To ensure that the algorithm does not attempt to overrun the cost budget, one must limit the $\cg$-semi-norm of the input function.  The definition of  $\fc$ in \eqref{normdeflate} implies that $G(f) \le \fc\norm[\cg]{f}$ according to Lemma \ref{Gnormlem}. This means that for any function, $f$, with actual $\cg$-semi-norm $\sigma=\norm[\cg]{f}$, the upper bound on its $\cg$-semi-norm computed via Lemma \ref{Gnormlem} is no greater than $\fC \fc \sigma$.  Thus, after using $N_G$ samples to estimate $\norm[\cg]{f}$, functions in $\cn$ as defined in \eqref{nicefdef} never need more than $N_{\max} - N_G$ additional samples to estimate $S(f)$ with the desired accuracy.  This establishes that Algorithm \ref{twostagedetalgo} must be successful for all $f \in \cn$.  It furthermore establishes an upper bound on the cost of the algorithm as given in \eqref{auto2stagedetcost}.
+
+Now consider the penalty for not knowing $\norm[\cg]{f}$ in advance.  If the sequence of fixed-cost algorithms, $\{A_n\}_{n \in \ci}$, used to construct Algorithm \ref{twostagedetalgo} are nearly optimal for solving the problem on both $\cf$ and $\cg$, as defined in \eqref{nearoptdef}, then it follows that for $\cj \in \{\cf,\cg\}$,
+\begin{multline*}
+\sup_{0 < \varepsilon/\sigma \le 1} \frac{\cost(A,\cn,\varepsilon,\infty,\sigma)} {\comp(\varepsilon/\sigma,\ca_{\fix}(\cj,\ch,S,\Lambda))} \left(\frac{\varepsilon}{\sigma}\right)^{p} \\
+= \sup_{0 < \varepsilon/\sigma \le 1} \frac{\cost(A,\cn,\varepsilon,\infty,\sigma)}{\min\{n \in \ci : \err(A_n,\cj,\ch,S) \le \varepsilon/\sigma\}} \left(\frac{\varepsilon}{\sigma}\right)^{p/2}  \\
+ \times \sup_{0 < \varepsilon/\sigma \le 1} \frac{\min\{n \in \ci : \err(A_n,\cj,\ch,S) \le \varepsilon/\sigma\}} {\comp(\varepsilon/\sigma,\ca_{\fix}(\cj,\ch,S,\Lambda))} \left(\frac{\varepsilon}{\sigma}\right)^{p/2}
+\end{multline*}
+The first of these suprema is finite by comparing the convergence rates of the sequence algorithms, $\{A_n\}_{n \in \ci}$, in \eqref{algseqerrbd} with the cost of the automatic algorithm given by \eqref{auto2stagedetcost}. The second of these suprema is finite for all $p>0$ by the near optimality of $\{A_n\}_{n \in \ci}$.
+\end{proof}
+
+There are a several remarks that may facilitate understanding of this result.
+
+\begin{rem} The main conditions to be checked for this theorem to hold are
+\begin{enumerate}
+\renewcommand{\labelenumi}{\roman{enumi}.}
+\item An algorithm to approximate the semi-norm in the larger space,  $\norm[\cg]{\cdot}$,
+\item The convergence rates, both the powers, $p_1$ and $p_2$, and the leading constants, $C_1$ and $C_2$, for the sequence of fixed-cost algorithms, $\{A_n\}_{n \in \ci}$, and
+\item The near optimality of this sequence of fixed-cost algorithms.
+\end{enumerate}
+Sections ??? provide concrete examples where these conditions are checked.
+\end{rem}
+
+\begin{rem} The cost of Algorithm \ref{twostagedetalgo}, as given by \eqref{auto2stagedetcost}, depends on $\sigma$, which is essentially the $\cg$-semi-norm of the input function, $f$.  Thus, if $\sigma$ is smaller, the cost will correspondingly be smaller.  Moreover, $\sigma$ is not an input parameter for the algorithm.  Rather the algorithm reliably estimates $\norm[\cg]{f}$, and then adjusts the number of samples used (the cost) accordingly.
+\end{rem}
+
+\begin{rem} Instead of choosing $\tau$ as an input parameter for Algorithm \ref{twostagedetalgo}, one may alternatively choose $\fC >1$.  This then implies that
+\begin{equation}
+\tau = \left(1 - \frac{1}{\fC}\right)\frac{1}{\err_{+}(G,\cf,\reals_+,\norm[\cg]{\cdot})},
+\end{equation}
+which is equivalent to \eqref{norminflate}.
+\end{rem}
+
+\begin{rem} Suppose that the sequence of sequence of fixed-cost algorithms,
+\[
+\{A_n\}_{n \in \ci} = \{A_{n_1}, A_{n_2}, \ldots \},
+\]
+are \emph{embedded}, i.e., $A_{n_{i+1}}$ uses all of the data used by $A_{n_{i}}$ for $i=1, 2, \ldots$.  Furthermore, suppose that the data used by $G$, the algorithm used to estimate the $\cg$-semi-norm of $f$, is the same data used by $A_{n_1}$, and so $n_1=N_G$.  Then total cost of Algorithm \ref{twostagedetalgo} can be reduced; it is simply $N$, as given in Stage 2, instead of $N+N_G$.  Moreover, $\tN_{\max}$ may then be taken to be $N_{\max}$, and the cost bound of the automatic algorithm in \eqref{auto2stagedetcost} does not need the term $N_G$.
+\end{rem}
+
+\begin{rem} Assuming embedded algorithms, $\{A_n\}_{n \in \ci}$, as in the previous remark, and assuming that for every $n \in \ci$, there exists an algorithm $G_n$ that estimates $\norm[\cg]{\cdot}$, one may modify the two-stage Algorithm \ref{twostagedetalgo} to become multi-stage.  Starting with $i=1$,
+
+\begin{description}
+
+\item [Stage 1.] Compute $G_{n_i}(f)$ as in Stage 1, and then $\fC_{i}$ as in \eqref{norminflate}.
+
+\item [Stage 2.] Check whether $n_i$ is large enough to satisfy the error tolerance, i.e.,
+\[
+\frac{\min(C_1,C_2\tau n_i^{p_1-p_2})\fC_i G_{n_i}(f)}{n_i^{p_1}} \le \varepsilon.
+\]
+If this is true, then set $W=0$.  Otherwise, if this inequality fails to hold and $n_{i+1} > N_{\max}$ then set the $W=1$.  In both cases, return $(A_{n_i}(f),W)$ and terminate the algorithm.  If the error tolerance is not yet satisfied, and $n_{i+1} \le N_{\max}$, then increment $i$ by one and return to Stage 1.
+\end{description}
+
+The advantage of this multi-stage algorithm, where Stages 1 and 2 are repeated until the error tolerance is reached, has the advantage that the estimates of $\norm[\cg]{f}$ should generally improve as $i$ increases.  This means that the final sample size needed may not be so large.
+\end{rem}
+
+\subsection{Two-Stage, Random Automatic Algorithms}
+It ma
+
+\subsection{Lower Complexity Bounds for the Deterministic Algorithms}
+Lower complexity bounds are typically proved by constructing fooling functions.  First, a lower bound is derived for the complexity of problems defined on $\cf$- and $\cg$-semi-norm balls of input functions.  This technique is generally known \cite{???}.  Then it is shown how to extend this idea for the cone $\cc_{\tau}$.
+
+Consider the Banach spaces $\cf$, $\cg$, $\ch$, and the \emph{linear} solution operator $S: \cg \to \ch$.  Let $\Lambda$ be the set of bounded linear functionals that can be used as data. Suppose that for any $n>0$, and for all $L_1, \ldots, L_m\in \Lambda$, satisfying $\$(L_1)+ \cdots + \$(L_m)\le n$, there exists an $f_1 \in \cf$, depending on $n$ and the $L_i$, such that
+\begin{subequations} \label{assumpfone}
+\begin{gather}
+\label{assumpbumpa}
+\norm[\ch]{S(f_1)} = 1, \qquad L_1(f_1) = \cdots = L_m(f_1)= 0 , \\
+\label{assumpbumpd}
+\norm[\cg]{f_1} \le a n^{p}, \qquad \norm[\cf]{f_1} \le b n^{q} \norm[\cg]{f_1},
+\end{gather}
+\end{subequations}
+for some positive $p, q, a,$ and  $b$.  Since the data for the function $f_1$ are all zero, it follows that $A(f_1)=A(-f_1)$ for any algorithm, $A$.  Then, by the triangle inequality and \eqref{assumpbumpa} the error of for one of the fooling functions $\pm f_1$ must be at least one:
+\begin{align*}
+\MoveEqLeft{\max(\norm[\ch]{S(f_1)-A(f_1)},\norm[\ch]{S(-f_1)-A(-f_1)})} \\
+& = \max(\norm[\ch]{S(f_1)-A(f_1)},\norm[\ch]{-S(f_1)-A(f_1)})\\
+& \ge \frac{1}{2} \left[ \norm[\ch]{S(f_1)-A(f_1)}+ \norm[\ch]{S(f_1)+A(f_1)} \right] \\
+& \ge \frac{1}{2} \norm[\ch]{[S(f_1)-A(f_1)]+[S(f_1)+A(f_1)]} = \norm[\ch]{S(f_1)}=1.
+\end{align*}
+Furthermore, applying \eqref{assumpbumpd}, for $\cj \in \{\cf,\cg\}$, it follows that any fixed-cost, deterministic algorithm satisfying the error tolerance $\varepsilon$ must have a cost $n$ satisfying the following inequality:
+\begin{align*}
+\varepsilon & \ge \sup_{f \ne 0} \frac{\norm[\ch]{S(f)-A(f)}}{\norm[\cj]{f}} \\
+& \ge \frac{\max(\norm[\ch]{S(f_1)-A(f_1)},\norm[\ch]{S(-f_1)-A(-f_1)})}{\norm[\cj]{f_1}} \\
+& \ge \frac{1}{\norm[\cj]{f_1}}
+\ge \begin{cases} a^{-1} n^{-p}, & \cj=\cg,\\
+(ab)^{-1} n^{-(p+q)}, & \cj=\cf
+\end{cases}
+\end{align*}
+This implies lower bounds on the complexity of fixed-cost algorithms, as defined in \eqref{fixcostcomplex}:
+\[
+\comp(\varepsilon,\ca_{\fix}(\cj,\ch,S,\Lambda)) \ge
+\begin{cases} (a\varepsilon)^{-1/p}, & \cj=\cg,\\
+(ab\varepsilon)^{-1/(p+q)}, & \cj=\cf.
+\end{cases}
+\]
+Thus, the cost of solving the problem within error tolerance $\varepsilon$ for input functions in a $\cg$-semi-norm ball of radius $\sigma$ is at least $[\sigma/(a\varepsilon)]^{1/p}$ and for input functions in a $\cf$-semi-norm ball of radius $\sigma$ is at least $[\sigma/(ab\varepsilon)]^{1/(p+q)}$
+
+Turning to the problem of solving functions in the cone $\cc_{\tau}$, the lower bound on the complexity becomes a bit more difficult to derive.  Note that condition \eqref{assumpbumpd} allows the fooling function $f_1$ to lie outside this cone.  Thus, when considering the cone of input functions, the fooling function must be modified as described below.
+
+It is assumed that there exist a set of functions $\{f_{0,n}\}_{n>0}$ satisfying
+\begin{subequations} \label{assumpfzero}
+\begin{gather}
+\label{assumpbumpe}
+\norm[\cg]{f_{0,n}} = \frac{\sigma b n^q }{b n^q + \tau - \tau_0} =:c_{0,n}, \qquad \norm[\cf]{f_{0,n}} \le \tau_0 c_{0,n}\\
+\intertext{where $\tau_0$ is some fixed number smaller than $\tau$.  Furthermore, suppose that for each $n>0$, and for all $L_1, \ldots, L_m\in \Lambda$, satisfying $\$(L_1)+ \cdots + \$(L_m)\le n$, there exists $f_1$ as described above in \eqref{assumpfone} , and also satisfying}
+\label{assumpbumpb}
+\norm[\cf]{f_{0,n} + c_1f_1} \le \tau_0 c_{0,n} + \abs{c_1} \norm[\cf]{f_1}  \quad \forall c_1 \in \reals, \\
+\label{assumpbumpc}
+c_{0,n} \le \norm[\cg]{f_{0,n} + c_1f_1} \le c_{0,n} + \abs{c_1} \norm[\cg]{f_1} \quad \forall c_1 \in \reals
+\end{gather}
+\end{subequations}
+Under these assumptions, one may show the following lower bound on the complexity of solving the problem $S$ for functions in the cone $\cc_{\tau}$.
+
+\begin{theorem} \label{complowbd} Suppose that functions $f_{0,n}$ and $f_1$ can be found that satisfy conditions \eqref{assumpfone} and \eqref{assumpfzero}.  It then follows that the complexity of the problem, defined by \eqref{complexdef}, assuming infinite cost budget, over the cone of functions, $\cc_{\tau}$
+\[
+\comp(\varepsilon,\ca(\cc_{\tau},\ch,S,\Lambda),\infty,\sigma) \ge \min\left(\left(\frac{\sigma}{2\varepsilon a}\right)^{1/p}, \left(\frac{\sigma(\tau-\tau_0)}{2\varepsilon a b}\right)^{1/(p+q)} \right).
+\]
+\end{theorem}
+
+\begin{proof} Let $A$ be a successful, possibly adaptive, algorithm.  Suppose that for an error tolerance of $\varepsilon$, and for all input functions $f$ with $\cg$-semi-norm no greater than $\sigma$ and lying in the cone  $\cc_{\tau}$, the cost of this algorithm is no greater than $n>0$.  Define two fooling functions, $f_{\pm}$, in terms of the $f_{0,n}$ and $f_1$ satisfying conditions \eqref{assumpfone} and \eqref{assumpfzero} as follows:
+\begin{equation} \label{c1bumpdef}
+f_{\pm} =f_{0,n} \pm c_1 f_1, \qquad \text{with } c_1= \frac{\sigma (\tau-\tau_0)}{\norm[\cg]{f_1} [b n^q + \tau - \tau_0]}.
+\end{equation}
+These fooling functions must lie inside the cone $\cc_{\tau}$ because
+\begin{align*}
+\norm[\cf]{f_{\pm}} - \tau  \norm[\cg]{f_{\pm}} & \le \tau_0 c_{0,n} + c_1 \norm[\cf]{f_1} - \tau c_{0,n}
+&& \text{by \eqref{assumpbumpb},\eqref{assumpbumpc}} \\
+& \le c_1 b n^{q} \norm[\cg]{f_1} - (\tau - \tau_0) c_{0,n} && \text{by \eqref{assumpbumpd}} \\
+& = \frac{\sigma (\tau - \tau_0) [b n^q - b n^q ] }{b n^q + \tau - \tau_0} = 0 && \text{by \eqref{assumpbumpe}, \eqref{c1bumpdef}}.
+\end{align*}
+Moreover, both fooling functions have $\cg$-semi-norms no greater than $\sigma$, since
+\begin{align*}
+\norm[\cg]{f_{\pm}} & \le c_{0,n} + c_1 \norm[\cg]{f_1}
+&& \text{by \eqref{assumpbumpb}} \\
+& = \frac{\sigma(b n^q + \tau- \tau_0) }{b n^q + \tau- \tau_0} =\sigma && \text{by \eqref{assumpbumpe}, \eqref{c1bumpdef}.}
+\end{align*}
+
+Following the argument earlier in this section, it is noted that the data used by the algorithm, $A$, is the same for both fooling functions, and consequently
+\[
+\varepsilon  \ge  \max(\norm[\ch]{S(f_+)-A(f_+)},\norm[\ch]{S(f_-)-A(f_-)}) \ge c_1 \norm[\ch]{S(f_1)}=c_1.
+\]
+Since $A$ is successful, $c_1$, as defined in \eqref{c1bumpdef}, must be no larger than the error tolerance, which implies by \eqref{assumpbumpd} that
+\begin{multline*}
+\frac{\sigma (\tau-\tau_0)}{\varepsilon} \le \frac{\sigma (\tau-\tau_0)}{c_1}  = \norm[\cg]{f_1} (b n^q + \tau-\tau_0) \\
+\le a n^{p} (b n^q + \tau-\tau_0) \le 2 a n^{p} \max( b n^{q}, \tau-\tau_0)
+\end{multline*}
+This inequality then implies the conclusion of the theorem.
+\end{proof}
+
+\begin{rem} Now suppose that the sequence of fixed-cost algorithms used to construct the adaptive, automatic Algorithm \ref{twostagedetalgo}, and the fooling functions in Theorem \ref{complowbd} have comparable powers, namely $p_1=p$ and $p_2=p+q$.  It then follows by comparing the upper bound on the cost in Theorem \ref{TwoStageDetermThm} to the lower bound above that Algorithm \ref{twostagedetalgo} is optimal.
+\end{rem}
+
+\begin{rem} To derive a lower bound on the complexity of solving the problem over a ball in $\cf$ or $\cg$, rather than the cone, $\cc_{\tau}$, one does need the function $f_0$ to define the fooling functions.  Choosing $f_{\pm}$ as a multiple of $f_1$, can act as the fooling function.
+\end{rem}
+
+
+\section{$\cl_{\infty}$ Approximation of Univariate Functions with Bounded First Derivatives Using Function Values}
+
+Let $\ch$ be the space of continuous functions on $[0,1]$ with $\cl_{\infty}$ first derivatives.  Suppose one wants to approximate functions in $\ch$ based on function values.  The goal is to make the $\cl_{\infty}$ error small, i.e., to find an algorithm, $A$ for which $\norm[\infty]{f - A(f)} \le \varepsilon$.  A non-adaptive algorithm is described and analyzed first, however, as described in the introduction it is successful only for functions whose size is known.  Next an adaptive algorithm is constructed from the non-adaptive one.  A measure of guile is defined, and functions with moderate guile are guaranteed to be well-approximated by the non-adpative algorithm.
+
+\subsection{Non-Adaptive Algorithms} As a start, consider the algorithm that produces a piecwise constant approximation using function values at $n+1$ equally spaced data sites, $\left\{x_i = \frac{i}{n}\right\}_{i=0}^n$:
+\begin{equation} \label{appxbuildblock}
+\tA_n(f) = 1_{\left[0,\frac{1}{2n}\right)}(x) \, f(0) + \sum_{i=1}^{n-1} 1_{\left[\frac{2i-1}{2n},\frac{2i+1}{2n}\right)}(x) \, f\left(x_i\right) + 1_{\left[\frac{2n-1}{2n},1\right]}(x) \, f(1).
+\end{equation}
+This algorithm assigns as the value $\tA_n(f)(x)$ the value of $f\left(x_i\right)$ corresponding to the data site, $x_i$, nearest $x$.  The algorithm $\tA_n$ is used to construct an adaptive algorithm to be described later.  Note that the cost of this algorithm is $n+1$, not $n$.  Although this algorithm is slightly sub-optimal for fixed sample size,
+
+Define the size of a function as the $\cl_{\infty}$ norm of its first derivative, i.e., $\size(f) = \norm[\infty]{f'}$. Furthermore, as in the previous section, define the ball of functions $\cb_{\sigma} :=\{f \in \ch : \norm[\infty]{f'} \le \sigma\}$.
+
+\begin{theorem} \label{stdappxthm}  The problem of approximating functions of bounded size has complexity
+\[
+\comp(\varepsilon,\cb_{\sigma},\Lambda^{\std}) = \left \lceil \frac{\sigma}{2\varepsilon} \right \rceil.
+\]
+The algorithm defined in \eqref{appxbuildblock} is nearly optimal, in the sense that it satisfies the error tolerance with only one additional function evaluation than is optimal:
+\[
+\sup_{f \in \cb_{\sigma}} \norm[\infty]{f - \tA_{\lceil\sigma/(2\varepsilon)\rceil}(f)} \le \varepsilon, \qquad \cost(\tA_{\lceil\sigma/(2\varepsilon)\rceil},\cb_{\sigma}) = \left \lceil \frac{\sigma}{2\varepsilon} \right \rceil + 1.
+\]
+\end{theorem}
+\begin{proof}  For any function $f$ lying in the ball $\cb_\sigma$, and any $x \in [0,1)$, let $x_i$ be the data site nearest $x$, and so $\abs{x-x_i} \le 1/(2\lceil\sigma/(2\varepsilon)\rceil) \le \varepsilon/\sigma$ and $\tA_{\lceil\sigma/(2\varepsilon)\rceil}(f)(x)=f(x_i)$. It then follows that
+\begin{equation*}
+\abs{f(x) - \tA_{\lceil\sigma/(2\varepsilon)\rceil}(f)(x)}=\abs{f(x) - f(x_i)} = \abs{\int_{x_i}^x f'(t) \, \dif t} \le \norm[\infty]{f'} \abs{x-x_i} \le  \sigma \frac{\varepsilon}{\sigma} = \varepsilon.
+\end{equation*}
+This implies that $\tA_{\lceil\sigma/(2\varepsilon)\rceil}$ that attains the error tolerance with  $\left \lceil \frac{\sigma}{2\varepsilon} \right \rceil + 1$ function evaluations.  A similar argument using an algorithm based on function evaluations at $x_i=(2i-1)/n,\ i=1, \ldots, n$ can be used to show that $\comp(\varepsilon,\cb_{\sigma},\Lambda^{\std}) \le \left \lceil \frac{\sigma}{2\varepsilon} \right \rceil$.
+
+To prove a lower bound, one considers \emph{any} (possibly adaptive) algorithm $A$ using $n\le \left \lceil \frac{\sigma}{2\varepsilon} \right \rceil - 1$ function evaluations.  The proof proceeds by constructing a fooling function, $f^* \in \cb_\sigma$ for which $\norm[\infty]{f^* - A(f^*)} > \varepsilon$.  Let $A$ be any such algorithm.  Since the algorithm may be adaptive, the choice of the point, $\xi_i$, where the fooling function, $f^*$, is evaluated, may depend on $(x_1,f^*(\xi_1)), \ldots, (\xi_{i-1},f^*(\xi_{i-1}))$, for $i=2, \ldots, n$. By fiat, the fooling function is constructed to vanish at all data sites, $\xi_i$.  The fooling function is a translated and scaled bump.  Define a standard triangular bump on $\reals$ as
+\begin{equation} \label{trianglebump}
+\psi(x) : = \max(1-\abs{x},0) = \begin{cases}0, & \abs{x} > 1, \\
+1-\abs{x}, & \abs{x} \le 1,
+\end{cases}
+\end{equation}
+and note that $\norm[\infty]{\psi} = \norm[\infty]{\psi'}=1$.  Given the algorithm $A$ with data sites $\xi_1, \ldots, \xi_n$, there exists at least one point $\xi_0 \in [0,1)$ with $\min_{1 \le i \le n} \abs{\xi_i -\xi_0} \ge 1/(2n)$.  Then define the fooling function by
+\[
+f^*: x \mapsto \frac{\sigma}{2n}\psi(2n(x-\xi_0)).
+\]
+By definition, $\pm f^*(\xi_i)=0$ for $i=1, \ldots, n$, and $\norm[\infty]{\pm{f^*}'} = \sigma$, so $\pm f^* \in \cb_\sigma$.   Moreover, $\pm f^*(\xi_i)= \pm \sigma/(2n)$.  Since the two functions $\pm f^*$ provide the same data to algorithm $A$, it follows that $A(f)(\xi_0)=A(-f)(\xi_0)$.  The triangle inequality and the strict upper bound on $n$ then imply that the approximation error must be greater than the desired tolerance.
+\begin{align*}
+\sup_{f \in \cb} \norm[\infty]{f - A(f)}
+&\ge \max\left(\norm[\infty]{f^* - A(f^*)},\norm[\infty]{-f^* - A(- f^*)}\right) \\
+& \ge \max\left(\abs{f^*(\xi_0) - A(f)(\xi_0)},\abs{-f^*(\xi_0) - A(-f^*)(\xi_0)}\right) \\
+& \ge \frac{1}{2} \left [ \abs{f(\xi_0) - A(f^*)(\xi_0)} + \abs{f^*(\xi_0)+ A(-f^*)(\xi_0)} \right ]\\
+& \ge \frac{1}{2} \abs{f^*(\xi_0) - A(f^*)(\xi_0) + f^*(\xi_0) + A(-f^*)(\xi_0)}\\
+& = \abs{f^*(\xi_0)} = \frac{\sigma}{2n} \ge \frac{\sigma}{2 \left(\left \lceil \frac{\sigma}{2\varepsilon} \right \rceil - 1\right)} > \varepsilon.
+\end{align*}
+Thus, $\comp(\varepsilon,\cb_{\sigma},\Lambda^{\std}) > \left \lceil \frac{\sigma}{2\varepsilon} \right \rceil -1$, which completes the proof.
+\end{proof}
+
+\subsection{Adaptive Algorithms}
+
+The complexity result in Theorem \ref{stdappxthm} requires knowledg of the size of the function to be approximated, i.e, $\size(f) = \norm[\infty]{f'}$.  This is typically not known in advance, however, it can be approximated from the data. Given the data sites $0, 1/n, \dots, 1$, and the corresponding function values, one may estimate $\size(f)$ in terms of divided differences:
+\begin{equation}
+\hsigma_n(f)= \max_{i=1, \ldots, n} n\abs{f(i/n)-f((i-1)/n)}.
+\end{equation}
+Note that $\hsigma_n(f)$ never overestimates $\size(f)$.  The quality of this estimate depends on how much $f'$ changes over a short distance.  This motivates the following definition of guile:
+\begin{equation}
+\guile(f):= \frac{\norm[\infty]{f''}}{\norm[\infty]{f'}} = \frac{\norm[\infty]{f''}}{\size(f)},
+\end{equation}
+with the convention that constant functions have zero guile.  The guile of a function is the size of its second derivative relative to the size of its first derivative.  This guile remains unchanged when the function is multiplied by any nonzero constant.
+
+A function with small guile has a size that is well approximated by $\hsigma_n$.  Suppose that $\zeta$ is some point satisfying $\abs{f'(\zeta)} = \norm[\infty]{f'}$ and that $(i-1)/n \le \zeta < i/n$.  It then follows that $f(i/n)-f((i-1)/n) = f'(\eta)/n$ for some $\eta$ between $(i-1)/n$ and $i/n$.  Thus,
+\begin{align*}
+\norm[\infty]{f'} &= \abs{f'(\zeta)} = \abs{f'(\eta) + \int_{\eta}^{\zeta} f''(x) \, \dif x} \le \abs{f'(\eta)} + \abs{\int_{\eta}^{\zeta} f''(x) \, \dif x} \\
+& \le \hsigma_n(f) + \abs{\zeta - \eta} \norm[\infty]{f''} \le \hsigma_n(f) + \frac{\guile(f) \norm[\infty]{f'}}{n}, \\
+\norm[\infty]{f'} & \le \frac{\hsigma_n(f)}{1 - \guile(f)/n}.
+\end{align*}
+Letting $\cn_{\tau} = \{ f \in \ch : \guile(f) \le \tau\}$ now carves out a subset of $\ch$ which includes functions of arbitrarily size, but for which that size can be easily bounded empirically as
+\begin{equation} \label{sizebd}
+\size(f) \le \frac{\hsigma_n(f)}{1 - \tau/n} \qquad \forall f \in \cn_{\tau}.
+\end{equation}
+This then suggests the following adaptive algorithm that is guaranteed to approximate functions in $\cn_{\tau}$ within a tolerance of $\varepsilon$.
+
+
+\begin{algo} \label{adapappxalgo} Given positive numbers $\varepsilon$ and $\tau$, let $n_1=\lceil \tau \rceil +1$, and $j=1$.
+\begin{enumerate}
+\renewcommand{\labelenumi}{Step \arabic{enumi}.}
+\item Let $n=n_12^{j-1}$.  Evaluate $\hsigma_{n}(f)$.
+\item If
+\[
+\frac{\hsigma_n(f)}{2(n - \tau)} \le
+\varepsilon,
+\]
+then output $A_{\varepsilon}(f) = \tA_{n}(f)$ as the approximation.  Else, let $j=j+1$ and to to Step 1.
+\end{enumerate}
+\end{algo}
+
+\begin{theorem} \label{adapappxthm}  \emph{Nice} functions may be well approximated at a reasonable cost by $A_{\varepsilon}$, the adaptive Algorithm \ref{adapappxalgo}.  In particular,
+\begin{gather*}
+\sup_{f \in \cn_{\tau}} \norm[\infty]{f - A_{\varepsilon}(f)} \le \varepsilon, \\
+\left \lceil \frac{\sigma}{2\varepsilon} \right \rceil \le \comp(\varepsilon,\cn_{\tau},\sigma) \le \cost(A_{\varepsilon},\cn_{\tau},\sigma) \le 2 \lceil \tau \rceil + \max\left(2,\frac{\sigma}{\varepsilon} \right) + 1.
+\end{gather*}
+\end{theorem}
+\begin{proof}  For any nice function $f$ lying in $\cn_\tau$, its size is bounded above by $\hsigma_n(f)/(1-\tau/n)$ according to \eqref{sizebd}.  Furthermore, by the proof of Theorem \ref{stdappxthm} it follows that
+\[
+\norm[\infty]{f - \tA_n(f)} \le \frac{\size(f)}{2n} \le \frac{\hsigma_n(f)}{2(n-\tau)}.
+\]
+Thus, when the stopping criterion in Step 2 is satisfied, the resulting approximation is within the desired tolerance.
+
+The algorithm terminates for the first positive integer $j$ satisfying the inequality in Step 2.  Since $\hsigma(f)$ never overestimates $\size(f)$ for all $f \in \ch$, this means that
+\begin{align*}
+n \ge \tau + \frac{\hsigma_n(f)}{2 \varepsilon}
+& \Longleftarrow (\lceil \tau \rceil + 1 ) 2^{j-1} = n_1 2^{j-1} = n \ge \lceil \tau \rceil + \frac{\size(f)}{2 \varepsilon} \\
+& \Longleftarrow j \ge 2 +  \log_2\left(\frac{\lceil \tau \rceil + \frac{\size(f)}{2 \varepsilon}} {\lceil \tau \rceil + 1} \right) \\
+& \Longleftarrow n \ge 2 \lceil \tau \rceil + \max\left(2,\frac{\size(f)}{\varepsilon} \right).
+\end{align*}
+This establishes an upper bound on the cost of the algorithm.
+
+The proof of the lower bound is similar to that in Theorem \ref{stdappxthm}. Consider \emph{any} (possibly adaptive) algorithm $A$ using $n\le \left \lceil \frac{\sigma}{2\varepsilon} \right \rceil - 1$ function evaluations.
+A fooling function $f^* \in \cn_\tau$ is constructed to vanish at all data sites, $\xi_i$.  Unlike Theorem  \ref{stdappxthm}, the fooling function must be continuously differentiable.  The bump function in Theorem \ref{stdappxthm} is replaced by
+\begin{equation} \label{contbump}
+\phi(x) : = [\max(0,1-x^2)]^2 = \begin{cases}(1-x^2)^2, & \abs{x} \le 1, \\
+0, & \abs{x} > 1,
+\end{cases}
+\end{equation}
+which has first and second derivatives
+\begin{equation} \label{contbump}
+\phi'(x) = \begin{cases} -4x(1-x^2), & \abs{x} \le 1, \\
+0, & \abs{x} > 1,
+\end{cases} \qquad
+\phi''(x) = \begin{cases} -4(1-3x^2), & \abs{x} \le 1, \\
+0, & \abs{x} > 1,
+\end{cases}
+\end{equation}
+and note that $\norm[\infty]{\phi} = 1$, $\norm[\infty]{\phi'}=8/(3 \sqrt{3})$, and $\norm[\infty]{\phi''}=8$.  Given the algorithm $A$ with data sites $\xi_1, \ldots, \xi_n$, there exists at least one point $\xi_0 \in [0,1)$ with $\min_{1 \le i \le n} \abs{\xi_i -\xi_0} \ge 1/(2n)$.  Then define the fooling function by
+\[
+f^*: x \mapsto \frac{\sigma}{2n}\psi(2n(x-\xi_0)).
+\]
+By definition, $\pm f^*(\xi_i)=0$ for $i=1, \ldots, n$, and $\norm[\infty]{\pm{f^*}'} = \sigma$, so $\pm f^* \in \cb_\sigma$.   Moreover, $\pm f^*(\xi_i)= \pm \sigma/(2n)$.  Since the two functions $\pm f^*$ provide the same data to algorithm $A$, it follows that $A(f)(\xi_0)=A(-f)(\xi_0)$.  The triangle inequality and the strict upper bound on $n$ then imply that the approximation error must be greater than the desired tolerance.
+\begin{align*}
+\sup_{f \in \cb} \norm[\infty]{f - A(f)}
+&\ge \max\left(\norm[\infty]{f^* - A(f^*)},\norm[\infty]{-f^* - A(- f^*)}\right) \\
+& \ge \max\left(\abs{f^*(\xi_0) - A(f)(\xi_0)},\abs{-f^*(\xi_0) - A(-f^*)(\xi_0)}\right) \\
+& \ge \frac{1}{2} \left [ \abs{f(\xi_0) - A(f^*)(\xi_0)} + \abs{f^*(\xi_0)+ A(-f^*)(\xi_0)} \right ]\\
+& \ge \frac{1}{2} \abs{f^*(\xi_0) - A(f^*)(\xi_0) + f^*(\xi_0) + A(-f^*)(\xi_0)}\\
+& = \abs{f^*(\xi_0)} = \frac{\sigma}{2n} \ge \frac{\sigma}{2 \left(\left \lceil \frac{\sigma}{2\varepsilon} \right \rceil - 1\right)} > \varepsilon.
+\end{align*}
+Thus, $\comp(\varepsilon,\cb_{\sigma},\Lambda^{\std}) > \left \lceil \frac{\sigma}{2\varepsilon} \right \rceil -1$, which completes the proof.
+\end{proof}
+
+
+\section{$\cl_{\infty}$ Approximation of Univariate Functions with Bounded First Derivatives Using Function Values}
+\subsection{Adaptive Algorithms}
+
+Here we consider the function in following sets.
+
+Given $s\in (0,1], \tau \ge 0.$ Let
+$$\mathcal{N}_{s, \tau}=\left\{f \in C^{1}[0,1]: \forall x,t \in [0,1], |f^{'}(x)-f^{'}(t)|\leq \tau|x-t|^{s} \|f^{'}\|_{\infty} \right\}.$$
+
+Given $n \in \mathbb{N}, n \ge 2$ and $f \in \mathcal{N}_{s,\tau},$ and given the data
+$f\left(\frac{i-1}{n}\right), i=1, \ldots,n+1.$
+
+Define $\tilde{f_{n}}(x)$ piecewise by
+$$\tilde{f_{n}}(x)=f\left(\frac{i-1}{n}\right)(i-nx)+f\left(\frac{i}{n}\right)(nx-i+1),$$
+
+for $i-1 \leq nx \leq i,$ $ i=1,\ldots,n.$
+
+Here we denote
+$$f[x,y]:=\frac{f(x)-f(y)}{x-y}.$$
+Then we can have another way to have $\tilde{f_{n}}(x)$
+$$\tilde{f_{n}}(x)=f\left(\frac{i-1}{n}\right)+f\left[\frac{i-1}{n},\frac{i}{n}\right]\left(x-\frac{i-1}{n}\right),$$
+ $$\tilde{f_{n}}(x)=f\left(\frac{i}{n}\right)+f\left[\frac{i-1}{n},\frac{i}{n}\right]\left(x-\frac{i}{n}\right),$$
+ for $\frac{i-1}{n} \leq x \leq \frac{i}{n}, \ i=1, \ldots, n.$
+
+ Note that for all $x,y \in [0,1]$ distinct, we have
+ $$|f(x)-f(y)|=\left|\int_{x}^{y}f^{'}(t)dt\right|\leq \left|\int_{x}^{y}\left|f^{'}(t)\right|dt\right|
+ \leq |x-y|\|f^{'}\|_{\infty}.$$
+ Therefore we have $|f[x,y]|\leq \|f^{'}\|_{\infty}.$
+
+ And we can also have
+ $$f(x)=f\left(\frac{i-1}{n}\right)+f\left[\frac{i-1}{n},x\right]\left(x-\frac{i-1}{n}\right),$$
+  $$\text{ or } f(x)=f\left(\frac{i}{n}\right)+f\left[\frac{i}{n},x\right]\left(x-\frac{i-1}{n}\right)  \forall i=1,\ldots,n, \forall x \in [0,1].$$
+
+  Then for all $x$ which $\frac{i-1}{n} \leq x \leq \frac{i}{n}$
+  \begin{align*}
+  f(x) & \leq \min\left(f\left(\frac{i-1}{n}\right)+\|f^{'}\|_{\infty}\left(x-\frac{i-1}{n}\right),f\left(\frac{i}{n}\right)-\|f^{'}\|_{\infty}\left(x-\frac{i}{n}\right)\right)\\
+  & \leq \left\{\begin{matrix}
+  f\left(\frac{i-1}{n}\right)+\|f^{'}\|_{\infty}\left(x-\frac{i-1}{n}\right) & \frac{i-1}{n} \leq x \leq \frac{i-1+j^{*}}{n} \\
+  f\left(\frac{i}{n}\right)-\|f^{'}\|_{\infty}\left(x-\frac{i}{n}\right) & \frac{i-1+j^{*}}{n} \leq x \leq \frac{i}{n}
+  \end{matrix},\right.
+  \end{align*}
+where $0 \leq j^{*} \leq 1$ is defined by
+$$f\left(\frac{i-1}{n}\right)+\|f^{'}\|_{\infty}\frac{j^{*}}{n}=f\left(\frac{i}{n}\right)-\|f^{'}\|_{\infty}\left(-1+j^{*}\right)
+\Rightarrow j^{*}=\frac{1}{2}\left[1+\frac{f\left[\frac{i-1}{n},\frac{i}{n}\right]}{\|f^{'}\|_{\infty}}\right].$$
+Then we have
+\begin{align*}
+f\left(\frac{i-1+j^{*}}{n}\right)-\tilde{f_{n}}\left(\frac{i-1+j^{*}}{n}\right) &
+\leq \left(\|f^{'}\|_{\infty}-f\left[\frac{i-1}{n},\frac{i}{n}\right]\right)\frac{j^{*}}{n}\\
+& =\left(\|f^{'}\|_{\infty}-f\left[\frac{i-1}{n},\frac{i}{n}\right]\right)\frac{1}{2n}\left[1+\frac{f\left[\frac{i-1}{n},\frac{i}{n}\right]}{\|f^{'}\|_{\infty}}\right]\\
+& =\frac{\|f^{'}\|_{\infty}}{2n}\left[1-\left(\frac{f\left[\frac{i-1}{n},\frac{i}{n}\right]}{\|f^{'}\|_{\infty}}\right)^{2}\right]\leq \frac{\|f^{'}\|_{\infty}}{2n}
+\end{align*}
+
+Similarly, we can obtain that for $x \in [0,1]$
+\begin{equation}|f(x)-\tilde{f_{n}}(x)| \leq \frac{\|f^{'}\|_{\infty}}{2n}.
+\end{equation}
+
+Now looking another way for $\frac{i-1}{n} \leq x \leq \frac{i-\frac{1}{2}}{n}$
+$$\left|f(x)-\tilde{f_{n}}(x)\right|=\left|f\left[\frac{i-1}{n},x\right]\left(x-\frac{i-1}{n}\right)-f\left[\frac{i-1}{n},\frac{i}{n}\right]\right|\left(x-\frac{i-1}{n}\right).$$
+Then by Mean Value theorem, we can find $\xi \in \left(\frac{i-1}{n},x\right), \ \zeta \in \left(\frac{i-1}{n},\frac{i}{n}\right),$ such that
+$$f^{'}(\xi)=f\left[\frac{i-1}{n},x\right],f^{'}(\zeta)=f\left[\frac{i-1}{n},\frac{i}{n}\right].$$
+Let $x=\frac{i-1+j}{n}, \ 0 \leq j \leq \frac{1}{2}.$ Then we can have
+\begin{align*}
+\left|f(x)-\tilde{f_{n}}(x)\right|&=\frac{j}{n}|f^{'}(\xi)-f^{'}(\zeta)| \leq \frac{j}{n} \tau |\xi-\zeta|^{s}\|f^{'}\|_{\infty} \\
+ & \leq \frac{1}{2n} \tau \frac{1}{n^{s}}\|f^{'}\|_{\infty}=\frac{\tau}{2n^{s+1}}\|f^{'}\|_{\infty}.
+\end{align*}
+
+Similarly, for $\frac{i-\frac{1}{2}}{n} \leq x \leq \frac{i}{n},$ we can have same results.
+Hence, we obtain that
+$$\left|f(x)-\tilde{f_{n}}(x)\right|\leq\frac{\tau}{2n^{s+1}}\|f^{'}\|_{\infty}.$$
+Combine with eq.(1), we have
+\begin{equation}\left|f(x)-\tilde{f_{n}}(x)\right|\leq\min\left\{1, \frac{\tau}{n^{s}}\right\}\frac{\|f^{'}\|_{\infty}}{2n}.\end{equation}
+
+ Given the data sites $0, 1/n, \dots, 1$, and the corresponding function values, one may estimate $\size(f)$ in terms of divided differences:
+\begin{equation}
+\hsigma_n(f)= \max_{i=1, \ldots, n} n\abs{f(i/n)-f((i-1)/n)}.
+\end{equation}
+Note that $\hsigma_n(f)$ never overestimates $\size(f)$. Suppose that $\zeta$ is some point satisfying $\abs{f'(s)} = \norm[\infty]{f'}$ and that $(i-1)/n \le s < i/n$.  It then follows that $f(i/n)-f((i-1)/n) = f'(\eta)/n$ for some $\eta$ between $(i-1)/n$ and $i/n$.  Thus,
+\begin{align*}
+\norm[\infty]{f'} &= \abs{f'(s)}\leq \abs{f'(\eta)} + \abs{f'(\eta)-f'(s) }  \le \hsigma_n(f) + \tau\abs{ \eta-s}^{s} \norm[\infty]{f''}\nonumber\\
+& \leq  \hsigma_n(f) + \tau/n^{s} \norm[\infty]{f''}\nonumber\\
+&\Rightarrow \norm[\infty]{f'}  \le \frac{\hsigma_n(f)}{1 - \tau/n^{s}}.
+\end{align*}
+
+Choose $n_{0}$ to find $\hat{\sigma}_{n_{0}}(f),$ such that
+$$\norm[\infty]{f'}\le \frac{\hsigma_{n_{0}}(f)}{1 - \tau/n_{0}^{s}}.$$
+Substitute above into eq.(2), we can obtain
+$$\left|f(x)-\tilde{f_{n}}(x)\right|\leq\min\left\{1, \frac{\tau}{n^{s}}\right\}\frac{1}{2n} \frac{\hsigma_{n_{0}}(f)}{1 - \tau/n_{0}^{s}}.
+$$
+
+This then suggests the following adaptive algorithm that is guaranteed to approximate functions in $\cn_{s,\tau}$ within a tolerance of $\varepsilon$.
+
+\begin{algo} \label{adapappxalgo} Given positive numbers $\varepsilon$ and $\tau$, let $j=1$ and $n_0=\lceil \frac{\tau C}{C-1} \rceil $, where $c>1.$ Evaluate $\hsigma_{n_{0}}(f)$
+\begin{enumerate}
+\renewcommand{\labelenumi}{Step \arabic{enumi}.}
+\item Let $n=n_02^{j-1}$.
+\item If
+\[
+\min\left\{ \frac{\hsigma_{n_{0}}(f)}{2n(1 - \tau/n_{0}^{s})} , \frac{\tau\hsigma_{n_{0}}(f)}{2n^{1+s}(1 - \tau/n_{0}^{s})} \right\}< \varepsilon
+\]
+then output $A_{\varepsilon}(f) = \tA_{n}(f)$ as the approximation.  Else, let $j=j+1$ and to to Step 1.
+\end{enumerate}
+\end{algo}
+
+\begin{theorem} \label{adapappxthm}  \emph{Nice} functions may be well approximated at a reasonable cost by $A_{\varepsilon}$, the adaptive Algorithm \ref{adapappxalgo}.  In particular,
+\begin{align*}
+\sup_{f \in \cn_{\tau}} \norm[\infty]{f - A_{\varepsilon}(f)} & \le \varepsilon, \\
+\min\left\{\left\lceil  \left(\frac{(3-s)^{\frac{1-s}{2}}}{32(1-s)^{\frac{1-s}{2}}}\frac{\sigma\tau}{\varepsilon}\right)^{\frac{1}{1+s}}  \right\rceil-1, \left\lceil \frac{3\sqrt{3}\sigma}{16\varepsilon}\right\rceil-1 \right\} & \leq \comp(\varepsilon,\mathcal{N}_{s,\tau},\sigma)  \\
+\le \cost(A_{\varepsilon},\cn_{\tau},\sigma) & \le  \left\lceil \min\left( \frac{\sigma}{2\varepsilon(1 - \tau/n_{0}^{s})} , \left(\frac{\sigma\tau}{2\varepsilon(1 - \tau/n_{0}^{s})}\right)^{\frac{1}{1+s}}\right) \right\rceil.
+\end{align*}
+\end{theorem}
+\begin{proof}
+For any nice function $f$ lying in $\mathcal{N}_{s,\tau},$ we can have
+$$\|f-A_{\varepsilon}(f)\|_{\infty}\leq \min\left\{ \frac{\hsigma_{n_{0}}(f)}{2n(1 - \tau/n_{0}^{s})} , \frac{\tau\hsigma_{n_{0}}(f)}{2n^{1+s}(1 - \tau/n_{0}^{s})} \right\}.$$
+Thus, when the stopping criterion in Step 2 is satisfied, the resulting approximation is within
+the desired tolerance.
+
+The algorithm terminates for the first positive integer $j$ satisfying the inequality in Step
+2. Since $\hat{\sigma}(f)$ never overestimates size$(f)$ for all $f \in H,$ this means that
+\begin{align*}
+ & n \ge \left\lceil \min\left( \frac{\hsigma}{2\varepsilon(1 - \tau/n_{0}^{s})} , \left(\frac{\tau\hsigma}{2\varepsilon(1 - \tau/n_{0}^{s})}\right)^{\frac{1}{1+s}}\right) \right\rceil\\
+   \Rightarrow & n \ge  \left\lceil \min\left( \frac{\hsigma_{n_{0}}(f)}{2\varepsilon(1 - \tau/n_{0}^{s})} , \left(\frac{\tau\hsigma_{n_{0}}(f)}{2\varepsilon(1 - \tau/n_{0}^{s})}\right)^{\frac{1}{1+s}}\right) \right\rceil\\
+\Rightarrow &  \min\left\{ \frac{\hsigma_{n_{0}}(f)}{2n(1 - \tau/n_{0}^{s})} , \frac{\tau\hsigma_{n_{0}}(f)}{2n^{1+s}(1 - \tau/n_{0}^{s})} \right\}   \leq \varepsilon.
+\end{align*}
+This establishes an upper bound on the cost of the algorithm.\\
+
+Next, we will prove the lower bound.
+
+Consider any (possibly
+adaptive) algorithm $A$ using $$n \leq \min\left\{\left\lceil  \left(\frac{(3-s)^{\frac{1-s}{2}}}{32(1-s)^{\frac{1-s}{2}}}\frac{\sigma\tau}{\varepsilon}\right)^{\frac{1}{1+s}} \right\rceil-2, \left\lceil \frac{3\sqrt{3}\sigma}{16\varepsilon}\right\rceil-2 \right\},$$
+function evaluations. We want to build a fooling function $f^{*} \in \mathcal{N}_{\tau}$
+is constructed to be linear at all data sites $\xi_{i}, \ i=1,\ldots,n.$ There exists at least one $i$ such that $\xi_{i+1}-\xi_{i}\ge\frac{1}{n+1}.$ Then define the fooling function by
+$$f_{\pm}^{*}(x):=\left\{\begin{matrix}
+Bx, & 0 \leq x \leq \xi_{j},\\
+Bx\pm A_{1}(x-\xi_{j})^{2}(x-\xi_{j+1})^{2} & \xi_{j}< x \leq \xi_{j+1},\\
+Bx & \xi_{j+1}< x \leq 1,
+\end{matrix}\right.$$
+where $A_{1},B$ are constants can by defined by $n,\sigma,\tau.$ And without loss of generality, we can assume $A_{1},B \ge 0.$
+Then if we let $\Phi(x)=(x+1)^2(x-1)^2, \text{ where } -1 \leq x \leq 1$
+we can have $\forall \xi_{j}< x \leq \xi_{j+1},$
+\begin{align*}f_{\pm}^{*}(x)&=Bx\pm  \frac{(\xi_{j+1}-\xi_{j})^{4}}{16}A_{1}\Phi\left[\frac{2x-(\xi_{j}+\xi_{j+1})}{\xi_{j+1}-\xi_{j}}\right], \\
+{f_{\pm}^{*}}^{'}(x)&=B \pm \frac{(\xi_{j+1}-\xi_{j})^{3}}{8}A_{1}\Phi^{'}\left[\frac{2x-(\xi_{j}+\xi_{j+1})}{\xi_{j+1}-\xi_{j}}\right]
+\end{align*}
+Thus, if we let $\tilde{x}=\frac{2x-(\xi_{j}+\xi_{j+1})}{\xi_{j+1}-\xi_{j}}, \tilde{t}=\frac{2t-(\xi_{j}+\xi_{j+1})}{\xi_{j+1}-\xi_{j}} $ we have
+$$\frac{|f_{+}^{*'}(x)-f_{+}^{*'}(t)|}{|x-t|^{s}}=\left(\frac{\xi_{j+1}-\xi_{j}}{x}\right)^{3-s}A_{1}\frac{|\Phi_{+}^{*'}(\tilde{x})-\Phi_{+}^{*'}(\tilde{t})|}
+{|\tilde{x}-\tilde{t}|^{s}}.$$
+And we know
+$$\frac{|\Phi_{+}^{*'}(\tilde{x})-\Phi_{+}^{*'}(\tilde{t})|}
+{|\tilde{x}-\tilde{t}|^{s}}=4|\tilde{x}-\tilde{t}|^{1-s}\left|1-\frac{3}{4}(\tilde{x}+\tilde{t})^{2}-\frac{1}{4}(\tilde{x}-\tilde{t})^{2}\right|
+\Rightarrow \max \frac{|\Phi_{+}^{*'}(\tilde{x})-\Phi_{+}^{*'}(\tilde{t})|}
+{|\tilde{x}-\tilde{t}|^{s}}=2^{4-s}\frac{(1-s)^{\frac{1-s}{2}}}{(3-s)^{\frac{3-s}{2}}},$$
+where $(1-s)^{\frac{1-s}{2}}=1,$ when $s=1.$
+
+Hence, we have
+\begin{align*}\|f_{+}^{*'}\|_{\infty}&=B+\frac{\sqrt{3}A_{1}}{9}(\xi_{j+1}-\xi_{j})^{3}, \\ \max_{x,t}\frac{|f_{+}^{*'}(x)-f_{+}^{*'}(t)|}{|x-t|^{s}}&=2A_{1}(\xi_{j+1}-\xi_{j})^{3-s}\frac{(1-s)^{\frac{1-s}{2}}}{(3-s)^{\frac{3-s}{2}}}.
+\end{align*}
+
+Let $B$ satisfy $ B+\frac{\sqrt{3}A_{1}}{9}(\xi_{j+1}-\xi_{j})^{3}=\sigma.$
+Then we have $$\sigma-\frac{\sqrt{3}A_{1}}{9}(\xi_{j+1}-\xi_{j})^{3} >0 \Rightarrow A_{1} < \frac{3\sqrt{3}\sigma}{(\xi_{j+1}-\xi_{j})^{3}}.$$
+Thus we know
+$$\frac{\max_{x,t}\frac{|f_{+}^{*'}(x)-f_{+}^{*'}(t)|}{|x-t|^{s}}}{ \|f_{+}^{*'} \|_{\infty}}=\frac{2A_{1}(\xi_{j+1}-\xi_{j})^{3-s}\frac{(1-s)^{\frac{1-s}{2}}}{(3-s)^{\frac{3-s}{2}}} }{\sigma}
+ \leq \tau \Rightarrow A_{1} \leq\frac{(3-s)^{\frac{3-s}{2}}\sigma\tau}{2(\xi_{j+1}-\xi_{j})^{3-s}(1-s)^{\frac{1-s}{2}}} .$$
+Hence we have $$A_{1}=\min\left\{\frac{3\sqrt{3}\sigma}{(\xi_{j+1}-\xi_{j})^{3}},\frac{(3-s)^{\frac{3-s}{2}}\sigma\tau}{2(\xi_{j+1}-\xi_{j})^{3-s}(1-s)^{\frac{1-s}{2}}} \right\}$$
+Then we have $f_{+}^{*} \in \mathcal{N}_{\tau}$ and meanwhile $f_{+}^{*} \in \mathcal{B}_{\sigma}.$\\
+We can also know that $f_{-}^{*} \in \mathcal{N}_{\tau}$ and $f_{-}^{*} \in \mathcal{B}_{\sigma}.$
+
+We denote $\xi_{0}=\frac{1}{2}(\xi_{j}+\xi_{j+1}).$
+Since the two functions $f_{\pm}^{*}$ provide the same data to Algorithm $A,$ it follows
+that $A(f_{+}^{*})(\xi_{0})=A(f_{-}^{*})(\xi_{0}).$
+The triangle inequality and the strict upper bound on
+$n$, we will have the approximation error must be greater than the desired tolerance.
+\begin{align*}
+\sup\limits_{f \in \mathcal{B}}\|f-A(f)\|_{\infty} & \ge \max\left(\|f_{+}^{*}-A(f_{+}^{*})\|_{\infty},\|f_{-}^{*}-A(f_{-}^{*})\|_{\infty}\right) \\
+& \ge \max\left(|f_{+}^{*}(\xi_{0})-A(f_{+}^{*})(\xi_{0})|,|f_{-}^{*}(\xi_{0})-A(f_{-}^{*})(\xi_{0})|\right) \\
+& \ge \frac{1}{2}\left(|f_{+}^{*}(\xi_{0})-A(f_{+}^{*})(\xi_{0})|+|f_{-}^{*}(\xi_{0})-A(f_{-}^{*})(\xi_{0})|\right)\\
+& \ge \frac{1}{2}\left(|f_{+}^{*}(\xi_{0})-A(f_{+}^{*})(\xi_{0})-\left(f_{-}^{*}(\xi_{0})-A(f_{-}^{*})(\xi_{0})\right)|\right)\\
+& \ge A_{1}\left(\frac{\xi_{j+1}-\xi_{j}}{2}\right)^{4}=\min\left\{\frac{3\sqrt{3}\sigma}{    6}(\xi_{j+1}-\xi_{j}),\frac{(3-s)^{\frac{3-s}{2}}\sigma\tau}{32(1-s)^{\frac{1-s}{2}}}(\xi_{j+1}-\xi_{j})^{1+s} \right\} \\& \ge \min\left\{\frac{3\sqrt{3}\sigma}{16(n+1)},\frac{(3-s)^{\frac{3-s}{2}}\sigma\tau}{32(1-s)^{\frac{1-s}{2}}(n+1)^{1+s} } \right\}  > \varepsilon.
+\end{align*}
+  Hence, we can have the lower bound$$n \ge \max\left\{\left\lceil \left(\frac{(3-s)^{\frac{1-s}{2}}}{32(1-s)^{\frac{1-s}{2}}}\frac{\sigma\tau}{\varepsilon}\right)^{\frac{1}{1+s}} \right\rceil-1, \left\lceil \frac{3\sqrt{3}\sigma}{16\varepsilon}\right\rceil-1 \right\}.$$
+\end{proof}
+
+
+\section{Solving Problems on Hilbert Spaces with Continuous Linear Functional Data}
+\subsection{The Basic Problem}
+Let $\cf$, $\cg$, and $\ch$ be a separable Hilbert spaces with the solution operator $S$ defined as a series in terms of bases of these Hilbert spaces as follows:
+\begin{equation} \label{HilbertS}
+S(f) = \sum_{j=1}^\infty \lambda_j \omega_j \ip[\cf]{u_j}{f} v_j, \qquad \forall f \in \cg.
+\end{equation}
+Here $\{u_j\}_{j=1}^{\infty}$ is an orthonormal basis for $\cf$ and an orthogonal basis for $\cg$, $\{v_j\}_{j=1}^{\infty}$ is and orthonormal basis for $\ch$, and furthermore, the inner products for $\cf$ and $\cg$ and the weights above satisfy the following conditions:
+\begin{gather*}
+\lambda_1 \ge \lambda_2 \ge \cdots \ge 0, \qquad \omega_1 \ge \omega_2 \ge \cdots \ge 0, \\
+\ip[\cf]{f}{g} = \sum_{j=1}^\infty \ip[\cf]{u_j}{f} \ip[\cf]{u_j}{g}, \qquad \forall f,g \in \cf, \\
+\ip[\cg]{u_j}{g}= \omega_j\ip[\cf]{u_j}{g}, \quad \ip[\cg]{f}{g} = \sum_{j=1}^\infty \omega_j^2\ip[\cf]{u_j}{f} \ip[\cf]{u_j}{g}, \quad \forall f,g \in \cg, \ j \in \naturals.
+\end{gather*}
+
+If any bounded linear functionals can be used to collect data, then a natural sequence of algorithms to approximate $S(f)$ comes from the using the most significant terms in the series defining the solution, namely,
+\begin{equation*}
+A_n(f) = \sum_{j=1}^n \lambda_j \omega_j \ip[\cf]{u_j}{f} v_j, \qquad \forall f \in \cg, \ n \in \naturals.
+\end{equation*}
+Let the cost of this algorithm be defined as the number of data taken, i.e., $\cost(A_n)=n$.  The worst-case error of this fixe-cost algorithm can be bounded tightly as follows:
+\begin{align*}
+\norm[\ch]{S(f)-A_n(f)}^2 &= \norm[\ch]{\sum_{j=n+1}^\infty \lambda_j \omega_j \ip[\cf]{u_j}{f} v_j}^2 = \sum_{j=n+1}^\infty \lambda_j^2 \omega_j^2 \abs{\ip[\cf]{u_j}{f}}^2 \\
+& \le \begin{cases}
+\lambda_{n+1}^2 \omega_{n+1}^2 \sum_{j=n+1}^\infty \abs{\ip[\cf]{u_j}{f}}^2 \le \lambda_{n+1}^2 \omega_{n+1}^2 \norm[\cf]{f}^2, \\
+\lambda_{n+1}^2 \sum_{j=n+1}^\infty \omega_{j}^2 \abs{\ip[\cf]{u_j}{f}}^2 \le \lambda_{n+1}^2 \norm[\cg]{f}^2,
+\end{cases}
+\end{align*}
+\begin{equation*}
+\sup_{0 \ne f \in \cf}\frac{\norm[\ch]{S(f)-A_n(f)}}{\norm[\cf]{f}} =\lambda_{n+1} \omega_{n+1}, \qquad
+\sup_{0 \ne f \in \cg}\frac{\norm[\ch]{S(f)-A_n(f)}}{\norm[\cg]{f}} =\lambda_{n+1}
+\end{equation*}
+
+Estimating the $\cg$-semi-norm of a function $f \in \cf$ is easily accomplished using the data $L_i(f)=\ip[\cf]{u_i}{f}$ to compute a lower bound:
+\begin{equation} \label{genLGalg}
+G_n(f) = \norm[\cg]{\sum_{i=1}^n \ip[\cf]{u_i}{f} u_i } = \sqrt{\sum_{i=1}^n \omega_i^2\abs{\ip[\cf]{u_i}{f}}^2 }
+\end{equation}
+The error of this approximation is given by the two-sided inequality
+\begin{align*}
+0 \le \norm[\cg]{f}^2 - G_n^2(f)
+&= \sum_{i=1}^\infty \omega_i^2\abs{\ip[\cf]{u_i}{f}}^2 -  \sum_{i=1}^n \omega_i^2\abs{\ip[\cf]{u_i}{f}}^2\\
+& = \sum_{i=n+1}^\infty \omega_i^2\abs{\ip[\cf]{u_i}{f}}^2 \\
+& \le \omega_{n+1}^2 \sum_{i=n+1}^\infty \abs{\ip[\cf]{u_i}{f}}^2 = \omega_{n+1}^2 \norm[\cf]{f}^2.
+\end{align*}
+Assuming $f$ lies in the specified cone of functions, the arguments of Lemma \ref{Gnormlem} lead to a two-sided bound on the $\cg$-semi-norm $f$ in terms of $G_n(f)$:
+\[
+G_n(f)  \le \norm[\cg]{f} \le \frac{G_n(f)}{\sqrt{1 - \tau^2 \omega_{n+1}^2}} \qquad \forall f \in \cc_{\tau}.
+\]
+
+\begin{algo} \label{GenHilbAlg} {\bf (Multistage, Deterministic Automatic Algorithm for \eqref{HilbertS}).}  For the problem defined above in this section, given $tau>0$, error tolerance, $\varepsilon$, and maximum cost budget, $N_{\max}$, let $N_0= \min\{ n : \omega_{n+1} < 1 /\tau\}$. Set $G_0(f)=$ and $A_0(f)=0$.  For $n=1, \ldots, N_{max}$,
+
+\begin{description}
+
+\item [Stage 1.] Evaluate the datum $\ip[\cf]{u_n}{f}$, and compute
+\[
+G_{n}(f)=\sqrt{G_{n-1} + \omega_n^2 \abs{\ip[\cf]{u_n}{f}}^2}, \quad A_n(f)=A_{n-1}(f)+ \lambda_n\omega_n\ip[\cf]{u_n}{f}v_n.
+\]
+If $n<N_0$, increment $n$ and repeat this stage.  Otherwise, proceed to Stage 2.
+
+\item [Stage 2.] Check whether $n$ is large enough to satisfy the error tolerance, i.e.,
+\[
+\frac{\lambda_n \omega_n \tau G_{n}(f)}{\sqrt{1 - \tau^2 \omega_{n+1}^2}} \le \varepsilon.
+\]
+If this is true, then set $W=0$.  Otherwise, if this inequality fails to hold and $n= N_{\max}$ then set the $W=1$.  In both cases, return $(A_{n_i}(f),W)$ and terminate the algorithm.  If the error tolerance is not yet satisfied, and $n < N_{\max}$, then increment $i$ by one and return to Stage 1.
+\end{description}
+\end{algo}
+
+
+\begin{theorem}
+Let $\cc_\tau$ be the cone of functions defined in \eqref{conedef} whose $\cf$-semi-norms are no larger than $\tau$ times their $\cg$-semi-norms.  Assume that $N_0$ as defined in Algorithm \ref{GenHilbAlg} is smaller $N_{\max}$.  Let
+\begin{equation} \label{nicefHilbdef}
+\cn = \left \{ f \in \cc_\tau : \norm[\cg]{f} \le \frac{\varepsilon \sqrt{1 - \tau^2 \omega_{N_{\max}+1}^2}}{\tau \lambda_{N_{\max}} \omega_{N_{\max}}} \right\}
+\end{equation}
+be a subset of the cone $\cc_\tau$ that lies inside a $\cg$-semi-norm ball of rather large radius.  Then it follows that Algorithm \ref{twostagedetalgo} is successful for all functions in this set of \emph{nice} functions $\cn$,  i.e.,  $\success(A,W,\cn,\varepsilon,N_{\max}) = 1$.  Moreover, the cost of this algorithm is bounded above in terms of the $\cg$-semi-norm of the input function as follows:
+\begin{multline} \label{auto2stagedetcost}
+\cost(A,\cn,\varepsilon,N_{\max},\sigma) \\
+\le N_G+ \min\left\{ n \in \ci : n \ge \min\left( \left[\frac{C_1 \fC \fc \sigma }{\varepsilon}\right]^{1/p_1}, \left[\frac{C_2 \tau \fC \fc \sigma}{\varepsilon}\right]^{1/p_2} \right ) \right\}.
+\end{multline}
+The upper bound on the cost of this specific algorithm provides an upper bound on the complexity of the problem, $\comp(\varepsilon,\ca(\cn,\ch,S,\Lambda),N_{\max},\sigma)$.  If the sequence of algorithms $\{A_n\}_{n \in \ci}$, $A_n \in\ca_{\fix}(\cg,\ch,S,\Lambda)$  is nearly optimal for the problems $(\cg,\ch,S,\Lambda)$ and $(\cf,\ch,S,\Lambda)$ as defined in \eqref{nearoptdef}, then Algorithm \ref{twostagedetalgo} does not incur a significant penalty for not knowing $\norm[\cg]{f}$ a priori, i.e., for all $p>0$,
+\begin{equation*}
+\sup_{0 < \varepsilon/\sigma \le 1} \frac{\cost(A,\cn,\varepsilon,\infty,\sigma)} {\comp(\varepsilon/\sigma,\ca_{\fix}(\cj,\ch,S,\Lambda))} \left(\frac{\varepsilon}{\sigma}\right)^p <\infty, \qquad \cj \in \{\cf,\cg\}.
+\end{equation*}
+
+\end{theorem}
+
+\subsection{Tensor Product Spaces and Tractability}
+
+
+
+
+of real-valued functions of interest defined on $\cx \subseteq \reals^d$.  Let $\rho: \cx \to [0,\infty)$ be a non-negative weight used to define the $\cl_2$ norm.  Let $\{\phi_k\}_{k=1}^{\infty}$ be an orthonormal basis for this Hilbert space, i.e.,
+\begin{align*}
+\ip[2]{f}{g} &:= \int_{\cx} \overline{f(\vx)} g(\vx) \, \rho(\vx) \, \dif \vx \qquad \forall f,g \in \cl_2,\\
+\ip[2]{\phi_k}{\phi_{\ell}} &= \int_{\cx} \overline{\phi_k(\vx)} \phi_{\ell}(\vx) \, \rho(\vx) \, \dif \vx = \delta_{k\ell} \qquad \forall k,l \in \naturals,\\
+\hf(k) &: = \ip[2]{\phi_k}{f} \qquad \forall k \in \naturals,\\
+f &= \sum_{k=1}^{\infty} \hf(k) \phi_k, \\
+\ip[2]{f}{g} &= \sum_{k=1}^\infty \overline{\hf(k)}\hg(k).
+\end{align*}
+Let $\ch$ be a Hilbert subspace of $\cl_2$ such that $\{\phi_k\}_{k=1}^{\infty}$ is an orthogonal basis for $\ch$.  Let $w:\naturals \to [0,\infty)$ be a non-increasing function.  The inner product for $\ch$ is defined as
+\begin{gather*}
+\ip[\ch]{f}{g} = \sum_{k=1}^\infty \frac{\overline{\hf(k)}\hg(k)}{w(k)} \\
+\ch=\ch_{w} :=\left \{ f = \sum_{k=1}^{\infty} \hf(k) \phi_k : \norm[\ch]{f}^2 = \sum_{k=1}^\infty \frac{\lvert\hf(k)\rvert^2}{w(k)} < \infty \right\}.
+\end{gather*}
+Note that $\{\sqrt{w(k)}\phi_k\}_{k=1}^{\infty}$ is an orthonormal basis for $\ch_w$.
+
+For now, consider the case where one can obtain any bounded linear functionals.  In that case, the best approximation is the Fourier series truncated at the first $n$ terms.  That is, one should compute the information
+\[
+L_k(f) = \hf(k) = \ip[\ch]{w(k)\phi_k}{f}  = \ip[2]{\phi_k}{f}, \qquad k=1, \ldots, n,
+\]
+and then form the approximation as follows:
+\[
+\tf_{\trunc,n} = A_{\trunc,n}(f) = \sum_{k=1}^{n} L_k(f) \phi_k = \sum_{k=1}^{n} \hf(k) \phi_k.
+\]
+The error of this approximation bounded as follows by H\"older's inequality:
+\begin{gather*}
+\norm[2]{f - \tf_{\trunc,n}}^2 = \norm[2]{\sum_{k=n+1}^{\infty} \hf(k) \phi_k}^2 = \sum_{k=n+1}^{\infty} \abs{\hf(k)}^2 = \sum_{k=n+1}^{\infty} \frac{\abs{\hf(k)}^2}{w(k)} w(k) \le \norm[\ch]{f}^2 \sum_{k=n+1}^{\infty} w(k) \\
+\sup_{0 \ne f \in \ch} \frac{\norm[2]{f - \tf_{\trunc,n}}}{\norm[\ch]{f}} =  \sqrt{\sum_{k=n+1}^{\infty} w(k)} =: W(n) \end{gather*}
+Letting
+
+
+This is approximation is optimal in the following sense:
+\[
+\tf_{\trunc,n} = \argmin_{g \in \cl_2} \sup_{f \in } \norm[2]{f - g}
+\]
+
+
+
+\bibliographystyle{elsarticle-num.bst}
+\bibliography{FJH22,FJHown22}
+\end{document}
+
+
+\begin{condit} \label{bumpassump}
+Consider the Banach spaces $\cf$, $\cg$, $\ch$, the \emph{linear} solution operator $S: \cg \to \ch$, the positive numbers $\sigma$ and $\tau$, and the space of possible linear data functionals, $\Lambda$, and some countable, non-negative valued index set $\ci$ satisfying \eqref{indexdef}.  It is assumed that there exist
+\begin{subequations}
+\begin{itemize}
+\item positive $p, q, \alpha,$ and  $\beta$ and real $\gamma$, and
+\item a sequence $\{f_{0,n}\}_{n\in \ci}$ with
+\begin{equation} \label{assumpbumpe}
+\norm[\cg]{f_{0,n}} = \frac{\sigma \max(\beta n^q - \gamma \tau,0)}{\max(\beta n^q - \gamma \tau,0) + \tau} =:c_{0,n}
+\end{equation}
+\end{itemize}
+Furthermore, any $n \in \ci$, for all $L_1, \ldots L_m\in \Lambda$, which may depend on $\{f_{0,n}\}_{n\in \ci}$, but must satisfy $\$(L_1)+ \cdots + \$(L_m)\le n$, there exists an $f_1 \in \cf$, depending on $n$ and the $L_i$, such that
+\begin{gather}
+\label{assumpbumpa}
+S(f_1) = 1, \qquad L_1(f_1) = \cdots = L_m(f_1)= 0 , \\
+\label{assumpbumpb}
+\norm[\cf]{f_{0,n} + c_1f_1} = \abs{c_1} \norm[\cf]{f_1}  \quad \forall c_1 \in \reals, \\
+\label{assumpbumpc}
+c_{0,n} + \gamma \abs{c_1} \norm[\cg]{f_1} \le \norm[\cg]{f_{0,n} + c_1f_1} \le c_{0,n} + \abs{c_1} \norm[\cg]{f_1} \quad \forall c_1 \in \reals, \\
+\label{assumpbumpd}
+\norm[\cg]{f_1} \le \alpha n^{p}, \qquad \norm[\cf]{f_1} \le \beta n^{q} \norm[\cg]{f_1},
+\end{gather}
+\end{subequations}
+\end{condit}
+
+
+\begin{theorem} Suppose that
+
+\end{theorem}
+
+\begin{proof} For some algorithm, $A$, suppose that for an error tolerance of $\varepsilon$, and for all input functions $f$ lying in the cone  $\cc_{\tau}$ and having $\cg$-semi-norm no greater than $\sigma$, this algorithm is successful at cost of no greater than $n$.  Given this $n$, define two fooling functions in terms of the $f_{0,n}$ and $f_1$ satisfying Condition \ref{bumpassump} as follows:
+\begin{equation} \label{c1bumpdef}
+f_{\pm} =f_{0,n} \pm c_1 f_1, \qquad \text{with } c_1= \frac{\sigma \tau}{\norm[\cg]{f_1} [\max(\beta n^q - \gamma \tau,0) + \tau]}.
+\end{equation}
+It follows that these fooling functions lie inside the cone $\cc_{\tau}$ because
+\begin{align*}
+\norm[\cf]{f_{\pm}} - \tau  \norm[\cg]{f_{\pm}} & = c_1 \norm[\cf]{f_1} - \tau[c_{0,n} + \gamma c_1 \norm[\cg]{f_1}]
+&& \text{by \eqref{assumpbumpb},\eqref{assumpbumpc}} \\
+& \le c_1 (\beta n^{q} - \tau \gamma) \norm[\cg]{f_1} - \tau c_{0,n} && \text{by \eqref{assumpbumpd}} \\
+& = \frac{\sigma\tau [\beta n^q - \gamma \tau - \max(\beta n^q - \gamma \tau,0)] }{\max(\beta n^q - \gamma \tau,0) + \tau} && \text{by \eqref{assumpbumpe}, \eqref{c1bumpdef}} \\
+& \le 0.
+\end{align*}
+Next it is shown that both fooling functions have $\cg$-semi-norms no greater than $\sigma$:
+\begin{align*}
+\norm[\cg]{f_{\pm}} & \le c_{0,n} + c_1 \norm[\cg]{f_1}
+&& \text{by \eqref{assumpbumpb}} \\
+& = \frac{\sigma[\max(\beta n^q - \gamma \tau,0) + \tau] }{\max(\beta n^q - \gamma \tau,0) + \tau} =\sigma && \text{by \eqref{assumpbumpe}, \eqref{c1bumpdef}.}
+\end{align*}
+
+Noting that the data used by the algorithm, $A$, is the same for both fooling functions, namely,
+\[
+L_{i}(f_{\pm})=L_i(f_{0,n} \pm c_1 f_1) = L_i(f_{0,n}) \pm c_1 L_i(f_1) = L_i(f_{0,n}),
+\]
+it follows that $A(f_+)=A(f_{-})$.  Thus, by the triangle inequality and the linearity of $S$ it follows that the error in approximating $f_+$ or $f_-$ must be at least $c_1$:
+\begin{align*}
+\lefteqn{\max(\norm[\ch]{S(f_+)-A(f_+)},\norm[\ch]{S(f_-)-A(f_-)})} \\
+& \ge \frac{1}{2} \left[ \norm[\ch]{S(f_+)-A(f_+)}+ \norm[\ch]{S(f_-)-A(f_-)} \right] \\
+& \ge \frac{1}{2} \norm[\ch]{S(f_+)-A(f_+)-[S(f_-)-A(f_-)]} \\
+& = \frac{1}{2} \norm[\ch]{S(f_+)-S(f_-)} = \frac{1}{2} \norm[\ch]{S(f_+-f_-)}\\
+& = c_1 \norm[\ch]{S(f_1)}=c_1
+\end{align*}
+Since $A$ is successful, $c_1$, as defined in \eqref{c1bumpdef}, must be no larger than the error tolerance, which implies by \eqref{assumpbumpd} that
+\[
+\frac{\sigma \tau}{\varepsilon} \le \frac{\sigma \tau}{c_1} = \norm[\cg]{f_1} [\max(\beta n^q - \gamma \tau,0) + \tau] \le \alpha n^{p} [\max(\beta n^q - \gamma \tau,0) + \tau]
+\]
+
+
+
+
+
+ The lower bound on this $n$ is demonstrated by using two fooling functions.
+
+In the first case, suppose that $n \le (\gamma \tau/\beta)^{1/q}$.
+
+Define two bump function as follows that
+
+
+
+ based on Two bump functions are constructed that take the form of $f_{\pm} = c_0 f_0 \pm c_1 f_1$, where $f_4$
+\end{proof} 

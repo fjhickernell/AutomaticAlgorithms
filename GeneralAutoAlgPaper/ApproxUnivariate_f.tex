@@ -1,31 +1,105 @@
 
 Now we consider the problem of $\cl_{\infty}$ recovery of functions defined on $[0,1]$, i.e.,
 \[
-S(f)=f, \qquad \ch=\cl_{\infty}, \qquad \norm[\ch]{S(f)-A(f)}=\norm[\infty]{f-A(f)}.
+S(f)=\APP(f):=f, \qquad \ch=\cl_{\infty}, \qquad \norm[\ch]{S(f)-A(f)}=\norm[\infty]{f-A(f)}.
 \]
 The spaces of functions to be recovered are the Sobolev spaces $\cg = \mathcal{W}^{1,\infty}$ and $\cf = \mathcal{W}^{2,\infty}$, where $\mathcal{W}^{k,\infty}$ was defined in \eqref{defSobolev}.  The cone of functions for which our adaptive algorithms will be shown to work well is defined as
-\begin{equation}\label{taudef}
-\cc_{\tau}=\{f \in  \mathcal{W}^{2,\infty} : \norm[\infty]{f''}\leq \tau\norm[\infty]{f'}\}.
-\end{equation}
-
-Again, we consider algorithms based on function values, and the cost of a function value is one.   The basic non-adaptive algorithm used to approximate functions in the cone $\cc_{\tau}$ is linear interpolation on evenly spaced points.  Letting $\ci=\{2, 3, \ldots\}$ as in the previous section, the sequence of algorithms $\{A_n\}_{n \in \ci},$ is defined by
-\begin{subequations} \label{linearspline}
-\begin{equation}
-x_i=\frac{i-1}{n-1}, \qquad i=1, \ldots, n,
-\end{equation}
-\begin{multline}
-A_{n}(f)(x)=(n-1) \left[ f(x_{i})(x_{i+1}-x) +f(x_{i+1})(x-x_i) \right], \\ x_i \leq x \leq x_{i+1}.
-\end{multline}
+\begin{subequations} \label{coneappxdef}
+\begin{gather}
+\Gnorm{f}=\norm[\infty]{f'-f(1)+f(0)}, \qquad \Fnorm{f}=\norm[\infty]{f''}, \\
+\cc_{\tau}=\{f \in  \mathcal{W}^{2,\infty} : \norm[\infty]{f''}\leq \tau\norm[\infty]{f'-f(1)+f(0)}\}.
+\end{gather}
 \end{subequations}
-The cost of $A_n$, is the number of function evaluations, $n$.  Using this same data one may approximate the $\cl_\infty$ norm of $f'$ by the algorithm
-\begin{equation}\label{estfirstderiv}
-G_n(f) = (n-1) \sup_{i=1, \ldots, n-1} \abs{f(x_{i+1})-f(x_i)}.
+
+Again, we consider algorithms based on function values, and the cost of a function value is one.   The basic non-adaptive algorithm used to approximate functions in the cone $\cc_{\tau}$ is the linear spline algorithm given in \eqref{linearspline}.  
+The cost of $A_n$, is the number of function evaluations, $n$.  Since $A_n$, which uses $n-1$ line segments, is embedded in $A_{2n-1}$, which uses $2(n-1)$ line segments, the minimum cost multiple is $r=2$.
+
+Using this same data one may approximate the $\cl_\infty$ norm of $f'-f(1)+f(0)$ by the algorithm
+\begin{multline}\label{estfirstderiv}
+G_n(f) := \norm[\infty]{A_n(f)' - A_2(f)'} \\
+= \sup_{i=1, \ldots, n-1} \bigabs{(n-1) [f(x_{i+1})-f(x_i)]-f(1)+f(0)}.
+\end{multline}
+Moreover, a lower bound on $\norm[\infty]{f'}$ can be derived similarly to the previous section.  Specifically,
+\begin{equation} \label{Fnormappxalg}
+F_n(f) := \frac 1 2 (n-1)^2\sup_{i=1, ..., n-2} \abs{f(x_i) - 2 f(x_{i+1})+f(x_{i+2})}.
 \end{equation}
-Since $A_n$, which uses $n-1$ line segments, is embedded in $A_{2n-1}$, which uses $2(n-1)$ line segments, the minimum cost multiple is $r=2$.
+It follows using the mean value theorem that 
+\begin{align*}
+F_n(f) &= \frac 1 2 (n-1)^2\sup_{i=1, ..., n-2} \bigabs{[f(x_{i+2}) - f(x_{i+1})] - [f(x_{i+1}) - f(x_{i})]} \\
+&= \frac 1 2 (n-1)\sup_{i=1, ..., n-2} \abs{f'(\xi_{i+1}) - f'(\xi_{i})} \le \norm[\infty]{f''},
+\end{align*}
+where $\xi_i$ is some point in $[x_i,x_{i+1}]$, and so $\xi_{i+1} - \xi_i \le 2(n-1)^{-1}$.
 
 \subsection{Adaptive Algorithm and Upper Bound on the Cost}
 
-Given the algorithms $G_n$ and $A_n$, we now turn to deriving the worst case error bounds, $h_{\pm}$ defined in \eqref{Gerrbds} and $\tildeh$ and $h$ defined in \eqref{algseqerrbd}.  For $x_{i} \le x \le x_{i+1}$ note from \eqref{foneasinteg} that the difference between $f'(x)$ and its linear spline approximation is bounded by
+Given the algorithms $G_n$ and $A_n$, we now turn to deriving the worst case error bounds, $h_{\pm}$ defined in \eqref{Gerrbds} and $\tildeh$ and $h$ defined in \eqref{algseqerrbd}.  
+Note that $G_{n}(f)$ never overestimates $\Gnorm{f}$ because 
+\begin{align*}
+\Gnorm{f} & = \bignorm[\infty]{f'-A_2(f)'} 
+= \sup_{i=1, ..., n-1} \sup_{x_i \le x \le x_{i+1}} \abs{f'(x) - A_2(f)'(x)} \, \dif x \\
+&\ge \sup_{i=1, ..., n-1} (n-1)\int_{x_i}^{x_{i+1}} \abs{f'(x) - f(1)+f(0)} \, \dif x \\
+&\ge \sup_{i=1, ..., n-1} (n-1)\abs{\int_{x_i}^{x_{i+1}} [f'(x) - f(1)+f(0)] \, \dif x }\\
+&= \sup_{i=1, ..., n-1} (n-1)\abs{f'(x_{i+1})-f(x_i) - \frac{f(1)-f(0)}{n-1}} = G_n(f).
+\end{align*}
+Thus, $h_{-}(n)=0$ and $\fc_n=\tfc_n=1$. 
+
+To find an upper bound on $\Gnorm{f}-G_{n}(f)$, note that 
+\begin{equation*}
+\Gnorm{f} - G_{n}(f) = \Gnorm{f} - \bigabs{A_n(f)}_{\cg} \le \bigabs{f-A_n(f)}_{\cg} = \bignorm[\infty]{f' -A_n(f)'},
+\end{equation*}
+since $(f-A_n(f))(x)$ vanishes for $x=0,1$.  The next step is to bound the difference between 
+
+
+
+Moreover, 
+\begin{multline} \label{infnormfp}
+\bignorm[\infty]{f' -A_n(f)'} \\
+= \sup_{i=1, \ldots, n-1} \sup_{x_i \le x \le x_{i+1}} \abs{f'(x) -(n-1)[f(x_{i+1})-f(x_i)]} \, \dif x.
+\end{multline}
+
+
+Using integration by parts, one can write the difference between $f$ and its linear spline in terms of an integral kernel.  For $x \in [x_i,x_{i+1}]$, 
+\begin{align}
+\nonumber
+f(x)-A_n (f)(x)
+&= f(x) - (n-1) \left[f(x_{i})(x_{i+1}-x) +f(x_{i+1})(x-x_i) \right]\\
+&= (n-1) \int_{x_i}^{x_{i+1}} v_i(t,x) f'(t) \, \dif t \label{fintermsfprime}\\
+& = (n-1) \int_{x_i}^{x_{i+1}} u_i(t,x) f''(t) \, \dif t, \label{fintermsfdoubprime}\\
+f'(x)-A_n(f)'(x) & = (n-1) \int_{x_i}^{x_{i+1}} w_i(t,x) f''(t) \, \dif t, \label{fprimeintermsfdoubprime}
+\end{align}
+where the kernels are defined as
+\begin{align*}
+u_i(t,x)& =\begin{cases} (x_{i+1}-x)(x_i-t), & x_i\leq t\leq x,\\
+(x-x_{i})(t- x_{i+1}), & x< t \leq x_{i+1},
+\end{cases} \\
+v_i(t,x)& =- \frac{\partial u_i}{\partial t}(t,x) = \begin{cases}  x_{i+1}-x, & x_i\leq t\leq x,\\
+x_{i}-x, & x< t \leq x_{i+1},
+\end{cases} \\
+w_i(t,x)& = \frac{\partial u_i}{\partial x}(t,x) = \begin{cases}  t-x_i, & x_i\leq t\leq x,\\
+t-x_{i+1}, & x< t \leq x_{i+1}.
+\end{cases}
+\end{align*}
+This implies the following upper bound on a piece of $\|f'\|_{1}$:
+\begin{align*}
+\MoveEqLeft{\int_{x_i}^{x_{i+1}}|f'(x)-A_n(f)'(x)| \, \dif x}\\
+& \le (n-1) \int_{x_i}^{x_{i+1}} \int_{x_i}^{x_{i+1}}|w(t,x)||f''(t)| \dif t \, \dif x\\
+& \le  (n-1)\int_{x_i}^{x_{i+1}}2(t-x_i)(x_{i+1}-t)|f''(t)| \, \dif t \\
+& \le  (n-1) \max_{x_i \le t \le x_{i+1}} \abs{2(t-x_i)(x_{i+1}-t)} \int_{x_i}^{x_{i+1}} |f''(t)| \, \dif t \\
+&  \le \frac{1}{2(n-1)}\int_{x_i}^{x_{i+1}} |f''(t)| \, \dif t .
+\end{align*}
+Applying this inequality for $i=1, \ldots, n-1$ leads to 
+\begin{align*}
+\Gnorm{f} - G_{1,n}(f) &  \le \bignorm[1]{f' -A_n(f)'} \\
+& = \sum_{i=1}^{n-1} \left \{  \int_{x_i}^{x_{i+1}}|f'(x)-A_n(f)'(x)|\, \dif x \right \} \\
+& \le \frac{1}{2(n-1)} \sum_{i=1}^{n-1} \int_{x_i}^{x_{i+1}} |f''(t)| \, \dif t = \frac{\|f''\|_{1}}{2(n-1)}.
+\end{align*}
+According to \eqref{Gerrbds} and , we have $h_{+}(n)=1/[2(n-1)]$ and an inflation factor of 
+\begin{equation}\label{factor}
+\mathfrak{C}_n =\frac{1}{1 - \tau/(2n-2)} \qquad \text{for } n>1+\tau/2.
+\end{equation}
+
+
+For $x_{i} \le x \le x_{i+1}$ note from \eqref{foneasinteg} that the difference between $f'(x)$ and its linear spline approximation is bounded by
 \begin{align*}
 \MoveEqLeft{\abs{f'(x)} - (n-1) \abs{f(x_{i+1})-f(x_i)}} \\
 &\le(n-1)\abs{ \int_{x_i}^{x_{i+1}} v(t,x) f''(t) \, \dif t} \\

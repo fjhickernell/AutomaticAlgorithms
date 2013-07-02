@@ -1,0 +1,169 @@
+\documentclass[]{amsart}
+\setlength{\marginparwidth}{0.5in}
+\usepackage{amsmath,amssymb,amsthm,mathtools,booktabs,array,tikz,pifont,graphicx}
+\usepackage[author-year]{amsrefs}
+\input FJHDef.tex
+
+%Requires ApproxUnivariate.tex, univariate_integration.tex, foolbwquadexample.eps 
+
+\DeclareMathOperator{\INT}{INT}
+\DeclareMathOperator{\lin}{lin}
+\DeclareMathOperator{\up}{up}
+\DeclareMathOperator{\lo}{lo}
+\DeclareMathOperator{\fix}{non}
+\DeclareMathOperator{\err}{err}
+\DeclareMathOperator{\maxcost}{maxcost}
+\DeclareMathOperator{\mincost}{mincost}
+\newcommand{\herr}{\widehat{\err}}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{prop}[theorem]{Proposition}
+\newtheorem{lem}{Lemma}
+\newtheorem{cor}{Corollary}
+\theoremstyle{definition}
+\newtheorem{algo}{Algorithm}
+\newtheorem{condit}{Condition}
+%\newtheorem{assump}{Assumption}
+\theoremstyle{remark}
+\newtheorem{rem}{Remark}
+\newcommand{\Fnorm}[1]{\abs{#1}_{\cf}}
+\newcommand{\Gnorm}[1]{\abs{#1}_{\cg}}
+\newcommand{\flin}{f_{\text{\rm{lin}}}}
+
+
+\begin{document}
+
+\title{Constructing a Fooling Function for the Trapezoidal Rule}
+\author{Fred J. Hickernell}
+\maketitle 
+
+\section{Fooling Function}
+Choose a large $N=2^n$ and define
+\begin{align*}
+x_i&=\frac{i}{N}, \qquad i=0, \ldots, N,
+\intertext{These nodes are used to define a \emph{periodic} piecewise linear function whose values at the nodes need to be solved.  These function values, the derivative values, and the changes in the derivative values are defined as}
+f_i&=f(x_i), \qquad i=0, \ldots, N, & f_N&=f_0\\
+d_i&=f_{i+1}-f_i, \qquad i=0, \ldots, N-1, & d_N&=d_0,\\
+s_i&=d_{i+1}-d_i, \qquad i=0, \ldots, N-1.
+\end{align*}
+Based on these definitions, it follows that
+\begin{align*}
+d_i&=d_0 + (d_1-d_0) + (d_2-d_1) + \cdots + (d_i - d_{i-1}) \\
+&= d_0 + s_0 + s_1 + \cdots +  s_{i-1}, \qquad i=0, \ldots, N,\\
+0 &= s_0 + s_1 + \cdots +  s_{N-1}, \\
+f_i&=f_0 + (f_1-f_0) + (f_2-f_1) + \cdots + (f_i - f_{i-1}) \\
+&= f_0 + d_0 + d_1 + \cdots +  d_{i-1} \\
+&= f_0 + i d_0 + (i-1) s_0 + (i-2) s_1 + \cdots +  s_{i-2} \\
+&= f_0 + i d_0 + \sum_{j=0}^{i-1} (i-j-1) s_j, \qquad i=1, \ldots, N,\\
+0 &= d_0 + d_1 + \cdots +  d_{N-1} \\
+& = Nd_0 + (N-1)s_0 + (N-2)s_1 + \cdots +  s_{N-2}.
+\end{align*}
+
+Since $f$ is piecewise linear, the integral of $f$ is given by the trapezoidal rule:
+\begin{align*} 
+I(f) := \int_0^1 f(x) \, \dif x & = \frac{1}{2N} ( f_0 + 2f_1 + 2f_2 + \cdots + 2f_{N-1} + f_N) \\
+&= \frac{1}{N} ( f_0 + f_1 + f_2 + \cdots + f_{N-1}) \\
+&= \frac{1}{N} \sum_{i=0}^{N-1} f_i \\
+&= f_0 + d_0 \frac{1}{N} \sum_{i=0}^{N-1} i  + \frac{1}{N} \sum_{i=1}^{N-1} \sum_{j=0}^{i-1} (i-j-1) s_j \allowdisplaybreaks \\
+&= f_0 + \frac{d_0(N-1)}{2}  + \frac{1}{N} \sum_{j=0}^{N-2} s_j \sum_{i=j+1}^{N-1} (i-j-1) \\
+&= f_0 + \frac{d_0(N-1)}{2}  + \frac{1}{2N} \sum_{j=0}^{N-2} (N-1-j)(N-2-j)s_j \\
+\end{align*}
+
+\section{Trapezoidal Rule}
+Suppose that there is a trapezoidal rule with $M=2^m<N$ trapezoids.  Then only every $L^{\text{th}}$ function value is used, where $L=2^l=N/M$, $l=n-m$:
+\begin{align*}
+T_M(f) &:= \frac{1}{M} ( f_0 + f_L + f_{2L} + \cdots + f_{N-L}) = \frac{1}{M} \sum_{i=0}^{M-1} f_{iL} \\
+&= f_0 + d_0 L \frac{1}{M} \sum_{i=0}^{M-1} i + \frac{1}{M} \sum_{i=1}^{M-1}  \sum_{j=0}^{iL-1} (iL-j-1) s_j \\
+&= f_0 + \frac{d_0 L(M-1)}{2} + \frac{1}{M} \sum_{j=0}^{N-L-1} s_j  \sum_{i=\lceil (j+1)/L \rceil }^{M-1}   (iL-j-1) \\
+&= f_0 + \frac{d_0 (N-L)}{2} + \\
+& \qquad \qquad \frac{1}{2M} \sum_{j=0}^{N-L-1} \left (M- \left\lceil \frac{j+1}{L} \right \rceil \right) \left (N - L + L\left\lceil \frac{j+1}{L} \right \rceil - 2j-2 \right)  s_j.
+\end{align*}
+We will also consider a trapezoidal rule with $M/2$ trapezoids, which then uses every $2L^{\text{th}}$ function value:
+\begin{align*}
+T_{M/2}(f) &:= \frac{1}{M} ( f_0 + f_{2L} + f_{4L} + \cdots + f_{N-2L}) = \frac{2}{M} \sum_{i=0}^{M/2-1} f_{2iL} \\
+&= f_0 + \frac{d_0 (N-2L)}{2} + \\
+& \qquad \qquad \frac{1}{M} \sum_{j=0}^{N-2L-1} \left (\frac{M}{2}- \left\lceil \frac{j+1}{2L} \right \rceil \right) \left (N - 2L + 2L\left\lceil \frac{j+1}{2L} \right \rceil - 2j-2 \right)  s_j.
+\end{align*}
+
+
+The error of this trapezoidal rule is 
+\begin{align*}
+I(f)-T_M(f) & = \frac{1}{N} [ (1-L) f_0 + f_1 + \cdots + f_{L-1} + (1-L) f_L + \cdots + f_{N-1}]
+\end{align*}
+
+\section{Constrained Optimization}
+
+Given $m,n,p \in \naturals$ with $p \le m \le n$, and given
+\begin{align*}
+\mA \ & n \times n \text{ symmetric, positive definite} \\
+\mB \ & n \times m \\
+\mC \ & p \times m \\
+\vd \ & m \times 1,
+\end{align*}
+we want to find $\vx \in \reals^n$, $\vy \in \reals^p$ such that
+\begin{align*}
+(\vx,\vy) \text{ minimizes} \quad & \vx^T \mA \vx\\
+\text{subject to} \quad & \mB^T \vx + \mC^T \vy = \vd.
+\end{align*}
+
+First we write $\vx$ in terms of $\mB$ as follows:
+\[
+\vx = \mA^{-1} \mB \vxi + \mB_{\perp} \vxi_{\perp},
+\]
+where $\mB_{\perp}$ is $n \times n-m$ such that $(\mB \, \vert \, \mB_{\perp})$ has full rank, and the columns of $\mB_{\perp}$ are perpendicular to the columns of $\mB$.  The $m$-vector $\vxi$ and the $n-m$-vector $\xi_\perp$ are the new unknowns replacing $\vx$.  This implies that 
+\begin{align*}
+\vx^T\mA\vx &= \vxi^T \mB^T \mA^{-1} \mB \vxi + \vxi^T_\perp \mB^T_\perp \mA \mB_\perp \vxi_\perp \\
+\vd & = \mB^T \mA^{-1} \mB \vxi + \mC^T \vy
+\end{align*}
+Thus, one should choose $\vx_\perp =\vzero$.  One may now solve for $\vxi$ in terms of $\vy$:
+\[
+\vxi = (\mB^T \mA^{-1} \mB)^{-1} (\vd - \mC^T \vy).
+\]
+Then the quantity to minimize becomes
+\begin{align*}
+\vx^T\mA\vx &= \vxi^T \mB^T \mA^{-1} \mB \vxi \\
+& = (\vd - \mC^T \vy)^T (\mB^T \mA^{-1} \mB)^{-1} (\vd - \mC^T \vy) \\
+& = \vy^T \mC(\mB^T \mA^{-1} \mB)^{-1} \mC^T \vy - 2\vd^T (\mB^T \mA^{-1} \mB)^{-1} \mC^T \vy + \vd^T (\mB^T \mA^{-1} \mB)^{-1} \vd
+\end{align*}
+The value of $\vy$ that minimizes this quantity is 
+\[
+\vy = [\mC(\mB^T \mA^{-1} \mB)^{-1} \mC^T]^{-1} \mC(\mB^T \mA^{-1} \mB)^{-1} \vd
+\]
+
+To solve this numerically in a stable way, perhaps we should use singular value decompositions.  First we form $(\mB^T \mA^{-1} \mB)^{-1}$:
+\begin{align*}
+\mA &= \mV_1 \mLambda_1^2 \mV_1^T, \quad  \mLambda_1, \mV_1 \ n \times n, \ \ \mLambda_1 \text{ diagonal}, \ \ \mV^T_1 \mV_1 = \mI, \\
+\mLambda_1^{-1} \mV_1^T \mB &= \mU_2 \mLambda_2 \mV_2^T, \quad \mU_2 \ n \times m, \ \ \mLambda_2, \mV_2 \ n \times n, \\
+& \qquad \qquad \mU^T_2 \mU_2=\mV^T_2 \mV_2 = \mI, \ \ \mLambda_2 \text{ diagonal}, \\
+\mB^T \mA^{-1} \mB & = \mB^T \mV_1 \mLambda_1^{-2} \mV_1^T \mB = \mV_2 \mLambda_2^2 \mV_2^T,\\
+(\mB^T \mA^{-1} \mB)^{-1} & = \mV_2 \mLambda_2^{-2} \mV_2^T.
+\end{align*}
+Next we form $[\mC(\mB^T \mA^{-1} \mB)^{-1} \mC^T]^{-1}$:
+\begin{align*}
+\mLambda_2^{-1} \mV_2^T \mC^T &= \mU_3 \mLambda_3 \mV_3^T, \quad \mU_3 \ m \times p, \ \ \mLambda_3, \mV_3 \ p \times p, \\
+& \qquad \qquad \mU^T_3 \mU_3=\mV^T_3 \mV_3 = \mI, \ \ \mLambda_3 \text{ diagonal}, \\
+\mC(\mB^T \mA^{-1} \mB)^{-1} &= \mV_3 \mLambda_3  \mU_3^T \mLambda_2^{-1} \mV_2^{T}, \\
+\mC(\mB^T \mA^{-1} \mB)^{-1} \mC^T & = \mV_3 \mLambda_3^2 \mV_3^T, \\
+[\mC(\mB^T \mA^{-1} \mB)^{-1} \mC^T]^{-1} & = \mV_3 \mLambda_3^{-2} \mV_3^T.
+\end{align*}
+Then we solve for $\vy$:
+\begin{align*}
+\vy & = [\mV_3 \mLambda_3^{-2} \mV_3^T][\mV_3 \mLambda_3  \mU_3^T \mLambda_2^{-1} \mV_2^{T}]\vd \\
+& = \mV_3 \mLambda_3^{-1} \mU_3^T \mLambda_2^{-1} \mV_2^{T} \vd.
+\end{align*}
+Finally we solve for $\vx$ via $\vxi$:
+\begin{align*}
+\mC^T\vy & = [\mV_2 \mLambda_2\mU_3 \mLambda_3 \mV_3^T] \mV_3 \mLambda_3^{-1} \mU_3^T \mLambda_2^{-1} \mV_2^{T} \vd \\
+& = \mV_2 \mLambda_2 \mU_3 \mU_3^T \mLambda_2^{-1} \mV_2^{T} \vd \\
+\vd-\mC^T\vy & = \mV_2 \mLambda_2 (\mI - \mU_3 \mU_3^T) \mLambda_2^{-1} \mV_2^{T} \vd \\
+\vxi & = (\mB^T \mA^{-1} \mB)^{-1} (\vd - \mC^T \vy) \\
+& = [\mV_2 \mLambda_2^{-2} \mV_2^T] \mV_2 \mLambda_2 (\mI - \mU_3 \mU_3^T) \mLambda_2^{-1} \mV_2^{T} \vd \\
+& = \mV_2 \mLambda_2^{-1} (\mI - \mU_3 \mU_3^T) \mLambda_2^{-1} \mV_2^{T} \vd \\
+\vx & = \mA^{-1} \mB \vxi \\
+&=[\mU_2 \mLambda_2 \mV_2^T]\mV_2 \mLambda_2^{-1} (\mI - \mU_3 \mU_3^T) \mLambda_2^{-1} \mV_2^{T} \vd \\
+&=\mU_2 (\mI - \mU_3 \mU_3^T) \mLambda_2^{-1} \mV_2^{T} \vd \\
+\end{align*}
+
+\bibliography{FJH22,FJHown22}
+\end{document}
+

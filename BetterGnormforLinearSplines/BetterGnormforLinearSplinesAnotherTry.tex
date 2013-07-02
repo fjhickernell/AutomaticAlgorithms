@@ -1,0 +1,189 @@
+\documentclass[final]{elsarticle}
+\setlength{\marginparwidth}{0.5in}
+\usepackage{amsmath,amssymb,amsthm,natbib,mathtools,bbm,graphicx}
+\input FJHDef.tex
+
+\newcommand{\chin}{\ch_{\text{\rm{in}}}}
+\newcommand{\chout}{\ch_{\text{\rm{out}}}}
+\newcommand{\pin}{p_{\text{\rm{in}}}}
+\newcommand{\pout}{p_{\text{\rm{out}}}}
+%\newcommand{\cc}{\mathcal{C}}
+\newcommand{\cq}{\mathcal{Q}}
+\newcommand{\bbW}{\mathbb{W}}
+%\newcommand{\tP}{\widetilde{P}}
+\newcommand{\bg}{{\bf g}}
+\newcommand{\bu}{{\bf u}}
+\newcommand{\bbu}{\bar{\bf u}}
+\newcommand{\bv}{{\bf v}}
+\newcommand{\bbv}{\bar{\bf v}}
+\newcommand{\bw}{{\bf w}}
+\newcommand{\bbw}{\bar{\bf w}}
+%\newcommand{\hv}{\hat{v}}
+\newcommand{\Fnorm}[1]{\abs{#1}_{\cf}}
+\newcommand{\FYnorm}[1]{\abs{#1}_{\cf_{\cy}}}
+\newcommand{\Gnorm}[3]{\abs{#3}_{\cg,#2,#1}}
+\newcommand{\GYnorm}[1]{\abs{#1}_{\cg_{\cy}}}
+\newcommand{\Hnorm}[1]{\norm[\ch]{#1}}
+\newtheorem{theorem}{Theorem}
+\newtheorem{prop}[theorem]{Proposition}
+\newtheorem{lem}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{algo}{Algorithm}
+\newtheorem{condit}{Condition}
+%\newtheorem{assump}{Assumption}
+\theoremstyle{remark}
+\newtheorem{rem}{Remark}
+\DeclareMathOperator{\err}{err}
+\DeclareMathOperator{\fix}{fix}
+\DeclareMathOperator{\up}{up}
+\DeclareMathOperator{\lo}{lo}
+
+\journal{Journal of Complexity}
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{A Better $\cg$-Semi-Norm for Algorithms Based on Linear Splines}
+\author{Fred J. Hickernell}
+\address{Room E1-208, Department of Applied Mathematics, Illinois Institute of Technology,\\ 10 W.\ 32$^{\text{nd}}$ St., Chicago, IL 60616}
+\begin{abstract}
+\end{abstract}
+
+\begin{keyword}
+%% keywords here, in the form: keyword \sep keyword
+
+%% MSC codes here, in the form: \MSC code \sep code
+%% or \MSC[2008] code \sep code (2000 is the default)
+
+\end{keyword}
+\end{frontmatter}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Why Do We Need a Better $\cg$-Semi-Norm}
+In \cite{HicEtal14b} we presented guaranteed automatic algorithms for integration and function recovery.  One weakness of these algorithms was that if $\norm[1]{f'}$ ($\norm[\infty]{f'}$) is large, but $\norm[1]{f''}$ ($\norm[\infty]{f''}$) is small, then the error bounds in the automatic algorithms for integration (function recovery) can be very conservative.  The input function $f:x\mapsto 100 x$ is a prime example.
+
+Here we present a family of substitutes for $\norm[p]{f'}, \ p=1,\infty$ that overcome this weakness.  If the function is piecewise linear with a small number of discontinuities in $f'$, then the algorithms in \cite{HicEtal14b} converge quite quickly.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{A Proposed New $\cg$-Semi-Norm}
+Define the integral functional on the interval $[\alpha,\beta]$ as 
+\[
+I(f;\alpha,\beta) = \int_\alpha^\beta f(x) \, \dif x,
+\]
+and define the $\cl_p$-norms on this as follows:
+\[
+\norm[p,{[\alpha,\beta]}]{f} = \begin{cases} \Bigabs{\int_\alpha^\beta \abs{f(x)}^p \, \dif x}^{1/p}, & 1 \le p < \infty,\\
+\displaystyle \sup_{a \le x \le b}\abs{f(x)}, & p=\infty.
+\end{cases}
+\]
+The norm over the larger interval can be written in terms of the norms of subintervals.  Namely, for any $\alpha_j$ satisfying $\alpha=\alpha_0 < \alpha_1 < \cdots < \alpha_r=\beta$, it follows that
+\begin{equation}\label{subintnorm}
+\norm[p,{[\alpha,\beta]}]{f} = \Bignorm[\ell_p]{\bigvecpar{\norm[p,{[\alpha_{k-1},\alpha_k]}]{f}}{k=1}{r}}.
+\end{equation}
+
+For any $m \in \naturals$, define the following equally spaced points:
+\[
+x_{i,m}=\frac{i}{m}, \qquad i=0, \ldots m.
+\]
+The following semi-norm compares measures the deviation of the first derivative of the function from its average value:
+\begin{equation} \label{Gnormdef}
+\Gnorm{p}{m}{f}=\Bignorm[\ell_p]{\Bigvecpar{\norm[p,{[x_{i-1,m},x_{i,m}]}]{\norm[p,{[x_{i-1,m},x_{i,m}]}]{f' - m I(f';x_{i-1,m},x_{i,m})}}} {i=1}{m}}.
+\end{equation}
+Let us verify that this indeed a semi-norm.  Clearly, it is non-negative and vanishes when $f$ is the zero function.  So, the only other thing to verify is the triangle inequality, which follows since $f \mapsto f' - m I(f';x_{i-1,m},x_{i,m})$ is a linear operator.
+
+It can be shown that $\Gnorm{2}{rm}{f} \le \Gnorm{2}{m}{f}$ for positive integer $r$.  First, note that the one may re-write the norm over $[x_{i-1,m},x_{i,m}]$ in terms of norms over $[x_{r(i-1)+k-1,rm},x_{r(i-1)+k,rm}]$ by \eqref{subintnorm}:
+\begin{multline} \label{twonormsub}
+\norm[2,{[x_{i-1,m},x_{i,m}]}]{f' - m I(f';x_{i-1,m},x_{i,m})} \\
+= \Bignorm[\ell_2]{\bigvecpar{\norm[2,{[x_{r(i-1)+k-1,rm},x_{r(i-1)+k,rm}]}]{f' - m I(f';x_{i-1,m},x_{i,m})}}{k=1}{r}}.
+\end{multline}
+Moreover, the norms inside the expression above are no smaller than the norms comprising $\Gnorm{2}{rm}{f}$ :
+\begin{align*}
+\MoveEqLeft{\norm[2,{[x_{r(i-1)+k-1,rm},x_{r(i-1)+k,rm}]}]{f' - m I(f';x_{i-1,m},x_{i,m})}^2}\\
+&=\int_{x_{r(i-1)+k-1}}^{x_{r(i-1)+k,rm}} [f'(x) - m I(f';x_{i-1,m},x_{i,m})]^2 \, \dif x \\
+&=\int_{x_{r(i-1)+k-1}}^{x_{r(i-1)+k,rm}} \bigl\{ [f'(x) - rm I(f';x_{r(i-1)+k-1},x_{r(i-1)+k,rm})]^2  \\
+& \qquad \qquad + 2m[f'(x) - rm I(f';x_{r(i-1)+k-1},x_{r(i-1)+k,rm})] \\
+& \qquad \qquad \qquad \times [r I(f';x_{r(i-1)+k-1},x_{r(i-1)+k,rm})- I(f';x_{i-1,m},x_{i,m})]\\
+&\qquad \qquad + m^2 [r I(f';x_{r(i-1)+k-1},x_{r(i-1)+k,rm})- I(f';x_{i-1,m},x_{i,m})]^2 \bigr\} \, \dif x \\
+&=\norm[2,{[x_{r(i-1)+k-1},x_{r(i-1)+k,rm}]}]{f' - rm I(f';x_{r(i-1)+k-1},x_{r(i-1)+k,rm})}^2  \\
+&\qquad \qquad + \frac{1}{r^2} [r I(f';x_{r(i-1)+k-1},x_{r(i-1)+k,rm})- I(f';x_{i-1,m},x_{i,m})]^2\\
+& \ge \norm[2,{[x_{r(i-1)+k-1},x_{r(i-1)+k,rm}]}]{f' - rm I(f';x_{r(i-1)+k-1},x_{r(i-1)+k,rm})}^2 
+\end{align*}
+
+Substituting this inequality into \eqref{twonormsub} yields 
+\begin{multline*}
+\norm[2,{[x_{i-1,m},x_{i,m}]}]{f' - m I(f';x_{i-1,m},x_{i,m})} \\
+\ge \Bignorm[\ell_2]{\bigvecpar{\norm[2,{[x_{r(i-1)+k-1},x_{r(i-1)+k,rm}]}]{f' - rm I(f';x_{r(i-1)+k-1},x_{r(i-1)+k,rm})}}{k=1}{r}}.
+\end{multline*}
+According to the definition of $\Gnorm{2}{m}{f}$ in \eqref{Gnormdef}, it then follows that $\Gnorm{2}{rm}{f} \le \Gnorm{2}{m}{f}$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Estimating the New $\cg$-Semi-Norm}
+
+Let $\tf_n$ denote the linear spline based on the function values $f(x_{i,n-1})$, $i=0, \ldots, n-1$. We  estimate $\Gnorm{p}{(n-1)/2}{f}$ by the algorithm $G_{(n-1)/2,p,n}:f \mapsto \bigabs{\tf_n}_{\cg,(n-1)/2,p}$.  Then it follows that the error of our approximation to the $\cg$-semi-norm is 
+\begin{align*}
+\Gnorm{p}{(n-1)/2}{f} - G_{(n-1)/2,p,n}(f) &= \Gnorm{p}{(n-1)/2}{f} - \bigabs{\tf_n}_{\cg,(n-1)/2,p} \\
+&\le \bigabs{f-\tf_n}_{\cg,(n-1)/2,p},
+\end{align*}
+
+
+For any $i=1, \ldots, n-2$, the idea is to approximate  The idea is to approximate
+\[
+\int_{x_{i-1}}^{x_{i+1}} \abs{f'(x)-\frac{n-1}{2}I(f';x_{i-1},x_{i+1})}^p \, \dif x 
+\]
+by piecewise linear approximation to $f$, which implies a piecewise constant approximation to $f'$.  
+\[
+a
+\] 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Bounding the Error in Terms of the New $\cg$-Semi-Norm}
+\subsection{Integration}
+
+For the integration problem, we use the composite trapezoidal rule, 
+\begin{multline*}
+A_n(f) = \frac{1}{2(n-1)} \left[f(x_{0,n-1}) + 2f(x_{1,n-1}) + 2f(x_{2,n-1}) + \cdots \right.\\
+\left . + 2f(x_{n-2,n-1}) + f(x_{n-1,n-1})\right].
+\end{multline*}
+We consider how to bound the error of this approximation for integrands with given norm $\Gnorm{p}{(n-1)/2}{f}$.
+
+For simplicity of notation let $x_i=x_{i,n-1}$.  For a fixed $i=1, \ldots, n-2$, consider the error in integrating over the interval $[x_{i-1},x_{i+1}]$ using two trapezoids.  The derivation proceeds by applying applying basic calculus ideas.  First we express the trapezoidal rule approximation as the integral of a piecewise linear function, and then use integration by parts to write the integral in terms of the first derivative of the integrand:
+\begin{align*}
+\MoveEqLeft{\biggabs{\int_{x_{i-1}}^{x_{i+1}} f(x) \, \dif x - \frac{1}{2(n-1)} [f(x_{i-1}) + 2f(x_{i}) + f(x_{i+1}) ]}}\\
+&=\biggl \lvert \int_{x_{i-1}}^{x_{i}} \{f(x) - (n-1)[f(x_{i-1})(x_{i}-x) + f(x_{i})(x-x_{i-1})] \}\, \dif x \\
+&\qquad \qquad + \int_{x_{i}}^{x_{i+1}} \{ f(x) - (n-1)[f(x_{i})(x_{i+1}-x) + f(x_{i+1})(x-x_{i})] \} \, \dif x \biggr \rvert \\
+&=(n-1) \biggl \lvert \int_{x_{i-1}}^{x_{i}} \biggl \{(x_{i}-x)\int_{x_{i-1}}^x f'(t) \, \dif t -    (x-x_{i-1}) \int_{x}^{x_i} f'(t) \, \dif t  \biggr \}\, \dif x \\
+&\qquad \qquad + \int_{x_{i}}^{x_{i+1}} \biggl \{(x_{i+1}-x)\int_{x_{i}}^x f'(t) \, \dif t -    (x-x_{i}) \int_{x}^{x_{i+1}} f'(t) \, \dif t  \biggr \}\, \dif x \biggr \rvert.
+\end{align*}
+Next the order of integration is switched and the error is expressed as a univariate integral of $f'$ multiplied by a weight:
+\begin{align*}
+\MoveEqLeft{\biggabs{\int_{x_{i-1}}^{x_{i+1}} f(x) \, \dif x - \frac{1}{2(n-1)} [f(x_{i-1}) + 2f(x_{i}) + f(x_{i+1}) ]}}\\
+&=(n-1) \biggl \lvert \int_{x_{i-1}}^{x_{i}} f'(t) \biggl\{ \int_{t}^{x_{i}} (x_{i}-x) \, \dif x  - \int_{x_{i-1}}^{t}  (x-x_{i-1}) \, \dif x \biggr \} \, \dif t \\
+&\qquad \qquad + \int_{x_{i}}^{x_{i+1}} f'(t) \biggl \{\int_{t}^{x_{i+1}} (x_{i+1}-x) \, \dif x - \int_{x_i}^{t} (x-x_{i}) \, \dif x  \biggr \}\, \dif t \biggr \rvert \\
+&=(n-1) \biggl \lvert \int_{x_{i-1}}^{x_{i}} f'(t) \biggl\{ \frac{(t-x_i)^2-(t-x_{i-1})^2}{2} \biggr \} \, \dif t \\
+&\qquad \qquad + \int_{x_{i}}^{x_{i+1}} f'(t) \biggl\{ \frac{(t-x_{i+1})^2-(t-x_{i})^2}{2} \biggr \}\, \dif t \biggr \rvert  \\
+&=\biggl \lvert \int_{x_{i-1}}^{x_{i}} f'(t) \biggl ( \frac{x_{i-1}+x_{i}-2t}{2} \biggr ) \, \dif t + \int_{x_{i}}^{x_{i+1}} f'(t) \biggl ( \frac{x_{i}+x_{i+1}-2t}{2} \biggr ) \, \dif t\biggr \rvert .
+\end{align*}
+Since the weight is odd with respect to the center of the integration interval, one may subtract a constant multiple of this weight without altering the integral, and then apply H\"older's inequality with $p^{-1}+q^{-1}=1$.
+\begin{align*}
+\MoveEqLeft{\biggabs{\int_{x_{i-1}}^{x_{i+1}} f(x) \, \dif x - \frac{1}{2(n-1)} [f(x_{i-1}) + 2f(x_{i}) + f(x_{i+1}) ]}}\\
+&=\biggl \lvert \int_{x_{i-1}}^{x_{i}} \Bigl[f'(t)-\frac{n-1}{2}I(f';x_{i-1},x_{i+1}) \Bigr] \biggl ( \frac{x_{i-1}+x_{i}-2t}{2} \biggr ) \, \dif t \\
+& \qquad \qquad + \int_{x_{i}}^{x_{i+1}} \Bigl[f'(t)-\frac{n-1}{2}I(f';x_{i-1},x_{i+1}) \Bigr] \biggl ( \frac{x_{i}+x_{i+1}-2t}{2} \biggr ) \, \dif t\biggr \rvert \\
+&=\Bignorm[p,{[x_{i-1},x_{i+1}]}]{f'-\frac{n-1}{2}I(f',x_{i-1},x_{i+1})} \\
+&\qquad \qquad \times \biggl\{ \int_{x_{i-1}}^{x_{i}}\abs{\frac{x_{i-1}+x_{i}-2t}{2}}^q \dif t + \int_{x_{i}}^{x_{i+1}}\abs{\frac{x_{i}+x_{i+1}-2t}{2}}^q \dif t \biggr\}^{1/q}
+\\ 
+&=\left[\frac{4}{(q+1)(2n-2)^{q+1}} \right]^{1/q} \Bignorm[p,{[x_{i-1},x_{i+1}]}]{f'-\frac{n-1}{2}I(f';x_{i-1},x_{i+1})}.
+\end{align*}
+
+Finally, these error bounds over the subintervals $[x_{i-1},x_{i+1}]$ are combined to obtain an error bound for the trapezoidal rule, again using H\"older's inequality:
+\begin{align*}
+\MoveEqLeft{\biggabs{\int_{0}^{1} f(x) \, \dif x - A_n(f)}} \\
+& \le \sum_{i=1}^{(n-1)/2}\biggabs{\int_{x_{2i}}^{x_{2i+2}} f(x) \, \dif x - \frac{1}{2(n-1)} [f(x_{2i}) + 2f(x_{2i+1}) + f(x_{2i+2}) ]} \\
+& \le \sum_{i=1}^{(n-1)/2}\left[\frac{4}{(q+1)(2n-2)^{q+1}} \right]^{1/q} \Bignorm[p,{[x_{2i},x_{2i+2}]}]{f'-\frac{n-1}{2}I(f';x_{2i},x_{2i+2})} \\
+& \le  \left(\frac{1}{q+1}\right)^{1/q} \frac{\Gnorm{p}{(n-1)/2}{f}}{2n-2} .
+\end{align*}
+
+\bibliographystyle{elsarticle-num.bst}
+\bibliography{FJH22,FJHown22}
+\end{document}
+

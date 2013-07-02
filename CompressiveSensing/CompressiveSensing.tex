@@ -1,0 +1,68 @@
+\documentclass[]{elsarticle}
+\setlength{\marginparwidth}{0.5in}
+\usepackage{amsmath,amssymb,amsthm,natbib,mathtools,graphicx}
+\input FJHDef.tex
+
+\DeclareMathOperator{\lin}{lin}
+\DeclareMathOperator{\up}{up}
+\DeclareMathOperator{\lo}{lo}
+\DeclareMathOperator{\fix}{non}
+\DeclareMathOperator{\err}{err}
+\newcommand{\fudge}{\mathfrak{C}}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{prop}[theorem]{Proposition}
+\newtheorem{lem}{Lemma}
+\theoremstyle{definition}
+\newtheorem{algo}{Algorithm}
+\newtheorem{condit}{Condition}
+%\newtheorem{assump}{Assumption}
+\theoremstyle{remark}
+\newtheorem{rem}{Remark}
+
+
+\journal{Journal of Complexity}
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{Guaranteed Automatic Algorithms with Relative Error}
+\author{Fred J. Hickernell}
+\address{Room E1-208, Department of Applied Mathematics, Illinois Institute of Technology,\\ 10 W.\ 32$^{\text{nd}}$ St., Chicago, IL 60616}
+\begin{abstract}
+\end{abstract}
+
+\begin{keyword}
+adaptive \sep cones \sep function recovery \sep integration \sep quadrature
+%% keywords here, in the form: keyword \sep keyword
+
+\MSC[2010] 65D05 \sep 65D30 \sep 65G20
+%% MSC codes here, in the form: \MSC code \sep code
+%% or \MSC[2008] code \sep code (2000 is the default)
+
+\end{keyword}
+\end{frontmatter}
+
+
+Let $\mA$ be an $M \times N$ matrix, let $K$ be a small number, and let 
+\[
+\cx = \{ \mA \vc : \norm{\vc} \le K \}
+\]
+be a set of elements that we want to estimate based on incomplete data.  Here $\norm{\cdot}$ be a measure of size, e.g., 
+\[
+\norm{\vc} = \norm[0]{\vc} = \sum_{i=1}^N \abs{c_j}^0 \qquad \text{or} \qquad 
+\norm{\vc} = \norm[1]{\vc} = \sum_{i=1}^N \abs{c_j}
+\]
+Given integers $\tM \le M$ and $\tN \le N$, let $\tmA$ denote the upper left $\tM \times \tN$ block of $\mA$. For any $\vx \in \cx$, let $\tvx$ denote the upper $\tM$ rows of $\vx$.  Let $\tvc$ denote the solution of 
+\[
+\tvc = \argmin_{\vb, \norm{\vb} \le K} \big \lVert \tvx - \tmA \vb \big \rVert.
+\] 
+Our estimate of $\vx$ based on only $\tM$ data is $\mA \tvc$.
+
+
+\section*{Acknowledgements} 
+
+\bibliographystyle{spbasic}
+\bibliography{FJH22,FJHown22}
+\end{document}

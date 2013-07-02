@@ -7,6 +7,7 @@
 
 \DeclareMathOperator{\Var}{Var}
 \DeclareMathOperator{\INT}{INT}
+\DeclareMathOperator{\APP}{APP}
 \DeclareMathOperator{\lin}{lin}
 \DeclareMathOperator{\up}{up}
 \DeclareMathOperator{\lo}{lo}
@@ -856,7 +857,7 @@ This allows one to use Algorithms \ref{twostagedetalgo} and \ref{multistagealgo}
 
 \section{$\cl_{\infty}$ Approximation of Univariate Functions} \label{approxsec}
 
-\input{ApproxUnivariate.tex}
+\input{ApproxUnivariate_f.tex}
 
 \section{Addressing Questions and Concerns About Automatic Algorithms} \label{overcomesec}
 
@@ -869,7 +870,7 @@ In claiming to construct guaranteed automatic algorithms, it must be understood 
 
 \subsection{Why Cones?}
 
-Traditional error estimates are derived for balls of input functions, $\cb_{\sigma}$, as defined in \eqref{balldef} with radius $\sigma$.  The analysis here uses cones, $\cc_{\tau}$, of the form \eqref{conedef}, instead.  Automatic algorithms proceed by bounding, perhaps conservatively, the approximation error and then increasing the number of function data until that error bound is no larger than the prescribed tolerance.  These error bounds are constructed in such a way that if they are reliable for $f$, then they are also reliable for $cf$, where $c$ is any real number.  Thus, if an algorithm is successful for the input function $f$, then it is also successful for any input of the form $cf$.  By definition a cone is just that set that contains $cf$ for all numbers $c$ if it contains $f$.
+Traditional error estimates are derived for balls of input functions, $\cb_{\sigma}$, as defined in \eqref{balldef} with radius $\sigma$.  The analysis here uses cones, $\cc_{\tau}$, of the form \eqref{conedef}, instead.  Automatic algorithms proceed by bounding, perhaps conservatively, the approximation error and then increasing the number of function data until that error bound is no larger than the prescribed tolerance.  These error bounds are constructed in such a way that if they are reliable for $f$, then they are also reliable for $af$, where $a$ is any real number.  Thus, if an algorithm is successful for the input function $f$, then it is also successful for any input of the form $af$.  By definition a cone is just that set that contains $af$ for all numbers $a$ if it contains $f$.
 
 One might wonder whether the definition of $\cc_{\tau}$ in \eqref{conedef} is too strict.  Ignoring the cost budget, an alternative would be to define the cone of success, $\cc_{\text{success}}$, consisting of all input functions for which the automatic algorithm successfully approximates the solution within the error tolerance.  Clearly $\cc_{\text{success}}$ contains $\cc_{\tau}$, and likely $\cc_{\text{success}}$ also contains many functions not in $\cc_{\tau}$.  However, the definition of $\cc_{\text{success}}$ does not provide any insight into what kinds of input functions the automatic algorithm can successfully handle.  Moreover, the optimality results that one can often prove, including those in Sections \ref{integsec} and \ref{approxsec}, show that the cost of the automatic algorithm is within a constant multiple of the cost of the best algorithm for $\cc_{\tau}$.
 

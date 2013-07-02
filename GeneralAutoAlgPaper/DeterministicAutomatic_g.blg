@@ -1,0 +1,51 @@
+This is BibTeX, Version 0.99d (TeX Live 2012)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: DeterministicAutomatic_g.aux
+The style file: model1b-num-names.bst.bst
+Database file #1: FJH22.bib
+Database file #2: FJHown22.bib
+Warning--empty journal in HicEtal14a
+Warning--empty pages in HicEtal14a
+Warning--empty journal in NiuHic09a
+You've used 24 entries,
+            2611 wiz_defined-function locations,
+            787 strings with 8313 characters,
+and the built_in function-call counts, 12668 in all, are:
+= -- 923
+> -- 484
+< -- 18
++ -- 191
+- -- 162
+* -- 1562
+:= -- 1922
+add.period$ -- 25
+call.type$ -- 24
+change.case$ -- 171
+chr.to.int$ -- 23
+cite$ -- 27
+duplicate$ -- 860
+empty$ -- 878
+format.name$ -- 242
+if$ -- 2250
+int.to.chr$ -- 2
+int.to.str$ -- 1
+missing$ -- 196
+newline$ -- 79
+num.names$ -- 100
+pop$ -- 203
+preamble$ -- 2
+purify$ -- 172
+quote$ -- 0
+skip$ -- 243
+stack$ -- 0
+substring$ -- 595
+swap$ -- 735
+text.length$ -- 1
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 198
+warning$ -- 3
+while$ -- 99
+width$ -- 0
+write$ -- 277
+(There were 3 warnings)

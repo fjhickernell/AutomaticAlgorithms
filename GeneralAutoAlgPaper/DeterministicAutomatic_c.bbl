@@ -1,0 +1,150 @@
+\def\Ignore#1{}\def\notesupp#1{}\def\Ignore#1{}\def\notesupp#1{}\def\Ignore#1{}\def\notesupp#1{}\def\Ignore#1{}\def\notesupp#1{}\def\Ignore#1{}\def\notesupp#1{}\def\Ignore#1{}\def\notesupp#1{}
+\begin{thebibliography}{23}
+\expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
+\providecommand{\bibinfo}[2]{#2}
+\ifx\xfnm\relax \def\xfnm[#1]{\unskip,\space#1}\fi
+%Type = Book
+\bibitem[{Brass and Petras(2011)}]{BraPet11a}
+\bibinfo{author}{H.~Brass}, \bibinfo{author}{K.~Petras},
+  \bibinfo{title}{Quadrature theory: the theory of numerical integration on a
+  compact interval}, \bibinfo{publisher}{American Mathematical Society},
+  \bibinfo{address}{Rhode Island}, \bibinfo{edition}{first} edition,
+  \bibinfo{year}{2011}.
+%Type = Book
+\bibitem[{Burden and Faires(2010)}]{BurFai10}
+\bibinfo{author}{R.L. Burden}, \bibinfo{author}{J.D. Faires},
+  \bibinfo{title}{Numerical Analysis}, \bibinfo{publisher}{Cengage
+  Brooks/Cole}, \bibinfo{address}{Belmont, CA}, \bibinfo{edition}{ninth}
+  edition, \bibinfo{year}{2010}.
+%Type = Book
+\bibitem[{Cheney and Kincaid(2013)}]{CheKin12a}
+\bibinfo{author}{W.~Cheney}, \bibinfo{author}{D.~Kincaid},
+  \bibinfo{title}{Numerical Mathematics and Computing},
+  \bibinfo{publisher}{Brooks/Cole}, \bibinfo{address}{Boston},
+  \bibinfo{edition}{seventh} edition, \bibinfo{year}{2013}.
+%Type = Article
+\bibitem[{Gander and Gautschi(2000)}]{GanGau00a}
+\bibinfo{author}{W.~Gander}, \bibinfo{author}{W.~Gautschi},
+  \bibinfo{title}{Adaptive quadrature --- revisited}, \bibinfo{journal}{BIT}
+  \bibinfo{volume}{40} (\bibinfo{year}{2000}) \bibinfo{pages}{84--101}.
+%Type = Manual
+\bibitem[{Hale et~al.(2012)Hale, Trefethen and Driscoll}]{TrefEtal12}
+\bibinfo{author}{N.~Hale}, \bibinfo{author}{L.N. Trefethen},
+  \bibinfo{author}{T.A. Driscoll}, \bibinfo{title}{Chebfun Version 4},
+  \bibinfo{year}{2012}.
+%Type = Inproceedings
+\bibitem[{Hickernell et~al.(2014)Hickernell, Jiang, Liu and Owen}]{HicEtal14a}
+\bibinfo{author}{F.J. Hickernell}, \bibinfo{author}{L.~Jiang},
+  \bibinfo{author}{Y.~Liu}, \bibinfo{author}{A.B. Owen},
+  \bibinfo{title}{Guaranteed conservative fixed width confidence intervals via
+  {M}onte {C}arlo sampling}, in: \bibinfo{editor}{J.~Dick},
+  \bibinfo{editor}{F.Y. Kuo}, \bibinfo{editor}{G.W. Peters},
+  \bibinfo{editor}{I.H. Sloan} (Eds.), \bibinfo{booktitle}{{M}onte {C}arlo and
+  Quasi-{M}onte {C}arlo Methods 2012}, \bibinfo{publisher}{Springer-Verlag,
+  Berlin}, \bibinfo{year}{2014}. \bibinfo{note}{To appear}.
+%Type = Article
+\bibitem[{Hickernell et~al.(2010)Hickernell, M\"uller-Gronbach, Niu and
+  Ritter}]{HicMGRitNiu09a}
+\bibinfo{author}{F.J. Hickernell}, \bibinfo{author}{T.~M\"uller-Gronbach},
+  \bibinfo{author}{B.~Niu}, \bibinfo{author}{K.~Ritter},
+  \bibinfo{title}{Multi-level {M}onte {C}arlo algorithms for
+  infinite-dimensional integration on $\mathbb{R}^\mathbb{N}$},
+  \bibinfo{journal}{J. Complexity} \bibinfo{volume}{26} (\bibinfo{year}{2010})
+  \bibinfo{pages}{229--254}.
+%Type = Article
+\bibitem[{Kuo et~al.(2010)Kuo, Sloan, Wasilkowski and
+  Wo\'{z}niakowski}]{KuoEtal10a}
+\bibinfo{author}{F.Y. Kuo}, \bibinfo{author}{I.H. Sloan}, \bibinfo{author}{G.W.
+  Wasilkowski}, \bibinfo{author}{H.~Wo\'{z}niakowski},
+  \bibinfo{title}{Liberating the dimension}, \bibinfo{journal}{J. Complexity}
+  \bibinfo{volume}{26} (\bibinfo{year}{2010}) \bibinfo{pages}{422--454}.
+%Type = Article
+\bibitem[{Lyness(1983)}]{Lyn83}
+\bibinfo{author}{J.N. Lyness}, \bibinfo{title}{When not to use an automatic
+  quadrature routine}, \bibinfo{journal}{SIAM Rev.} \bibinfo{volume}{25}
+  (\bibinfo{year}{1983}) \bibinfo{pages}{63--87}.
+%Type = Inproceedings
+\bibitem[{Niu and Hickernell(2010)}]{NiuHic09a}
+\bibinfo{author}{B.~Niu}, \bibinfo{author}{F.J. Hickernell},
+  \bibinfo{title}{{M}onte {C}arlo simulation of stochastic integrals when the
+  cost of function evaluation is dimension dependent}, in:
+  \bibinfo{editor}{P.~L'Ecuyer}, \bibinfo{editor}{A.~Owen} (Eds.),
+  \bibinfo{booktitle}{{M}onte {C}arlo and Quasi-{M}onte {C}arlo Methods 2008},
+  \bibinfo{publisher}{Springer-Verlag, Berlin}, \bibinfo{year}{2010}, pp.
+  \bibinfo{pages}{545--560}.
+%Type = Article
+\bibitem[{Niu et~al.(2011)Niu, Hickernell, M\"uller-Gronbach and
+  Ritter}]{NiuHic09b}
+\bibinfo{author}{B.~Niu}, \bibinfo{author}{F.J. Hickernell},
+  \bibinfo{author}{T.~M\"uller-Gronbach}, \bibinfo{author}{K.~Ritter},
+  \bibinfo{title}{Deterministic multi-level algorithms for infinite-dimensional
+  integration on {$\mathbb{R}^{\mathbb{N}}$}}, \bibinfo{journal}{J. Complexity}
+  \bibinfo{volume}{27} (\bibinfo{year}{2011}) \bibinfo{pages}{331--351}.
+%Type = Article
+\bibitem[{Novak(1996)}]{Nov96a}
+\bibinfo{author}{E.~Novak}, \bibinfo{title}{On the power of adaption},
+  \bibinfo{journal}{J. Complexity} \bibinfo{volume}{12} (\bibinfo{year}{1996})
+  \bibinfo{pages}{199--237}.
+%Type = Article
+\bibitem[{Plaskota and Wasilkowski(2005)}]{PlaWas05a}
+\bibinfo{author}{L.~Plaskota}, \bibinfo{author}{G.W. Wasilkowski},
+  \bibinfo{title}{Adaption allows efficient integration of functions with
+  unknown singularities}, \bibinfo{journal}{Numer.\ Math.}
+  (\bibinfo{year}{2005}) \bibinfo{pages}{123--144}.
+%Type = Article
+\bibitem[{Plaskota and Wasilkowski(2011)}]{PlaWas11a}
+\bibinfo{author}{L.~Plaskota}, \bibinfo{author}{G.W. Wasilkowski},
+  \bibinfo{title}{Tractability of infinite-dimensional integration in the worst
+  case and randomized settings}, \bibinfo{journal}{J. Complexity}
+  \bibinfo{volume}{27} (\bibinfo{year}{2011}) \bibinfo{pages}{505--518}.
+%Type = Article
+\bibitem[{Plaskota et~al.(2008)Plaskota, Wasilkowski and Zhao}]{PlaEtal08a}
+\bibinfo{author}{L.~Plaskota}, \bibinfo{author}{G.W. Wasilkowski},
+  \bibinfo{author}{Y.~Zhao}, \bibinfo{title}{The power of adaption for
+  approximating functions with singularities}, \bibinfo{journal}{Math. Comput.}
+   (\bibinfo{year}{2008}) \bibinfo{pages}{2309--2338}.
+%Type = Book
+\bibitem[{Sauer(2012)}]{Sau12a}
+\bibinfo{author}{T.~Sauer}, \bibinfo{title}{Numerical Analysis},
+  \bibinfo{publisher}{Pearson}, \bibinfo{year}{2012}.
+%Type = Manual
+\bibitem[{{The MathWorks, Inc.}(2012)}]{MAT7.12}
+\bibinfo{author}{{The MathWorks, Inc.}}, \bibinfo{title}{{MATLAB} 7.12},
+  \bibinfo{address}{Natick, MA}, \bibinfo{year}{2012}.
+%Type = Manual
+\bibitem[{{The Numerical Algorithms Group}(2012)}]{NAG23}
+\bibinfo{author}{{The Numerical Algorithms Group}}, \bibinfo{title}{The NAG
+  Library}, \bibinfo{address}{Oxford}, \bibinfo{edition}{{M}ark 23} edition,
+  \bibinfo{year}{2012}.
+%Type = Book
+\bibitem[{Traub et~al.(1988)Traub, Wasilkowski and
+  Wo\'zniakowski}]{TraWasWoz88}
+\bibinfo{author}{J.F. Traub}, \bibinfo{author}{G.W. Wasilkowski},
+  \bibinfo{author}{H.~Wo\'zniakowski}, \bibinfo{title}{Information-Based
+  Complexity}, \bibinfo{publisher}{Academic Press}, \bibinfo{address}{Boston},
+  \bibinfo{year}{1988}.
+%Type = Book
+\bibitem[{Traub and Werschulz(1998)}]{TraWer98}
+\bibinfo{author}{J.F. Traub}, \bibinfo{author}{A.G. Werschulz},
+  \bibinfo{title}{Complexity and Information}, \bibinfo{publisher}{Cambridge
+  University Press}, \bibinfo{address}{Cambridge}, \bibinfo{year}{1998}.
+%Type = Misc
+\bibitem[{Wasilkowski(2012)}]{Was13a}
+\bibinfo{author}{G.W. Wasilkowski}, \bibinfo{title}{Average case tractability
+  of approximating $\infty$-variate functions},
+  \bibinfo{howpublished}{submitted for publication}, \bibinfo{year}{2012}.
+%Type = Article
+\bibitem[{Wasilkowski and Wo\'{z}niakowski(2011{\natexlab{a}})}]{WasWoz11a}
+\bibinfo{author}{G.W. Wasilkowski}, \bibinfo{author}{H.~Wo\'{z}niakowski},
+  \bibinfo{title}{Liberating the dimension for function approximation},
+  \bibinfo{journal}{J. Complexity} \bibinfo{volume}{27}
+  (\bibinfo{year}{2011}{\natexlab{a}}) \bibinfo{pages}{86--110}.
+%Type = Article
+\bibitem[{Wasilkowski and Wo\'{z}niakowski(2011{\natexlab{b}})}]{WasWoz11b}
+\bibinfo{author}{G.W. Wasilkowski}, \bibinfo{author}{H.~Wo\'{z}niakowski},
+  \bibinfo{title}{Liberating the dimension for function approximation:
+  {S}tandard information}, \bibinfo{journal}{J. Complexity}
+  \bibinfo{volume}{27} (\bibinfo{year}{2011}{\natexlab{b}})
+  \bibinfo{pages}{417--440}.
+
+\end{thebibliography}

@@ -9,7 +9,7 @@ A_{n}(f)(x)=(n-1) \left[ f(x_{i})(x_{i+1}-x) +f(x_{i+1})(x-x_i) \right] \\ \text
 \end{subequations}
 The cost of each function value is one and so the cost of  $A_n$ is $n$.
 
-The first example we consider is univariate integration on the unit interval, $S(f)=\INT(f)=\int_{0}^{1}f(x) \, \dif x$.  The two spaces of input functions are $\cf=\mathcal{V}^{1}$, the space of functions whose first derivatives have finite total variation, and and $\cg=\mathcal{W}^{1,1}$, the Sobolev space with smoothness of degree $1$.  The general definition of these spaces are as follows:
+The first example we consider is univariate integration on the unit interval, $S(f)=\INT(f):=\int_{0}^{1}f(x) \, \dif x$.  The two spaces of input functions are $\cf=\mathcal{V}^{1}$, the space of functions whose first derivatives have finite total variation, and and $\cg=\mathcal{W}^{1,1}$, the Sobolev space with smoothness of degree $1$.  The general definition of these spaces are as follows:
 \begin{subequations} \label{defSobolev}
 \begin{gather} 
   \cv^{k}: =\cv^{k}[0,1]=\{f\in C[0,1]: \Var(f^{(k)}) < \infty \}, \\
@@ -39,6 +39,17 @@ The algorithm for approximating $\Gnorm{f}=\norm[1]{f'-f(1)+f(0)}$ is the $\cg$-
     G_n(f)=\Gnorm{A_n(f)}=\bignorm[1]{A_n(f)'-A_2(f)'} \\
     =\sum_{i=1}^{n-1}\left|f(x_{i+1})-f(x_{i}) - \frac{f(1)-f(0)}{n-1}\right|.
 \end{multline} 
+The algorithm $\Fnorm{f}:=\Var(A_n(f)')$  provides a lower bound on $\Var(f')$, and can be used in the necessary condition that $f$ lies in $\cc_\tau$ as described in Remark \ref{neccondrem}.  Specifically,
+\begin{equation} \label{Fnormalg}
+F_n(f) :=\Var(A_n(f)') = (n-1)\sum_{i=1}^{n-2} \bigabs{f(x_i) - 2 f(x_{i+1})+f(x_{i+2})}.
+\end{equation}
+It follows using the mean value theorem that 
+\begin{align*}
+F_n(f) &= (n-1)\sum_{i=1}^{n-1} \bigabs{[f(x_{i+2}) - f(x_{i+1})] - [f(x_{i+1}) - f(x_{i})]} \\
+&= \sum_{i=1}^{n-1} \abs{f'(\xi_{i+1}) - f'(\xi_{i})} \le \Var(f'),
+\end{align*}
+where $\xi_i$ is some point in $[x_i,x_{i+1}]$.
+
 
 \subsection{Adaptive Algorithm and Upper Bound on the Cost}
 
@@ -135,17 +146,6 @@ Since $G_2(f)=0$ by definition, the above inequality for $\Gnorm{f} - G_{2}(f)$ 
 %\mathfrak{C}_n =\frac{1}{1 - \tau/(2n-2)} \qquad \text{for } n>1+\tau/2.
 %\end{equation}
 
-An algorithm that provides a lower bound on $\Fnorm{f}=\Var(f')$ is now derived to use as a necessary condition that $f$ lies in $\cc_\tau$ as described in Remark \ref{neccondrem}.  Given $n =2, 3, \ldots$, define 
-\begin{equation} \label{Fnormalg}
-F_n(f) = (n-1)\sum_{i=1}^{n-2} \abs{f(x_i) - 2 f(x_{i+1})+f(x_{i+2})}.
-\end{equation}
-It follows using the mean value theorem that 
-\begin{align*}
-F_n(f) &= (n-1)\sum_{i=1}^{n-1} \abs{[f(x_{i+2}) - f(x_{i+1})] - [f(x_{i+1}) - f(x_{i})]} \\
-&= \sum_{i=1}^{n-1} \abs{f'(\xi_{i+1}) - f'(\xi_{i})} \le \Var(f'),
-\end{align*}
-where $\xi_i$ is some point in $[x_i,x_{i+1}]$.
-
 The errors of the trapezoidal rule for integrands in the spaces $\cv^{1}$ and $\mathcal{W}^{1,1}$ are given in \cite[(7.14) and (7.15)]{BraPet11a}:
 \begin{subequations} \label{integhhtilde}
 \begin{gather}
@@ -204,8 +204,6 @@ $$
 and set $W$ to be true. Return $(T_{n_{i+1}}(f),W)$ and terminate the algorithm.
 \end{description}
 \end{algo}
-
-{\bf fix it}
 
 \begin{theorem} \label{multistageintegthm} Let $(T,W)$ be the automatic trapezoidal rule defined by Algorithm \ref{multistageintegalgo}, and let  $N_{\max}$, $\tau$, $n_1$, and $\varepsilon$ be the inputs and parameters described there.  Assume that $n_1 \le N_{\max}$.  Let $\cc_\tau$ be the cone of functions defined in \eqref{coneinteg}.  Let
 \begin{multline*}
