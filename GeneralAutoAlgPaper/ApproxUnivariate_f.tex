@@ -1,25 +1,24 @@
-
 Now we consider the problem of $\cl_{\infty}$ recovery of functions defined on $[0,1]$, i.e.,
 \[
-S(f)=\APP(f):=f, \qquad \ch=\cl_{\infty}, \qquad \norm[\ch]{S(f)-A(f)}=\norm[\infty]{f-A(f)}.
+S(f)=\APP(f):=f, \qquad \cg=\cl_{\infty}, \qquad \norm[\cg]{S(f)-A(f)}=\norm[\infty]{f-A(f)}.
 \]
-The spaces of functions to be recovered are the Sobolev spaces $\cg = \mathcal{W}^{1,\infty}$ and $\cf = \mathcal{W}^{2,\infty}$, where $\mathcal{W}^{k,\infty}$ was defined in \eqref{defSobolev}.  The cone of functions for which our adaptive algorithms will be shown to work well is defined as
+The space of functions to be recovered is the Sobolev spaces $\cf = \mathcal{W}^{2,\infty}$, as defined in \eqref{defSobolev}.  The cone of functions for which our adaptive algorithms will be shown to succeed is defined as
 \begin{subequations} \label{coneappxdef}
 \begin{gather}
-\Gnorm{f}=\norm[\infty]{f'-f(1)+f(0)}, \qquad \Fnorm{f}=\norm[\infty]{f''}, \\
+\Ftnorm{f}=\norm[\infty]{f'-f(1)+f(0)}, \qquad \Fnorm{f}=\norm[\infty]{f''}, \\
 \cc_{\tau}=\{f \in  \mathcal{W}^{2,\infty} : \norm[\infty]{f''}\leq \tau\norm[\infty]{f'-f(1)+f(0)}\}.
 \end{gather}
 \end{subequations}
 
-Again, we consider algorithms based on function values, and the cost of a function value is one.   The basic non-adaptive algorithm used to approximate functions in the cone $\cc_{\tau}$ is the linear spline algorithm given in \eqref{linearspline}.  
-The cost of $A_n$, is the number of function evaluations, $n$.  Since $A_n$, which uses $n-1$ line segments, is embedded in $A_{2n-1}$, which uses $2(n-1)$ line segments, the minimum cost multiple is $r=2$.
+Again, we consider algorithms based on function values, and the cost of a function value is one.   The basic non-automatic algorithm used to approximate functions in the cone $\cc_{\tau}$ is the linear spline algorithm given in \eqref{linearspline}.  
+The cost of $A_n$, is the number of function evaluations, $n$, and again the minimum cost multiple is $r=2$.
 
 Using this same data one may approximate the $\cl_\infty$ norm of $f'-f(1)+f(0)$ by the algorithm
 \begin{multline}\label{estfirstderiv}
 G_n(f) := \norm[\infty]{A_n(f)' - A_2(f)'} \\
 = \sup_{i=1, \ldots, n-1} \bigabs{(n-1) [f(x_{i+1})-f(x_i)]-f(1)+f(0)}.
 \end{multline}
-Moreover, a lower bound on $\norm[\infty]{f'}$ can be derived similarly to the previous section.  Specifically,
+Moreover, a lower bound on $\norm[\infty]{f''}$ can be derived similarly to the previous section.  Specifically,
 \begin{equation} \label{Fnormappxalg}
 F_n(f) := \frac 1 2 (n-1)^2\sup_{i=1, ..., n-2} \abs{f(x_i) - 2 f(x_{i+1})+f(x_{i+2})}.
 \end{equation}
@@ -30,12 +29,15 @@ F_n(f) &= \frac 1 2 (n-1)^2\sup_{i=1, ..., n-2} \bigabs{[f(x_{i+2}) - f(x_{i+1})
 \end{align*}
 where $\xi_i$ is some point in $[x_i,x_{i+1}]$, and so $\xi_{i+1} - \xi_i \le 2(n-1)^{-1}$.
 
+{\bf fix this}
+
+
 \subsection{Adaptive Algorithm and Upper Bound on the Cost}
 
 Given the algorithms $G_n$ and $A_n$, we now turn to deriving the worst case error bounds, $h_{\pm}$ defined in \eqref{Gerrbds} and $\tildeh$ and $h$ defined in \eqref{algseqerrbd}.  
-Note that $G_{n}(f)$ never overestimates $\Gnorm{f}$ because 
+Note that $G_{n}(f)$ never overestimates $\Ftnorm{f}$ because 
 \begin{align*}
-\Gnorm{f} & = \bignorm[\infty]{f'-A_2(f)'} 
+\Ftnorm{f} & = \bignorm[\infty]{f'-A_2(f)'} 
 = \sup_{i=1, ..., n-1} \sup_{x_i \le x \le x_{i+1}} \abs{f'(x) - A_2(f)'(x)} \, \dif x \\
 &\ge \sup_{i=1, ..., n-1} (n-1)\int_{x_i}^{x_{i+1}} \abs{f'(x) - f(1)+f(0)} \, \dif x \\
 &\ge \sup_{i=1, ..., n-1} (n-1)\abs{\int_{x_i}^{x_{i+1}} [f'(x) - f(1)+f(0)] \, \dif x }\\
@@ -43,9 +45,9 @@ Note that $G_{n}(f)$ never overestimates $\Gnorm{f}$ because
 \end{align*}
 Thus, $h_{-}(n)=0$ and $\fc_n=\tfc_n=1$. 
 
-To find an upper bound on $\Gnorm{f}-G_{n}(f)$, note that 
+To find an upper bound on $\Ftnorm{f}-G_{n}(f)$, note that 
 \begin{equation*}
-\Gnorm{f} - G_{n}(f) = \Gnorm{f} - \bigabs{A_n(f)}_{\cg} \le \bigabs{f-A_n(f)}_{\cg} = \bignorm[\infty]{f' -A_n(f)'},
+\Ftnorm{f} - G_{n}(f) = \Ftnorm{f} - \bigabs{A_n(f)}_{\tcf} \le \bigabs{f-A_n(f)}_{\tcf} = \bignorm[\infty]{f' -A_n(f)'},
 \end{equation*}
 since $(f-A_n(f))(x)$ vanishes for $x=0,1$.  The next step is to bound the difference between 
 
@@ -89,7 +91,7 @@ This implies the following upper bound on a piece of $\|f'\|_{1}$:
 \end{align*}
 Applying this inequality for $i=1, \ldots, n-1$ leads to 
 \begin{align*}
-\Gnorm{f} - G_{1,n}(f) &  \le \bignorm[1]{f' -A_n(f)'} \\
+\Ftnorm{f} - G_{1,n}(f) &  \le \bignorm[1]{f' -A_n(f)'} \\
 & = \sum_{i=1}^{n-1} \left \{  \int_{x_i}^{x_{i+1}}|f'(x)-A_n(f)'(x)|\, \dif x \right \} \\
 & \le \frac{1}{2(n-1)} \sum_{i=1}^{n-1} \int_{x_i}^{x_{i+1}} |f''(t)| \, \dif t = \frac{\|f''\|_{1}}{2(n-1)}.
 \end{align*}
@@ -209,7 +211,7 @@ Using these choices of $f_0$ and $f_1$, along with the corresponding $\tg$ and $
 
 \begin{theorem} \label{complowbdappr} The linear spline algorithm is optimal for $\cl_{\infty}$ approximation of functions in $\mathcal{W}^{1,\infty}$ and $\mathcal{W}^{2,\infty}$. Assuming an infinite cost budget, the complexity of the function recovery problem problem, over the cone of functions $\cc_{\tau}$ defined in \eqref{taudef} is
 \begin{align*}
-\comp(\varepsilon,\ca(\cc_{\tau},\ch,S,\Lambda),\infty,\norm[\infty]{f'})
+\comp(\varepsilon,\ca(\cc_{\tau},\cg,S,\Lambda),\infty,\norm[\infty]{f'})
 &\ge \min\left(\frac{3\sqrt{3}\norm[\infty]{f'}}{64 \varepsilon}, \sqrt{\frac{\tau\norm[\infty]{f'}}{128\varepsilon}} \right)-1\\
 & \sim \sqrt{\frac{\tau\norm[\infty]{f'}}{128\varepsilon}}  \quad\text{as } \frac{\norm[\infty]{f'}}{\varepsilon} \to \infty.
 \end{align*}
