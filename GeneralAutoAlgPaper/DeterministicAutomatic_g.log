@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=latex 2013.2.13)  10 JUL 2013 23:51
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=latex 2013.2.13)  11 JUL 2013 08:01
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -532,6 +532,12 @@ Excluding comment 'comment') (./FJHDef.tex
 \c@rem=\count139
  (./DeterministicAutomatic_g.aux
 
+LaTeX Warning: Label `fintermsfdoubprime' multiply defined.
+
+
+LaTeX Warning: Label `fprimeintermsfdoubprime' multiply defined.
+
+
 LaTeX Warning: Label `factor' multiply defined.
 
 )
@@ -603,46 +609,42 @@ Overfull \hbox (5.63974pt too wide) in paragraph at lines 136--137
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-) [22] (./ApproxUnivariate_g.tex [23]
+) [22] (./ApproxUnivariate_g.tex [23] [24]
 
-LaTeX Warning: Reference `algseqerrbd' on page 24 undefined on input line 37.
-
-[24]
-
-LaTeX Warning: Reference `foneasinteg' on page 25 undefined on input line 104.
+LaTeX Warning: Reference `foneasinteg' on page 25 undefined on input line 76.
 
 [25]
-Overfull \hbox (5.49309pt too wide) in paragraph at lines 141--141
+Overfull \hbox (5.49309pt too wide) in paragraph at lines 113--113
 [] 
  []
 
 [26]
 
-LaTeX Warning: Reference `taudef' on page 27 undefined on input line 173.
+LaTeX Warning: Reference `taudef' on page 27 undefined on input line 145.
 
 [27]
 
-LaTeX Warning: Reference `taudef' on page 28 undefined on input line 212.
+LaTeX Warning: Reference `taudef' on page 28 undefined on input line 184.
 
-[28]) [29]
+) [28]
 
-LaTeX Warning: Reference `fig:NonadaptAlgo' on page 30 undefined on input line 
+LaTeX Warning: Reference `fig:NonadaptAlgo' on page 29 undefined on input line 
 618.
 
 
-LaTeX Warning: Reference `fig:AdaptAlgo' on page 30 undefined on input line 618
+LaTeX Warning: Reference `fig:AdaptAlgo' on page 29 undefined on input line 618
 .
 
-[30] [31]
+[29] [30]
 File: foolbwquadexample.eps Graphic file (type eps)
- <foolbwquadexample.eps> [32] [33] [34]
+ <foolbwquadexample.eps> [31] [32] [33]
 (./DeterministicAutomatic_g.bbl
 Underfull \hbox (badness 2707) in paragraph at lines 21--26
 []\OT1/cmr/m/n/10 W. Ch-eney, D. Kin-caid, Nu-mer-i-cal Math-e-mat-ics and Com-
 put-ing,
  []
 
-[35]) [36] (./DeterministicAutomatic_g.aux)
+[34]) [35] (./DeterministicAutomatic_g.aux)
 
 LaTeX Warning: There were undefined references.
 
@@ -655,12 +657,12 @@ LaTeX Warning: There were multiply-defined labels.
 ### simple group (level 1) entered at line 230 ({)
 ### bottom level 
 Here is how much of TeX's memory you used:
- 11556 strings out of 493489
- 206633 string characters out of 3141349
- 259072 words of memory out of 3000000
- 14596 multiletter control sequences out of 15000+200000
+ 11555 strings out of 493489
+ 206620 string characters out of 3141349
+ 259071 words of memory out of 3000000
+ 14595 multiletter control sequences out of 15000+200000
  16440 words of font info for 65 fonts, out of 3000000 for 9000
  957 hyphenation exceptions out of 8191
  56i,18n,55p,1393b,302s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on DeterministicAutomatic_g.dvi (36 pages, 166260 bytes).
+Output written on DeterministicAutomatic_g.dvi (35 pages, 163032 bytes).

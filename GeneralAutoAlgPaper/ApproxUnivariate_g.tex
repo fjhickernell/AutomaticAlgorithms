@@ -29,27 +29,40 @@ F_n(f) &= \frac 1 2 (n-1)^2\sup_{i=1, ..., n-2} \bigabs{[f(x_{i+2}) - f(x_{i+1})
 \end{align*}
 where $\xi_i$ is some point in $[x_i,x_{i+1}]$, and so $\xi_{i+1} - \xi_i \le 2(n-1)^{-1}$.
 
-{\bf fix this}
-
-
 \subsection{Adaptive Algorithm and Upper Bound on the Cost}
 
-Given the algorithms $G_n$ and $A_n$, we now turn to deriving the worst case error bounds, $h_{\pm}$ defined in \eqref{Gerrbds} and $\tildeh$ and $h$ defined in \eqref{algseqerrbd}.  
+Given the algorithms $G_n$ and $A_n$, we now turn to deriving the worst case error bounds, $h_{\pm}$ defined in \eqref{Gerrbds} and $h$ defined in \eqref{algoerr} and satisfying \eqref{algseqerrcond}.  
 Note that $G_{n}(f)$ never overestimates $\Ftnorm{f}$ because 
 \begin{align*}
 \Ftnorm{f} & = \bignorm[\infty]{f'-A_2(f)'} 
 = \sup_{i=1, ..., n-1} \sup_{x_i \le x \le x_{i+1}} \abs{f'(x) - A_2(f)'(x)} \, \dif x \\
 &\ge \sup_{i=1, ..., n-1} (n-1)\int_{x_i}^{x_{i+1}} \abs{f'(x) - f(1)+f(0)} \, \dif x \\
 &\ge \sup_{i=1, ..., n-1} (n-1)\abs{\int_{x_i}^{x_{i+1}} [f'(x) - f(1)+f(0)] \, \dif x }\\
-&= \sup_{i=1, ..., n-1} (n-1)\abs{f'(x_{i+1})-f(x_i) - \frac{f(1)-f(0)}{n-1}} = G_n(f).
+&= \sup_{i=1, ..., n-1} (n-1)\abs{f(x_{i+1})-f(x_i) - \frac{f(1)-f(0)}{n-1}} = G_n(f).
 \end{align*}
 Thus, $h_{-}(n)=0$ and $\fc_n=\tfc_n=1$. 
+
+{\bf fix this}
+
 
 To find an upper bound on $\Ftnorm{f}-G_{n}(f)$, note that 
 \begin{equation*}
 \Ftnorm{f} - G_{n}(f) = \Ftnorm{f} - \bigabs{A_n(f)}_{\tcf} \le \bigabs{f-A_n(f)}_{\tcf} = \bignorm[\infty]{f' -A_n(f)'},
 \end{equation*}
-since $(f-A_n(f))(x)$ vanishes for $x=0,1$.  The next step is to bound the difference between 
+since $(f-A_n(f))(x)$ vanishes for $x=0,1$.  The next step is to bound the difference between $f$ and its linear spline.  Using integration by parts it follows that for $x \in [x_i,x_{i+1}]$, 
+\begin{align}
+\nonumber
+f(x)-A_n (f)(x)
+&= f(x) - (n-1) \left[f(x_{i})(x_{i+1}-x) +f(x_{i+1})(x-x_i) \right]\\
+& = (n-1) \int_{x_i}^{x_{i+1}} u_i(t,x) f''(t) \, \dif t, \label{fintermsfdoubprime}\\
+f'(x)-A_n(f)'(x) & = (n-1) \int_{x_i}^{x_{i+1}} \frac{\partial u_i}{\partial x}(t,x) f''(t) \, \dif t, \label{fprimeintermsfdoubprime}
+\end{align}
+where the kernel, $u$, inside these integrals is defined as
+\begin{equation*}
+u_i(t,x) =\begin{cases} (x_{i+1}-x)(x_i-t), & x_i\leq t\leq x,\\
+(x-x_{i})(t- x_{i+1}), & x< t \leq x_{i+1},
+\end{cases}.
+\end{equation*}
 
 
 
@@ -58,47 +71,6 @@ Moreover,
 \bignorm[\infty]{f' -A_n(f)'} \\
 = \sup_{i=1, \ldots, n-1} \sup_{x_i \le x \le x_{i+1}} \abs{f'(x) -(n-1)[f(x_{i+1})-f(x_i)]} \, \dif x.
 \end{multline}
-
-
-Using integration by parts, one can write the difference between $f$ and its linear spline in terms of an integral kernel.  For $x \in [x_i,x_{i+1}]$, 
-\begin{align}
-\nonumber
-f(x)-A_n (f)(x)
-&= f(x) - (n-1) \left[f(x_{i})(x_{i+1}-x) +f(x_{i+1})(x-x_i) \right]\\
-&= (n-1) \int_{x_i}^{x_{i+1}} v_i(t,x) f'(t) \, \dif t \label{fintermsfprime}\\
-& = (n-1) \int_{x_i}^{x_{i+1}} u_i(t,x) f''(t) \, \dif t, \label{fintermsfdoubprime}\\
-f'(x)-A_n(f)'(x) & = (n-1) \int_{x_i}^{x_{i+1}} w_i(t,x) f''(t) \, \dif t, \label{fprimeintermsfdoubprime}
-\end{align}
-where the kernels are defined as
-\begin{align*}
-u_i(t,x)& =\begin{cases} (x_{i+1}-x)(x_i-t), & x_i\leq t\leq x,\\
-(x-x_{i})(t- x_{i+1}), & x< t \leq x_{i+1},
-\end{cases} \\
-v_i(t,x)& =- \frac{\partial u_i}{\partial t}(t,x) = \begin{cases}  x_{i+1}-x, & x_i\leq t\leq x,\\
-x_{i}-x, & x< t \leq x_{i+1},
-\end{cases} \\
-w_i(t,x)& = \frac{\partial u_i}{\partial x}(t,x) = \begin{cases}  t-x_i, & x_i\leq t\leq x,\\
-t-x_{i+1}, & x< t \leq x_{i+1}.
-\end{cases}
-\end{align*}
-This implies the following upper bound on a piece of $\|f'\|_{1}$:
-\begin{align*}
-\MoveEqLeft{\int_{x_i}^{x_{i+1}}|f'(x)-A_n(f)'(x)| \, \dif x}\\
-& \le (n-1) \int_{x_i}^{x_{i+1}} \int_{x_i}^{x_{i+1}}|w(t,x)||f''(t)| \dif t \, \dif x\\
-& \le  (n-1)\int_{x_i}^{x_{i+1}}2(t-x_i)(x_{i+1}-t)|f''(t)| \, \dif t \\
-& \le  (n-1) \max_{x_i \le t \le x_{i+1}} \abs{2(t-x_i)(x_{i+1}-t)} \int_{x_i}^{x_{i+1}} |f''(t)| \, \dif t \\
-&  \le \frac{1}{2(n-1)}\int_{x_i}^{x_{i+1}} |f''(t)| \, \dif t .
-\end{align*}
-Applying this inequality for $i=1, \ldots, n-1$ leads to 
-\begin{align*}
-\Ftnorm{f} - G_{1,n}(f) &  \le \bignorm[1]{f' -A_n(f)'} \\
-& = \sum_{i=1}^{n-1} \left \{  \int_{x_i}^{x_{i+1}}|f'(x)-A_n(f)'(x)|\, \dif x \right \} \\
-& \le \frac{1}{2(n-1)} \sum_{i=1}^{n-1} \int_{x_i}^{x_{i+1}} |f''(t)| \, \dif t = \frac{\|f''\|_{1}}{2(n-1)}.
-\end{align*}
-According to \eqref{Gerrbds} and , we have $h_{+}(n)=1/[2(n-1)]$ and an inflation factor of 
-\begin{equation}\label{factor}
-\mathfrak{C}_n =\frac{1}{1 - \tau/(2n-2)} \qquad \text{for } n>1+\tau/2.
-\end{equation}
 
 
 For $x_{i} \le x \le x_{i+1}$ note from \eqref{foneasinteg} that the difference between $f'(x)$ and its linear spline approximation is bounded by
