@@ -202,7 +202,7 @@ The adaptive, automatic algorithms constructed in the next section use sequences
 \end{equation}
 Here in this article the positive integer-valued index set, $\ci=\{n_1, n_2, \ldots\} \subseteq \natzero$, with $n_i < n_{i+1}$ is assumed to satisfy 
 \begin{equation} \label{Inobiggap}
-\sup_i \frac{n_{i+1}}{n_i} \le \rho <\infty.
+\sup_{\substack{ i\\ n_i>0}} \frac{n_{i+1}}{n_i} \le \rho <\infty.
 \end{equation}
 Note that the definition of $h^{-1}$ in \eqref{hinvdef} implies that
 \begin{equation}
@@ -210,7 +210,7 @@ h(n)\le\varepsilon \implies n \ge h^{-1}(\varepsilon), \qquad  h(n) > \varepsilo
 \end{equation}
 Finally, in this article we consider sequences of algorithms for which $h$ satisfies
 \begin{equation} \label{hinvonetwocond}
-\sup_{\epsilon > 0} \frac{h^{-1}(\varepsilon)}{h^{-1}(2\varepsilon)} < \infty.
+\sup_{\epsilon > 0} \frac{h^{-1}(\varepsilon)}{\max(1,h^{-1}(2\varepsilon))} < \infty.
 \end{equation}
 \end{subequations}
 This means that $h(n)$ may decay polynomially in $n^{-1}$ or faster as $n$ tends to infinity.
@@ -311,6 +311,9 @@ Sections \ref{integsec} and \ref{approxsec} provide concrete examples where thes
 \tau = \left(1 - \frac{1}{\fC}\right)\frac{1}{h_{+}(n_{\tF})},
 \end{equation}
 which is equivalent to \eqref{norminflate}.
+\end{rem}
+
+\begin{rem} \label{Nmaxrem}  For practical reasons one may wish to impose an upper bound on the computational cost of the algorithm, $N_{\max}$.  If the algorithm attempts to use more function values than this budget, then the algorithms should return an answer using the largest possible number of function values within budget and also a warning that the error tolerance may not be met.  Algorithms \ref{twostagedetalgo} computes the correct answer within  budget for input functions lying in the cone $\cc_{\tau}$ and for which any of the cost upper bounds in Theorem \ref{TwoStageDetermThm} do not exceed $N_{\max}$.  An analogous result holds for Algorithm \ref{multistagealgo} and Theorem \ref{MultiStageThm}.
 \end{rem}
 
 \begin{rem} \label{neccondrem} In some cases it is possible to find a lower bound on the $\cf$-norm of the input function.  This means that there exists an algorithm $F_n$ using the same function values as $\tF_n$, such that
@@ -437,10 +440,7 @@ Consider fixed (semi-)normed linear spaces $\cf$ and $\cg$, as described above, 
 \Fnorm{f_1} \le 1, \qquad \vL(f_1)= \vzero, \qquad
 \norm[\cg]{S(f_1)} \ge g(n), 
 \end{equation}
-for some positive, non-increasing function $g$ defined on $\ci$ with $\inf_{n \in \ci} g(n)=0$.  For example, one might have $g(n)=a n^{-p}$ for $n \in \naturals$ with positive $a$ and $p$.  Let $g^{-1}$ be defined by
-\begin{equation} \label{ginvdef}
-g^{-1}(\varepsilon) = \max \{ n \in \natzero : g(n-1) > \varepsilon, \ n \in \ci \}
-\end{equation}
+for some positive, non-increasing function $g$ defined on $\ci$ with $\inf_{n \in \ci} g(n)=0$.  For example, one might have $g(n)=a n^{-p}$ for $n \in \naturals$ with positive $a$ and $p$.
 
 \subsection{Problems Defined on Balls} 
 Suppose that $A$ is any successful automatic algorithm for the ball $\cb_{\sigma}$, i.e., $A \in \ca(\cb_{\sigma},\cg,S,\Lambda)$, and $\Gnorm{S(f)-A(f)}\le \varepsilon$ for all $f \in \cb_{\sigma}$.  For a fixed $\varepsilon>0$ and $n \in \ci$ with $n \le \maxcost(A,\cb_{\sigma},\varepsilon,\cb_{s})$.  Let $\vL$ be the design used by the algorithm for the zero function, and let $f_1$ be constructed according to \eqref{assumpfone} for this $\vL$.  Since the data for the functions $\pm s f_1$ are all zero, it follows that $A(s f_1)=A(-s f_1)$.  Also note that $\pm s f_1 \in \cb_{s}$.
@@ -451,8 +451,12 @@ Now since $A$ must be successful for $\pm \sigma f_1$, it follows that
 & \ge \frac{s}{2} \left[ \norm[\cg]{S(f_1)-A(f_1)}+ \norm[\cg]{S(f_1)+A(f_1)} \right] \\
 & \ge \frac{s}{2} \norm[\cg]{[S(f_1)-A(f_1)]+[S(f_1)+A(f_1)]} = s\norm[\cg]{S(f_1)}  \\
 & \ge s g(n),\\
-g^{-1}(\varepsilon/s) & \le n \le \maxcost(A,\cb_{\sigma},\varepsilon,\cb_{\sigma}).
+g^{-1}(\varepsilon/s) & \le n \le \maxcost(A,\cb_{\sigma},\varepsilon,\cb_{\sigma}),
 \end{align*}
+where $g^{-1}$ be defined by
+\begin{equation} \label{ginvdef}
+g^{-1}(\varepsilon) = \max \{ n \in \natzero : g(n-1) > \varepsilon, \ n \in \ci \}.
+\end{equation}
 This implies lower bounds on the complexity of algorithms defined for $\cf$-balls.
 
 \begin{theorem} \label{complowbdball} The computational complexity of the problem for a ball of input functions $\cb_{\sigma}$ is bounded below by
@@ -463,7 +467,7 @@ g ^{-1}(\varepsilon/\min(\sigma,s)).
 \end{theorem}
 Thus, the cost of solving the problem within error tolerance $\varepsilon$ for input functions in a $\cf$-semi-norm ball of radius $\sigma$ is at least $g^{-1}(\varepsilon/\sigma)$.  This leads to a simple check on whether a sequence of non-adaptive algorithms is optimal.
 
-\begin{theorem} \label{optimalprop} Suppose that there exist non-automatic algorithms $\{A_n\}_{n \in \ci}$, with $A_n  \in \ca_{\fix}(\cf,\cg,S,\Lambda)$, for which the upper error bounds satisfy \eqref{algoerr} for known $h$.  If 
+\begin{theorem} \label{optimalprop} Suppose that there exist non-automatic algorithms $\{A_n\}_{n \in \ci}$, with $A_n  \in \ca_{\fix}(\cf,\cg,S,\Lambda)$, for which the upper error bounds satisfy \eqref{algoerr} for known $h$.  Suppose also that $g$ is also defined on the same $\ci$, which satisfies \eqref{Inobiggap}. If 
 \begin{equation}\label{ghcond}
 \sup_{n \in \ci} \frac{h(n)}{g(n)} < \infty,
 \end{equation}
@@ -476,16 +480,16 @@ then Algorithm \ref{nonadaptalgo} is optimal in the sense that for fixed $\sigma
 
 \begin{proof}  Choose a number $C \ge h(n)/g(n)$ for all $n \in \ci$, which is possible by assumption \eqref{ghcond}.  It then follows that
 \begin{align*}
-g^{-1}(\varepsilon) = \min\{ n \in \naturals : g(n) \le \varepsilon\} 
-& \ge \min\{ n \in \ci : g(n) \le \varepsilon\}  \\
-& \ge \min \left \{ n \in \ci : \frac{h(n)}{C} \le \varepsilon \right\} = h^{-1}(C \varepsilon).
+g^{-1}(\varepsilon) &= \max \{ n \in \natzero : g(n-1) > \varepsilon, \ n \in \ci \} \\ 
+& \ge \frac{1}{\rho}\min\{ n \in \ci : g(n) \le \varepsilon\}  \\
+& \ge \frac{1}{\rho} \min \left \{ n \in \ci : \frac{h(n)}{C} \le \varepsilon \right\} = \frac{h^{-1}(C \varepsilon)}{\rho}.
 \end{align*}
 Thus, it follows from the expression for the maximum cost in \eqref{nonadaptalgocost} and the condition on $h$ in \eqref{hinvonetwocond} that the error of $\{A_n\}_{n \in \ci}$ is no worse than a constant times the best possible non-adaptive algorithm:
 \begin{align*}
 \MoveEqLeft{\sup_{0 < \varepsilon \le 1} \frac{\maxcost(A,\cb_{\sigma},\varepsilon,\cb_{s})}
 {\max(1,\comp(\varepsilon,\ca(\cb_{\sigma},\cg,S,\Lambda),\cb_s))}} \\
 & \le \sup_{0 < \varepsilon \le 1} \frac{h^{-1}(\varepsilon/\sigma)} {\max(1,g^{-1}(\varepsilon/\min(\sigma,s)))} \\
-& \le \sup_{0 < \varepsilon \le 1} \frac{h^{-1}(\varepsilon/\sigma)} {\max(1,h^{-1}(C\varepsilon/\min(\sigma,s)))} <\infty.
+& \le \sup_{0 < \varepsilon \le 1} \frac{h^{-1}(\varepsilon/\sigma)} {\max(1,\rho^{-1} h^{-1}(C\varepsilon/\min(\sigma,s)))} <\infty.
 \end{align*}
 \end{proof}
 
@@ -590,7 +594,7 @@ This allows one to apply Algorithms \ref{twostagedetalgo} and \ref{multistagealg
 
 \section{$\cl_{\infty}$ Approximation of Univariate Functions} \label{approxsec}
 
-\input{ApproxUnivariate_f.tex}
+\input{ApproxUnivariate_g.tex}
 
 {\bf Fix this here and below.}
 
