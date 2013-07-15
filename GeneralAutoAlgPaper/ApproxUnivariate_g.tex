@@ -2,7 +2,7 @@ Now we consider the problem of $\cl_{\infty}$ recovery of functions defined on $
 \[
 S(f)=\APP(f):=f, \qquad \cg=\cl_{\infty}, \qquad \norm[\cg]{S(f)-A(f)}=\norm[\infty]{f-A(f)}.
 \]
-The space of functions to be recovered is the Sobolev spaces $\cf = \mathcal{W}^{2,\infty}$, as defined in \eqref{defSobolev}.  The cone of functions for which our adaptive algorithms will be shown to succeed is defined as
+The space of functions to be recovered is the Sobolev space $\cf = \mathcal{W}^{2,\infty}$, as defined in \eqref{defSobolev}.  The cone of functions for which our adaptive algorithms will be shown to succeed is defined as
 \begin{subequations} \label{coneappxdef}
 \begin{gather}
 \Ftnorm{f}=\norm[\infty]{f'-f(1)+f(0)}, \qquad \Fnorm{f}=\norm[\infty]{f''}, \\
@@ -112,7 +112,7 @@ Go to Stage 1.
 \end{description}
 \end{algo}
 
-\begin{theorem} \label{multistageappxthm} Let $A \in \ca(\cc_{\tau}, \reals, \APP, \Lambda^{\std})$ be the automatic linear spline defined by Algorithm \ref{multistageapproalgo}, and let $\tau$, $n_1$, and $\varepsilon$ be the inputs and parameters described there. Let $\cc_\tau$ be the cone of functions defined in \eqref{coneappxdef}.  Then it follows that Algorithm \ref{multistageintegalgo} is successful for all functions in $\cc_{\tau}$,  i.e.,  $\abs{f - A(f,\varepsilon)} \le \varepsilon$.  Moreover, the cost of this algorithm is bounded above as follows:
+\begin{theorem} \label{multistageappxthm} Let $A \in \ca(\cc_{\tau}, \reals, \APP, \Lambda^{\std})$ be the automatic linear spline defined by Algorithm \ref{multistageapproalgo}, and let $\tau$, $n_1$, and $\varepsilon$ be the inputs and parameters described there. Let $\cc_\tau$ be the cone of functions defined in \eqref{coneappxdef}.  Then it follows that Algorithm \ref{multistageintegalgo} is successful for all functions in $\cc_{\tau}$,  i.e.,  $\abs{f - A(f,\varepsilon)} \le \varepsilon$.  Moreover, the cost of this algorithm is bounded below and above as follows:
 \begin{multline}
 \max \left(\left \lceil\frac{\tau+1}{2} \right \rceil, \left \lceil \sqrt{\frac{ \norm[\infty]{f''}}{8\varepsilon}} \right \rceil \right) +1 \\
 \le \max \left(\left \lceil\frac{\tau+1}{2} \right \rceil, \left \lceil \sqrt{\frac{\tau \norm[\infty]{f'-f(1)+f(0)}}{8\varepsilon}} \right \rceil \right) +1 \\
@@ -148,15 +148,15 @@ This implies that $\norm[\infty]{f''_1}=1$, and
 \]
 Using these choices of $f_0$ and $f_1$, along with the corresponding $g$ above, one may invoke Theorems \ref{complowbdball}--\ref{complowbd}, and Corollary \ref{optimcor} to obtain the following theorem.
 
-\begin{theorem} \label{complowbdappr} For $\sigma>0$ let $\cb_{\sigma}=\{f \in \cw^{2,\infty} : \norm[\infty]{f'} \le \sigma\}$.  The complexity of function recovery on this ball is
+\begin{theorem} \label{complowbdappr} For $\sigma>0$ let $\cb_{\sigma}=\{f \in \cw^{2,\infty} : \norm[\infty]{f''} \le \sigma\}$.  The complexity of function recovery on this ball is bounded below as
 \begin{equation*}
-\comp(\varepsilon,\ca(\cb_{\sigma},\cl_\infty,\APP,\Lambda^{\std}),\cb_{s}) \ge \sqrt{\frac{\min(s,\sigma)}{16 \varepsilon}} -1 .
+\comp(\varepsilon,\ca(\cb_{\sigma},\cl_\infty,\APP,\Lambda^{\std}),\cb_{s}) \ge \left \lceil \sqrt{\frac{\min(s,\sigma)}{16 \varepsilon}} \right \rceil -1 .
 \end{equation*}
-Furthermore, Algorithm \ref{nonadaptalgo} using linear splines is optimal in the sense of Theorem \ref{optimalprop}.
+Algorithm \ref{nonadaptalgo} using linear splines is optimal in the sense of Theorem \ref{optimalprop}.
 
 For $\tau>2$, the complexity of the function recovery problem over the cone of functions $\cc_{\tau}$ defined in \eqref{coneappxdef} is bounded below as
 \begin{equation*}
-\comp(\varepsilon,\ca(\cc_{\tau},\cl_\infty,\APP,\Lambda^{\std}),\cb_{s}) \ge \sqrt{\frac{(\tau-2)s}{32 \tau \varepsilon}} -1 .
+\comp(\varepsilon,\ca(\cc_{\tau},\cl_\infty,\APP,\Lambda^{\std}),\cb_{s}) \ge \left \lceil \sqrt{\frac{(\tau-2)s}{32 \tau \varepsilon}} \right \rceil-1 .
 \end{equation*}
 The adaptive linear spline Algorithm \ref{multistageapproalgo} is optimal for recovering functions in $\cc_{\tau}$ in the sense that the maximum cost of the algorithm is only an $\varepsilon$ and $\sigma$ independent constant multiple of the computational complexity of the problem. 
 \end{theorem}

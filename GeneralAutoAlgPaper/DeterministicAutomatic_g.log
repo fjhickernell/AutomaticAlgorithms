@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=latex 2013.2.13)  12 JUL 2013 21:58
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=latex 2013.2.13)  13 JUL 2013 23:45
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -534,9 +534,6 @@ Excluding comment 'comment') (./FJHDef.tex
 
 LaTeX Warning: Label `fintermsfdoubprime' multiply defined.
 
-
-LaTeX Warning: Label `complowbdappr' multiply defined.
-
 )
 \openout1 = `DeterministicAutomatic_g.aux'.
 
@@ -602,34 +599,30 @@ Overfull \hbox (5.63974pt too wide) in paragraph at lines 136--137
 []\OT1/cmr/m/n/10 Compute $[](\OML/cmm/m/it/10 f\OT1/cmr/m/n/10 )$
  []
 
-[20] [21]
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-) [22] (./ApproxUnivariate_g.tex [23] [24] [25]
+[20] [21] [22]) (./ApproxUnivariate_g.tex [23] [24] [25]
 Overfull \hbox (7.04253pt too wide) in paragraph at lines 91--92
 []\OT1/cmr/m/n/10 Compute $[](\OML/cmm/m/it/10 f\OT1/cmr/m/n/10 )$
  []
 
-[26] [27]) [28]
+[26] [27])
 
-LaTeX Warning: Reference `fig:NonadaptAlgo' on page 29 undefined on input line 
-618.
+LaTeX Warning: Reference `???' on page 28 undefined on input line 608.
 
-
-LaTeX Warning: Reference `fig:AdaptAlgo' on page 29 undefined on input line 618
-.
-
-[29] [30]
+[28] [29]
 File: foolbwquadexample.eps Graphic file (type eps)
- <foolbwquadexample.eps> [31] [32] [33]
-(./DeterministicAutomatic_g.bbl
+ <foolbwquadexample.eps> [30]
+Overfull \hbox (3.53133pt too wide) in paragraph at lines 678--679
+\OT1/cmr/m/n/10 teed au-to-matic al-go-rithms with \OT1/cmr/m/it/10 higher or-d
+er con-ver-gence rates \OT1/cmr/m/n/10 for smoother
+ []
+
+[31] (./DeterministicAutomatic_g.bbl
 Underfull \hbox (badness 2707) in paragraph at lines 21--26
 []\OT1/cmr/m/n/10 W. Ch-eney, D. Kin-caid, Nu-mer-i-cal Math-e-mat-ics and Com-
 put-ing,
  []
 
-[34]) [35] (./DeterministicAutomatic_g.aux)
+[32]) [33] (./DeterministicAutomatic_g.aux)
 
 LaTeX Warning: There were undefined references.
 
@@ -639,15 +632,15 @@ LaTeX Warning: There were multiply-defined labels.
  )
 (\end occurred inside a group at level 1)
 
-### simple group (level 1) entered at line 230 ({)
+### simple group (level 1) entered at line 231 ({)
 ### bottom level 
 Here is how much of TeX's memory you used:
- 11550 strings out of 493489
- 206559 string characters out of 3141349
- 260043 words of memory out of 3000000
- 14590 multiletter control sequences out of 15000+200000
- 16440 words of font info for 65 fonts, out of 3000000 for 9000
+ 11548 strings out of 493489
+ 206515 string characters out of 3141349
+ 259053 words of memory out of 3000000
+ 14588 multiletter control sequences out of 15000+200000
+ 16104 words of font info for 63 fonts, out of 3000000 for 9000
  957 hyphenation exceptions out of 8191
- 56i,18n,55p,1393b,315s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 56i,18n,55p,1066b,305s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on DeterministicAutomatic_g.dvi (35 pages, 162864 bytes).
+Output written on DeterministicAutomatic_g.dvi (33 pages, 154924 bytes).

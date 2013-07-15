@@ -579,7 +579,7 @@ The next two sections illustrate the theorems of Section \ref{genthmsec} by look
 
 \item the semi-normed space of functions, $(\cf,\Fnorm{\cdot})$, with the weaker semi-norm $\Ftnorm{\cdot}$, the normed space of outputs, $(\cg,\Gnorm{\cdot})$, and the solution operator, $S$,
 
-\item a set of non-automatic algorithms, $\{A_n\}_{n \in \ci}$, which approximate $S$, are indexed by their cost, $n$, and have the property that some lower cost algorithms are embedded in higher cost algorithms,  the minimum cost multiple, $r$, defined just before Algorithm \ref{multistagealgo}, and the upper bound error function, h, defined in \eqref{algoerr}, and satisying \eqref{algseqerrcond},
+\item a set of non-automatic algorithms, $\{A_n\}_{n \in \ci}$, which approximate $S$, are indexed by their cost, $n$, and have the property that some lower cost algorithms are embedded in higher cost algorithms,  the minimum cost multiple, $r$, defined just before Algorithm \ref{multistagealgo}, and the upper bound error function, h, defined in \eqref{algoerr}, and satisfying \eqref{algseqerrcond},
 
 \item a set of non-automatic algorithms, $\{\tF_n\}_{n \in \ci}$, which approximate $\Ftnorm{\cdot}$, such that $\tF_n$ uses the same function data as $A_n$, the error bounds $h_{\pm}(n)$ and the deflation and inflation factors, $\fc_n$ and $\fC_n$, which are defined in \eqref{normdeflate} and \eqref{norminflate} respectively, and
 
@@ -598,63 +598,20 @@ This allows one to apply Algorithms \ref{twostagedetalgo} and \ref{multistagealg
 
 {\bf Fix this here and below.}
 
-\section{Addressing Questions and Concerns About Automatic Algorithms} \label{overcomesec}
+\section{Addressing Questions and Concerns About Adaptive, Automatic Algorithms} \label{overcomesec}
 
-Automatic algorithms are popular, especially for univariate integration problems.  As mentioned in the introduction, MATLAB \cite{TrefEtal12,MAT7.12} and the NAG \cite{NAG23} library all have one or more automatic integration routines.  In spite of this popularity certain questions, concerns, or even objections have been raised about automatic algorithms.  This section attempts to address them.
+Adaptive, automatic algorithms are popular, especially for univariate integration problems.  As mentioned in the introduction, MATLAB \cite{TrefEtal12,MAT7.12} and the NAG \cite{NAG23} library all have one or more automatic integration routines.  In spite of this popularity certain questions and concerns have been raised about adaptive algorithms.  This section attempts to address them.
 
 
 \subsection{Automatic Algorithms Can Be Fooled}  
 
-In claiming to construct guaranteed automatic algorithms, it must be understood that the guarantees still require certain assumptions on the input functions.  Any algorithm that solves a problem for involving an infinite-dimensional space of input functions can be fooled by a spiky function, i.e., one that yields zero data where probed by the algorithm, but is nonzero elsewhere.  A guaranteed automatic algorithm specifies sufficient conditions for success, and functions that are too spiky violate these conditions.  Thus, the aim is not to have an algorithm that works for all functions, but to know for which functions it is guaranteed to work, and preferably to be able to adjust the algorithm to broaden or narrow that set depending on the relevant application and computational cost budget.
+In claiming to construct guaranteed automatic algorithms, either adaptive or not, it must be understood that the guarantees still require certain assumptions on the input functions.  Any algorithm that solves a problem for involving an infinite-dimensional space of input functions can be fooled by a spiky function, i.e., one that yields zero data where probed by the algorithm, but is nonzero elsewhere (see e.g., Figure \ref{???}a).  Guaranteed algorithms specifies sufficient conditions for success by ruling out spiky functions.  Guaranteed non-adaptive algorithms such as Algorithm \ref{nonadaptalgo} rule them out requiring that input functions lie in a ball, while guaranteed adaptive algorithms, such as  Algorithms \ref{twostagedetalgo} and \ref{multistagealgo} rule them out by requiring that input functions line in a cone.
 
 \subsection{Why Cones?}
 
-Traditional error estimates are derived for balls of input functions, $\cb_{\sigma}$, as defined in \eqref{balldef} with radius $\sigma$.  The analysis here uses cones, $\cc_{\tau}$, of the form \eqref{conedef}, instead.  Automatic algorithms proceed by bounding, perhaps conservatively, the approximation error and then increasing the number of function data until that error bound is no larger than the prescribed tolerance.  These error bounds are constructed in such a way that if they are reliable for $f$, then they are also reliable for $af$, where $a$ is any real number.  Thus, if an algorithm is successful for the input function $f$, then it is also successful for any input of the form $af$.  By definition a cone is just that set that contains $af$ for all numbers $a$ if it contains $f$.
+Traditional error estimates are derived for balls of input functions, $\cb_{\sigma}$, and lead to non-adaptive, automatic algorithms, such as Algorithm \ref{nonadaptalgo}. The analysis here uses cones of input functions, $\cc_{\tau}$.  We have two reasons for favoring cones.  We believe that if an algorithm is clever enough to solve the problem for input function $f$, then it should also work for $cf$.  This naturally leads to cones.
 
-One might wonder whether the definition of $\cc_{\tau}$ in \eqref{conedef} is too strict.  Ignoring the cost budget, an alternative would be to define the cone of success, $\cc_{\text{success}}$, consisting of all input functions for which the automatic algorithm successfully approximates the solution within the error tolerance.  Clearly $\cc_{\text{success}}$ contains $\cc_{\tau}$, and likely $\cc_{\text{success}}$ also contains many functions not in $\cc_{\tau}$.  However, the definition of $\cc_{\text{success}}$ does not provide any insight into what kinds of input functions the automatic algorithm can successfully handle.  Moreover, the optimality results that one can often prove, including those in Sections \ref{integsec} and \ref{approxsec}, show that the cost of the automatic algorithm is within a constant multiple of the cost of the best algorithm for $\cc_{\tau}$.
-
-The automatic algorithms described here require that the width of the cone, $\tau$, be specified.  This requires the user's judgement, and its value cannot be determined from the function data.  The choice of $\tau$ reflects how cautious the user wants to be, since a larger $\tau$ leads to an adaptive algorithm with a higher cost. 
-
-The condition defining a ball $\cb_{\sigma}$ involves only one semi-norm, whereas the condition defining the cone $\cc_{\tau}$ involves two semi-norms.  One may wonder whether this makes specifying $\tau$ more difficult than choosing $\sigma$.  As mentioned in the introduction, automatic algorithms based on balls are not adaptive and have fixed cost. There is no savings in computational cost when the actual semi-norm of the input function is much smaller than the radius of the ball. For automatic algorithms designed for balls of input functions, as diagramed in Figure \ref{fig:NonadaptAlgo},  $\sigma$ is a measure of the largest input function that the algorithm is designed to handle.  This size is not necessarily something that is easy to bound a priori.  On the other hand, for automatic algorithms designed for cones of input functions, as diagramed in Figure \ref{fig:AdaptAlgo}, the parameter $\tau$ is a measure of the nastiest input function that the algorithm is designed to handle.  For the examples of univariate integration in Section \ref{integsec} and univariate function recovery in Section \ref{approxsec}, $\tau$ may be interpreted as a minimum sample size, and $1/\tau$ may be interpreted the length scale of the spikiest function that the algorithm can handle. These interpretations facilitate the choice of $\tau$. 
-
-\subsection{Automatic Algorithms that Stop When $A_{n_{i}}(f)-A_{n_{i-1}}(f)$ Is Small}
-
-Many automatic algorithms, especially those for univariate integration, are based on a sequence of non-adaptive algorithms $\{A_{n_i}\}_{i=1}^{\infty}$, and a stopping rule that returns $A_{n_{i}}(f)$ as the answer for the first $i$ where $A_{n_{i}}(f)-A_{n_{i-1}}(f)$ is small enough.  Fundamental texts in numerical algorithms advocate such stopping rules, e.g. \cite[p.\ 223--224]{BurFai10}, \cite[p.\ 233]{CheKin12a}, and \cite[p.\ 270]{Sau12a}.  Unfortunately, such stopping rules are problematic.
-
-For instance, consider the univariate integration problem and the trapezoidal rule algorithm, $A_{n_i}$, based on $n_i=2^i+1$ points, i.e., $n_i-1=2^i$ trapezoids.  It is taught that the trapezoidal rule has the following error estimate:
-\[
-\hE_i(f):=\frac{A_{n_{i}}(f)-A_{n_{i-1}}(f)}{3} \approx \int_0^1 f(x) \, \dif x - A_{n_i}(f) =:E_i(f).
-\]
-Since $A_{n_i}(f)+ \hE_i(f)$ is exactly Simpson's rule, the quality of $\hE_i(f)$ as an error estimate is equivalent to the quality of Simpson's rule. Since $E_i(f) -\hE_i(f) = \Theta(16^{-i} \norm[1]{f^{(4)}})$, the error estimate will often be good even for moderate $i$, but it can only be guaranteed with some a priori knowledge of $\norm[1]{f^{(4)}}$.
-
-In his provocatively titled SIAM Review article, \emph{When Not to Use an Automatic Quadrature Routine} \cite[p.\ 69]{Lyn83}, James Lyness makes the following claim.
-\begin{quote}
-While prepared to take the risk of being misled by chance alignment of zeros in the integrand function, or by narrow peaks which are ``missed,'' the user may wish to be reassured that for ``reasonable'' integrand functions which do not have these characteristics all will be well. It is the purpose of the rest of this section to demonstrate by example that he cannot be reassured on this point. In fact the routine is likely to be unreliable in a significant proportion of the problems it faces (say $1$ to $5\%$) and there is no way of predicting in a straightforward way in which of any set of apparently reasonable problems this will happen.
-\end{quote}
-
-The following is a summary of Lyness's argument using the notation of the present article. To fool an automatic algorithm one constructs an integrand $f_\lambda$, which is parameterized by $\lambda$, such that 
-\begin{itemize}
-\item $f_\lambda$ is ``reasonable'' for all $\lambda \in [0,1]$,
-\item $A_n(f_\lambda)$ is continuous in $\lambda$, and 
-\item for some moderate $n_i$, $A_{n_{i}}(f_\lambda)-A_{n_{i-1}}(f_\lambda)$ has different signs for $\lambda=0,1$.  
-\end{itemize}
-It then follows that $A_{n_{i}}(f_{\lambda_*})-A_{n_{i-1}}(f_{\lambda_*})=0$ for some $\lambda_* \in [0,1]$.  Then this algorithm will likely fail for integrands $f_{\lambda}$ with $\lambda$ nearby $\lambda_*$ since the stopping criterion is satisfied, but $n_i$ is not large enough to satisfy the desired error tolerance.
-
-Lyness's argument, with its pessimistic conclusion, is correct for algorithms that use the size of $A_{n_{i}}(f)-A_{n_{i-1}}(f)$ as a stopping criterion.  Figure \ref{fig:foolquad} depicts an integrand constructed in a manner similarly to that described by Lyness.  We would call this integrand ``fluky''.  MATLAB's {\tt quad}, which is based on adaptive Simpson's rule  \citep{GanGau00a}, gives the answer $\approx 0.1733$, for an absolute error tolerance of $\varepsilon=10^{-14}$, but the true answer is $\approx 0.1925$.  The {\tt quad} routine splits the interval of integration into three separate intervals and initially calculates Simpson's rule with one and two parabolas for each of the three intervals.  The data taken are denoted by $\bullet$ in Figure \ref{fig:foolquad}.  Since this fluky integrand is designed so that the two Simpson's rules match exactly for each of the three intervals, {\tt quad} is fooled into thinking that it knows the correct value of the integral and terminates immediately.
-
-\begin{figure}
-\centering 
-\includegraphics[width=8cm]{foolbwquadexample.eps}
-\caption{Integrand designed to fool MATLAB's {\tt quad} along with the data used by {\tt quad}. \label{fig:foolquad}}
-\end{figure}
-
-While Lyness's argument is correct, it does not apply to the algorithms proposed in this article because their stopping criteria are not based on  $A_{n_{i}}(f)-A_{n_{i-1}}(f)$.  Algorithm \ref{multistageintegalgo} presented in Section \ref{integsec}, always succeeds for ``reasonable'' integrands because such integrands lie in the cone $\cc_{\tau}$.  The analogous statement is true for function approximation Algorithm \ref{multistageapproalgo}, as well as for the general Algorithms \ref{twostagedetalgo} and \ref{multistagealgo}.  All of these algorithms succeed for reasonable input functions.  
-
-Lyness's warning in \cite{Lyn83} should not be interpreted as an objection to automatic algorithms.  It is a valid objection to stopping criteria that are based on the value of a single functional, in this case, $A_{n_{i}}-A_{n_{i-1}}$.  What Lyness clearly demonstrates is that one may easily make a functional vanish even though the error of the algorithm is significant.
-
-\subsection{No Advantage in Adaption}
-
-Although there are some positive results on adaption in \cite{Nov96a,PlaWas05a,PlaEtal08a}, there are also sweeping, rigorous results from information based complexity theory stating that adaptive algorithms have no significant advantage over non-adaptive algorithms (e.g., see \citep[Chapter 4, Theorem 5.2.1]{TraWasWoz88} and \cite{Nov96a}). The automatic algorithms presented here do adaptively determine the total number of samples required based on the function data collected.  The reason that adaption can help in this context is that the cone of input functions, $\cc_{\tau}$, is not a convex set.  This violates one of the assumptions required to prove the negative results that adaption does not help.
+A second reason is that we want to spend less effort solving the problems for input functions that are ``easy''.  This means that we want an adaptive algorithm.  There are also rigorous results from information based complexity theory giving general conditions under which that adaptive algorithms have no significant advantage over non-adaptive algorithms (e.g., see \citep[Chapter 4, Theorem 5.2.1]{TraWasWoz88} and \cite{Nov96a}). Thus, for adaption to be useful, we must violate one of these conditions.  In particular, we violate the condition that the set of input functions be convex.
 
 To see why $\cc_{\tau}$ is not convex, let $f_{\text{in}}$ and $f_{\text{out}}$ be functions in $\cf$ with nonzero $\tcf$-semi-norms, where $f_{\text{in}}$  lies in the interior of this cone, and $f_{\text{out}}$ lies outside the cone.  This means that 
 \[
@@ -683,22 +640,34 @@ On the other hand, the average of $f_{\pm}$, which is also a convex combination 
 \]
 Since $\tau > \tau_{\text{in}}$, this is a nonzero multiple of $f_{\text{out}}$, and it lies outside $\cc_{\tau}$.  Thus, this cone is not a convex set.
 
+\subsection{Automatic Algorithms that Stop When $A_{n_{i}}(f)-A_{n_{i-1}}(f)$ Is Small}
+
+Many practical adaptive, automatic algorithms, especially those for univariate integration, are based on a stopping rule that returns $A_{n_{i}}(f)$ as the answer for the first $i$ where $\norm[\cg]{A_{n_{i}}(f)-A_{n_{i-1}}(f)}$ is small enough.  Fundamental texts in numerical algorithms advocate such stopping rules, e.g. \cite[p.\ 223--224]{BurFai10}, \cite[p.\ 233]{CheKin12a}, and \cite[p.\ 270]{Sau12a}.  Unfortunately, such stopping rules are problematic.
+
+For instance, consider the univariate integration problem and the trapezoidal rule algorithm, $T_{n_i}$, based on $n_i=2^i+1$ points, i.e., $n_i-1=2^i$ trapezoids.  It is taught that the trapezoidal rule has the following error estimate:
+\begin{equation} \label{traperrest}
+\herr_i(f):=\frac{T_{n_{i}}(f)-T_{n_{i-1}}(f)}{3} \approx \int_0^1 f(x) \, \dif x - T_{n_i}(f) =:\err_i(f).
+\end{equation}
+Since $T_{n_i}(f)+ \herr_i(f)$ is exactly Simpson's rule, the quality of $\herr_i(f)$ as an error estimate is equivalent to the quality of Simpson's rule. Since $\err_i(f) -\herr_i(f) = \Theta(16^{-i} \Var(f^{(3)}))$, the error estimate will often be good even for moderate $i$, but it can only be guaranteed with some a priori knowledge of $\Var(f^{(3)}))$.
+
+In his provocatively titled SIAM Review article, \emph{When Not to Use an Automatic Quadrature Routine} \cite[p.\ 69]{Lyn83}, James Lyness makes the following claim.
+\begin{quote}
+While prepared to take the risk of being misled by chance alignment of zeros in the integrand function, or by narrow peaks which are ``missed,'' the user may wish to be reassured that for ``reasonable'' integrand functions which do not have these characteristics all will be well. It is the purpose of the rest of this section to demonstrate by example that he cannot be reassured on this point. In fact the routine is likely to be unreliable in a significant proportion of the problems it faces (say $1$ to $5\%$) and there is no way of predicting in a straightforward way in which of any set of apparently reasonable problems this will happen.
+\end{quote}
+
+Lyness's argument, with its pessimistic conclusion, is correct for many commonly used adaptive, automatic algorithms.  Figure \ref{fig:foolquad}b depicts an integrand inspired by \cite{Lyn83}.  We would call this integrand ``fluky''.  MATLAB's {\tt quad}, which is based on adaptive Simpson's rule  \citep{GanGau00a}, gives the answer $\approx 0.1733$, for an absolute error tolerance of $\varepsilon=10^{-14}$, but the true answer is $\approx 0.1925$.  The {\tt quad} routine splits the interval of integration into three separate intervals and initially calculates Simpson's rule with one and two parabolas for each of the three intervals.  The data taken are denoted by $\bullet$ in Figure \ref{fig:foolquad}.  Since this fluky integrand is designed so that the two Simpson's rules match exactly for each of the three intervals, {\tt quad} is fooled into thinking that it knows the correct value of the integral and terminates immediately.
+
+\begin{figure}
+\centering 
+\includegraphics[width=8cm]{foolbwquadexample.eps}
+\caption{Integrand designed to fool MATLAB's {\tt quad} along with the data used by {\tt quad}. \label{fig:foolquad}}
+\end{figure}
+
+Lyness's warning in \cite{Lyn83} is a a valid objection to stopping criteria that are based on a simple measure of the difference between two successive algorithms, e.g., the error estimate in \eqref{traperrest}. However, it should not be taken as a wholesale objection to adaptive, automatic algorithms, and it does not apply apply to the algorithms presented here.
 
 \section{Discussion and Further Work} \label{furthersec}
 
-When we consider the landscape of numerical algorithms, it is clear that relatively simple problems have well-developed automatic algorithms that we use without questioning their reliability.  For example, the MATLAB \cite{MAT7.12} algorithms
-\[
-{\tt cos, sin, exp, log, airy, besselj, gamma, gammainc, ellipj, erf,} \text{ and } {\tt  erfinv}
-\] 
-all automatically use the correct number of terms in a suitable expansion needed to provide the corresponding function value with $15$ significant digit accuracy. The only exceptions are cases of unavoidable round-off error, e.g., 
-\[
-{\tt cos(1e47*pi)= -5.432862626006405e-01},
-\]
-whereas the correct answer is {\tt 1}.  
-
-We believe that more complex problems, whose inputs are functions, also deserve to have automatic algorithms with guarantees of their success.  Users ought to be able to integrate functions, approximate functions, optimize functions, etc., without needing to manually tune the sample size.  Here we have shown how this might be done in general, as well as specifically for two case studies.  We hope that this will inspire further research in this direction.
-
-
+We believe that there should be more adaptive, automatic algorithms whose inputs are functions and that have rigorous guarantees of their success.  Users ought to be able to integrate functions, approximate functions, optimize functions, etc., without needing to manually tune the sample size.  Here we have shown how this might be done in general, as well as specifically for two case studies.  We hope that this will inspire further research in this direction.
 
 The results presented here suggest a number of other interesting open problems.  Here is a summary.
 
@@ -706,13 +675,13 @@ The results presented here suggest a number of other interesting open problems. 
 
 \item Here we consider an absolute error tolerance.  This analysis should be extended to relative error, which is work in progress.  
 
-\item The univariate integration and function approximation algorithms in Sections \ref{integsec} and \ref{approxsec} have low order convergence.  Guaranteed automatic algorithms with \emph{higher order convergence rates} for smoother input functions are needed.  These might be based on higher degree piecewise polynomial approximations.
+\item The algorithms in Sections \ref{integsec} and \ref{approxsec} have low order convergence.  Guaranteed automatic algorithms with \emph{higher order convergence rates} for smoother input functions are needed.
 
-\item There are other types of problems, e.g., differential equations and nonlinear optimization, which fit the general framework presented here.  These problems also have automatic algorithms, but without guarantees.  It would be helpful to develop guaranteed automatic algorithms in these other areas.
+\item There are other types of problems, e.g., differential equations and nonlinear optimization, which fit the general framework presented here.  These problems also have adaptive, automatic algorithms, but guarantees are needed.
 
-\item The algorithms developed here are \emph{globally adaptive}, in the sense that the function data determines the sample size, but not the kinds of data collected or the locations of the sample points, which depend only on the sample size.  Some existing automatic algorithms are \emph{locally adaptive} in that they collect more data in regions of special interest, say where the function has a spike.  Such algorithms need guarantees like the ones that are provided here for globally adaptive algorithms.  The appropriate kinds of spaces $\tcf$ and $\cf$, and their semi-norms, need to be identified for locally adaptive algorithms.
+\item The algorithms developed here are \emph{globally adaptive}, in the sense that the function data determines the sample size, but does not lead to denser sampling in areas of interest.  Although some existing automatic algorithms are \emph{locally adaptive}, there are no guarantees yet.
 
-\item For some numerical problems the error bound of the non-adaptive algorithm involves a $\tcf$- or $\cf$-semi-norm that is very hard to approximate because of its complexity.  An example is multivariate quadrature using quasi-Monte Carlo algorithms, where the error depends on the \emph{variation} of the integrand.  The definition of the variation depends on the definition of $\tcf$ or $\cf$, but it is essentially some semi-norm of a mixed partial derivative of the integrand.  To obtain guaranteed automatic algorithms one must either find an efficient way to approximate the variation of the function or find other suitable conservative estimates for the error that can be reliably obtained from the function data.  
+\item For some numerical problems the error bound of the non-adaptive algorithm involves a $\tcf$- or $\cf$-semi-norm that is very hard to approximate because of its complexity.  An example is multivariate quadrature using quasi-Monte Carlo algorithms, where the error depends on the \emph{variation} of the integrand.  To obtain guaranteed automatic algorithms one must either find an efficient way to approximate the variation of the function or find other suitable conservative estimates for the error that can be reliably obtained from the function data.  
 
 \item This article considers only the worst case error of deterministic algorithms.  There are many random algorithms, and they must be analyzed by somewhat different methods.  A guaranteed Monte Carlo algorithm for estimating the mean of a random variable, which includes multivariate integration as a special case, has been proposed in \cite{HicEtal14a}.
 
