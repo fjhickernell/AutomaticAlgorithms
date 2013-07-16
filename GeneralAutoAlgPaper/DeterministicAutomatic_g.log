@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=latex 2013.2.13)  15 JUL 2013 22:00
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=latex 2013.2.13)  16 JUL 2013 08:47
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -606,21 +606,16 @@ LaTeX Warning: Reference `???' on page 27 undefined on input line 576.
 [27] [28] [29]
 File: foolbwquadexample.eps Graphic file (type eps)
  <foolbwquadexample.eps>
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 638.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 634.
 
 
 (/usr/local/texlive/2012/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 638.
-
-Overfull \hbox (3.53133pt too wide) in paragraph at lines 640--641
-\OT1/cmr/m/n/10 teed au-to-matic al-go-rithms with \OT1/cmr/m/it/10 higher or-d
-er con-ver-gence rates \OT1/cmr/m/n/10 for smoother
- []
-
-[30] (./DeterministicAutomatic_g.bbl
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 634.
+ [30]
+(./DeterministicAutomatic_g.bbl
 Underfull \hbox (badness 2707) in paragraph at lines 21--26
 []\OT1/cmr/m/n/10 W. Ch-eney, D. Kin-caid, Nu-mer-i-cal Math-e-mat-ics and Com-
 put-ing,
@@ -639,12 +634,12 @@ LaTeX Warning: There were multiply-defined labels.
 ### simple group (level 1) entered at line 229 ({)
 ### bottom level 
 Here is how much of TeX's memory you used:
- 11549 strings out of 493489
- 206541 string characters out of 3141349
- 258064 words of memory out of 3000000
- 14589 multiletter control sequences out of 15000+200000
+ 11550 strings out of 493489
+ 206556 string characters out of 3141349
+ 258074 words of memory out of 3000000
+ 14590 multiletter control sequences out of 15000+200000
  16104 words of font info for 63 fonts, out of 3000000 for 9000
  957 hyphenation exceptions out of 8191
- 56i,18n,55p,1065b,329s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 56i,18n,55p,1050b,331s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on DeterministicAutomatic_g.dvi (33 pages, 148484 bytes).
+Output written on DeterministicAutomatic_g.dvi (33 pages, 148692 bytes).
