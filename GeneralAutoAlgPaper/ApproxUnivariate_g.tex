@@ -10,7 +10,7 @@ The space of functions to be recovered is the Sobolev space $\cf = \mathcal{W}^{
 \end{gather}
 \end{subequations}
 
-Again, we consider algorithms based on function values, and the cost of a function value is one.   The basic non-automatic algorithm used to approximate functions in the cone $\cc_{\tau}$ is the linear spline algorithm given in \eqref{linearspline}.  
+Again, we consider algorithms based on function values, and the cost of a function value is one.   The basic fixed cost algorithm used to approximate functions in the cone $\cc_{\tau}$ is the linear spline algorithm given in \eqref{linearspline}.  
 The cost of $A_n$, is the number of function evaluations, $n$, and again the minimum cost multiple is $r=2$.
 
 Using this same data one may approximate the $\cl_\infty$ norm of $f'-f(1)+f(0)$ by the algorithm
@@ -158,7 +158,7 @@ For $\tau>2$, the complexity of the function recovery problem over the cone of f
 \begin{equation*}
 \comp(\varepsilon,\ca(\cc_{\tau},\cl_\infty,\APP,\Lambda^{\std}),\cb_{s}) \ge \left \lceil \sqrt{\frac{(\tau-2)s}{32 \tau \varepsilon}} \right \rceil-1 .
 \end{equation*}
-The adaptive linear spline Algorithm \ref{multistageapproalgo} is optimal for recovering functions in $\cc_{\tau}$ in the sense that the maximum cost of the algorithm is only an $\varepsilon$ and $\sigma$ independent constant multiple of the computational complexity of the problem. 
+The adaptive linear spline Algorithm \ref{multistageapproalgo} is optimal for recovering functions in $\cc_{\tau}$ the sense of Corollary \ref{optimcor}.
 \end{theorem}
 
 {\bf fix this}
