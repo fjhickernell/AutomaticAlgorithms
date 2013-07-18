@@ -1,4 +1,4 @@
-Now we consider the problem of $\cl_{\infty}$ recovery of functions defined on $[0,1]$, i.e.,
+Now we consider the problem of $\cl_{\infty}$ recovery of functions, i.e.,
 \[
 S(f)=\APP(f):=f, \qquad \cg=\cl_{\infty}, \qquad \norm[\cg]{S(f)-A(f)}=\norm[\infty]{f-A(f)}.
 \]
@@ -11,14 +11,14 @@ The space of functions to be recovered is the Sobolev space $\cf = \mathcal{W}^{
 \end{subequations}
 
 Again, we consider algorithms based on function values, and the cost of a function value is one.   The basic fixed cost algorithm used to approximate functions in the cone $\cc_{\tau}$ is the linear spline algorithm given in \eqref{linearspline}.  
-The cost of $A_n$, is the number of function evaluations, $n$, and again the minimum cost multiple is $r=2$.
+The cost of $A_n$ is $n$, and the minimum cost multiple is $r=2$.
 
 Using this same data one may approximate the $\cl_\infty$ norm of $f'-f(1)+f(0)$ by the algorithm
 \begin{multline}\label{estfirstderiv}
 \tF_n(f) := \norm[\infty]{A_n(f)' - A_2(f)'} \\
 = \sup_{i=1, \ldots, n-1} \bigabs{(n-1) [f(x_{i+1})-f(x_i)]-f(1)+f(0)}.
 \end{multline}
-Moreover, a lower bound on $\norm[\infty]{f''}$ can be derived similarly to the previous section.  Specifically,
+Moreover, a lower bound on $\norm[\infty]{f''}$ can be derived similarly to the previous section.  Specifically, for $n \ge 3$,
 \begin{equation} \label{Fnormappxalg}
 F_n(f) := \frac 1 2 (n-1)^2\sup_{i=1, \ldots, n-2} \abs{f(x_i) - 2 f(x_{i+1})+f(x_{i+2})}.
 \end{equation}
@@ -84,7 +84,7 @@ To derive the error bounds for $A_n(f)$ we make use of \eqref{fintermsfdoubprime
 \end{align*}
 Since $h_{\pm}(n)$ and $h(n)$, are the same as in the previous section for integration, the simplifications in \eqref{simpifycond} apply here as well.  Then Algorithm \ref{multistagealgo} and Theorem \ref{MultiStageThm} may be applied directly to  yield the following algorithm for function approximation and its guarantee.
 
-\begin{algo}[Univariate Function Recovery] \label{multistageapproalgo}
+\begin{algo}[Adaptive Univariate Function Recovery] \label{multistageapproalgo}
 Let the sequence of algorithms $\{A_n\}_{n\in \mathcal{I}}$, $\{\tF_n\}_{n\in \mathcal{I}}$, and $\{F_n\}_{n\in \mathcal{I}}$ be as described above. 
 Let $\tau \ge 2$ be the cone constant. Set $i=1$. Let $n_1=\lceil(\tau+1)/2\rceil+1$. For any error tolerance $\varepsilon$ and input function $f$, do the following:
 \begin{description}
@@ -104,7 +104,7 @@ Go to Stage 1.
     \begin{equation*}
      \tF_{n_i}(f) \le \frac{4\varepsilon(n_i-1)(2n_i-2 - \tau)}{\tau}.
     \end{equation*}
-If this is true, then return $T_{n_i}(f)$ and terminate the algorithm.   If this is not true, choose
+If this is true, then return $A_{n_i}(f)$ and terminate the algorithm.   If this is not true, choose
 $$
 n_{i+1}=1+ (n_i-1)\max\left\{2,\left\lceil\frac{1}{(n_i-1)}\sqrt{\frac{\tau \tF_{n_i}(f)}{8\varepsilon}}\right\rceil\right\}.
 $$
@@ -112,7 +112,7 @@ Go to Stage 1.
 \end{description}
 \end{algo}
 
-\begin{theorem} \label{multistageappxthm} Let $A \in \ca(\cc_{\tau}, \cl_{\infty}, \APP, \Lambda^{\std})$ be the automatic linear spline defined by Algorithm \ref{multistageapproalgo}, and let $\tau$, $n_1$, and $\varepsilon$ be the inputs and parameters described there. Let $\cc_\tau$ be the cone of functions defined in \eqref{coneappxdef}.  Then it follows that Algorithm \ref{multistageintegalgo} is successful for all functions in $\cc_{\tau}$,  i.e.,  $\norm[\infty]{f - A(f,\varepsilon)} \le \varepsilon$.  Moreover, the cost of this algorithm is bounded below and above as follows:
+\begin{theorem} \label{multistageappxthm} Let $A \in \ca(\cc_{\tau}, \cl_{\infty}, \APP, \Lambda^{\std})$ be the automatic linear spline defined by Algorithm \ref{multistageapproalgo}, and let $\tau$, $n_1$, and $\varepsilon$ be the inputs and parameters described there. Let $\cc_\tau$ be the cone of functions defined in \eqref{coneappxdef}.  Then it follows that Algorithm \ref{multistageapproalgo} is successful for all functions in $\cc_{\tau}$,  i.e.,  $\norm[\infty]{f - A(f,\varepsilon)} \le \varepsilon$.  Moreover, the cost of this algorithm is bounded below and above as follows:
 \begin{multline}
 \max \left(\left \lceil\frac{\tau+1}{2} \right \rceil, \left \lceil \sqrt{\frac{ \norm[\infty]{f''}}{8\varepsilon}} \right \rceil \right) +1 \\
 \le \max \left(\left \lceil\frac{\tau+1}{2} \right \rceil, \left \lceil \sqrt{\frac{\tau \norm[\infty]{f'-f(1)+f(0)}}{8\varepsilon}} \right \rceil \right) +1 \\
@@ -121,7 +121,7 @@ Go to Stage 1.
 \le \sqrt{\frac{\tau \norm[\infty]{f'-f(1)+f(0)}}{2\varepsilon}} + \tau + 4 
 \le \sqrt{\frac{\tau \norm[\infty]{f''} }{4\varepsilon}} + \tau + 4.
 \end{multline}
-The algorithm is computationally stable, meaning that the minimum and maximum costs for all integrands, $f$, with fixed $\norm[\infty]{f'-f(1)+f(0)}$ or $\norm[\infty]{f''}$ are an $\varepsilon$-dependent constant of each other.
+The algorithm is computationally stable, meaning that the minimum and maximum costs for all integrands, $f$, with fixed $\norm[\infty]{f'-f(1)+f(0)}$ or $\norm[\infty]{f''}$ are an $\varepsilon$-independent constant of each other.
 \end{theorem}
 
 \subsection{Lower Bound on the Computational Cost}
@@ -129,7 +129,7 @@ Next, we derive a lower bound on the cost of approximating functions in the ball
 \begin{gather*}
 \Ftnorm{f_0}=\norm[\infty]{f'_0-f_0(1)+f_0(0)}=\sup_{0 \le x \le 1} \abs{1-2x} = 1, \\ \Fnorm{f_0}=\norm[\infty]{f''_0}=2= \tau_{\min} \norm[\infty]{f'_0-f_0(1)+f_0(0)}.
 \end{gather*}
-For any $n \in \naturals$, suppose that the one has the data $L_i(f)=f(\xi_i)$, $i=1, \ldots, n$ for arbitrary $\xi_i$, where $0=\xi_0 \le \xi_1 < \cdots < \xi_n \le \xi_{n+1} = 1$.  There must be some $j=0, \ldots, n$ such that $\xi_{j+1} - \xi_j \ge 1/(n+1)$.  The function $f_{1}$ is defined as a bump having piecewise constant second derivative on $[\xi_j, \xi_{j+1}]$ and zero elsewhere.  For $\xi_{j} \le x \leq \xi_{j+1}$,
+For any $n \in \natzero$, suppose that the one has the data $L_i(f)=f(\xi_i)$, $i=1, \ldots, n$ for arbitrary $\xi_i$, where $0=\xi_0 \le \xi_1 < \cdots < \xi_n \le \xi_{n+1} = 1$.  There must be some $j=0, \ldots, n$ such that $\xi_{j+1} - \xi_j \ge 1/(n+1)$.  The function $f_{1}$ is defined as a bump having piecewise constant second derivative on $[\xi_j, \xi_{j+1}]$ and zero elsewhere.  For $\xi_{j} \le x \leq \xi_{j+1}$,
 \begin{multline*}
 f_{1}(x):=
 \frac{1}{32} \left [4(\xi_{i+1}-\xi_i)^2 + (4x-2\xi_i-2\xi_{i+1})^2  \right. \\
@@ -161,11 +161,8 @@ For $\tau>2$, the complexity of the function recovery problem over the cone of f
 The adaptive linear spline Algorithm \ref{multistageapproalgo} is optimal for recovering functions in $\cc_{\tau}$ the sense of Corollary \ref{optimcor}.
 \end{theorem}
 
-{\bf fix this}
-
-
-
 \subsection{Numerical Example}
+{\bf fix this with the right norms, etc.}
 
 To illustrate Algorithm \ref{multistageapproalgo} we choose the same  family of test functions as in \eqref{testfun}, but now with $z \sim \cu[0,1]$, $\log_{10}(a) \sim \cu[0,4]$, and $b=1$. When $a$ is large this function is very spiky and hard to approximate since the sampled function values may miss the spike.  Since $\norm[\infty]{f'}=a\sqrt{2/\me}$ and $\norm[\infty]{f''}=2a^2$, the probability that $f \in \cc_{\tau}$ is $\min\left(\max(0,\log_{10}\left(\tau/\sqrt{2\me})/4\right),1\right).$
 For $\tau = 10, 100 , 1000$ we choose a sample of  $10000$ functions and an error tolerance of  $\varepsilon = 10^{-8}$.  The empirical probability that Algorithm \ref{multistageapproalgo} succeeds in returning an answer within the error tolerance is given in Table \ref{approxnumerical}.  Our algorithm succeeds for all functions lying in the cone plus some others.  It is conservative, but not overly so.
