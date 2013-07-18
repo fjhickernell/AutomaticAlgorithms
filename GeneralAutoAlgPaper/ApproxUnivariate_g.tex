@@ -73,7 +73,7 @@ since $(f-A_n(f))(x)$ vanishes for $x=0,1$. Using \eqref{fprimeintermsfdoubprime
 This implies that $\fC_n =1/[1 - \tau /(2n-2)]$ provided that $n>1+\tau/2$.
 Since $\tF_2(f)=0$ by definition, the above inequality for $\Ftnorm{f} - \tF_{2}(f)$ implies that $\tau_{\min}=2$.
 
-To derive the error bounds for $A_n(f)$ we make use of \label{fintermsfdoubprime}:
+To derive the error bounds for $A_n(f)$ we make use of \eqref{fintermsfdoubprime}:
 \begin{align*}
 \norm[\infty]{f-A_n(f)}
 & \le \sup_{\substack{x_i \le x \le x_{i+1}\\ i=1, \ldots, n-1 }} \abs{f(x)-A_n (f)(x)}\\
@@ -86,7 +86,7 @@ Since $h_{\pm}(n)$ and $h(n)$, are the same as in the previous section for integ
 
 \begin{algo}[Univariate Function Recovery] \label{multistageapproalgo}
 Let the sequence of algorithms $\{A_n\}_{n\in \mathcal{I}}$, $\{\tF_n\}_{n\in \mathcal{I}}$, and $\{F_n\}_{n\in \mathcal{I}}$ be as described above. 
-Let $\tau>2$ be the cone constant. Set $i=1$. Let $n_1=\lceil(\tau+1)/2\rceil+1$. For any error tolerance $\varepsilon$ and input function $f$, do the following:
+Let $\tau \ge 2$ be the cone constant. Set $i=1$. Let $n_1=\lceil(\tau+1)/2\rceil+1$. For any error tolerance $\varepsilon$ and input function $f$, do the following:
 \begin{description}
 \item[Stage 1.\ Estimate {$\norm[\infty]{f'-f(1)+f(0)}$} and bound {$\norm[\infty]{f''}$}.] Compute $\tF_{n_i}(f)$ in \eqref{estfirstderiv} and $F_{n_i}(f)$ in \eqref{Fnormappxalg}.
 
@@ -112,7 +112,7 @@ Go to Stage 1.
 \end{description}
 \end{algo}
 
-\begin{theorem} \label{multistageappxthm} Let $A \in \ca(\cc_{\tau}, \reals, \APP, \Lambda^{\std})$ be the automatic linear spline defined by Algorithm \ref{multistageapproalgo}, and let $\tau$, $n_1$, and $\varepsilon$ be the inputs and parameters described there. Let $\cc_\tau$ be the cone of functions defined in \eqref{coneappxdef}.  Then it follows that Algorithm \ref{multistageintegalgo} is successful for all functions in $\cc_{\tau}$,  i.e.,  $\abs{f - A(f,\varepsilon)} \le \varepsilon$.  Moreover, the cost of this algorithm is bounded below and above as follows:
+\begin{theorem} \label{multistageappxthm} Let $A \in \ca(\cc_{\tau}, \cl_{\infty}, \APP, \Lambda^{\std})$ be the automatic linear spline defined by Algorithm \ref{multistageapproalgo}, and let $\tau$, $n_1$, and $\varepsilon$ be the inputs and parameters described there. Let $\cc_\tau$ be the cone of functions defined in \eqref{coneappxdef}.  Then it follows that Algorithm \ref{multistageintegalgo} is successful for all functions in $\cc_{\tau}$,  i.e.,  $\norm[\infty]{f - A(f,\varepsilon)} \le \varepsilon$.  Moreover, the cost of this algorithm is bounded below and above as follows:
 \begin{multline}
 \max \left(\left \lceil\frac{\tau+1}{2} \right \rceil, \left \lceil \sqrt{\frac{ \norm[\infty]{f''}}{8\varepsilon}} \right \rceil \right) +1 \\
 \le \max \left(\left \lceil\frac{\tau+1}{2} \right \rceil, \left \lceil \sqrt{\frac{\tau \norm[\infty]{f'-f(1)+f(0)}}{8\varepsilon}} \right \rceil \right) +1 \\

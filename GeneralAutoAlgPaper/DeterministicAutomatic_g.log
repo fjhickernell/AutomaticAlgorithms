@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=latex 2013.2.13)  16 JUL 2013 08:47
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=latex 2013.2.13)  17 JUL 2013 21:52
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -530,11 +530,7 @@ Excluding comment 'comment') (./FJHDef.tex
 \c@algo=\count137
 \c@condit=\count138
 \c@rem=\count139
- (./DeterministicAutomatic_g.aux
-
-LaTeX Warning: Label `fintermsfdoubprime' multiply defined.
-
-)
+ (./DeterministicAutomatic_g.aux)
 \openout1 = `DeterministicAutomatic_g.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 37.
@@ -549,13 +545,14 @@ LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 37.
 LaTeX Font Info:    ... okay on input line 37.
 LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 37.
 LaTeX Font Info:    ... okay on input line 37.
- ABD: EveryShipout initializing macros
-LaTeX Font Info:    Try loading font information for U+msa on input line 48.
+
+ABD: EveryShipout initializing macros
+LaTeX Font Info:    Try loading font information for U+msa on input line 50.
 
 (/usr/local/texlive/2012/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 48.
+LaTeX Font Info:    Try loading font information for U+msb on input line 50.
 
 (/usr/local/texlive/2012/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
@@ -564,21 +561,21 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 
 ] [2]
 [3] [4] [5] [6]
-LaTeX Font Info:    Try loading font information for U+euf on input line 232.
+LaTeX Font Info:    Try loading font information for U+euf on input line 234.
  (/usr/local/texlive/2012/texmf-dist/tex/latex/amsfonts/ueuf.fd
 File: ueuf.fd 2013/01/14 v3.01 Euler Fraktur
-) [7] [8] [9] [10] [11] [12] [13] [14]
-Underfull \hbox (badness 1314) in paragraph at lines 543--543
+) [7] [8] [9] [10] [11] [12] [13]
+Underfull \hbox (badness 1314) in paragraph at lines 545--545
 []\OT1/cmr/m/n/8 Table 1: Costs of var-i-ous al-go-rithms, $\OML/cmm/m/it/8 A$\
 OT1/cmr/m/n/8 , guar-an-teed to sat-isfy the tol-er-ance, i.e.,
  []
 
-[15] (./univariate_integration_g.tex [16] [17]
+[14] (./univariate_integration_g.tex [15] [16]
 LaTeX Font Info:    Try loading font information for U+bbm on input line 76.
 
 (/usr/local/texlive/2012/texmf-dist/tex/latex/bbm-macros/ubbm.fd
 File: ubbm.fd 1999/03/15 V 1.2 Font definition for bbm font - TH
-) [18]
+) [17] [18]
 Overfull \hbox (2.24185pt too wide) in paragraph at lines 131--133
 []\OT1/cmr/bx/n/10 Algorithm 4 \OT1/cmr/m/n/10 (Uni-vari-ate In-te-gra-tion)\OT
 1/cmr/bx/n/10 . []\OT1/cmr/m/n/10 Let the se-quence of al-go-rithms $\OMS/cmsy/
@@ -590,30 +587,28 @@ Overfull \hbox (5.63974pt too wide) in paragraph at lines 134--135
 []\OT1/cmr/m/n/10 Compute $[](\OML/cmm/m/it/10 f\OT1/cmr/m/n/10 )$
  []
 
-[19] [20] [21]) (./ApproxUnivariate_g.tex [22] [23] [24]
+[19] [20]
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+) [21] (./ApproxUnivariate_g.tex [22] [23]
 Overfull \hbox (7.04253pt too wide) in paragraph at lines 91--92
 []\OT1/cmr/m/n/10 Compute $[](\OML/cmm/m/it/10 f\OT1/cmr/m/n/10 )$
  []
 
-[25] [26]
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-)
-
-LaTeX Warning: Reference `???' on page 27 undefined on input line 576.
-
-[27] [28] [29]
+[24] [25] [26])
+File: Foolquadbw.eps Graphic file (type eps)
+ <Foolquadbw.eps>
 File: foolbwquadexample.eps Graphic file (type eps)
- <foolbwquadexample.eps>
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 634.
+ <foolbwquadexample.eps> [27] [28] [29]
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 643.
 
 
 (/usr/local/texlive/2012/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 634.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 643.
  [30]
 (./DeterministicAutomatic_g.bbl
 Underfull \hbox (badness 2707) in paragraph at lines 21--26
@@ -621,25 +616,18 @@ Underfull \hbox (badness 2707) in paragraph at lines 21--26
 put-ing,
  []
 
-[31] [32]) [33] (./DeterministicAutomatic_g.aux)
-
-LaTeX Warning: There were undefined references.
-
-
-LaTeX Warning: There were multiply-defined labels.
-
- )
+[31]) [32] (./DeterministicAutomatic_g.aux) )
 (\end occurred inside a group at level 1)
 
 ### simple group (level 1) entered at line 229 ({)
 ### bottom level 
 Here is how much of TeX's memory you used:
- 11550 strings out of 493489
- 206556 string characters out of 3141349
- 258074 words of memory out of 3000000
+ 11551 strings out of 493489
+ 206579 string characters out of 3141349
+ 260034 words of memory out of 3000000
  14590 multiletter control sequences out of 15000+200000
  16104 words of font info for 63 fonts, out of 3000000 for 9000
  957 hyphenation exceptions out of 8191
- 56i,18n,55p,1050b,331s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 56i,18n,55p,1050b,358s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on DeterministicAutomatic_g.dvi (33 pages, 148692 bytes).
+Output written on DeterministicAutomatic_g.dvi (32 pages, 148920 bytes).
