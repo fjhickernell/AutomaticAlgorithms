@@ -104,7 +104,7 @@ Moreover, there must exist some sequence of algorithms $\{\tF_n\}_{n\in \ci}$ su
 \begin{equation} \label{Gerrbds}
 -h_{-}(n)\Fnorm{f} \le \Ftnorm{f}- \tF_n(f) \le h_{+}(n) \Fnorm{f}, \qquad \forall f \in \cf,
 \end{equation}
-for some known non-negative valued, non-increasing functions $h_{\pm}$ satisfying $\sup_{n \in \ci} h_{\pm}(n) = 0$.  Then the adaptive algorithms are defined on a cone input functions:
+for some known non-negative valued, non-increasing functions $h_{\pm}$ satisfying $\inf_{n \in \ci} h_{\pm}(n) = 0$.  Then the adaptive algorithms are defined on a cone input functions:
 \begin{equation} \label{conedef}
 \cc_{\tau}=\{f \in \cf : \Fnorm{f} \le \tau \Ftnorm{f} \}.
 \end{equation}
@@ -184,7 +184,7 @@ Algorithm \ref{nonadaptalgo} is defined for input functions lying in the ball $\
 
 \subsection{Fixed Cost Algorithms}
 
-Algorithm \ref{nonadaptalgo} is built from a sequence of fixed cost, i.e., not automatic, algorithms, $\{A_n\}_{n \in \ci}$, indexed by their cost and defined for all $f \in \cf$.  The set of fixed cost algorithms is denoted $\ca_{\fix}(\cf,\cg,S,\Lambda)$.  These are algorithms for which neither the choice of the $L_i$ nor the number of function data depend on the input function.  Furthermore, such fixed cost algorithms have no dependence on $\varepsilon$, so we write $A_n(f)$ rather than $A_n(f,\varepsilon)$.  Any fixed cost algorithm, $A_n \in \ca_{\fix}(\cf,\cg,S,\Lambda)$ is assumed to be satisfy the following positive homogeneity properties:
+Algorithm \ref{nonadaptalgo} is built from a sequence of fixed cost, i.e., not automatic, algorithms, $\{A_n\}_{n \in \ci}$, indexed by their cost and defined for all $f \in \cf$.  The set of fixed cost algorithms is denoted $\ca_{\fix}(\cf,\cg,S,\Lambda)$.  These are algorithms for which neither the choice of the $L_i$ nor the number of function data depend on the input function.  Furthermore, such fixed cost algorithms have no dependence on $\varepsilon$, so we write $A_n(f)$ rather than $A_n(f,\varepsilon)$.  Any fixed cost algorithm, $A_n \in \ca_{\fix}(\cf,\cg,S,\Lambda)$ is assumed to satisfy the following positive homogeneity properties:
 \begin{equation}
 \label{algoscale}
 \vL(cf) = c \vL(f), \ \
