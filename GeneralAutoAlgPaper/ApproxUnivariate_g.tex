@@ -10,7 +10,7 @@ The space of functions to be recovered is the Sobolev space $\cf = \mathcal{W}^{
 \end{gather}
 \end{subequations}
 
-Again, we consider algorithms based on function values, and the cost of a function value is one.   The basic fixed cost algorithm used to approximate functions in the cone $\cc_{\tau}$ is the linear spline algorithm given in \eqref{linearspline}.  
+Again, we consider algorithms based on function values, and the cost of a function value is one.   The basic fixed cost algorithm used to approximate functions in the cone $\cc_{\tau}$ is the linear spline algorithm given in \eqref{linearspline}.
 The cost of $A_n$ is $n$, and the minimum cost multiple is $r=2$.
 
 Using this same data one may approximate the $\cl_\infty$ norm of $f'-f(1)+f(0)$ by the algorithm
@@ -22,7 +22,7 @@ Moreover, a lower bound on $\norm[\infty]{f''}$ can be derived similarly to the 
 \begin{equation} \label{Fnormappxalg}
 F_n(f) := \frac 1 2 (n-1)^2\sup_{i=1, \ldots, n-2} \abs{f(x_i) - 2 f(x_{i+1})+f(x_{i+2})}.
 \end{equation}
-It follows using the mean value theorem that 
+It follows using the mean value theorem that
 \begin{align*}
 F_n(f) &= \frac 1 2 (n-1)^2\sup_{i=1, \ldots, n-2} \bigabs{[f(x_{i+2}) - f(x_{i+1})] - [f(x_{i+1}) - f(x_{i})]} \\
 &= \frac 1 2 (n-1)\sup_{i=1, \ldots, n-2} \abs{f'(\xi_{i+1}) - f'(\xi_{i})} \le \norm[\infty]{f''},
@@ -31,18 +31,18 @@ where $\xi_i$ is some point in $[x_i,x_{i+1}]$, and so $\xi_{i+1} - \xi_i \le 2(
 
 \subsection{Adaptive Algorithm and Upper Bound on the Cost}
 
-Given the algorithms $\tF_n$ and $A_n$, we now turn to deriving the worst case error bounds, $h_{\pm}$ defined in \eqref{Gerrbds} and $h$ defined in \eqref{algoerr} and satisfying \eqref{algseqerrcond}.  
-Note that $\tF_{n}(f)$ never overestimates $\Ftnorm{f}$ because 
+Given the algorithms $\tF_n$ and $A_n$, we now turn to deriving the worst case error bounds, $h_{\pm}$ defined in \eqref{Gerrbds} and $h$ defined in \eqref{algoerr} and satisfying \eqref{algseqerrcond}.
+Note that $\tF_{n}(f)$ never overestimates $\Ftnorm{f}$ because
 \begin{align*}
-\Ftnorm{f} &  = \bignorm[\infty]{f'-A_2(f)'} 
+\Ftnorm{f} &  = \bignorm[\infty]{f'-A_2(f)'}
 = \sup_{\substack{x_i \le x \le x_{i+1}\\ i=1, \ldots, n-1 }} \abs{f'(x) - A_2(f)'(x)} \, \dif x \\
 &\ge \sup_{i=1, \ldots, n-1} (n-1)\int_{x_i}^{x_{i+1}} \abs{f'(x) - f(1)+f(0)} \, \dif x \\
 &\ge \sup_{i=1, \ldots, n-1} (n-1)\abs{\int_{x_i}^{x_{i+1}} [f'(x) - f(1)+f(0)] \, \dif x }\\
 &= \sup_{i=1, \ldots, n-1} (n-1)\abs{f(x_{i+1})-f(x_i) - \frac{f(1)-f(0)}{n-1}} = \tF_n(f).
 \end{align*}
-Thus, $h_{-}(n)=0$ and $\fc_n=\tfc_n=1$. 
+Thus, $h_{-}(n)=0$ and $\fc_n=\tfc_n=1$.
 
-The difference between $f$ and its linear spline can be bounded in terms of an integral involving the second derivative using integration by parts.  For $x \in [x_i,x_{i+1}]$ it follows that 
+The difference between $f$ and its linear spline can be bounded in terms of an integral involving the second derivative using integration by parts.  For $x \in [x_i,x_{i+1}]$ it follows that
 \begin{align}
 \nonumber
 f(x)-A_n (f)(x)
@@ -57,11 +57,11 @@ u_i(t,x) =\begin{cases} (x_{i+1}-x)(x_i-t), & x_i\leq t\leq x,\\
 \end{cases}.
 \end{equation*}
 
-To find an upper bound on $\Ftnorm{f}-\tF_{n}(f)$, note that 
+To find an upper bound on $\Ftnorm{f}-\tF_{n}(f)$, note that
 \begin{equation*}
 \Ftnorm{f} - \tF_{n}(f) = \Ftnorm{f} - \bigabs{A_n(f)}_{\tcf} \le \bigabs{f-A_n(f)}_{\tcf} = \bignorm[\infty]{f' -A_n(f)'},
 \end{equation*}
-since $(f-A_n(f))(x)$ vanishes for $x=0,1$. Using \eqref{fprimeintermsfdoubprime} it then follows that 
+since $(f-A_n(f))(x)$ vanishes for $x=0,1$. Using \eqref{fprimeintermsfdoubprime} it then follows that
 \begin{align*}
 \Ftnorm{f} - \tF_{n}(f) & \le \bignorm[\infty]{f' -A_n(f)'} \\
 & = \sup_{\substack{x_i \le x \le x_{i+1}\\ i=1, \ldots, n-1 }} \abs{f'(x) -(n-1)[f(x_{i+1})-f(x_i)]} \, \dif x \\
@@ -85,16 +85,16 @@ To derive the error bounds for $A_n(f)$ we make use of \eqref{fintermsfdoubprime
 Since $h_{\pm}(n)$ and $h(n)$, are the same as in the previous section for integration, the simplifications in \eqref{simpifycond} apply here as well.  Then Algorithm \ref{multistagealgo} and Theorem \ref{MultiStageThm} may be applied directly to  yield the following algorithm for function approximation and its guarantee.
 
 \begin{algo}[Adaptive Univariate Function Recovery] \label{multistageapproalgo}
-Let the sequence of algorithms $\{A_n\}_{n\in \mathcal{I}}$, $\{\tF_n\}_{n\in \mathcal{I}}$, and $\{F_n\}_{n\in \mathcal{I}}$ be as described above. 
+Let the sequence of algorithms $\{A_n\}_{n\in \mathcal{I}}$, $\{\tF_n\}_{n\in \mathcal{I}}$, and $\{F_n\}_{n\in \mathcal{I}}$ be as described above.
 Let $\tau \ge 2$ be the cone constant. Set $i=1$. Let $n_1=\lceil(\tau+1)/2\rceil+1$. For any error tolerance $\varepsilon$ and input function $f$, do the following:
 \begin{description}
 \item[Stage 1.\ Estimate {$\norm[\infty]{f'-f(1)+f(0)}$} and bound {$\norm[\infty]{f''}$}.] Compute $\tF_{n_i}(f)$ in \eqref{estfirstderiv} and $F_{n_i}(f)$ in \eqref{Fnormappxalg}.
 
-\item[Stage 2. Check the necessary condition for $f \in \cc_{\tau}$.] Compute 
+\item[Stage 2. Check the necessary condition for $f \in \cc_{\tau}$.] Compute
     \begin{align*}
      \tau_{\min,n_i} =  \frac{F_{n_i}(f)}{\tF_{n_i}(f)+F_{n_i}(f)/(2n_i-2)}.
     \end{align*}
-If $\tau \ge \tau_{\min,n_i}$, then go to stage 3.  Otherwise, set $\tau = 2\tau_{\min,n_i}$.  If $n_i \ge (\tau+1)/2$, then go to stage 3.  Otherwise, choose 
+If $\tau \ge \tau_{\min,n_i}$, then go to stage 3.  Otherwise, set $\tau = 2\tau_{\min,n_i}$.  If $n_i \ge (\tau+1)/2$, then go to stage 3.  Otherwise, choose
 $$
 n_{i+1}=1+ (n_i-1)\left\lceil\frac{\tau+1}{2n_i-2}\right\rceil.
 $$
@@ -116,9 +116,9 @@ Go to Stage 1.
 \begin{multline}
 \max \left(\left \lceil\frac{\tau+1}{2} \right \rceil, \left \lceil \sqrt{\frac{ \norm[\infty]{f''}}{8\varepsilon}} \right \rceil \right) +1 \\
 \le \max \left(\left \lceil\frac{\tau+1}{2} \right \rceil, \left \lceil \sqrt{\frac{\tau \norm[\infty]{f'-f(1)+f(0)}}{8\varepsilon}} \right \rceil \right) +1 \\
-\le 
+\le
 \cost(A,f;\varepsilon,N_{\max}) \\
-\le \sqrt{\frac{\tau \norm[\infty]{f'-f(1)+f(0)}}{2\varepsilon}} + \tau + 4 
+\le \sqrt{\frac{\tau \norm[\infty]{f'-f(1)+f(0)}}{2\varepsilon}} + \tau + 4
 \le \sqrt{\frac{\tau \norm[\infty]{f''} }{4\varepsilon}} + \tau + 4.
 \end{multline}
 The algorithm is computationally stable, meaning that the minimum and maximum costs for all integrands, $f$, with fixed $\norm[\infty]{f'-f(1)+f(0)}$ or $\norm[\infty]{f''}$ are an $\varepsilon$-independent constant of each other.
@@ -132,17 +132,17 @@ Next, we derive a lower bound on the cost of approximating functions in the ball
 For any $n \in \natzero$, suppose that the one has the data $L_i(f)=f(\xi_i)$, $i=1, \ldots, n$ for arbitrary $\xi_i$, where $0=\xi_0 \le \xi_1 < \cdots < \xi_n \le \xi_{n+1} = 1$.  There must be some $j=0, \ldots, n$ such that $\xi_{j+1} - \xi_j \ge 1/(n+1)$.  The function $f_{1}$ is defined as a bump having piecewise constant second derivative on $[\xi_j, \xi_{j+1}]$ and zero elsewhere.  For $\xi_{j} \le x \leq \xi_{j+1}$,
 \begin{multline*}
 f_{1}(x):=
-\frac{1}{32} \left [4(\xi_{i+1}-\xi_i)^2 + (4x-2\xi_i-2\xi_{i+1})^2  \right. \\
-\left. + (4x-\xi_i-3\xi_{i+1})\abs{4x-\xi_i-3\xi_{i+1}} -(4x-3\xi_i-\xi_{i+1})\abs{4x-3\xi_i-\xi_{i+1}} \right],
+\frac{1}{32} \left [4(\xi_{j+1}-\xi_j)^2 + (4x-2\xi_j-2\xi_{j+1})^2  \right. \\
+\left. + (4x-\xi_j-3\xi_{j+1})\abs{4x-\xi_j-3\xi_{j+1}} -(4x-3\xi_j-\xi_{j+1})\abs{4x-3\xi_j-\xi_{j+1}} \right],
 \end{multline*}
 \[
 f'_{1}(x)=
-\frac{1}{4} \left [4x-2\xi_i-2\xi_{i+1} + \abs{4x-\xi_i-3\xi_{i+1}} -\abs{4x-3\xi_i-\xi_{i+1}} \right],
+\frac{1}{4} \left [4x-2\xi_j-2\xi_{j+1} + \abs{4x-\xi_j-3\xi_{j+1}} -\abs{4x-3\xi_j-\xi_{j+1}} \right],
 \]
 \[
-f''_{1}(x)=\sgn(4x-\xi_i-3\xi_{i+1}) - \sgn(4x-3\xi_i-\xi_{i+1}) + 1.
+f''_{1}(x)=\sgn(4x-\xi_j-3\xi_{j+1}) - \sgn(4x-3\xi_j-\xi_{j+1}) + 1.
 \]
-This implies that $\norm[\infty]{f''_1}=1$, and 
+This implies that $\norm[\infty]{f''_1}=1$, and
 \[
 \norm[\infty]{f_1}=f_1((\xi_j+\xi_{j+1})/2)= \frac{(\xi_{j+1} - \xi_j)^2}{16} \ge \frac{1}{16(n+1)^2} =: g(n).
 \]
@@ -164,18 +164,22 @@ The adaptive linear spline Algorithm \ref{multistageapproalgo} is optimal for re
 \subsection{Numerical Example}
 {\bf fix this with the right norms, etc.}
 
-To illustrate Algorithm \ref{multistageapproalgo} we choose the same  family of test functions as in \eqref{testfun}, but now with $z \sim \cu[0,1]$, $\log_{10}(a) \sim \cu[0,4]$, and $b=1$. When $a$ is large this function is very spiky and hard to approximate since the sampled function values may miss the spike.  Since $\norm[\infty]{f'}=a\sqrt{2/\me}$ and $\norm[\infty]{f''}=2a^2$, the probability that $f \in \cc_{\tau}$ is $\min\left(\max(0,\log_{10}\left(\tau/\sqrt{2\me})/4\right),1\right).$
-For $\tau = 10, 100 , 1000$ we choose a sample of  $10000$ functions and an error tolerance of  $\varepsilon = 10^{-8}$.  The empirical probability that Algorithm \ref{multistageapproalgo} succeeds in returning an answer within the error tolerance is given in Table \ref{approxnumerical}.  Our algorithm succeeds for all functions lying in the cone plus some others.  It is conservative, but not overly so.
+To illustrate Algorithm \ref{multistageapproalgo} we choose the same  family of test functions as in \eqref{testfun}, but now with  $\log_{10}(a) \sim \cu[-4,-1]$, $z \sim \cu[2a,1-2a]$, and $b=1/(2a^2)$.   Since $\norm[\infty]{f'-f(0)+f(1)}=1/a$ and $\norm[\infty]{f''}=1/a^2$, the probability that $f \in \mathcal{N}$ is $1-\min\left(\max(0,\left(\log_{10}1/\tau+4\right)/3),1\right).$
+For $\tau = 10, 100 , 1000$ we choose a sample of  $10000$ functions and an error tolerance of  $\varepsilon = 10^{-8}$.  The empirical probability that Algorithm \ref{multistageapproalgo} succeeds in returning an answer within the error tolerance is given in Table \ref{approxnumerical}.
+
 \begin{table}[h]
 \centering
 \begin{tabular}{cccc}
-$\tau$ &  10 & 100 & 1000\\
+$\tau$ &  $f \in \mathcal{N} $ & Met \\
 \toprule
-Probability of $f \in \cc_{\tau}$ &  $ 16 \%$ &  $41 \%$  & $66 \%$ \\
-Observed Success Rate & 25$\%$ &  49$\%$  & 74$\%$ \\
+$10$ & $0\% \rightarrow  25\% $ & $25\%$  \\
+$100$ & $33 \% \rightarrow 56\% $ & $58\%$ \\
+$1000$ & $67\% \rightarrow 67\% $& $80\%$ \\
 \end{tabular}
-\caption{Comparison between the probability of the input function lying in the cone and the empirical success rate of Algorithm \ref{multistageapproalgo}.  \label{approxnumerical}}
+\caption{Comparison between the probability of the input
+function lying in the cone and the empirical success rate of Algorithm \ref{multistageapproalgo}.  \label{approxnumerical}}
 \end{table}
+
 
 
 
