@@ -112,7 +112,10 @@ Go to Stage 1.
 \end{description}
 \end{algo}
 
-\begin{theorem} \label{multistageappxthm} Let $A \in \ca(\cc_{\tau}, \cl_{\infty}, \APP, \Lambda^{\std})$ be the automatic linear spline defined by Algorithm \ref{multistageapproalgo}, and let $\tau$, $n_1$, and $\varepsilon$ be the inputs and parameters described there. Let $\cc_\tau$ be the cone of functions defined in \eqref{coneappxdef}.  Then it follows that Algorithm \ref{multistageapproalgo} is successful for all functions in $\cc_{\tau}$,  i.e.,  $\norm[\infty]{f - A(f,\varepsilon)} \le \varepsilon$.  Moreover, the cost of this algorithm is bounded below and above as follows:
+\begin{theorem} \label{multistageappxthm} 
+Let $\sigma >0$ be some fixed parameter, and let $\cb_{\sigma}=\{f \in  \mathcal{W}^{2,\infty} : \norm[\infty]{f''}\leq \sigma\}$. Let $A \in \ca(\cb_{\sigma}, \cl_{\infty}, \APP, \Lambda^{\std})$ be the non-adaptive linear spline defined by Algorithm \ref{nonadaptalgo}, and let $\varepsilon>0$ be the error tolerance. Then this algorithm succeeds for $f \in \cb_{\sigma}$, i.e., $\norm[\infty]{f - A(f,\varepsilon)} \le \varepsilon$, and the cost of this algorithm is $\left \lceil \sqrt{\sigma/(8\varepsilon)}\right \rceil + 1$, regardless of the size of $\norm[\infty]{f''}$.
+
+Let $A \in \ca(\cc_{\tau}, \cl_{\infty}, \APP, \Lambda^{\std})$ be the adaptive linear spline defined by Algorithm \ref{multistageapproalgo}, and let $\tau$, $n_1$, and $\varepsilon$ be the inputs and parameters described there. Let $\cc_\tau$ be the cone of functions defined in \eqref{coneappxdef}.  Then it follows that Algorithm \ref{multistageapproalgo} is successful for all functions in $\cc_{\tau}$,  i.e.,  $\norm[\infty]{f - A(f,\varepsilon)} \le \varepsilon$.  Moreover, the cost of this algorithm is bounded below and above as follows:
 \begin{multline}
 \max \left(\left \lceil\frac{\tau+1}{2} \right \rceil, \left \lceil \sqrt{\frac{ \norm[\infty]{f''}}{8\varepsilon}} \right \rceil \right) +1 \\
 \le \max \left(\left \lceil\frac{\tau+1}{2} \right \rceil, \left \lceil \sqrt{\frac{\tau \norm[\infty]{f'-f(1)+f(0)}}{8\varepsilon}} \right \rceil \right) +1 \\
@@ -162,22 +165,20 @@ The adaptive linear spline Algorithm \ref{multistageapproalgo} is optimal for re
 \end{theorem}
 
 \subsection{Numerical Example}
-{\bf fix this with the right norms, etc.}
 
-To illustrate Algorithm \ref{multistageapproalgo} we choose the same  family of test functions as in \eqref{testfun}, but now with  $\log_{10}(a) \sim \cu[-4,-1]$, $z \sim \cu[2a,1-2a]$, and $b=1/(2a^2)$.   Since $\norm[\infty]{f'-f(0)+f(1)}=1/a$ and $\norm[\infty]{f''}=1/a^2$, the probability that $f \in \mathcal{N}$ is $1-\min\left(\max(0,\left(\log_{10}1/\tau+4\right)/3),1\right).$
-For $\tau = 10, 100 , 1000$ we choose a sample of  $10000$ functions and an error tolerance of  $\varepsilon = 10^{-8}$.  The empirical probability that Algorithm \ref{multistageapproalgo} succeeds in returning an answer within the error tolerance is given in Table \ref{approxnumerical}.
+To illustrate Algorithm \ref{multistageapproalgo} we choose the same  family of test functions as in \eqref{testfun}, but now with  $\log_{10}(a) \sim \cu[-4,-1]$, $z \sim \cu[2a,1-2a]$, and $b=1/(2a^2)$.   Since $\norm[\infty]{f'-f(0)+f(1)}=1/a$ and $\norm[\infty]{f''}=1/a^2$, the probability that $f \in \cc_{\tau}$ is $\min\left(1,\max(0,\left(\log_{10}(\tau)-1\right)/3)\right).$
+For initial $\tau$ values of $10, 100 , 1000$ we choose a sample of  $10000$ functions and an error tolerance of  $\varepsilon = 10^{-8}$.  The probability that $f$ initially lies in $\cc_{\tau}$ is the smaller number in the second column of Table \ref{approxnumerical}, while the larger number is the empirical probability that $f$ eventually lies in $\cc_{\tau}$ after possible increases in $\tau$ made by Stage 2 of Algorithm \ref{multistageapproalgo}.  Algorithm \ref{multistageapproalgo} yields the correct value to within the error tolerance for all $f$ that finally lie inside $\cc_{\tau}$ plus some functions that lie outside $\cc_{\tau}$.  The empirical probability of success is given in Table \ref{approxnumerical}.
 
 \begin{table}[h]
 \centering
 \begin{tabular}{cccc}
-$\tau$ &  $f \in \mathcal{N} $ & Met \\
+$\tau$ &  $\Prob(f \in \cc_{\tau}) $ & Success \\
 \toprule
 $10$ & $0\% \rightarrow  25\% $ & $25\%$  \\
 $100$ & $33 \% \rightarrow 56\% $ & $58\%$ \\
 $1000$ & $67\% \rightarrow 67\% $& $80\%$ \\
 \end{tabular}
-\caption{Comparison between the probability of the input
-function lying in the cone and the empirical success rate of Algorithm \ref{multistageapproalgo}.  \label{approxnumerical}}
+\caption{The probability of the input function lying in the cone for the original and eventual values of $\tau$ and the empirical success rate of Algorithm \ref{multistageapproalgo}.  \label{approxnumerical}}
 \end{table}
 
 
