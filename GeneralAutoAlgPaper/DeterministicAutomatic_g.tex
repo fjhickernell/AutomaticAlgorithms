@@ -164,17 +164,17 @@ Although the cost of an adaptive algorithm varies with $f$, we hope that it does
 = \inf \left \{ \cost(A,f,\varepsilon) : f \in \cn\setminus \bigcup_{s'<s}\cb_{s'} \right\} .
 \end{gather*}
 We stress that $A$ knows that $f \in \cn$ but does not necessarily know $\Fnorm{f}$.  An algorithm is said to have \emph{$\cb_{s}$-stable computational cost} if 
-\begin{equation}\label{coststabledef}
+\begin{equation*}\label{coststabledef}
 \sup_{\varepsilon, s > 0} \frac{\maxcost(A,\cn,\varepsilon,\cb_s)}{\max(1,\mincost(A,\cn,\varepsilon, \cb_s))} < \infty.
-\end{equation} 
+\end{equation*} 
 Analogous definitions of maximum and minimum cost and stability of computational cost can be made in terms of $\tcf$-semi-norm balls.
 
 The complexity of a problem is defined as the maximum cost of the cheapest algorithm that always satisfies the error tolerance:
-\begin{multline} \label{complexdef}
+\begin{multline*} \label{complexdef}
 \comp(\varepsilon,\ca(\cn,\cg,S,\Lambda),\cb_s) \\
  = \inf\left\{\maxcost(A,\cn,\varepsilon,\cb_s) : A \in \ca(\cn,\cg,S,\Lambda), \right. \\
  \left . \norm[\cg]{S(f)-A(f,\varepsilon)} \le \varepsilon \ \ \forall f \in \cn, \ \varepsilon \ge 0 \right \} \in \natzero.
-\end{multline}
+\end{multline*}
 Here the infimum of an empty set is defined to be $\infty$.  
 
 Algorithm \ref{nonadaptalgo} is defined for input functions lying in the ball $\cb_{\sigma}$.  It is not adaptive, and its cost depends only on $\varepsilon/\sigma$, and not on the particulars of $f$:
@@ -185,11 +185,11 @@ Algorithm \ref{nonadaptalgo} is defined for input functions lying in the ball $\
 \subsection{Fixed Cost Algorithms}
 
 Algorithm \ref{nonadaptalgo} is built from a sequence of fixed cost, i.e., not automatic, algorithms, $\{A_n\}_{n \in \ci}$, indexed by their cost and defined for all $f \in \cf$.  The set of fixed cost algorithms is denoted $\ca_{\fix}(\cf,\cg,S,\Lambda)$.  These are algorithms for which neither the choice of the $L_i$ nor the number of function data depend on the input function.  Furthermore, such fixed cost algorithms have no dependence on $\varepsilon$, so we write $A_n(f)$ rather than $A_n(f,\varepsilon)$.  Any fixed cost algorithm, $A_n \in \ca_{\fix}(\cf,\cg,S,\Lambda)$ is assumed to satisfy the following positive homogeneity properties:
-\begin{equation}
+\begin{equation*}
 \label{algoscale}
 \vL(cf) = c \vL(f), \ \
 \phi(c\vy) = c\phi(\vy), \ \ A_n(cf) = cA_n(f) \quad \forall c \ge 0, \ \vy \in \reals^m.
-\end{equation}
+\end{equation*}
 These conditions make the error of these algorithms homogeneous, resulting in error bounds involving a non-increasing $h$ as described in \eqref{algoerr}.
 
 The adaptive algorithms constructed in the next section use sequences of fixed cost algorithms indexed by their cost that converge to the true answer as the cost increases:
@@ -295,9 +295,9 @@ There are a several points to note about this result.
 \end{rem}
 
 \begin{rem} Instead of choosing $\tau$ as an input parameter for Algorithm \ref{twostagedetalgo}, one may alternatively choose the inflation factor $\fC >1$.  This then implies that 
-\begin{equation} \label{taufromnC}
+\begin{equation*} \label{taufromnC}
 \tau = \left(1 - \frac{1}{\fC}\right)\frac{1}{h_{+}(n_{\tF})},
-\end{equation}
+\end{equation*}
 which is equivalent to \eqref{norminflate}.
 \end{rem}
 
@@ -341,9 +341,9 @@ If this is true, return $A_{n_i}(f)$ and terminate the algorithm.
 \end{algo}
 
 This iterative algorithm is guaranteed to converge also, and its cost can be bounded.  Define 
-\begin{equation} \label{hhdef}
+\begin{equation*} \label{hhdef}
 h_1(n) := \fC_n\tfc_n h(n) \ge h(n), \quad h_2(n) := \fC_n\fc_n h(n) \ge h(n) \qquad n \in \ci.
-\end{equation}
+\end{equation*}
 and note that $h_1$ and $h_2$ are non-increasing functions.  Let $h_1^{-1}$ and $h_2^{-1}$ be defined analogously to $h^{-1}$ as in \eqref{hinvdef}.  These definitions imply that the quantity appearing on the left hand side in \eqref{multistageconv}, has the following upper and lower bounds based on \eqref{twosidedGineq} for $f \in \cc_{\tau}$:
 \begin{subequations}\label{hh1h2bounds}
 \begin{equation}
@@ -434,9 +434,9 @@ Now since $A$ must be successful for $\pm s f_1$, it follows that
 g^{-1}(\varepsilon/s) & \le n \le \maxcost(A,\cb_{\sigma},\varepsilon,\cb_{\sigma}),
 \end{align*}
 where $g^{-1}$ be defined by
-\begin{equation} \label{ginvdef}
+\begin{equation*} \label{ginvdef}
 g^{-1}(\varepsilon) = \max \{ n \in \natzero : g(n-1) > \varepsilon, \ n \in \ci \}.
-\end{equation}
+\end{equation*}
 This implies lower bounds on the complexity of algorithms defined for $\cf$-balls.
 
 \begin{theorem} \label{complowbdball} The computational complexity of the problem for a ball of input functions $\cb_{\sigma}$ is bounded below by
@@ -452,10 +452,10 @@ Thus, the cost of solving the problem within error tolerance $\varepsilon$ for i
 \sup_{n \in \ci} \frac{h(n)}{g(n)} < \infty,
 \end{equation}
 then Algorithm \ref{nonadaptalgo} has optimal order in the sense that for fixed $\sigma$ and $s$, 
-\begin{equation} \label{balloptresult}
+\begin{equation*} \label{balloptresult}
 \sup_{\varepsilon > 0} \frac{\maxcost(A,\cb_{\sigma},\varepsilon,\cb_{s})}
 {\max(1,\comp(\varepsilon,\ca(\cb_{\sigma},\cg,S,\Lambda),\cb_s))} <\infty.
-\end{equation}
+\end{equation*}
 \end{theorem}
 
 \begin{proof}  Choose a number $C \ge h(n)/g(n)$ for all $n \in \ci$, which is possible by assumption \eqref{ghcond}.  It then follows that
@@ -528,10 +528,10 @@ This then implies the lower bound on the complexity of the problem.
 \end{proof}
 
 \begin{cor} \label{optimcor}
-Suppose that the functions $g$ and $h$ satisfy the hypotheses of Theorem \ref{optimalprop}, and in particular, condition \eqref{ghcond}, which means that Algorithm \ref{nonadaptalgo} has optimal order for solving the problem on $\cf$-balls of input functions.  It then follows that Algorithms \ref{twostagedetalgo} and \ref{multistagealgo} both have optimal order for solving the  problem on for input functions lying in the cone $\cc_{\tau}$ in the sense of
-\begin{equation} \label{nearoptdef}
+Suppose that the functions $g$ and $h$ satisfy the hypotheses of Theorem \ref{optimalprop}, and in particular, condition \eqref{ghcond}, which means that Algorithm \ref{nonadaptalgo} has optimal order for solving the problem on $\cf$-balls of input functions.  It then follows that Algorithms \ref{twostagedetalgo} and \ref{multistagealgo} both have optimal order for solving the problem on for input functions lying in the cone $\cc_{\tau}$ in the sense of
+\begin{equation*} \label{nearoptdef}
 \sup_{\varepsilon,s > 0} \frac{\maxcost(A,\cn,\varepsilon,\cb_s)} {\max(1,\comp(\varepsilon,\ca(\cn,\cg,S,\Lambda),\cb_s))} <\infty.
-\end{equation} 
+\end{equation*} 
 \end{cor}
 
 \begin{table}
