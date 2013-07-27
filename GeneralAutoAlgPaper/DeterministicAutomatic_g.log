@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=latex 2013.7.24)  26 JUL 2013 19:39
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=latex 2013.7.24)  26 JUL 2013 19:54
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -570,16 +570,16 @@ Overfull \hbox (5.63974pt too wide) in paragraph at lines 136--137
 []\OT1/cmr/m/n/10 Compute $[](\OML/cmm/m/it/10 f\OT1/cmr/m/n/10 )$
  []
 
-[19] [20] [21]) (./ApproxUnivariate_g.tex [22] [23]
+[19] [20] [21]) (./ApproxUnivariate_g.tex [22] [23] [24]
 Overfull \hbox (7.04253pt too wide) in paragraph at lines 91--92
 []\OT1/cmr/m/n/10 Compute $[](\OML/cmm/m/it/10 f\OT1/cmr/m/n/10 )$
  []
 
-[24] [25] [26])
+[25] [26]) [27]
 File: Foolquadbw.eps Graphic file (type eps)
  <Foolquadbw.eps>
 File: foolbwquadexample.eps Graphic file (type eps)
- <foolbwquadexample.eps> [27] [28] [29]
+ <foolbwquadexample.eps> [28] [29]
 LaTeX Font Info:    Try loading font information for OMS+cmr on input line 643.
 
 
@@ -598,15 +598,15 @@ put-ing,
 [31]) [32] (./DeterministicAutomatic_g.aux) )
 (\end occurred inside a group at level 1)
 
-### simple group (level 1) entered at line 231 ({)
+### simple group (level 1) entered at line 236 ({)
 ### bottom level 
 Here is how much of TeX's memory you used:
  11556 strings out of 493312
  206671 string characters out of 6137876
- 263700 words of memory out of 5000000
+ 260700 words of memory out of 5000000
  14744 multiletter control sequences out of 15000+600000
  16104 words of font info for 63 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
  56i,18n,55p,1050b,358s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on DeterministicAutomatic_g.dvi (32 pages, 150132 bytes).
+Output written on DeterministicAutomatic_g.dvi (32 pages, 151212 bytes).
