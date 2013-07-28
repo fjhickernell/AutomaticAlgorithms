@@ -44,29 +44,29 @@ We have tried to be consistent with the ideas of the information-based complexit
 
 \item We have altered our discussion of previous work on adaptive algorithms.
 
-\item Our perspective may differ from one referee, who states ``Adaption is not an advantage or an disadvantage per se, it is needed if [the set of interest] is a cone.'' If the set of input functions of interest has been fixed then it is true that one only wants the best algorithm irrespective of whether it is adaptive.  But we would argue that adaption \emph{does} have an advantage.
+\item Our perspective may differ from one referee, who states ``Adaption is not an advantage or a disadvantage per se, it is needed if [the set of interest] is a cone.'' If the set of input functions of interest has been fixed then it is true that one only wants to find the best algorithm irrespective of whether it is adaptive.  But we would argue that adaption \emph{does} have an advantage.
 
-Algorithms used in practice (and referenced in our manuscript) are adaptive.  The reason they are is that this allows one to expend more computational effort for a harder problem and less effort for an easier problem.  We define our cost in Section 2.2 to reflect that reality.   For algorithms that are defined over some nice subset, $\cn$, of the normed space of input functions, $\cf$, we define the cost of the algorithm as the maximum cost over functions in $\cn \cap \cb_s$, where $\cb_s$ is a ball or radius $s$.  Thus the cost depends both on $\varepsilon$ and $s$.  Adaptive algorithms defined on $\cn$ may have a cost that decreases as $s$ decreases, while non-adaptive algorithms have a fixed cost independent of $s$.  
+Algorithms used in practice (and referenced in our manuscript) are adaptive.  The reason they are is that this allows one to expend more computational effort for a harder problem and less effort for an easier problem.  We define our cost in Section 2.2 to reflect that reality.   For algorithms that are defined over some nice subset, $\cn$, of the normed space of input functions, $\cf$, we define the cost of the algorithm as the maximum cost over functions in $\cn \cap \cb_s$, where $\cb_s$ is a ball or radius $s$.  Thus the cost depends both on $\varepsilon$ and $s$.  Adaptive algorithms defined on $\cn$ may have a cost that decreases as $s$ decreases, while non-adaptive algorithms have a fixed cost independent of $s$.  This is the case whether or not $\cn$ is bounded and whether it is a ball or a cone.
 
 At the end of Section 4.2 we argue that our adaptive algorithms defined on cones enjoy a stronger sense of optimality because their cost decreases as $s$ decreases.  This is not the case for the traditional non-adaptive algorithms defined on the ball. This point is mentioned again in Section 7.2.
 
-Unfortunately, the adaptive algorithms used in practice have no guarantees, but they often do a great job.  We in the numerical analysis and IBC communities should be working to find guarantees, and they will only be found if we move away from balls.  We would argue that cones give us the best setting to have practical and theoretically justified adaptive algorithms.  
+Unfortunately, the adaptive algorithms used in practice have no theoretical guarantees, but they often do a great job.  We in the numerical analysis and IBC communities should be working to find guarantees, and we suggest that guarantees will only be found if we move away from balls.  We would argue that cones provide the best setting to have practical and theoretically justified adaptive algorithms.  
 
-\item We use the word ``guarantee'' a lot in our article for a reason.  For the reader who is only concerned with theoretically justified algorithms, guarantees are assumed, but for the larger audience of users of readily available adaptive, automatic software guarantees are not a given, but are sometimes implied.  For example, the abstract of \cite{BatTre04a}, which describes the Chebfun toolbox, reads ``All functions live on $[-1,1]$ and are represented by values at sufficiently many Chebyshev points for the polynomial interpolant to be \emph{accurate to close to machine precision}.''  (emphasis ours).  This statement is true for many functions, but not all, and there are no guarantees for which functions this statement must be true.  It is for this audience that we use the word ``guarantee'' often in our paper.
+\item We use the word ``guarantee'' a lot in our article for a reason.  For the reader who is only concerned with theoretically justified algorithms, guarantees are assumed.  However, for users of readily available adaptive, automatic software, guarantees are not a given, but are sometimes incorrectly implied.  For example, the abstract of \cite{BatTre04a}, which describes the Chebfun toolbox, reads ``All functions live on $[-1,1]$ and are represented by values at sufficiently many Chebyshev points for the polynomial interpolant to be \emph{accurate to close to machine precision}.''  (emphasis ours).  This statement is true for many functions, but not all, and there are no guarantees that specify the conditions under which this statement is true.  It is for the audience of practitioners that we use the word ``guarantee'' often.
 
 \item The condition $\phi(c\vy) = c\phi(\vy)$ is now only needed for the building block non-automatic algorithms described in Section 2.3.
 
-\item One referee gives a simple proof that the cone is not convex, but it assumes that the cone contains a ball.  None of our cones contain a ball, so this proof does not work.  In fact, if the cone contained a ball, then it would contain the whole linear space.
+\item One referee gives a simple proof that the cone is not convex, but the proof assumes that the cone contains a ball.  None of our cones contain a ball, so this proof does not work.  In fact, if the cone contained a ball, then it would contain the whole linear space.
 
 \item We have changed our notation so that $\ci=\{N_1, N_2, \ldots \}$.  We do not require that $A_{N_i}$ be nested in $A_{N_{i+1}}$, so $\ci=\{2,3, \ldots\}$ is fine, but for every $n \in \ci$ there needs to be a next larger number $\tn \in \ci$ such that $A_n$ is nested in $A_{\tn}$.  The $n_i$ are now used exclusively for the elements of $\ci$ chosen by the algorithms.
 
-\item For the numerical experiments, the success rate is the percentage of cases for which the error tolerance is strictly met.  
+\item For the numerical experiments, the success rate is the percentage of cases for which the error tolerance is strictly met.
 
 \item The referees pointed out many careless typos on our part.  Thank you so much.  We have tried to catch them all.
 
 \end{enumerate}
 
-Finally, let me stress that we appreciate the careful attention that the referees and the editor have given to our paper.  The comments have inspired a number of changes that we hope have improved the paper a lot.  We look forward to your feedback.
+Finally, we greatly appreciate the careful attention that the referees and the editor have given to our paper.  The comments have inspired a number of changes that we hope have improved the paper.  We look forward to your feedback.
 
 \bibliographystyle{spbasic}
 \bibliography{FJH22,FJHown22}

@@ -35,7 +35,7 @@ Given the algorithms $\tF_n$ and $A_n$, we now turn to deriving the worst case e
 Note that $\tF_{n}(f)$ never overestimates $\Ftnorm{f}$ because
 \begin{align*}
 \Ftnorm{f} &  = \bignorm[\infty]{f'-A_2(f)'}
-= \sup_{\substack{x_i \le x \le x_{i+1}\\ i=1, \ldots, n-1 }} \abs{f'(x) - A_2(f)'(x)} \, \dif x \\
+= \sup_{\substack{x_i \le x \le x_{i+1}\\ i=1, \ldots, n-1 }} \abs{f'(x) - A_2(f)'(x)} \\
 &\ge \sup_{i=1, \ldots, n-1} (n-1)\int_{x_i}^{x_{i+1}} \abs{f'(x) - f(1)+f(0)} \, \dif x \\
 &\ge \sup_{i=1, \ldots, n-1} (n-1)\abs{\int_{x_i}^{x_{i+1}} [f'(x) - f(1)+f(0)] \, \dif x }\\
 &= \sup_{i=1, \ldots, n-1} (n-1)\abs{f(x_{i+1})-f(x_i) - \frac{f(1)-f(0)}{n-1}} = \tF_n(f).
