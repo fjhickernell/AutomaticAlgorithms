@@ -21,40 +21,42 @@
 
 \bigskip
 
-Thanks to the editor and two referees for their encouraging words and very helpful comments.  Below is our response to all of you (merged together since some points were mentioned by more than one of you).  
+Thanks to the editor and two referees for their encouraging words and very helpful comments.  Below is our response to all of the points raised merged together.  
 
-As an overall comment, we have tried to be consistent with the ideas of the information-based complexity (IBC), and define our terms and explain our results in a way that this community would understand.  However, some of our ideas do not quite fit the classical IBC mold, and we have needed to stretch the mold, hopefully without breaking it.  Moreover, we are also seeking to reach a broader audience, i.e., those who use automatic algorithms like MATLAB's {\tt quad}, and expect them to work correctly.  This is why we stress the need for rigorous theoretical guarantees, which might be taken for granted in the IBC world.
+We have tried to be consistent with the ideas of the information-based complexity (IBC), and define our terms and explain our results in a way that this community would understand.  However, some of our ideas do not quite fit the classical IBC mold.  We have needed to stretch the mold, hopefully without breaking it.  Moreover, we are also seeking to reach a broader audience, i.e., those who use automatic algorithms like MATLAB's {\tt quad}, and expect them to work correctly.  This is why we stress the need for rigorous theoretical guarantees, which are not available for practical algorithms like {\tt quad}, but which might be taken for granted in the IBC world.
 
 \begin{enumerate}
 \renewcommand{\labelenumi}{\arabic{enumi}.}
 
-\item We have shortened the manuscript.  The introduction has been shrunk. The tables and lists in the introduction have been deleted.  Lemma 1, our first new result, is now on p.\ 7.  
+\item We have shortened the manuscript.  The introduction has been shrunk. The tables and list in the introduction have been deleted.  Lemma 1, our first new result, is now on p.\ 7 rather than p.\ 11.  
 
 \item We have relegated the cost budget, $N_{\max}$, to a remark.  It is not mentioned in the algorithms or theorems.
 
-\item We have clarified the meaning of ``automatic'' to mean all algorithms that adjust the cost relative to the error tolerance given.  All our full-fledged algorithms are automatic, including those that are not adaptive.  Fixed-cost building block algorithms are used construct the automatic algorithms.  ``Adaptive" means that the algorithm adjusts its computational effort based on function data.
+\item We have clarified the meaning of ``automatic'' to mean all algorithms that adjust the cost relative to the error tolerance given.  All our full-fledged algorithms are automatic, including those that are not adaptive.  Fixed-cost building block algorithms are used construct the automatic algorithms.  ``Adaptive" means that the algorithm adjusts its computational effort based on function data as well as the error tolerance.
 
-\item Certainly the title should not have referred to the ``complexity of an algorithm''.  We have modified the title, but think it important to keep ``adaptive'' (a departure from many IBC papers), and ``automatic'' (a word used in the numerical analysis literature).
+\item Certainly the title should not refer to the ``complexity of an algorithm''.  We have modified the title, but think it important to keep ``adaptive'' (a departure from many IBC papers), and ``automatic'' (a word used in the numerical analysis literature).
 
 \item The definition of optimality has been clarified.  There is only one type now.  We now speak of optimal order, to indicate that the algorithms are optimal up to a leading constant.
 
 \item The semi-normed linear space of input functions, $\cf$, is not called a Banach space.  The weaker semi-norm $\Ftnorm{\cdot}$ is now truly weaker than $\Fnorm{\cdot}$.  We make no mention of a space $\tcf$ ($\cg$ in the old notation).  The normed linear space of output functions is now called $\cg$.
 
-\item We have summarized the main assumptions that needed for our adaptive algorithms earlier, in Section 1.2.
+\item We have summarized the main assumptions that needed for our adaptive algorithms earlier in the article --- in Section 1.2.
 
 \item We have altered our discussion of previous work on adaptive algorithms.
 
-\item Our perspective may differ from one referee, who states ``Adaption is not an advantage or an disadvantage per se, it is needed if [the set of interest] is a cone.'' If the set of input functions of interest is already fixed, then it is true that one only wants the best algorithm irrespective of whether it is adaptive.  
+\item Our perspective may differ from one referee, who states ``Adaption is not an advantage or an disadvantage per se, it is needed if [the set of interest] is a cone.'' If the set of input functions of interest has been fixed then it is true that one only wants the best algorithm irrespective of whether it is adaptive.  But we would argue that adaption \emph{does} have an advantage.
 
-But we would argue that adaption \emph{does} have an advantage.  Algorithms used in practice (and referenced in our manuscript) are adaptive.  The reason they are is that this allows one to expend more computational effort for a harder problem and less effort for an easier problem.  In fact, at the end of Section 4.2 we argue that our adaptive algorithms for cones enjoy a stronger sense of optimality than the non-adaptive ones do for the (convex set) ball. This point is mentioned again in Section 7.2.  It has to do with our definition of the complexity of a problem. 
+Algorithms used in practice (and referenced in our manuscript) are adaptive.  The reason they are is that this allows one to expend more computational effort for a harder problem and less effort for an easier problem.  We define our cost in Section 2.2 to reflect that reality.   For algorithms that are defined over some nice subset, $\cn$, of the normed space of input functions, $\cf$, we define the cost of the algorithm as the maximum cost over functions in $\cn \cap \cb_s$, where $\cb_s$ is a ball or radius $s$.  Thus the cost depends both on $\varepsilon$ and $s$.  Adaptive algorithms defined on $\cn$ may have a cost that decreases as $s$ decreases, while non-adaptive algorithms have a fixed cost independent of $s$.  
+
+At the end of Section 4.2 we argue that our adaptive algorithms defined on cones enjoy a stronger sense of optimality because their cost decreases as $s$ decreases.  This is not the case for the traditional non-adaptive algorithms defined on the ball. This point is mentioned again in Section 7.2.
 
 Unfortunately, the adaptive algorithms used in practice have no guarantees, but they often do a great job.  We in the numerical analysis and IBC communities should be working to find guarantees, and they will only be found if we move away from balls.  We would argue that cones give us the best setting to have practical and theoretically justified adaptive algorithms.  
 
-For the reader who is only concerned with theoretically justified algorithms, guarantees are assumed, but for the larger audience of users of readily available adaptive, automatic software guarantees are not a given, but are sometimes implied.  For example, the abstract of \cite{BatTre04a}, which describes the Chebfun toolbox, reads ``All functions live on $[-1,1]$ and are represented by values at sufficiently many Chebyshev points for the polynomial interpolant to be \emph{accurate to close to machine precision}.''  (emphasis ours).  This statement is true for many functions, but not all, and there are no guarantees for which functions this statement must be true.  It is for this audience that we use the word ``guarantee'' often in our paper.
+\item We use the word ``guarantee'' a lot in our article for a reason.  For the reader who is only concerned with theoretically justified algorithms, guarantees are assumed, but for the larger audience of users of readily available adaptive, automatic software guarantees are not a given, but are sometimes implied.  For example, the abstract of \cite{BatTre04a}, which describes the Chebfun toolbox, reads ``All functions live on $[-1,1]$ and are represented by values at sufficiently many Chebyshev points for the polynomial interpolant to be \emph{accurate to close to machine precision}.''  (emphasis ours).  This statement is true for many functions, but not all, and there are no guarantees for which functions this statement must be true.  It is for this audience that we use the word ``guarantee'' often in our paper.
 
 \item The condition $\phi(c\vy) = c\phi(\vy)$ is now only needed for the building block non-automatic algorithms described in Section 2.3.
 
-\item One referee gives a simple proof that the cone is not convex, but it assumes that the cone contains a ball.  None of our cones contain a ball, so this proof does not work.  In fact, if the cone contained a ball, then it would contain all balls.
+\item One referee gives a simple proof that the cone is not convex, but it assumes that the cone contains a ball.  None of our cones contain a ball, so this proof does not work.  In fact, if the cone contained a ball, then it would contain the whole linear space.
 
 \item We have changed our notation so that $\ci=\{N_1, N_2, \ldots \}$.  We do not require that $A_{N_i}$ be nested in $A_{N_{i+1}}$, so $\ci=\{2,3, \ldots\}$ is fine, but for every $n \in \ci$ there needs to be a next larger number $\tn \in \ci$ such that $A_n$ is nested in $A_{\tn}$.  The $n_i$ are now used exclusively for the elements of $\ci$ chosen by the algorithms.
 

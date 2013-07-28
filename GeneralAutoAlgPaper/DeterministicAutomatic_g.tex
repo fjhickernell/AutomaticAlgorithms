@@ -80,7 +80,7 @@ where $h:\ci \to [0,\infty)$ is non-increasing. Thus, $A_n$ must be exact for in
 h^{-1}(\varepsilon) = \min \{n \in \ci : h(n) \le \varepsilon\}, \qquad \varepsilon > 0.
 \end{equation}
 \end{subequations}
-Error bound \eqref{traditionerra} allows one to construct an automatic, yet non-adaptive algorithm that is guaranteed for input functions in a prescribed $\cf$-ball, $\cb_\sigma=\{ f \in \cf : \Fnorm{f} \le \sigma\}$.
+Error bound \eqref{traditionerra} allows one to construct an automatic, yet non-adaptive, algorithm that is guaranteed for input functions in a prescribed $\cf$-ball, $\cb_\sigma=\{ f \in \cf : \Fnorm{f} \le \sigma\}$.
 
 \begin{algo}[Non-Adaptive, Automatic] \label{nonadaptalgo} Let $\{A_n\}_{n \in \naturals}$ be defined as above, and let $\sigma$ be a fixed positive number.  Given an input function $f\in \cb_{\sigma}$, and $\varepsilon$, a positive error tolerance, find the computational cost needed to satisfy the error tolerance: $n=h^{-1}(\varepsilon/\sigma)$.  Then return $A_n(f)$ as the answer.
 \end{algo}
@@ -88,11 +88,13 @@ Error bound \eqref{traditionerra} allows one to construct an automatic, yet non-
 \begin{theorem}  \label{NonAdaptDetermThm}  For $\cf$, $\Fnorm{\cdot}$, $\cg$, $\Gnorm{\cdot}$, $S$ as described above, and under the assumptions of Algorithm \ref{nonadaptalgo}, if $f$ lies in the ball $\cb_\sigma$, then the answer provided by Algorithm \ref{nonadaptalgo} must satisfy the error tolerance, i.e., $\norm[\cg]{S(f)-A_n(f)} \le \varepsilon$.
 \end{theorem}
 
-While Algorithm \ref{nonadaptalgo} is guaranteed by Theorem \ref{NonAdaptDetermThm} to return the desired answer, this algorithm has drawbacks.  If this algorithm works for $f \in \cf$, it may not work for $cf \in \cf$, where $c$ is some constant, because $cf$ may fall outside the ball $\cb_\sigma$.  Moreover, although error bound \eqref{traditionerra} depends on $\Fnorm{f}$, the computational cost of Algorithm \ref{nonadaptalgo} does not depend on $\Fnorm{f}$.  The cost is the same whether $\Fnorm{f}=\sigma$ or $\Fnorm{f}$ is much smaller than $\sigma$.  This is because Algorithm \ref{nonadaptalgo} is not adaptive and makes no use of the function values sampled to estimate $\Fnorm{f}$.
+Algorithm \ref{nonadaptalgo}, Theorem \ref{NonAdaptDetermThm}, and the other theoretical results in this article related to Algorithm \ref{nonadaptalgo} are essentially known.  They are provided here as a benchmark to which we may compare our new adaptive algorithms.  
+
+Algorithm \ref{nonadaptalgo} has drawbacks.  If it works for $f \in \cf$, it may not work for $cf \in \cf$, where $c>1$, because $cf$ may fall outside the ball $\cb_\sigma$.  Moreover, although error bound \eqref{traditionerra} depends on $\Fnorm{f}$, the computational cost of Algorithm \ref{nonadaptalgo} does not depend on $\Fnorm{f}$.  The cost is the same whether $\Fnorm{f}=\sigma$ or $\Fnorm{f}$ is much smaller than $\sigma$.  This is because Algorithm \ref{nonadaptalgo} is not adaptive and makes no use of the function values sampled to estimate $\Fnorm{f}$.
 
 \subsection{Adaptive, Automatic Algorithms for Cones of Input Functions} \label{adapintrosec}
 
-Adaptive automatic algorithms are common in numerical software packages.  Examples include  MATLAB's {\tt quad} and {\tt integral} \cite{MAT8.1}, the quadrature algorithms in the NAG Library \cite{NAG23}, and the MATLAB Chebfun toolbox \cite{TrefEtal12}.  While these adaptive algorithms work well in practice for many cases, they do not have rigorous justification. The methods used to determine the computational cost are either heuristics or asymptotic error estimates that may not hold for finite sample sizes.
+Adaptive automatic algorithms are common in numerical software packages.  Examples include  MATLAB's {\tt quad} and {\tt integral} \cite{MAT8.1}, the quadrature algorithms in the NAG Library \cite{NAG23}, and the MATLAB Chebfun toolbox \cite{TrefEtal12}.  While these adaptive algorithms work well in practice for many cases, they do not have rigorous justification. The methods used to determine the computational cost are either heuristics or asymptotic error estimates that do not hold for finite sample sizes.
 
 In this article we derive guaranteed adaptive, automatic algorithms.  These adaptive algorithms use the $\{A_n\}_n \in \ci$ with known $h$ as described in \eqref{algoerr} and satisfying some additional technical conditions in \eqref{algseqerrcond}.  However, rather than assuming a priori an upper bound on $\Fnorm{f}$, our adaptive algorithms in Section \ref{genthmsec} use function data to construct a \emph{rigorous} data-driven upper bound.  We highlight the requirements here.
 
@@ -135,7 +137,7 @@ Examples include the following:
 \end{align*}
 The first three examples above are linear problems, but the last example is a nonlinear problem, which nevertheless is positively homogeneous.
 
-Given ``nice'' subset $\cn \subseteq \cf$, an automatic algorithm $A:\cn\times(0,\infty) \to \cg$ takes as inputs a function, $f$, and an error tolerance, $\varepsilon$.  Our goal is to find efficient $A$ for which $\norm[\cg]{S(f)-A(f,\varepsilon)}\le \varepsilon$.  Algorithm \ref{nonadaptalgo} is one non-adaptive example that is successful for functions in balls.
+Given a ``nice'' subset of input functions, $\cn \subseteq \cf$, an automatic algorithm $A:\cn\times(0,\infty) \to \cg$ takes as inputs a function, $f$, and an error tolerance, $\varepsilon$.  Our goal is to find efficient $A$ for which $\norm[\cg]{S(f)-A(f,\varepsilon)}\le \varepsilon$.  Algorithm \ref{nonadaptalgo} is one non-adaptive example that is successful for functions in balls.
 
 Following the definition of algorithms described in \cite[Section 3.2]{TraWasWoz88}, the algorithm takes the form of some function of data derived from the input function:
 \begin{equation*}
