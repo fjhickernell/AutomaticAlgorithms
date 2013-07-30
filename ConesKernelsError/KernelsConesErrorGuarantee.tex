@@ -1,0 +1,267 @@
+\documentclass[11pt]{amsart}
+\usepackage{amsmath,amssymb,mathtools}
+\textwidth 6.5 in
+\textheight 9 in
+\hoffset -1 in
+\voffset -0.5 in
+
+\input{FJHDef}
+\newcommand{\tb}{\tilde{b}}
+\newcommand{\tw}{\widetilde{w}}
+\newcommand{\tl}{\tilde{l}}
+\newcommand{\hl}{\hat{l}}
+\DeclareMathOperator{\pq}{GGCVMLE}
+\DeclareMathOperator{\GCV}{GCV}
+\DeclareMathOperator{\CV}{CV}
+\DeclareMathOperator{\MLE}{MLE}
+\DeclareMathOperator{\VOL}{VOL}
+\DeclareMathOperator{\EB}{EB}
+\theoremstyle{definition}
+\newtheorem{algo}{Algorithm}
+
+
+
+\begin{document}
+
+\newtheorem{question}{Question}
+\title{Guaranteed Meshfree Methods Via Cones}
+\author{Fred J. Hickernell}
+\date{\today}
+
+\maketitle
+
+\section{Background}
+
+\subsection{Spline Algorithm}
+
+Given the data $(\vx_i,y_i)$, $i=1, \ldots, n$, where $y_i=f(\vx_i)$, how can we best estimate the function $f:\cx \to \reals$?  The spline (meshfree, radial basis function, kriging) approach is to construct the approximation as
+\begin{subequations} \label{tfformula}
+\begin{equation}
+A_n(f)(\vx) = \sum_{i=1}^n c_i K(\vx,\vx_i) = \vc^T \vk(\vx) = \vk^T(\vx) \vc,
+\end{equation}
+where $\vc = \left( c_i \right)_{i=1}^n$, $\vk(\vx) = \left( K(\vx,\vx_i) \right)_{i=1}^n$, and $K:\cx\times \cx \to \reals$ is a \emph{symmetric, positive definite kernel function}, i.e., 
+\begin{equation*}
+K(\vx,\vt)=K(\vt,\vx), \quad \forall \vx,\vt \qquad\text{and} \qquad
+\sum_{i,j=1}^m b_i b_j K(\vt_i,\vt_j) > 0 \quad \forall \vb  \ne \vzero,\ \forall \vt_1, \ldots, \vt_m.
+\end{equation*}
+A good choice of $\vc$ is 
+\[
+\vc = \mK^{-1} \vy, \qquad \text{where } \mK = \left( K(\vx_i,\vx_j) \right)_{i,j=1}^n, \quad \vy = \left( y_i \right)_{i=1}^n.
+\]
+Note that $\mK$ is a \emph{symmetric, positive definite} matrix.
+
+An equivalent way to write this is
+\begin{equation}
+A_n(f)(\vx) = A_n(f)(\vx; \vy) = A_n(f)(\vx; \vy, \cp) = \sum_{i=1}^n y_i w_i(\vx)  = \vy^T \vw(\vx) = \vw^T(\vx) \vy,
+\end{equation}
+where the \emph{cardinal functions} $w_i$ are given by
+\[
+\vw(\vx) = \vw(\vx; \cp) = \left( w_i(\vx) \right)_{i=1}^n = \mK^{-1} \vk(\vx),
+\]
+and $\cp=\{\vx_i\}_{i=1}^n$ is called the \emph{design}.  Note that in this form, it is obvious that $A_n(f)$ is \emph{linear} in the function data $\vy$.  Thus, the approximation may also be written as
+\begin{equation}
+A_n(f)(\vx)  = \vy^T  \mK^{-1} \vk(\vx) = \vk^T(\vx)  \mK^{-1} \vy.
+\end{equation}
+\end{subequations}
+The spline approximation depends on the function data, the design, and the kernel function.
+
+\emph{It is recognized that this is a simplified version of splines.  For example, it is often the case that there are low order polynomials included besides the nonparametric kernel part.  However, even the simplified framework here is sufficent for posing questions of interest.}
+
+\subsection{Optimality from a Deterministic Perspective \cite{Fas07a,Wen05a}}
+The $A_n(f)$ constructed above has a couple of optimality properties when $f$ is assumed to belong to the Hilbert space, $\ch$, with reproducing kernel, $K$, i.e., 
+\begin{equation*}
+K(\cdot, \vt) \in \ch \quad \text{and} \quad f(\vt) = \ip[\ch]{K(\cdot,\vt)}{f} \qquad \forall \vt \in \cx,\ f \in \ch .
+\end{equation*}
+The spline, $A_n(f)$, has the property that
+\begin{equation} \label{minnorminterp}
+A_n(f) = \argmin_{f \in \ch } \left \{ \norm[\ch]{f} : f(\vx_i) = y_i,\ i=1, \ldots, n \right \}.
+\end{equation}
+Furthermore, if $L:\ch \to \reals$ is any bounded linear functional, then
+\begin{equation} \label{bestlinfunctional}
+L(A_n(f)) = \argmin_z \sup_{f \in \ch } \left \{ \abs{L(f) - z} : f(\vx_i) = y_i,\ i=1, \ldots, n, \text{ and } \norm[\ch]{f} \le V \right \}.
+\end{equation}
+This is an interesting property for, say, $L(f) = f(\vx)$.
+
+The proof of \eqref{minnorminterp} follows by writing any $f \in \ch$ as $A_n(f) + f_{\perp}$, where $f_{\perp} = f -A_n(f)$.  Note that by definition $f_{\perp}$ vanishes at the design, $\cp=\{\vx_i\}_{i=1}^n$, i.e., 
+\[
+f_{\perp}(\vx_i) = f(\vx_i) - A_n(f)(\vx_i) = y_i - y_i = 0, \quad i=1, \dots, n.
+\]
+Then the square norm of $f$ satisfies
+\begin{equation*}
+\norm[\ch]{f}^2 = \ip[\ch]{f}{f} = \ip[\ch]{A_n(f)+f_{\perp}}{A_n(f)+f_{\perp}} = \norm[\ch]{A_n(f)}^2 + \norm[\ch]{f_{\perp}}^2 + 2 \ip[\ch]{A_n(f)}{f_{\perp}}.
+\end{equation*}
+This last inner product vanishes because
+\begin{equation*}
+\ip[\ch]{A_n(f)}{f_{\perp}} = \ip[\ch]{\vc^T \vk}{f_{\perp}} =  \sum_{i=1}^{n} c_i \ip[\ch]{K(\cdot,\vx_i)}{f_{\perp}}=  \sum_{i=1}^{n} c_i f_{\perp}(\vx_i) = 0.
+\end{equation*}
+Since 
+\[
+\norm[\ch]{f}^2 = \norm[\ch]{A_n(f)}^2 + \norm[\ch]{f_{\perp}}^2,
+\]
+it follows that $\norm[\ch]{f}^2$ attains its minimum when $f_{\perp}$ vanishes, i.e., $f=A_n(f)$.  As an important aside, note that 
+\begin{align*}
+\norm[\ch]{A_n(f)}^2 &= \ip[\ch]{A_n(f)}{A_n(f)} = \ip[\ch]{\vc^T \vk}{\vk^T \vc} = \sum_{i,j=1}^n \ip[\ch]{c_i K(\cdot, \vx_i)}{K(\cdot, \vx_j) c_j}\\
+&= \sum_{i,j=1}^n c_i K(\vx_i, \vx_j) c_j = \vc^T \mK \vc = \vy^T \mK^{-1} \vy.
+\end{align*}
+
+The proof of \eqref{bestlinfunctional} follows by considering pairs of functions any $f_{\pm} \in \ch$ given by $f_{\pm} = A_n(f) \pm f_{\perp}$, and noting that $\norm[\ch]{f_{\pm}}^2 = \norm[\ch]{A_n(f)}^2 + \norm[\ch]{f_{\perp}}^2$.  For any fixed $L$, $z$, $\vx_1, \ldots, \vx_n$, and $y_1, \ldots, y_n$, it follows that $A_n(f)$ is then fixed, and one may write
+\begin{align*}
+\MoveEqLeft{\sup_{f \in \ch } \left \{ \abs{L(f) - z} : f(\vx_i) = y_i,\ i=1, \ldots, n, \text{ and } \norm[\ch]{f} \le V \right \}}\\
+&= \sup_{f_{\perp} \in \ch } \left\{ \max_{f_+, f_-} \abs{L(f_{\pm}) - z} :  \norm[\ch]{f_{\perp}}^2 \le V^2 - \norm[\ch]{A_n(f)}^2 \right\} \\
+&= \sup_{f_{\perp} \in \ch }\left\{ \max_{\pm} \abs{L(A_n(f)) \pm L(f_{\perp}) - z} :  \norm[\ch]{f_{\perp}}^2 \le V^2 - \norm[\ch]{A_n(f)}^2 \right\} \\
+&= \abs{L(A_n(f)) - z} + \sup_{f_{\perp} \in \ch } \left\{ \abs{L(f_{\perp})} :  \norm[\ch]{f_{\perp}}^2 \le V^2 - \norm[\ch]{A_n(f)}^2 \right\}.
+\end{align*}
+Only the first term depends on $z$, and this is minimized by the choice $z=L(A_n(f))$.  This completes the proof of \eqref{bestlinfunctional}.  Note that since $L(A_n(f))$ is the best estimate of $L(f)$, and $L(A_n(f))$ is linear in the function data $\vy$, it is also the best linear estimator of $L(f)$.
+
+Continuing the above argument one may derive an error bound by expressing $L(f)$ in terms of the reproducing kernel and applying the Cauchy-Schwartz inequality.  Let $\eta \in \ch$ be the representer of $L$, i.e.,
+\[
+L(f)=\ip[\ch]{\eta}{f} \qquad \forall f \in \ch.
+\]
+It then follows that 
+\[
+\eta(\vx) = \ip[\ch]{K(\cdot, \vx)}{\eta} = L(K(\cdot,\vx)).
+\]
+The error of the approximation to $L(f)$ may then be written as 
+\begin{align*}
+\MoveEqLeft{\sup_{f \in \ch } \left \{ \abs{L(f) - L(A_n(f))} : f(\vx_i) = y_i,\ i=1, \ldots, n, \text{ and } \norm[\ch]{f} \le V \right \}}\\
+&= \sup_{f \in \ch } \left\{ \abs{\ip[\ch]{\eta - \sum_{i=1}^n L(w_i) K(\cdot,\vx_i)} {f} }:  \norm[\ch]{f} \le V \right\}\\
+&=  \norm[\ch]{\eta - \sum_{i=1}^n L(w_i) K(\cdot,\vx_i)}V.
+\end{align*}
+The pieces of this norm are 
+\begin{align*}
+\ip[\ch]{\eta}{\eta}&= L(\eta)= L^{\cdot}L^{\cdot \cdot} K(\cdot,\cdot\cdot)\\
+\ip[\ch]{\eta}{\sum_{i=1}^n L(w_i) K(\cdot,\vx_i)} & = \sum_{i=1}^n L(w_i) \ip[\ch]{\eta} {K(\cdot,\vx_i)} = \sum_{i=1}^n L(w_i) \eta(\vx_i) \\
+& = \sum_{i=1}^n L(w_i) L(K(\cdot,\vx_i)) = \veta^T \mK^{-1} \veta
+\end{align*}
+where $\veta=(L(K(\cdot,\vx_i)))_{i=1}^n$.  Moreover,
+\begin{align*}
+\ip[\ch]{\sum_{i=1}^n L(w_i) K(\cdot,\vx_i)}{\sum_{j=1}^n L(w_j) K(\cdot,\vx_j)}
+&= \sum_{i,j=1}^n \ip[\ch]{L(w_i) K(\cdot,\vx_i)}{L(w_j) K(\cdot,\vx_j)}\\
+&= \sum_{i,j=1}^n  L(w_i) K(\vx_i,\vx_j) L(w_j)= \veta^T \mK^{-1} \veta.
+\end{align*}
+Putting all the pieces together gives
+\begin{multline}
+\sup_{f \in \ch } \left \{ \abs{L(f) - L(A_n(f))}^2 : f(\vx_i) = y_i,\ i=1, \ldots, n, \text{ and } \norm[\ch]{f} \le V \right \} = \Phi_L V, \\
+\text{where } \Phi_L^2 = L^{\cdot}L^{\cdot \cdot} K(\cdot,\cdot\cdot) - \veta^T \mK^{-1} \veta.
+\end{multline}
+This may be expressed as a tight error bound
+\begin{equation} \label{wcerrbd}
+ \abs{L(f) - L(A_n(f))}^2 \le \Phi_L^2 \norm[\ch]{f - A_n(f)}^2 =  \Phi_L^2 \left[\norm[\ch]{f}^2 - \norm[\ch]{A_n(f)}^2 \right] \le \Phi_L^2 \norm[\ch]{f}^2.
+\end{equation}
+
+The space $\ch$ may be decomposed into two orthogonal subspaces, $\ch(K_{\cp})$ and $\ch(K_{\perp})$.  Define two kernel functions: 
+\[
+K_{\cp}(\vx,\vt) = \vk^T(\vx) \mK^{-1} \vk(\vt), \qquad K_{\perp}(\vx,\vt) = K(\vx,\vt) - K_{\cp}(\vx,\vt) = K(\vx,\vt) - \vk^T(\vx) \mK^{-1} \vk(\vt).
+\]
+These two kernels are symmetric by definition.  The first is positive semidefinite because
+\begin{multline*}
+\sum_{i,j=1}^n b_i K_{\cp}(\vt_i,\vt_j) b_j = \sum_{i,j=1}^n b_i \vk^T(\vt_i) \mK^{-1} \vk(\vt_j) b_j \\
+= \vb^T \left(\left( K(\vx_i,\vt_j) \right)_{i,j=1}^{n,m} \right)^T\mK^{-1} \left( K(\vx_i,\vt_j) \right)_{i,j=1}^{n,m}\vb \ge 0, \qquad \forall \vb, \ \forall \vt_1, \ldots, \vt_m.
+\end{multline*}
+For each fixed $\vt$, $K_{\cp}(\cdot,\vt)$ is a linear combination of the functions comprising the vector $\vk$.  Thus, $\ch(K_{\cp})$ consists of the span of the components of $\vk$.  Notice that for all $i,j=1, \ldots, n$, it follows that $K_{\cp}(\vx,\vx_i) = \vk^T(\vx) \mK^{-1} \vk(\vx_i)  = \vk^T(\vx) \ve_i = K(\vx,\vx_i)$, and 
+\begin{multline*}
+\ip[\ch(K_{\cp})]{K(\cdot,\vx_i)}{K(\cdot,\vx_j)} = \ip[\ch(K_{\cp})]{K_{\cp}(\cdot,\vx_i)}{K_{\cp}(\cdot,\vx_j)} = K_{\cp}(\vx_i,\vx_j) \\
+= K(\vx_i,\vx_j) = \ip[\ch]{K(\cdot,\vx_i)}{K(\cdot,\vx_j)}.
+\end{multline*}
+Thus, $\ch(K_{\cp})$ is a subspace of $\ch$.  
+
+Let $\ch_{\perp}$ denote the orthogonal complement of $\ch(K_{\cp})$.  It is now shown that $K_{\perp})$ as defined above is the reproducing kernel for this Hilbert space.  To demonstrate this, it is first shown that $K_{\perp}(\cdot,\vx) \in \ch_{\perp}$ by showing that $K_{\perp}(\cdot,\vx)$ is  perpendicular to all functions residing in $\ch(K_{\cp})$.  Such functions take the form  $\vb^T\vk$ for some $\vb$, and 
+\[
+\ip[\ch]{\vb^T\vk(\cdot)}{K_{\perp}(\cdot,\vx)}=\ip[\ch]{\vb^T\vk(\cdot)}{K(\cdot,\vx) - \vk^T(\cdot) \mK^{-1} \vk(\vx)} = \vb^T \vk(\vx) - \vb^T \mK \mK^{-1} \vk(\vx) = 0.
+\]
+Now consider any $f \in \ch_{\cp}$.  This means that $\ip[\ch]{K(\cdot,\vx_i)}{f}=0$ for $i=1, \ldots, n$, and so,
+\[
+f(\vx) = \ip[\ch]{K(\cdot,\vx)}{f} = \ip[\ch]{K(\cdot,\vx) - \vk(\cdot)\mK^{-1}\vk(\vx)}{f} = \ip[\ch_{\perp}]{K_{\perp}}{f}.
+\]
+Thus, $K_{\perp}$ obeys the reproducing property for $\ch_{\perp}$, and thus must be its reproducing kernel.
+
+
+\section{Error Estimation Via Cones}
+
+Let $L_{\vx}$ be the evaluation functional, i.e, $L_{\vx}(f)=f(\vx)$.  For this case we have an error bound
+\begin{align} \label{errexpress}
+\MoveEqLeft{\int_{\cx} \sup_{0 \ne f \in \ch} \frac{\abs{f(\vx) - A_n(f)(\vx)}^2}{\norm[\ch]{f}^2} \rho(\vx) \, \dif x}\\
+\nonumber
+ &\le \int_{\cx} \Phi_{L_{\vx}}^2 \rho(\vx) \, \dif x \\
+\nonumber
+& = \int_{\cx} [K(\vx,\vx) + \vk^T(\vx)\mK^{-1} \vk(\vx) ] \rho(\vx) \, \dif x\\
+\nonumber 
+& = \int_{\cx} K(\vx,\vx) \rho(\vx) \, \dif x + \trace\left( \mK^{-1} \tmK \right) \\
+\nonumber
+&=: h^2(n)
+\end{align}
+where $\tmK=\int_{\cx} \vk^T(\vx) \vk(\vx) \rho(\vx) \, \dif x$.
+Note that the left hand side is no smaller than 
+\[
+\sup_{0 \ne f \in \ch} \frac{\norm[\cl_2]{f-A_n(f)}}{\norm[\ch]{f}}.
+\]
+
+Now suppose that $T:\ch \to \cl_2=\cl_2(\cx)$ is some bounded linear operator, i.e., $\norm[\cl_2]{T(f)} \le C\norm[\ch]{f}$ for all $f \in \ch$.  Here the $\cl_2$-norm is defined in terms of a weight, $\rho$:
+\[
+\norm[\cl_2]{f}^2=\int_{\cx} \abs{f(x)}^2 \rho(\vx) \, \dif \vx.
+\]
+The linear functional $T_{\vx} : f \mapsto T(f)(\vx)$ is assumed to be bounded, and its square norm is $\norm[\ch]{T_{\vx}}=\sqrt{T^{\cdot}_{\vx}T^{\cdot \cdot}_{\vx} K(\cdot,\cdot\cdot)}$. Note that 
+\begin{multline*}
+\norm[\ch]{T}^2 = \sup_{\norm[\ch]{f} \le 1} \norm[\cl_2]{T(f)}^2 
+= \sup_{\norm[\ch]{f} \le 1} \int_{\cx} \abs{T(f)(\vx)}^2 \rho(\vx) \, \dif \vx \\
+\le \int_{\cx} \sup_{\norm[\ch]{f} \le 1}  \abs{T(f)(\vx)}^2  \rho(\vx) \, \dif \vx 
+= \int_{\cx} \abs{\norm[\ch]{T_{\vx}}}^2  \rho(\vx) \, \dif \vx =\norm[\cl_2]{\norm[\ch]{T_{\cdot}}}^2.
+\end{multline*}
+It is assumed that the right hand side is finite.  Let $\xi(\cdot,\vx)$ denote the representer for $T_{\vx}$.  This means that $\xi(\vt,\vx)=T_{\vx}(K(\cdot,\vt))=T_{\vx}(K(\vt,\cdot))$.
+
+Let $\norm[\tch]{\cdot}$ be a weaker norm defined by $\norm[\tch]{f} = \norm[\cl_2]{T(f)}$.  For a fixed design $\cp$, define the algorithm for estimating the weaker norm by $\tH_n(f)= \norm[\cl_2]{T(A_n(f))}$.  Defining
+\[
+\vxi(\vx)=\left(\xi(\vx,\vx_i) \right)_{i=1}^n=\left(T_{\vx}K(\cdot,\vx_i) \right)_{i=1}^n,
+\]
+it follows that $T(A(f))(x)=\vy^T\vxi(\vx)$, and so
+\begin{equation*}
+\tH_n^2(f) = \norm[\cl_2]{\vy^T\vxi(\cdot)}^2 = \vy \mK^{-1} \tmH \mK^{-1}\vy, \qquad \text{where }\tmH := \int_{\cx} \vxi(\vx) \vxi^T(\vx) \rho(\vx) \, \dif x.
+\end{equation*} 
+
+By the work in the previous section it follows that 
+\begin{align*}
+\abs{\norm[\tch]{f} - \tH_n(f)}^2 &= \abs{\norm[\cl_2]{T(f)} - \norm[\cl_2]{T(A_n(f))}}^2\\
+&\le  \norm[\cl_2]{T(f)-T(A_n(f))}^2 = \int_{\cx} [T(f)(\vx)-T(A_n(f))(\vx)]^2 \rho(\vx) \, \dif x\\
+&\le \norm[\ch]{f}^2 \int_{\cx} \Phi_{T_{\vx}}^2  \rho(\vx) \, \dif x = \norm[\cl_2]{\Phi_{T_{\cdot}}}^2 \norm[\ch]{f}^2.
+\end{align*}
+Let $\zeta(\vt,\vx)=T^{\cdot}_{\vt}T^{\cdot\cdot}_{\vx}K(\cdot,\cdot\cdot)$.  Note that the $\veta$ above becomes $\xi(\vx)$ for $L=T_{\vx}$.  Then one may write 
+\[
+\Phi_{T_{\vx}}^2 = \zeta(\vx,\vx) - \xi^T(\vx) \mK^{-1} \xi(\vx).
+\]
+This error bound may be written as
+\begin{align*}
+\tildeh^2(n) &:= \int_{\cx} \Phi_{T_{\vx}}^2  \rho(\vx) \, \dif x \\
+&= \int_{\cx} [\zeta(\vx) - \xi^T(\vx) \mK^{-1} \xi(\vx)]  \rho(\vx) \, \dif x\\
+&= \int_{\cx} \zeta(\vx,\vx) \rho(\vx) \, \dif x - \trace\left( \mK^{-1} \tmH \right) 
+\end{align*}
+
+Let $\cc_{\tau}=\{ f \in \ch :  \norm[\ch]{f} \le \tau \norm[\tch]{f}\}$.  Then for all $f \in \cc_{\tau}$, 
+\[
+\abs{\norm[\tch]{f} - \tH_n(f)} \le \tildeh (n) \norm[\ch]{f} \le \tau \tildeh (n) \norm[\tch]{f},
+\]
+which implies 
+\[
+\norm[\tch]{f} \le \frac{\tH_n(f)}{1-\tau \tildeh(n)}, \qquad \norm[\ch]{f} \le \frac{\tau \tH_n(f)}{1-\tau \tildeh(n)}.
+\]
+This implies that 
+\[
+\left[\int_{\cx} \sup_{\substack{g \in \ch \\ \norm[\ch]{g} \le \norm[\ch]{f} \\g(\vx_i)=f(\vx_i) }} \abs{g(\vx) - A_n(f)(\vx)}^2 \rho(\vx) \, \dif x \right ]^{1/2} \le \frac{\tau h(n) \tH_n(f)}{1-\tau \tildeh(n)}
+\]
+
+\begin{algo}  Given $\tau>0$, $\varepsilon>0$, and $f \in \cc_\tau$, choose $n_1$ such that $\tildeh(n) < 1/\tau$
+
+\begin{description}
+\item[Stage 1] Check if $\tau h(n_i) \tH_{n_i}(f) \le \varepsilon[1-\tau \tildeh(n_i)]$.  If so, return the answer $A_{n_i}(f)$.
+
+\item[Stage 2]  If not, increment $i$ by one and return to Stage 1.
+\end{description}
+\end{algo}
+
+\section{Example} To be continued \ldots
+\bibliographystyle{amsalpha}
+\bibliography{FJH22,FJHown22}
+
+
+
+
+\end{document}

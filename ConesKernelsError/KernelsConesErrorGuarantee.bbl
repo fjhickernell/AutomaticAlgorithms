@@ -1,0 +1,15 @@
+\def\Ignore#1{}\def\notesupp#1{}\def\Ignore#1{}\def\notesupp#1{}\def\Ignore#1{}\def\notesupp#1{}\def\Ignore#1{}\def\notesupp#1{}\def\Ignore#1{}\def\notesupp#1{}\def\Ignore#1{}\def\notesupp#1{}
+\providecommand{\bysame}{\leavevmode\hbox to3em{\hrulefill}\thinspace}
+\begin{thebibliography}{Wen05}
+
+\bibitem[Fas07]{Fas07a}
+G.~E. Fasshauer, \emph{Meshfree approximation methods with {{\sc Matlab}}},
+  Interdisciplinary Mathematical Sciences, vol.~6, World Scientific Publishing
+  Co., Singapore, 2007.
+
+\bibitem[Wen05]{Wen05a}
+H.~Wendland, \emph{Scattered data approximation}, Cambridge Monographs on
+  Applied and Computational Mathematics, no.~17, Cambridge University Press,
+  Cambridge, 2005.
+
+\end{thebibliography}
