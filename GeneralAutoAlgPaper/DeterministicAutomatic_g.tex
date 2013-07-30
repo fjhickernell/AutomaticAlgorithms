@@ -47,7 +47,7 @@
 \address{Room E1-208, Department of Applied Mathematics, Illinois Institute of Technology,\\ 10 W.\ 32$^{\text{nd}}$ St., Chicago, IL 60616}
 
 \begin{abstract} 
-Automatic numerical algorithms attempt to provide an approximate solution that differs from the true solution by no more than a user-specified error tolerance, $\varepsilon$. Furthermore, the computational cost is often determined \emph{adaptively} by the algorithm based on function data, e.g., function values. While automatic algorithms are widely used in practice, most of them lack \emph{guarantees}, i.e., conditions on the input function that ensure that the error tolerance is met. 
+Automatic numerical algorithms attempt to provide an approximate solution that differs from the true solution by no more than a user-specified error tolerance, $\varepsilon$. The computational cost is often determined \emph{adaptively} by the algorithm based on the function values sampled. While automatic algorithms are widely used in practice, most lack \emph{guarantees}, i.e., conditions on the input function that ensure that the error tolerance is met. 
 
 This article establishes a framework for guaranteed, adaptive, automatic algorithms. Sufficient conditions for success and bounds on the computational cost are provided in Theorems \ref{TwoStageDetermThm} and \ref{MultiStageThm}.  Lower bounds on the complexity of the problem are given in Theorem \ref{complowbd}, and conditions under which the proposed algorithms have optimal order are given in Corollary \ref{optimcor}. These general theorems are illustrated for univariate numerical integration and function recovery via adaptive algorithms based on linear splines.  
 
