@@ -20,14 +20,13 @@ Using this same data one may approximate the $\cl_\infty$ norm of $f'-f(1)+f(0)$
 \end{multline}
 Moreover, a lower bound on $\norm[\infty]{f''}$ can be derived similarly to the previous section.  Specifically, for $n \ge 3$,
 \begin{equation} \label{Fnormappxalg}
-F_n(f) := \frac 1 2 (n-1)^2\sup_{i=1, \ldots, n-2} \abs{f(x_i) - 2 f(x_{i+1})+f(x_{i+2})}.
+F_n(f) := (n-1)^2\sup_{i=1, \ldots, n-2} \abs{f(x_i) - 2 f(x_{i+1})+f(x_{i+2})}.
 \end{equation}
-It follows using the mean value theorem that
+It follows using the H\"older's inequality that
 \begin{align*}
-F_n(f) &= \frac 1 2 (n-1)^2\sup_{i=1, \ldots, n-2} \bigabs{[f(x_{i+2}) - f(x_{i+1})] - [f(x_{i+1}) - f(x_{i})]} \\
-&= \frac 1 2 (n-1)\sup_{i=1, \ldots, n-2} \abs{f'(\xi_{i+1}) - f'(\xi_{i})} \le \norm[\infty]{f''},
+F_n(f) &= (n-1)^2\sup_{i=1, \ldots, n-2} \biggabs{\int_{x_i}^{x_{i+2}} \left[\frac{1}{n-1} - \abs{x-x_{i+1}}\right] f''(x) \, \dif x} \\
+&\le (n-1)^2\sup_{i=1, \ldots, n-2} \norm[\infty]{f''} \int_{x_i}^{x_{i+2}} \abs{\frac{1}{n-1} - \abs{x-x_{i+1}}} \, \dif x = \norm[\infty]{f''}.
 \end{align*}
-where $\xi_i$ is some point in $[x_i,x_{i+1}]$, and so $\xi_{i+1} - \xi_i \le 2(n-1)^{-1}$.
 
 \subsection{Adaptive Algorithm and Upper Bound on the Cost}
 
@@ -82,7 +81,7 @@ To derive the error bounds for $A_n(f)$ we make use of \eqref{fintermsfdoubprime
 &=\norm[\infty]{f''} \sup_{\substack{x_i \le x \le x_{i+1}\\ i=1, \ldots, n-1 }}  \frac{(x-x_i)(x_{i+1}-x)}2 \\
 &= h(n) \norm[\infty]{f''}, \qquad \qquad  h(n):= \frac{1}{8(n-1)^2}.
 \end{align*}
-Since $h_{\pm}(n)$ and $h(n)$, are the same as in the previous section for integration, the simplifications in \eqref{simpifycond} apply here as well.  Then Algorithm \ref{multistagealgo} and Theorem \ref{MultiStageThm} may be applied directly to  yield the following algorithm for function approximation and its guarantee.
+Since $h_{\pm}(n)$ and $h(n)$, are the same as in the previous section for integration, the simplifications in \eqref{simplifycond} apply here as well.  Then Algorithm \ref{multistagealgo} and Theorem \ref{MultiStageThm} may be applied directly to  yield the following algorithm for function approximation and its guarantee.
 
 \begin{algo}[Adaptive Univariate Function Recovery] \label{multistageapproalgo}
 Let the sequence of algorithms $\{A_n\}_{n\in \mathcal{I}}$, $\{\tF_n\}_{n\in \mathcal{I}}$, and $\{F_n\}_{n\in \mathcal{I}}$ be as described above.
@@ -171,8 +170,9 @@ For initial $\tau$ values of $10, 100 , 1000$ we choose a sample of  $10000$ fun
 
 \begin{table}[h]
 \centering
-\begin{tabular}{cccc}
-$\tau$ &  $\Prob(f \in \cc_{\tau}) $ & Success \\
+\begin{tabular}{cccccc}
+&&\multicolumn{2}{c}{Success} & Failure \\
+$\tau$ &  $\Prob(f \in \cc_{\tau}) $ & No Warning & Warning & No Warning \\
 \toprule
 $10$ & $0\% \rightarrow  25\% $ & $25\%$  \\
 $100$ & $33 \% \rightarrow 56\% $ & $58\%$ \\

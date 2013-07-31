@@ -116,16 +116,16 @@ h(n)= \frac{1}{8(n-1)^2}, \qquad h^{-1}(\varepsilon) = \left \lceil \sqrt{\frac{
 %\end{subequations}
 
 Given the above definitions of $h, \fC_n, \fc_n$, and $\tfc_n$, it is now possible to also specify
-%\begin{subequations} \label{simplifycond}
-\begin{gather*}
+\begin{subequations} \label{simplifycond}
+\begin{gather}
 h_1(n) = h_2(n) = \fC_n h(n) = \frac{1}{4(n-1)(2n-2-\tau)}, \\
 h_1^{-1}(\varepsilon) = h_2^{-1}(\varepsilon) = 1+ \left \lceil \sqrt{\frac{\tau}{8 \varepsilon} + \frac{\tau^2}{16}} +\frac{\tau}{4} \right \rceil \le 2 + \frac{\tau}{2} + \sqrt{\frac{\tau}{8\varepsilon}}.
-\end{gather*}
+\end{gather}
 Moreover, the left side of \eqref{multistageconv}, the stoping criterion inequality in the multi-stage algorithm, becomes
-\begin{equation*}
+\begin{equation}
 \tau h(n_i)\fC_{n_i} \tF_{n_i}(f) = \frac{\tau  \tF_{n_i}(f) } {4(n_i-1)(2n_i-2 -\tau)}.
-\end{equation*}
-%\end{subequations}
+\end{equation}
+\end{subequations}
 With these preliminaries, Algorithm \ref{multistagealgo} and Theorem \ref{MultiStageThm} may be applied directly to  yield the following adaptive integration algorithm and its guarantee.
 
 \begin{algo}[Adaptive Univariate Integration] \label{multistageintegalgo}
@@ -220,12 +220,17 @@ If $a$ is large, then $f$ is spiky, and it is difficult to approximate the integ
 Monte Carlo simulation is used to determine the probability that $f \in \cc_{\tau}$ for $\tau = 10, 100$, and $1000$ (see Table \ref{integresultstable}). 
 \begin{table}[h]
 \centering
-\begin{tabular}{cccc|cccc}
-\multicolumn{4}{c|}{Algorithm \ref{multistageintegalgo}} \\
-$\tau$ &  10 & 100 & 1000 & {\tt quad} & {\tt quadgk} & {\tt chebfun} \\
+\begin{tabular}{cccccc}
+&&&\multicolumn{2}{c}{Success} & Failure \\
+& $\tau$ &  $\Prob(f \in \cc_{\tau}) $ & No Warning & Warning & No Warning \\
 \toprule
-Probability of $f \in \cc_{\tau}$ &  $0\%$ &  $25\%$  & $58\%$ \\
-Observed Success Rate & $37\%$ &  $69\%$  & $97\%$ & $30\%$ & $77\%$ & $68\%$
+&$10$ & $??\% \rightarrow  ??\% $ & $??\%$  \\
+Algorithm \ref{multistageintegalgo} &$100$ & $?? \% \rightarrow ??\% $ & $??\%$ \\
+&$1000$ & $??\% \rightarrow ??\% $& $??\%$ \\
+\midrule
+{\tt quad}\\
+{\tt quadgk}\\
+{\tt chebfun}\\
 \end{tabular}
 \caption{Performance of multi-stage, adaptive Algorithm \ref{multistageintegalgo} for various values of $\tau$, and also of other automatic quadrature algorithms. The test function \eqref{testfun} with random parameters, $a$ and $z$, was used. \label{integresultstable}}
 \end{table}

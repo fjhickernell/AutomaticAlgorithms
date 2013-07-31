@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=latex 2013.7.24)  31 JUL 2013 10:53
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=latex 2013.7.24)  31 JUL 2013 14:05
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -511,7 +511,11 @@ File: tikzlibrarytopaths.code.tex 2008/06/17 v2.10 (rcs-revision 1.2)
 (/usr/local/texlive/2013/texmf-dist/tex/latex/comment/comment.sty
 \CommentStream=\write5
 
-Excluding comment 'comment') (./FJHDef.tex
+Excluding comment 'comment')
+(/usr/local/texlive/2013/texmf-dist/tex/latex/multirow/multirow.sty
+\bigstrutjot=\dimen185
+)
+(./FJHDef.tex
 \overwdth=\skip59
 )
 \c@theorem=\count134
@@ -554,13 +558,13 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 LaTeX Font Info:    Try loading font information for U+euf on input line 231.
  (/usr/local/texlive/2013/texmf-dist/tex/latex/amsfonts/ueuf.fd
 File: ueuf.fd 2013/01/14 v3.01 Euler Fraktur
-) [7] [8] [9] [10] [11] [12] [13] [14]
+) [7] [8] [9] [10] [11] [12] [13]
 Underfull \hbox (badness 1314) in paragraph at lines 549--549
 []\OT1/cmr/m/n/8 Table 1: Costs of var-i-ous al-go-rithms, $\OML/cmm/m/it/8 A$\
 OT1/cmr/m/n/8 , guar-an-teed to sat-isfy the tol-er-ance, i.e.,
  []
 
-(./univariate_integration_g.tex [15] [16]
+[14] (./univariate_integration_g.tex [15] [16]
 LaTeX Font Info:    Try loading font information for U+bbm on input line 77.
 
 (/usr/local/texlive/2013/texmf-dist/tex/latex/bbm-macros/ubbm.fd
@@ -570,12 +574,13 @@ Overfull \hbox (5.63974pt too wide) in paragraph at lines 135--136
 []\OT1/cmr/m/n/10 Compute $[](\OML/cmm/m/it/10 f\OT1/cmr/m/n/10 )$
  []
 
-[19] [20] [21]) (./ApproxUnivariate_g.tex [22] [23]
+[19] [20]
+Overfull \hbox (1.01271pt too wide) in paragraph at lines 223--235
+ [][] 
+ []
 
-LaTeX Warning: Reference `simpifycond' on page 24 undefined on input line 85.
-
-
-Overfull \hbox (7.04253pt too wide) in paragraph at lines 91--92
+[21]) (./ApproxUnivariate_g.tex [22] [23]
+Overfull \hbox (7.04253pt too wide) in paragraph at lines 90--91
 []\OT1/cmr/m/n/10 Compute $[](\OML/cmm/m/it/10 f\OT1/cmr/m/n/10 )$
  []
 
@@ -601,20 +606,20 @@ put-ing,
 
 [31]) [32] (./DeterministicAutomatic_g.aux)
 
-LaTeX Warning: There were undefined references.
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
  )
 (\end occurred inside a group at level 1)
 
-### simple group (level 1) entered at line 233 ({)
+### simple group (level 1) entered at line 238 ({)
 ### bottom level 
 Here is how much of TeX's memory you used:
- 11554 strings out of 493312
- 206645 string characters out of 6137876
- 263673 words of memory out of 5000000
- 14742 multiletter control sequences out of 15000+600000
+ 11566 strings out of 493312
+ 206937 string characters out of 6137876
+ 264874 words of memory out of 5000000
+ 14750 multiletter control sequences out of 15000+600000
  16104 words of font info for 63 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
- 56i,18n,55p,1033b,358s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 56i,18n,55p,1033b,359s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on DeterministicAutomatic_g.dvi (32 pages, 150328 bytes).
+Output written on DeterministicAutomatic_g.dvi (32 pages, 149836 bytes).

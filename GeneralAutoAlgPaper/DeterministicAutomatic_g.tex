@@ -1,6 +1,6 @@
 \documentclass[]{elsarticle}
 \setlength{\marginparwidth}{0.5in}
-\usepackage{amsmath,amssymb,amsthm,mathtools,bbm,booktabs,array,tikz,pifont,comment,graphicx}
+\usepackage{amsmath,amssymb,amsthm,mathtools,bbm,booktabs,array,tikz,pifont,comment,multirow,graphicx}
 \input FJHDef.tex
 
 %Requires ApproxUnivariate.tex, univariate_integration.tex, foolbwquadexample.eps 
@@ -259,7 +259,7 @@ Then $\tau \fC \tF_{n_{\tF}}(f)$ is a reliable upper bound on $\Fnorm{f}$.
 \end{description}
 \end{algo}
 
-The bounds in Lemma \ref{Gnormlem} involving $\tF_n$ imply bounds on the cost in the algorithm above.  Since $h^{-1}$ is a non-increasing function, it follows that for all $f \in \cc_{\tau}$
+The bounds in Lemma \ref{Gnormlem} involving $\tF_n$ imply bounds on the cost in the algorithm above.  Since $h^{-1}$ is non-increasing, it follows that for all $f \in \cc_{\tau}$,
 \begin{equation*}
 h^{-1}\left(\frac{\varepsilon}{\Fnorm{f}}\right) \le  h^{-1}\left(\frac{\varepsilon}{\tau\Ftnorm{f}}\right)  \le h^{-1}\left(\frac{\varepsilon}{\tau \fC \tF_{n_{\tF}}(f)}\right) \le 
 \begin{cases} \displaystyle  h^{-1}\left(\frac{\varepsilon}{\tau \fC \tfc \Ftnorm{f}}\right) \\[2ex]
@@ -285,21 +285,18 @@ This algorithm is computationally stable in the sense that the maximum cost is n
 
 There are a several points to note about this result.
 
-\begin{rem} This algorithm and its accompanying theorem assume the existence of fixed cost algorithms for approximating the weaker norm and for approximating the solution, and the error bounds for these fixed cost algorithms must be known. Sections \ref{integsec} and \ref{approxsec} provide concrete examples where these conditions are satisfied.
+\begin{rem} This algorithm and its accompanying theorem assume the existence of fixed cost algorithms for approximating the weaker norm and for approximating the solution, both with known error bounds. Sections \ref{integsec} and \ref{approxsec} provide concrete examples where these conditions are satisfied.
 \end{rem}
 
-\begin{rem} The maximum and minimum costs of Algorithm \ref{twostagedetalgo}, as given by \eqref{auto2stagedetcost}, depend on the $\cf$- and $\tcf$-semi-norms of the input function, $f$.  However, the values of these semi-norms are not inputs to the algorithm, but rather are bounded by the algorithm.  The number of samples used to obtain the approximation to $S(f)$ is adjusted adaptively based on these bounds.
+\begin{rem} The maximum and minimum costs of Algorithm \ref{twostagedetalgo} in \eqref{auto2stagedetcost} depend on the $\cf$- and $\tcf$-semi-norms of the input function, $f$.  However, the semi-norms of $f$ are not input to the algorithm, but rather are bounded by the algorithm.  The number of samples used to obtain the approximation to $S(f)$ is adjusted adaptively based on these bounds.
 \end{rem}
 
-\begin{rem} Instead of choosing $\tau$ as an input parameter for Algorithm \ref{twostagedetalgo}, one may alternatively choose the inflation factor $\fC >1$.  This then implies that 
-\begin{equation*} \label{taufromnC}
-\tau = \left(1 - \frac{1}{\fC}\right)\frac{1}{h_{+}(n_{\tF})},
-\end{equation*}
-which is equivalent to \eqref{norminflate}.
-\end{rem}
-
-\begin{rem} \label{Nmaxrem}  For practical reasons one may wish to impose a computational cost budget, $N_{\max}$.  Algorithm \ref{twostagedetalgo} computes the correct answer within  budget for input functions lying in the cone $\cc_{\tau}$ and for which either of the cost upper bounds in Theorem \ref{TwoStageDetermThm} do not exceed $N_{\max}$.  An analogous result holds for Algorithm \ref{multistagealgo} and Theorem \ref{MultiStageThm}.
-\end{rem}
+%\begin{rem} Instead of choosing $\tau$ as an input parameter for Algorithm \ref{twostagedetalgo}, one may alternatively choose the inflation factor $\fC >1$.  This then implies that 
+%\begin{equation*} \label{taufromnC}
+%\tau = \left(1 - \frac{1}{\fC}\right)\frac{1}{h_{+}(n_{\tF})},
+%\end{equation*}
+%which is equivalent to \eqref{norminflate}.
+%\end{rem}
 
 \begin{rem} \label{neccondrem} In some cases it is possible to find a lower bound on the $\cf$-norm of the input function.  This means that there exists an algorithm $F_n$ using the same function values as $\tF_n$, such that
 \[
@@ -314,7 +311,10 @@ f \in \cc_\tau
 \label{neccondFn}
 \end{align}
 For Algorithm \ref{twostagedetalgo} the relevant value of $n$ is $n_{\tF}$, whereas for Algorithm \ref{multistagealgo} the relevant value of $n$ is $n_i$.
-This is not a sufficient condition for $f$ to lie in $\cc_{\tau}$, so it is possible to get an incorrect answer from Algorithm \ref{twostagedetalgo} or \ref{multistagealgo} even if \eqref{neccondFn} is satisfied but $f \notin \cc_{\tau}$.  However, in light of this argument one might modify Algorithms \ref{twostagedetalgo} and \ref{multistagealgo} by increasing $\tau$ to $2 \tau_{\min,n}$ whenever  $\tau_{\min,n}$ rises above $\tau$. 
+This is not a sufficient condition for $f$ to lie in $\cc_{\tau}$, so Algorithm \ref{twostagedetalgo} or \ref{multistagealgo} may yield an incorrect answer even if \eqref{neccondFn} is satisfied but $f \notin \cc_{\tau}$.  However, this argument suggests modifying Algorithms \ref{twostagedetalgo} and \ref{multistagealgo} to increasing $\tau$ to $2 \tau_{\min,n}$ whenever  $\tau_{\min,n}$ rises above $\tau$. 
+\end{rem}
+
+\begin{rem} \label{Nmaxrem}  For practical reasons one may impose a computational cost budget, $N_{\max}$.  If this is done, Algorithm \ref{twostagedetalgo} will compute the correct answer within budget for $f \in \cc_{\tau}$ for which either of the cost upper bounds in Theorem \ref{TwoStageDetermThm} do not exceed $N_{\max}$.  An analogous result holds for Algorithm \ref{multistagealgo} and Theorem \ref{MultiStageThm}.
 \end{rem}
 
 \subsection{Adaptive Algorithms Based on Embedded Algorithms $\{A_n\}_{n \in \ci}$}
