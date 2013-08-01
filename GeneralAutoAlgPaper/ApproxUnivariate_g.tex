@@ -111,7 +111,7 @@ Go to Stage 1.
 \end{description}
 \end{algo}
 
-\begin{theorem} \label{multistageappxthm} 
+\begin{theorem} \label{multistageappxthm}
 Let $\sigma >0$ be some fixed parameter, and let $\cb_{\sigma}=\{f \in  \mathcal{W}^{2,\infty} : \norm[\infty]{f''}\leq \sigma\}$. Let $A \in \ca(\cb_{\sigma}, \cl_{\infty}, \APP, \Lambda^{\std})$ be the non-adaptive linear spline defined by Algorithm \ref{nonadaptalgo}, and let $\varepsilon>0$ be the error tolerance. Then this algorithm succeeds for $f \in \cb_{\sigma}$, i.e., $\norm[\infty]{f - A(f,\varepsilon)} \le \varepsilon$, and the cost of this algorithm is $\left \lceil \sqrt{\sigma/(8\varepsilon)}\right \rceil + 1$, regardless of the size of $\norm[\infty]{f''}$.
 
 Let $A \in \ca(\cc_{\tau}, \cl_{\infty}, \APP, \Lambda^{\std})$ be the adaptive linear spline defined by Algorithm \ref{multistageapproalgo}, and let $\tau$, $n_1$, and $\varepsilon$ be the inputs and parameters described there. Let $\cc_\tau$ be the cone of functions defined in \eqref{coneappxdef}.  Then it follows that Algorithm \ref{multistageapproalgo} is successful for all functions in $\cc_{\tau}$,  i.e.,  $\norm[\infty]{f - A(f,\varepsilon)} \le \varepsilon$.  Moreover, the cost of this algorithm is bounded below and above as follows:
@@ -174,9 +174,9 @@ For initial $\tau$ values of $10, 100 , 1000$ we choose a sample of  $10000$ fun
 &&\multicolumn{2}{c}{Success} & Failure \\
 $\tau$ &  $\Prob(f \in \cc_{\tau}) $ & No Warning & Warning & No Warning \\
 \toprule
-$10$ & $0\% \rightarrow  25\% $ & $25\%$  \\
-$100$ & $33 \% \rightarrow 56\% $ & $58\%$ \\
-$1000$ & $67\% \rightarrow 67\% $& $80\%$ \\
+$10$ & $0\% \rightarrow  25\% $ & $25\%$  & $0\%$  &$75\%$ \\
+$100$ & $33 \% \rightarrow 58\% $ & $56\%$ & $1\%$ & $42\%$ \\
+$1000$ & $67\% \rightarrow 89\% $& $76\%$ & $5\%$ & $11\%$\\
 \end{tabular}
 \caption{The probability of the input function lying in the cone for the original and eventual values of $\tau$ and the empirical success rate of Algorithm \ref{multistageapproalgo}.  \label{approxnumerical}}
 \end{table}
