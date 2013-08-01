@@ -492,7 +492,7 @@ Linear combinations of $f_0$ and $f_1$ may be used to derive the following lower
 \label{c0bumpdef}
 c_0 = \frac{s(\tau+\tau_{\min})}{2\tau\tau_{\min}} > 0.
 \end{equation} 
-Provide the algorithm $A$ with the input function $c_0f_0$, and let $\vL(c_0f_0)$ be the data vector extracted by $A$ to obtain the estimate $A(c_0f_0)$. Let $n=\$(\vL)$ denote the cost of this algorithm for the function $c_0f_0$, and define two fooling functions, $f_{\pm}=c_0f_{0} \pm c_1 f_1$, in terms of $f_1$ satisfying conditions \eqref{assumpfone} with $c_1$ satisfying
+Provide the algorithm $A$ with the input function $c_0f_0$, and let $\vL(c_0f_0)$ be the data vector extracted by $A$ to obtain the estimate $A(c_0f_0)$. Let $\$(\vL)$ denote the cost of this algorithm for the function $c_0f_0$, and let $N_j, N_{j+1} \in \ci$ be chosen as before such that $N_{j}+1 \le \$(\vL) \le N_{j+1}$.  Define two fooling functions, $f_{\pm}=c_0f_{0} \pm c_1 f_1$, in terms of $f_1$ satisfying conditions \eqref{assumpfone} with
 \begin{equation} 
 \label{c1bumpdef}
 c_1 = \frac{s (\tau-\tau_{\min})}{2\tau } > 0.
@@ -512,11 +512,11 @@ Moreover, these fooling functions must lie inside the cone $\cc_{\tau}$ because
 & =  s - \frac{s(\tau+\tau_{\min})}{2\tau_{\min}} + \frac{s (\tau-\tau_{\min})}{2\tau_{\min}}= 0 \qquad \text{by \eqref{c0c1bumpdef}}.
 \end{align*}
 
-Following the argument earlier in this section, it is noted that the data used by algorithm $A$ for both fooling functions is the same, i.e., $\vL(f_{\pm})=\vL(c_0f_0)$, and so $A(f_{\pm})=A(c_0f_0)$.  Consequently, by the same argument used above, 
+Following the argument earlier in this section, we note that the data used by algorithm $A$ for both fooling functions is the same, i.e., $\vL(f_{\pm})=\vL(c_0f_0)$, and so $A(f_{\pm})=A(c_0f_0)$.  Consequently, by the same argument used above, 
 \[
-\varepsilon  \ge  \max(\norm[\cg]{S(f_+)-A(f_+)},\norm[\cg]{S(f_-)-A(f_-)}) \ge c_1 \norm[\cg]{S(f_1)}\ge c_1 g(n).
+\varepsilon  \ge  \max(\norm[\cg]{S(f_+)-A(f_+)},\norm[\cg]{S(f_-)-A(f_-)}) \ge c_1 \norm[\cg]{S(f_1)}\ge c_1 g(N_{j+1}).
 \]
-Here we have used the fact that $S$ is linear.  Since $A$ is successful for these two fooling functions, it follows that $n$ the cost of this arbitrarily algorithm, must be bounded below by
+Here we have used the fact that $S$ is linear.  Since $A$ is successful for these two fooling functions, it follows that $\$(\vL)$, the cost of this arbitrary algorithm, must be bounded below by
 \[
 g^{-1} \left ( \frac{\varepsilon}{c_1} \right ) = g^{-1}\left(\frac{2 \tau \varepsilon}{s(\tau-\tau_{\min})}\right).
 \]
@@ -552,7 +552,7 @@ Table \ref{costcomparefig} summarizes the lower and upper bounds on the computat
 
 However, in the limit of vanishing $\varepsilon$ and $\Fnorm{f}$ with $\varepsilon/\Fnorm{f}$ held constant, the non-adaptive Algorithm \ref{nonadaptalgo} has unbounded cost, while the adaptive Algorithm \ref{multistagealgo} has bounded cost. The disadvantage of the non-adaptive algorithm is also seen in the two optimality results.  The supremum in Corollary \ref{optimcor} is taken over $s$ as well as $\varepsilon$, whereas the supremum in Theorem \ref{optimalprop} can only be taken over $\varepsilon$.
 
-The next two sections illustrate the theorems of Section \ref{genthmsec} and \ref{LowBoundSec} by looking at the problems of integration and approximation. Algorithm \ref{multistagealgo} is given explicitly for these two cases along the guarantees provided by Theorem \ref{MultiStageThm}, the lower bound on complexity provided by Theorem \ref{complowbd}, and the optimality given by Corollary \ref{optimcor}.
+The next two sections illustrate the theorems of Section \ref{genthmsec} and \ref{LowBoundSec} for the problems of integration and approximation. Algorithm \ref{multistagealgo} is given explicitly for these two cases along with the guarantees provided by Theorem \ref{MultiStageThm}, the lower bound on complexity provided by Theorem \ref{complowbd}, and the optimality given by Corollary \ref{optimcor}.
 
 \section{Approximation of One-Dimensional Integrals} \label{integsec}
 
