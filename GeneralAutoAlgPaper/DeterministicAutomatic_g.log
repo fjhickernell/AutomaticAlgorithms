@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=latex 2013.7.24)  1 AUG 2013 13:11
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=latex 2013.7.24)  1 AUG 2013 16:56
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -613,11 +613,7 @@ Underfull \hbox (badness 2707) in paragraph at lines 21--26
 put-ing,
  []
 
-[31]) [32] (./DeterministicAutomatic_g.aux)
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
- )
+[31]) [32] (./DeterministicAutomatic_g.aux) )
 (\end occurred inside a group at level 1)
 
 ### simple group (level 1) entered at line 244 ({)
