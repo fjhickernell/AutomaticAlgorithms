@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=latex 2013.7.24)  31 JUL 2013 14:05
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=latex 2013.7.24)  31 JUL 2013 23:17
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -559,7 +559,7 @@ LaTeX Font Info:    Try loading font information for U+euf on input line 231.
  (/usr/local/texlive/2013/texmf-dist/tex/latex/amsfonts/ueuf.fd
 File: ueuf.fd 2013/01/14 v3.01 Euler Fraktur
 ) [7] [8] [9] [10] [11] [12] [13]
-Underfull \hbox (badness 1314) in paragraph at lines 549--549
+Underfull \hbox (badness 1314) in paragraph at lines 548--548
 []\OT1/cmr/m/n/8 Table 1: Costs of var-i-ous al-go-rithms, $\OML/cmm/m/it/8 A$\
 OT1/cmr/m/n/8 , guar-an-teed to sat-isfy the tol-er-ance, i.e.,
  []
@@ -589,14 +589,14 @@ File: Foolquadbw.eps Graphic file (type eps)
  <Foolquadbw.eps>
 File: foolbwquadexample.eps Graphic file (type eps)
  <foolbwquadexample.eps> [27] [28] [29]
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 640.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 639.
 
 
 (/usr/local/texlive/2013/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 640.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 639.
  [30]
 (./DeterministicAutomatic_g.bbl
 Underfull \hbox (badness 2707) in paragraph at lines 21--26
@@ -604,11 +604,7 @@ Underfull \hbox (badness 2707) in paragraph at lines 21--26
 put-ing,
  []
 
-[31]) [32] (./DeterministicAutomatic_g.aux)
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
- )
+[31]) [32] (./DeterministicAutomatic_g.aux) )
 (\end occurred inside a group at level 1)
 
 ### simple group (level 1) entered at line 238 ({)
@@ -622,4 +618,4 @@ Here is how much of TeX's memory you used:
  957 hyphenation exceptions out of 8191
  56i,18n,55p,1033b,359s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on DeterministicAutomatic_g.dvi (32 pages, 149836 bytes).
+Output written on DeterministicAutomatic_g.dvi (32 pages, 150120 bytes).
