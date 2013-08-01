@@ -411,15 +411,15 @@ Since statement ii) now holds, the right hand side inequalities in \eqref{automu
 \section{Lower Complexity Bounds for the Problems} \label{LowBoundSec}
 Lower complexity bounds are typically proved by constructing fooling functions.  Here we first derive a lower bound for the complexity of problems defined on an $\cf$-semi-norm ball of input functions, $\cb_\sigma$.  This technique is generally known, see for example \cite[p.\ 11--12]{TraWer98}.  Then it is shown how to extend this idea for the cone $\cc_{\tau}$. 
 
-Let $\ci$ be a subset of $\natzero$ satisfying \eqref{Inobiggap}.  Suppose that for any $n \in \ci$, and for all $\vL \in \Lambda^m$, satisfying $\$(\vL)\le n$, there exists an $f_1 \in \cf$, depending on $n$ and the $L_i$, with zero data, $\cf$-semi-norm smaller than one, and known lower bound on the solution, namely,
+Let $\cj$ be a subset of $\natzero$.  Suppose that for any $n \in \cj$, and for all $\vL \in \Lambda^m$, satisfying $\$(\vL)\le n$, there exists an $f_1 \in \cf$, depending on $n$ and the $L_i$, with zero data, $\cf$-semi-norm smaller than one, and known lower bound on the solution, namely,
 \begin{equation} \label{assumpfone}
 \Fnorm{f_1} \le 1, \qquad \vL(f_1)= \vzero, \qquad
 \norm[\cg]{S(f_1)} \ge g(n), 
 \end{equation}
-for some positive, non-increasing function $g$ defined on $\ci$ with $\inf_{n \in \ci} g(n)=0$.  For example, one might have $g(n)=a n^{-p}$ for $n \in \naturals$ with positive $a$ and $p$.
+for some positive, non-increasing function $g$ defined on $\cj$ with $\inf_{n \in \cj} g(n)=0$.  For example, one might have $g(n)=a n^{-p}$ for $n \in \naturals$ with positive $a$ and $p$.
 
 \subsection{Problems Defined on Balls} 
-Suppose that $A$ is any successful automatic algorithm for the ball $\cb_{\sigma}$, i.e., $A \in \ca(\cb_{\sigma},\cg,S,\Lambda)$, and $\Gnorm{S(f)-A(f)}\le \varepsilon$ for all $f \in \cb_{\sigma}$.  For any fixed $s \le \sigma$ and $\varepsilon>0$, let $\vL$ be the design used by the algorithm for the zero function.  Let $N_{j}$ and $N_{j+1}$ be two successive elements of $\ci$ with $N_{j}+1 \le \$(\vL) \le N_{j+1}$. Since $0 \in \cb_s$, it follows that $\$(\vL) \le \maxcost(A,\cb_{\sigma},\varepsilon,\cb_{s})$, and so $N_{j}+1$ is a lower bound on $\maxcost(A,\cb_{\sigma},\varepsilon,\cb_{s})$.
+Suppose that $A$ is any successful automatic algorithm for the ball $\cb_{\sigma}$, i.e., $A \in \ca(\cb_{\sigma},\cg,S,\Lambda)$, and $\Gnorm{S(f)-A(f)}\le \varepsilon$ for all $f \in \cb_{\sigma}$.  For any fixed $s \le \sigma$ and $\varepsilon>0$, let $\vL$ be the design used by the algorithm for the zero function.  Let $N_{j}$ and $N_{j+1}$ be two successive elements of $\cj$ with $N_{j}+1 \le \$(\vL) \le N_{j+1}$. Since $0 \in \cb_s$, it follows that $\$(\vL) \le \maxcost(A,\cb_{\sigma},\varepsilon,\cb_{s})$, and so $N_{j}+1$ is a lower bound on $\maxcost(A,\cb_{\sigma},\varepsilon,\cb_{s})$.
 
 Let $f_1$ be constructed according to \eqref{assumpfone} for this $\vL$.  Since the data for the functions $\pm s f_1$ are all zero, it follows that $A(s f_1)=A(-s f_1)$.  Also note that $\pm s f_1 \in \cb_{s}$.  Since $A$ must be successful for $\pm s f_1$, it follows that 
 \begin{align*}
@@ -429,10 +429,11 @@ Let $f_1$ be constructed according to \eqref{assumpfone} for this $\vL$.  Since 
 & = \norm[\cg]{S(sf_1)}= s\norm[\cg]{S(f_1)}  \\
 & \ge s g(N_{j+1}).
 \end{align*}
-This implies that the smallest that $N_{j}$ can be is the largest $n \in \ci$ with $s g(n) > \varepsilon$.  Thus, $g^{-1}(\varepsilon/s) \le N_{j}+1 \le \maxcost(A,\cb_{\sigma},\varepsilon,\cb_{s})$, where $g^{-1}$ is defined by
+This implies that the smallest that $N_{j}$ can be is the largest $n \in \cj$ with $s g(n) > \varepsilon$.  Thus, $g^{-1}(\varepsilon/s) \le N_{j}+1 \le \maxcost(A,\cb_{\sigma},\varepsilon,\cb_{s})$, where $g^{-1}$ is defined by
 \begin{equation*} \label{ginvdef}
-g^{-1}(\varepsilon) = \max \{ n \in \natzero : g(n-1) > \varepsilon, \ n \in \ci \}.
+g^{-1}(\varepsilon) = \max \{ n \in \cj : g(n) > \varepsilon\}+1.
 \end{equation*}
+Here the maximum of the empty set is assumed to be $-1$.
 
 \begin{theorem} \label{complowbdball} The computational complexity of the problem for a ball of input functions $\cb_{\sigma}$ is bounded below by
 \begin{equation*}
@@ -443,7 +444,7 @@ g ^{-1}(\varepsilon/\min(\sigma,s)).
 
 The lower bound in this theorem combined with the upper bound in Theorem \ref{NonAdaptDetermThm} leads to a simple condition that guarantees the optimality of Algorithm \ref{nonadaptalgo}.  One only need to look at the ratio $h(n)/g(n)$.
 
-\begin{theorem} \label{optimalprop} Suppose that there exist fixed cost algorithms $\{A_n\}_{n \in \ci}$, with $A_n  \in \ca_{\fix}(\cf,\cg,S,\Lambda)$, for which the upper error bounds satisfy \eqref{algoerr} for known $h$.  Suppose also that $g$ is also defined on the same $\ci$, which satisfies \eqref{Inobiggap}. If 
+\begin{theorem} \label{optimalprop} Suppose that there exist fixed cost algorithms $\{A_n\}_{n \in \ci}$, with $A_n  \in \ca_{\fix}(\cf,\cg,S,\Lambda)$, for which the upper error bounds satisfy \eqref{algoerr} for known $h$ defined on $\ci$, which satisfies \eqref{Inobiggap}.  Suppose also that $g$ is defined on $\cj \supseteq \ci$. If 
 \begin{equation}\label{ghcond}
 \sup_{n \in \ci} \frac{h(n)}{g(n)} < \infty,
 \end{equation}
@@ -456,7 +457,7 @@ then Algorithm \ref{nonadaptalgo} has optimal order in the sense that for fixed 
 
 \begin{proof}  Choose a number $C \ge h(n)/g(n)$ for all $n \in \ci$, which is possible by assumption \eqref{ghcond}.  It then follows that
 \begin{align*}
-g^{-1}(\varepsilon) &= \max \{ n \in \natzero : g(n-1) > \varepsilon, \ n \in \ci \} \\ 
+g^{-1}(\varepsilon) &= \max \{ n \in \cj : g(n) > \varepsilon\}+1 \\ 
 & \ge \frac{1}{\rho}\min\{ n \in \ci : g(n) \le \varepsilon\}  \\
 & \ge \frac{1}{\rho} \min \left \{ n \in \ci : \frac{h(n)}{C} \le \varepsilon \right\} = \frac{h^{-1}(C \varepsilon)}{\rho}.
 \end{align*}
@@ -477,7 +478,6 @@ Specifically, $f_0$ is assumed to satisfy
 \label{assumpfzero}
 \Ftnorm{f_{0}} = 1, \qquad \Fnorm{f_{0}} \le \tau_{\min} \Ftnorm{f_{0}} = \tau_{\min} < \tau.
 \end{equation}
-Linear combinations of $f_0$ and $f_1$ may be used to derive the following lower bound on the complexity of solving the problem $S$.
 
 \begin{theorem} \label{complowbd} Let $S$ be linear.  Assume that $\tau > \tau_{\min}$ and let $s$ be some positive number.  Suppose that functions $f_{0}$ and $f_1$ can be found that satisfy conditions \eqref{assumpfone} and \eqref{assumpfzero}.  It then follows that the complexity of the problem for cones of input function is bounded below by
 \begin{equation*}
@@ -486,13 +486,13 @@ Linear combinations of $f_0$ and $f_1$ may be used to derive the following lower
 \end{equation*}
 \end{theorem}
 
-\begin{proof} Let $A \in \ca(\cc_{\tau},\cg,S,\Lambda)$ be an arbitrary successful, possibly adaptive, algorithm.  Given an error tolerance, $\varepsilon$, and a positive $\sigma$, let $f_0$ be a function satisfying \eqref{assumpfzero} and choose 
+\begin{proof} Let $A \in \ca(\cc_{\tau},\cg,S,\Lambda)$ be an arbitrary successful, possibly adaptive, algorithm.  Given an error tolerance, $\varepsilon$, and a positive $s$, let $f_0$ be a function satisfying \eqref{assumpfzero} and choose 
 \begin{subequations}\label{c0c1bumpdef}
 \begin{equation} 
 \label{c0bumpdef}
 c_0 = \frac{s(\tau+\tau_{\min})}{2\tau\tau_{\min}} > 0.
 \end{equation} 
-Provide the algorithm $A$ with the input function $c_0f_0$, and let $\vL(c_0f_0)$ be the data vector extracted by $A$ to obtain the estimate $A(c_0f_0)$. Let $\$(\vL)$ denote the cost of this algorithm for the function $c_0f_0$, and let $N_j, N_{j+1} \in \ci$ be chosen as before such that $N_{j}+1 \le \$(\vL) \le N_{j+1}$.  Define two fooling functions, $f_{\pm}=c_0f_{0} \pm c_1 f_1$, in terms of $f_1$ satisfying conditions \eqref{assumpfone} with
+Provide the algorithm $A$ with the input function $c_0f_0$, and let $\vL(c_0f_0)$ be the data vector extracted by $A$ to obtain the estimate $A(c_0f_0)$. Let $\$(\vL)$ denote the cost of this algorithm for the function $c_0f_0$, and let $N_j, N_{j+1} \in \cj$ be chosen as before such that $N_{j}+1 \le \$(\vL) \le N_{j+1}$.  Define two fooling functions, $f_{\pm}=c_0f_{0} \pm c_1 f_1$, in terms of $f_1$ satisfying conditions \eqref{assumpfone} with
 \begin{equation} 
 \label{c1bumpdef}
 c_1 = \frac{s (\tau-\tau_{\min})}{2\tau } > 0.
@@ -516,7 +516,7 @@ Following the argument earlier in this section, we note that the data used by al
 \[
 \varepsilon  \ge  \max(\norm[\cg]{S(f_+)-A(f_+)},\norm[\cg]{S(f_-)-A(f_-)}) \ge c_1 \norm[\cg]{S(f_1)}\ge c_1 g(N_{j+1}).
 \]
-Here we have used the fact that $S$ is linear.  Since $A$ is successful for these two fooling functions, it follows that $\$(\vL)$, the cost of this arbitrary algorithm, must be bounded below by
+Here we have used the fact that $S$ is linear.  Since $A$ is successful for these two fooling functions, it follows that $\$(\vL)$, the cost of this arbitrary algorithm, is no greater than $\maxcost(A,\cc_{\tau},\varepsilon,\cb_s)$ and is bounded below by
 \[
 g^{-1} \left ( \frac{\varepsilon}{c_1} \right ) = g^{-1}\left(\frac{2 \tau \varepsilon}{s(\tau-\tau_{\min})}\right).
 \]
@@ -526,7 +526,7 @@ This then implies the lower bound on the complexity of the problem.
 \begin{cor} \label{optimcor}
 Suppose that the functions $g$ and $h$ satisfy the hypotheses of Theorem \ref{optimalprop}, and in particular, condition \eqref{ghcond}, which means that Algorithm \ref{nonadaptalgo} has optimal order for solving the problem on $\cf$-balls of input functions.  It then follows that Algorithms \ref{twostagedetalgo} and \ref{multistagealgo} both have optimal order for solving the problem on for input functions lying in the cone $\cc_{\tau}$ in the sense of
 \begin{equation*} \label{nearoptdef}
-\sup_{\varepsilon,s > 0} \frac{\maxcost(A,\cn,\varepsilon,\cb_s)} {\max(1,\comp(\varepsilon,\ca(\cn,\cg,S,\Lambda),\cb_s))} <\infty.
+\sup_{\varepsilon,s > 0} \frac{\maxcost(A,\cc_\tau,\varepsilon,\cb_s)} {\max(1,\comp(\varepsilon,\ca(\cc_\tau,\cg,S,\Lambda),\cb_s))} <\infty.
 \end{equation*} 
 \end{cor}
 
