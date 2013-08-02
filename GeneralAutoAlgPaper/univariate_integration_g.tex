@@ -211,14 +211,14 @@ Consider the family of test functions defined by
 \begin{equation}\label{testfun}
 f(x)=
 \begin{cases}
-\displaystyle  b[(x-z)^2-(x-z-a)^2-(x-z+a)^2+4a^2], & z-2a\leq x\leq z+2a,\\[2ex]
+\displaystyle  b[(x-z)^2-(x-z-a)|x-z-a|-(x-z+a)|x-z+a|+4a^2], & z-2a\leq x\leq z+2a,\\[2ex]
 \displaystyle  0, & \text{otherwise}.
 \end{cases}.
 \end{equation}
 with  $\log_{10}(a) \sim \cu[-4,-1]$, $z \sim \cu[2a,1-2a]$, and $b=4/a^3$ chosen to make $\int_0^1 f(x) \, \dif x = 1$.
 Straightforward calculations yield:
 \begin{gather*}
-\norm[1]{f'-f(1)+f(0)}=1/2, \\
+\norm[1]{f'-f(1)+f(0)}=1/a, \\
 \Var(f')=2/a^2.
 \end{gather*}
 The probability that $f \in \cc_{\tau}$ is $\min\left(1,\max(0,\left(\log_{10}(\tau/2)-1\right)/3)\right).$
@@ -234,7 +234,7 @@ Algorithm \ref{multistageintegalgo}
  &$100$ & $23 \% \rightarrow 58\% $ & $56\%$ & $0\%$ & $42\%$ \\
 &$1000$ & $57\% \rightarrow 88\% $& $68\%$ & $5\%$ &$11\%$ \\
 \midrule
-{\tt quad} & & & 80\% & & $20\%$\\
+{\tt quad} & & & 8\% & & $92\%$\\
 {\tt quadgk} & & & 19\% & & $81\%$\\
 {\tt chebfun} & & &29\% & & $71\%$\\
 \end{tabular}
