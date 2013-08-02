@@ -446,13 +446,13 @@ then Algorithm \ref{nonadaptalgo} has optimal order in the sense that for fixed 
 \end{equation*}
 \end{theorem}
 
-\begin{proof}  Choose a number $C \ge h(n)/g(n)$ for all $n \in \ci$, which is possible by assumption \eqref{ghcond}.  It then follows that
+\begin{proof}  Choose a number $C \ge \sup_{n \in \ci} h(n)/g(n)$.  It then follows that
 \begin{align*}
 g^{-1}(\varepsilon) &= \max \{ n \in \cj : g(n) > \varepsilon\}+1 \\ 
 & \ge \frac{1}{\rho}\min\{ n \in \ci : g(n) \le \varepsilon\}  \\
 & \ge \frac{1}{\rho} \min \left \{ n \in \ci : \frac{h(n)}{C} \le \varepsilon \right\} = \frac{h^{-1}(C \varepsilon)}{\rho}.
 \end{align*}
-Thus, it follows from the expression for the maximum cost in \eqref{nonadaptalgocost} and the condition on $h$ in \eqref{hinvonetwocond} that the error of $\{A_n\}_{n \in \ci}$ is no worse than a constant times the best possible non-adaptive algorithm:
+Thus, it follows from the expression for the maximum cost in \eqref{nonadaptalgocost} and the condition on $h$ in \eqref{hinvonetwocond} that the error of Algorithm \ref{nonadaptalgo} is no worse than a constant times the best possible algorithm:
 \begin{align*}
 \MoveEqLeft{\sup_{0 < \varepsilon \le 1} \frac{\maxcost(A,\cb_{\sigma},\varepsilon,\cb_{s})}
 {\max(1,\comp(\varepsilon,\ca(\cb_{\sigma},\cg,S,\Lambda),\cb_s))}} \\
@@ -463,14 +463,13 @@ Thus, it follows from the expression for the maximum cost in \eqref{nonadaptalgo
 
 \subsection{Problems Defined on Cones} \label{coneoptsubsec}
 
-Now we turn to the solving the numerical problem where the input functions lie in the the cone $\cc_{\tau}$.  The cone condition makes the complexity lower bound a bit more difficult to derive.  Moreover, we must now assume that the solution operator $S$ is \emph{linear}.  Note that condition \eqref{assumpfone} does not require the fooling function $f_1$ to lie \emph{inside} this cone.  To remedy this shortcoming, the fooling function is constructed as a linear combination of $f_1$ and another function, $f_0$, lying in the interior of the cone.
-Specifically, $f_0$ is assumed to satisfy
+Now we turn to the solving the numerical problem where the input functions lie in the cone $\cc_{\tau}$.  The cone condition makes the complexity lower bound more difficult to derive.  Moreover, we must now assume that the solution operator $S$ is \emph{linear}.  Condition \eqref{assumpfone} does not require the fooling function $f_1$ to lie \emph{inside} this cone.  To remedy this difficulty, fooling functions are constructed as linear combinations of $f_1$ and another function, $f_0$, lying in the interior of the cone.  Specifically, $f_0$ is assumed to satisfy
 \begin{equation}
 \label{assumpfzero}
 \Ftnorm{f_{0}} = 1, \qquad \Fnorm{f_{0}} \le \tau_{\min} \Ftnorm{f_{0}} = \tau_{\min} < \tau.
 \end{equation}
 
-\begin{theorem} \label{complowbd} Let $S$ be linear.  Assume that $\tau > \tau_{\min}$ and let $s$ be some positive number.  Suppose that functions $f_{0}$ and $f_1$ can be found that satisfy conditions \eqref{assumpfone} and \eqref{assumpfzero}.  It then follows that the complexity of the problem for cones of input function is bounded below by
+\begin{theorem} \label{complowbd} Let $S$ be linear.  Assume that $\tau > \tau_{\min}$ and let $s$ be some positive number.  Suppose that functions $f_{0}$ and $f_1$ can be found that satisfy conditions \eqref{assumpfone} and \eqref{assumpfzero}.  It then follows that the complexity of the problem for cones of input functions is bounded below by
 \begin{equation*}
 \comp(\varepsilon,\ca(\cc_{\tau},\cg,S,\Lambda),\cb_{s}) 
 \ge g^{-1}\left(\frac{2 \tau \varepsilon}{s(\tau-\tau_{\min})}\right).
