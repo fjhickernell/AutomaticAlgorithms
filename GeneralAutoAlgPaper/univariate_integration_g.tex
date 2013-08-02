@@ -1,4 +1,4 @@
-The algorithms used in this section on integration and the next section on function recovery are all based on linear splines on $[0,1]$.  The node set and the linear spline algorithm using $n$ function values are defined for $n \in \mathcal{I}=\{2,3,\ldots\}$ as follows:
+The algorithms used in this section on integration and the next section on function recovery are all based on linear splines on $[0,1]$.  The node set and the linear spline algorithm using $n$ function values are defined for $n \in \mathcal{I}:=\{2,3,\ldots\}$ as follows:
 \begin{subequations} \label{linearspline}
 \begin{equation}
 x_i=\frac{i-1}{n-1}, \qquad i=1, \ldots, n,
@@ -177,7 +177,7 @@ Next, we derive a lower bound on the cost of approximating functions in the ball
 \begin{gather*}
 \Ftnorm{f_0}=\norm[1]{f'_0-f_0(1)+f_0(0)}=\int_0^1 \abs{\sign(1/2-x)} \, \dif x = 1, \\ \Fnorm{f_0}=\Var(f'_0)=2= \tau_{\min}.
 \end{gather*}
-For any $n \in \natzero$, suppose that the one has the data $L_i(f)=f(\xi_i)$, $i=1, \ldots, n$ for arbitrary $\xi_i$, where $0=\xi_0 \le \xi_1 < \cdots < \xi_n \le \xi_{n+1} = 1$.  There must be some $j=0, \ldots, n$ such that $\xi_{j+1} - \xi_j \ge 1/(n+1)$.  The function $f_{1}$ is defined as a triangle function on the interval $[\xi_j, \xi_{j+1}]$:
+For any $n \in \cj:=\natzero$, suppose that the one has the data $L_i(f)=f(\xi_i)$, $i=1, \ldots, n$ for arbitrary $\xi_i$, where $0=\xi_0 \le \xi_1 < \cdots < \xi_n \le \xi_{n+1} = 1$.  There must be some $j=0, \ldots, n$ such that $\xi_{j+1} - \xi_j \ge 1/(n+1)$.  The function $f_{1}$ is defined as a triangle function on the interval $[\xi_j, \xi_{j+1}]$:
 $$
 f_{1}(x):=\begin{cases} \displaystyle
 \frac{\xi_{j+1}-\xi_{j}-\abs{\xi_{j+1}+\xi_{j}-2x}}{8} & \xi_{j} \le x \leq \xi_{j+1},\\
@@ -195,13 +195,13 @@ Using these choices of $f_0$ and $f_1$, along with the corresponding $g$ above, 
 \begin{equation*}
 \comp(\varepsilon,\ca(\cb_{\sigma},\reals,\INT,\Lambda^{\std}),\cb_{s}) \ge \left \lceil \sqrt{\frac{\min(s,\sigma)}{16 \varepsilon}} \right \rceil -1 .
 \end{equation*}
-Algorithm \ref{nonadaptalgo} using the trapezoidal rule is optimal in the sense of Theorem \ref{optimalprop}.
+Algorithm \ref{nonadaptalgo} using the trapezoidal rule has optimal order in the sense of Theorem \ref{optimalprop}.
 
 For $\tau>2$, the complexity of the integration problem over the cone of functions $\cc_{\tau}$ defined in \eqref{coneinteg} is bounded below as
 \begin{equation*}
 \comp(\varepsilon,\ca(\cc_{\tau},\reals,\INT,\Lambda^{\std}),\cb_{s}) \ge \left \lceil \sqrt{\frac{(\tau-2)s}{32 \tau \varepsilon}} \right \rceil -1 .
 \end{equation*}
-The adaptive trapezoidal Algorithm \ref{multistageintegalgo} is optimal for integration of functions in $\cc_{\tau}$ in the sense of Corollary \ref{optimcor}.
+The adaptive trapezoidal Algorithm \ref{multistageintegalgo} has optimal order for integration of functions in $\cc_{\tau}$ in the sense of Corollary \ref{optimcor}.
 \end{theorem}
 
 \subsection{Numerical Example}
