@@ -205,24 +205,20 @@ The adaptive trapezoidal Algorithm \ref{multistageintegalgo} is optimal for inte
 \end{theorem}
 
 \subsection{Numerical Example}
-{\bf FIX this subsection with new $\tcf$- and $\cf$-semi-norms, $A_n$, $T_n$}
 
-Consider the family of test functions defined by
+Consider the family of bump test functions defined by
 \begin{equation}\label{testfun}
 f(x)=
 \begin{cases}
-\displaystyle  b[(x-z)^2-(x-z-a)|x-z-a|-(x-z+a)|x-z+a|+4a^2], & z-2a\leq x\leq z+2a,\\[2ex]
+\displaystyle  b[(x-z)^2-(x-z-a)|x-z-a|\\
+\qquad -(x-z+a)|x-z+a|+4a^2], & z-2a\leq x\leq z+2a,\\[2ex]
 \displaystyle  0, & \text{otherwise}.
 \end{cases}.
 \end{equation}
-with  $\log_{10}(a) \sim \cu[-4,-1]$, $z \sim \cu[2a,1-2a]$, and $b=4/a^3$ chosen to make $\int_0^1 f(x) \, \dif x = 1$.
-Straightforward calculations yield:
-\begin{gather*}
-\norm[1]{f'-f(1)+f(0)}=1/a, \\
-\Var(f')=2/a^2.
-\end{gather*}
-The probability that $f \in \cc_{\tau}$ is $\min\left(1,\max(0,\left(\log_{10}(\tau/2)-1\right)/3)\right).$
-For initial $\tau$ values of $10, 100 , 1000$ we choose a sample of  $10000$ functions and an error tolerance of  $\varepsilon = 10^{-8}$.  The probability that $f$ initially lies in $\cc_{\tau}$ is the smaller number in the second column of Table \ref{integresultstable}, while the larger number is the empirical probability that $f$ eventually lies in $\cc_{\tau}$ after possible increases in $\tau$ made by Stage 2 of Algorithm \ref{multistageintegalgo}.  Algorithm \ref{multistageintegalgo} yields the correct value to within the error tolerance for all $f$ that finally lie inside $\cc_{\tau}$ plus some functions that lie outside $\cc_{\tau}$.  The empirical probability of success is given in Table
+with  $\log_{10}(a) \sim \cu[-4,-1]$, $z \sim \cu[2a,1-2a]$, and $b=1/(4a^3)$ chosen to make $\int_0^1 f(x) \, \dif x = 1$.  It follows that $\norm[1]{f'-f(1)+f(0)}=1/a$ and $\Var(f')=2/a^2$.  The probability that $f \in \cc_{\tau}$ is $\min\left(1,\max(0,\left(\log_{10}(\tau/2)-1\right)/3)\right).$
+
+As an experiment, we chose $10000$ random test functions and applied Algorithm \ref{multistageintegalgo} with an error tolerance of  $\varepsilon = 10^{-8}$ and initial $\tau$ values of $10, 100, 1000$.  The algorithm is considered successful for a particular $f$ if the exact and approximate integrals agree to within $\varepsilon$. The success and failure rates are given in Table \ref{integresultstable}. Our algorithm also imposed a cost budget of $N_{\max}=10^7$.  If the proposed $n_{i+1}$ in Stages 2 or 3 exceeded $N_{\max}$, then our algorithm would return a warning and fall back to the largest possible $n_{i+1}$ not exceeding $N_{\max}$ for which $n_{i+1}-1$ is a multiple of $n_i-1$.  The probability that $f$ initially lies in $\cc_{\tau}$ is the smaller number in the third column of Table \ref{integresultstable}, while the larger number is the empirical probability that $f$ eventually lies in $\cc_{\tau}$ after possible increases in $\tau$ made by Stage 2 of Algorithm \ref{multistageintegalgo}.  Algorithm \ref{multistageintegalgo} was successful for all $f$ that finally lie inside $\cc_{\tau}$, for which there was no warning.  It was also successful for a small percentage of functions lying outside the cone.
+
 \begin{table}[h]
 \centering
 \begin{tabular}{cccccc}
@@ -235,11 +231,10 @@ Algorithm \ref{multistageintegalgo}
 &$1000$ & $57\% \rightarrow 88\% $& $68\%$ & $5\%$ &$11\%$ \\
 \midrule
 {\tt quad} & & & 8\% & & $92\%$\\
-{\tt quadgk} & & & 19\% & & $81\%$\\
+{\tt integral} & & & 19\% & & $81\%$\\
 {\tt chebfun} & & &29\% & & $71\%$\\
 \end{tabular}
 \caption{Performance of multi-stage, adaptive Algorithm \ref{multistageintegalgo} for various values of $\tau$, and also of other automatic quadrature algorithms. The test function \eqref{testfun} with random parameters, $a$ and $z$, was used. \label{integresultstable}}
 \end{table}
 
-Ten thousand random instances of this test function are integrated by  Algorithm \ref{multistageintegalgo} and three existing automatic algorithms with an absolute error tolerance of $\varepsilon=10^{-8}$.  The observed success rates for these algorithms are shown.  As expected, the success rate of {Algorithm \ref{multistageintegalgo} increases as $\tau$ is increased.  All of the integrands lying inside $\cc_{\tau}$ are integrated to within the error tolerance, and a significant number of integrands lying outside the cone are integrated accurately as well.
-
+Some commonly available numerical algorithms in MATLAB are {\tt quad} and {\tt integral} \cite{MAT8.1} and the MATLAB Chebfun toolbox \cite{TrefEtal12}. We applied these three routines to the random family of test functions.  Their success and failure rates are also recorded in Table \ref{integresultstable}.  They do not give warnings of possible failure.
