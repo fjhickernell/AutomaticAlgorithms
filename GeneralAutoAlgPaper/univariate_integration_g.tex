@@ -1,4 +1,4 @@
-The algorithms used in this section and the next are all based on linear splines on $[0,1]$.  The node set and the linear spline algorithm using $n$ function values are defined for $n \in \mathcal{I}=\{2,3,\ldots\}$ as follows:
+The algorithms used in this section on integration and the next section on function recovery are all based on linear splines on $[0,1]$.  The node set and the linear spline algorithm using $n$ function values are defined for $n \in \mathcal{I}=\{2,3,\ldots\}$ as follows:
 \begin{subequations} \label{linearspline}
 \begin{equation}
 x_i=\frac{i-1}{n-1}, \qquad i=1, \ldots, n,
@@ -9,13 +9,13 @@ A_{n}(f)(x)=(n-1) \left[ f(x_{i})(x_{i+1}-x) +f(x_{i+1})(x-x_i) \right] \\ \text
 \end{subequations}
 The cost of each function value is one and so the cost of  $A_n$ is $n$. The algorithm $A_n$ is imbedded in the algorithm $A_{2n-1}$, which uses $2n-2$ subintervals.  Thus, $r=2$ is the minimum cost multiple as described in Section \ref{adapintrosec}.
 
-The problem to be solved is univariate integration on the unit interval, $S(f)=\INT(f):=\int_{0}^{1}f(x) \, \dif x \in \cg := \reals$.  The fixed-cost building blocks to construct the adaptive integration algorithm are the composite trapezoidal rules based on $n-1$ trapezoids:
+The problem to be solved is univariate integration on the unit interval, $S(f)=\INT(f):=\int_{0}^{1}f(x) \, \dif x \in \cg := \reals$.  The fixed cost building blocks to construct the adaptive integration algorithm are the composite trapezoidal rules based on $n-1$ trapezoids:
 \begin{equation*}
     T_{n}(f) = \int_0^1 A_n(f) \, \dif x
     =\frac{1}{2n-2}[f(x_1)+2f(x_2)+\cdots+2f(x_{n-1})+f(x_n)].
 \end{equation*}
 
-The space of input functions is $\cf=\mathcal{V}^{1}$, the space of functions whose first derivatives have finite variation.  The general definitions of these relevant norms and spaces are as follows:
+The space of input functions is $\cf=\mathcal{V}^{1}$, the space of functions whose first derivatives have finite variation.  The general definition of these relevant norms and spaces are as follows:
 \begin{subequations} \label{defSobolev}
 \begin{gather}
 \Var(f) := \sup_{\substack{n \in \naturals\\ 0 = x_0 < x_1 < \cdots < x_{n} =1}} \sum_{i=1}^n \abs{f(x_i)-f(x_{i-1})}, \\
@@ -31,7 +31,7 @@ The stronger semi-norm is $\Fnorm{f}:=\Var(f')$, while the weaker semi-norm is
 \[
 \Ftnorm{f}:=\norm[1]{f'-A_2(f)'}=\norm[1]{f'-f(1)+f(0)}=\Var(f-A_2(f)),
 \]
-where $A_2(f): x \mapsto f(0)(1-x)+f(1)x$ is the linear interpolant of $f$ using the two endpoints of the integration interval. The reason for defining $\Ftnorm{f}$ this way is that $\Ftnorm{f}$ vanishes if $f$ is a linear function, and linear functions are integrated exactly by the trapezoidal rule.  The cone of integrands is defined as
+where that $A_2(f): x \mapsto f(0)(1-x)+f(1)x$ is the linear interpolant of $f$ using the two endpoints of the integration interval. The reason for defining $\Ftnorm{f}$ this way is that $\Ftnorm{f}$ vanishes if $f$ is a linear function, and linear functions are integrated exactly by the trapezoidal rule.  The cone of integrands is defined as
 \begin{equation}\label{coneinteg}
 \cc_{\tau}=\{f\in \cv^{1}:\Var(f')\leq\tau\|f'-f(1)+f(0)\|_1\}.
 \end{equation}
@@ -211,15 +211,15 @@ Consider the family of test functions defined by
 \begin{equation}\label{testfun}
 f(x)=
 \begin{cases}
-\displaystyle  \frac{b}{2}[(x-z)^2-(x-z-a)^2-(x-z+a)^2+4a^2], & z-a\leq x\leq z+a,\\[2ex]
+\displaystyle  b[(x-z)^2-(x-z-a)^2-(x-z+a)^2+4a^2], & z-2a\leq x\leq z+2a,\\[2ex]
 \displaystyle  0, & \text{otherwise}.
 \end{cases}.
 \end{equation}
-with  $\log_{10}(a) \sim \cu[-4,-1]$, $z \sim \cu[2a,1-2a]$, and $b=3/(5a^2)$ is chosen to make $\int_0^1 f(x) \, \dif x = 1$.
+with  $\log_{10}(a) \sim \cu[-4,-1]$, $z \sim \cu[2a,1-2a]$, and $b=4/a^3$ chosen to make $\int_0^1 f(x) \, \dif x = 1$.
 Straightforward calculations yield:
 \begin{gather*}
-\norm[1]{f'-f(1)+f(0)}=a^2, \\
-\Var(f')=2a.
+\norm[1]{f'-f(1)+f(0)}=1/2, \\
+\Var(f')=2/a^2.
 \end{gather*}
 The probability that $f \in \cc_{\tau}$ is $\min\left(1,\max(0,\left(\log_{10}(\tau/2)-1\right)/3)\right).$
 For initial $\tau$ values of $10, 100 , 1000$ we choose a sample of  $10000$ functions and an error tolerance of  $\varepsilon = 10^{-8}$.  The probability that $f$ initially lies in $\cc_{\tau}$ is the smaller number in the second column of Table \ref{integresultstable}, while the larger number is the empirical probability that $f$ eventually lies in $\cc_{\tau}$ after possible increases in $\tau$ made by Stage 2 of Algorithm \ref{multistageintegalgo}.  Algorithm \ref{multistageintegalgo} yields the correct value to within the error tolerance for all $f$ that finally lie inside $\cc_{\tau}$ plus some functions that lie outside $\cc_{\tau}$.  The empirical probability of success is given in Table
@@ -229,14 +229,14 @@ For initial $\tau$ values of $10, 100 , 1000$ we choose a sample of  $10000$ fun
 &&&\multicolumn{2}{c}{Success} & Failure \\
 & $\tau$ &  $\Prob(f \in \cc_{\tau}) $ & No Warning & Warning & No Warning \\
 \toprule
-&$10$ & $0\% \rightarrow  29\% $ & $29\%$ & $0\%$ & $71\%$  \\
+&$10$ & $0\% \rightarrow  25\% $ & $25\%$ & $0\%$ & $75\%$  \\
 Algorithm \ref{multistageintegalgo}
- &$100$ & $33 \% \rightarrow 56\% $ & $54\%$ & $2\%$ & $46\%$ \\
-&$1000$ & $60\% \rightarrow 88\% $& $63\%$ & $4\%$ &$37\%$ \\
+ &$100$ & $23 \% \rightarrow 58\% $ & $56\%$ & $0\%$ & $42\%$ \\
+&$1000$ & $57\% \rightarrow 88\% $& $68\%$ & $5\%$ &$11\%$ \\
 \midrule
-{\tt quad} & 3\%\\
-{\tt quadgk} & 60\%\\
-{\tt chebfun} & 2\%\\
+{\tt quad} & & & 80\% & & $20\%$\\
+{\tt quadgk} & & & 19\% & & $81\%$\\
+{\tt chebfun} & & &29\% & & $71\%$\\
 \end{tabular}
 \caption{Performance of multi-stage, adaptive Algorithm \ref{multistageintegalgo} for various values of $\tau$, and also of other automatic quadrature algorithms. The test function \eqref{testfun} with random parameters, $a$ and $z$, was used. \label{integresultstable}}
 \end{table}
