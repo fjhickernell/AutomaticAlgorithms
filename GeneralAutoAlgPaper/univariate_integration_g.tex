@@ -15,7 +15,7 @@ The problem to be solved is univariate integration on the unit interval, $S(f)=\
     =\frac{1}{2n-2}[f(x_1)+2f(x_2)+\cdots+2f(x_{n-1})+f(x_n)].
 \end{equation*}
 
-The space of input functions is $\cf=\mathcal{V}^{1}$, the space of functions whose first derivatives have finite variation.  The general definition of these relevant norms and spaces are as follows:
+The space of input functions is $\cf=\mathcal{V}^{1}$, the space of functions whose first derivatives have finite variation.  The general definitions of these relevant norms and spaces are as follows:
 \begin{subequations} \label{defSobolev}
 \begin{gather}
 \Var(f) := \sup_{\substack{n \in \naturals\\ 0 = x_0 < x_1 < \cdots < x_{n} =1}} \sum_{i=1}^n \abs{f(x_i)-f(x_{i-1})}, \\
@@ -31,7 +31,7 @@ The stronger semi-norm is $\Fnorm{f}:=\Var(f')$, while the weaker semi-norm is
 \[
 \Ftnorm{f}:=\norm[1]{f'-A_2(f)'}=\norm[1]{f'-f(1)+f(0)}=\Var(f-A_2(f)),
 \]
-where that $A_2(f): x \mapsto f(0)(1-x)+f(1)x$ is the linear interpolant of $f$ using the two endpoints of the integration interval. The reason for defining $\Ftnorm{f}$ this way is that $\Ftnorm{f}$ vanishes if $f$ is a linear function, and linear functions are integrated exactly by the trapezoidal rule.  The cone of integrands is defined as
+where $A_2(f): x \mapsto f(0)(1-x)+f(1)x$ is the linear interpolant of $f$ using the two endpoints of the integration interval. The reason for defining $\Ftnorm{f}$ this way is that $\Ftnorm{f}$ vanishes if $f$ is a linear function, and linear functions are integrated exactly by the trapezoidal rule.  The cone of integrands is defined as
 \begin{equation}\label{coneinteg}
 \cc_{\tau}=\{f\in \cv^{1}:\Var(f')\leq\tau\|f'-f(1)+f(0)\|_1\}.
 \end{equation}
