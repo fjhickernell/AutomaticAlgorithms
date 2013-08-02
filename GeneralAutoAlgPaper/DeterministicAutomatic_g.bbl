@@ -1,5 +1,5 @@
 \def\Ignore#1{}\def\notesupp#1{}\def\Ignore#1{}\def\notesupp#1{}\def\Ignore#1{}\def\notesupp#1{}\def\Ignore#1{}\def\notesupp#1{}\def\Ignore#1{}\def\notesupp#1{}\def\Ignore#1{}\def\notesupp#1{}
-\begin{thebibliography}{24}
+\begin{thebibliography}{23}
 \expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
 \providecommand{\bibinfo}[2]{#2}
 \ifx\xfnm\relax \def\xfnm[#1]{\unskip,\space#1}\fi
@@ -109,10 +109,6 @@
 \bibinfo{author}{T.~Sauer}, \bibinfo{title}{Numerical Analysis},
   \bibinfo{publisher}{Pearson}, \bibinfo{year}{2012}.
 %Type = Manual
-\bibitem[{{The MathWorks, Inc.}(2012)}]{MAT7.12}
-\bibinfo{author}{{The MathWorks, Inc.}}, \bibinfo{title}{{MATLAB} 7.12},
-  \bibinfo{address}{Natick, MA}, \bibinfo{year}{2012}.
-%Type = Manual
 \bibitem[{{The MathWorks, Inc.}(2013)}]{MAT8.1}
 \bibinfo{author}{{The MathWorks, Inc.}}, \bibinfo{title}{{MATLAB} 8.1},
   \bibinfo{address}{Natick, MA}, \bibinfo{year}{2013}.
@@ -133,11 +129,11 @@
 \bibinfo{author}{J.F. Traub}, \bibinfo{author}{A.G. Werschulz},
   \bibinfo{title}{Complexity and Information}, \bibinfo{publisher}{Cambridge
   University Press}, \bibinfo{address}{Cambridge}, \bibinfo{year}{1998}.
-%Type = Misc
-\bibitem[{Wasilkowski(2012)}]{Was13a}
+%Type = Article
+\bibitem[{Wasilkowski(2013)}]{Was13a}
 \bibinfo{author}{G.W. Wasilkowski}, \bibinfo{title}{Average case tractability
-  of approximating $\infty$-variate functions},
-  \bibinfo{howpublished}{submitted for publication}, \bibinfo{year}{2012}.
+  of approximating $\infty$-variate functions}, \bibinfo{journal}{Math.
+  Comput.}  (\bibinfo{year}{2013}). \bibinfo{note}{To appear}.
 %Type = Article
 \bibitem[{Wasilkowski and Wo\'{z}niakowski(2011{\natexlab{a}})}]{WasWoz11a}
 \bibinfo{author}{G.W. Wasilkowski}, \bibinfo{author}{H.~Wo\'{z}niakowski},

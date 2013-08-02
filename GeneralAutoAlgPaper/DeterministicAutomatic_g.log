@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=latex 2013.7.24)  2 AUG 2013 12:50
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=latex 2013.7.24)  2 AUG 2013 14:49
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -606,12 +606,12 @@ put-ing,
 
 [31]) [32] (./DeterministicAutomatic_g.aux) ) 
 Here is how much of TeX's memory you used:
- 11566 strings out of 493312
- 206937 string characters out of 6137876
- 264874 words of memory out of 5000000
- 14750 multiletter control sequences out of 15000+600000
+ 11563 strings out of 493312
+ 206890 string characters out of 6137876
+ 264999 words of memory out of 5000000
+ 14747 multiletter control sequences out of 15000+600000
  16104 words of font info for 63 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
  56i,18n,55p,1322b,322s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on DeterministicAutomatic_g.dvi (32 pages, 150468 bytes).
+Output written on DeterministicAutomatic_g.dvi (32 pages, 150376 bytes).

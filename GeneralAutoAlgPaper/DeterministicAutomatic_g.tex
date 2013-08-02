@@ -40,10 +40,10 @@
 
 \title{The Cost of Deterministic, Adaptive, Automatic Algorithms:  Cones, Not Balls}
 \author{Nicholas Clancy}
-\author{Yuhan Ding}
+\author{Yuhan Ding} \ead{ding2@hawk.iit.edu}
 \author{Caleb Hamilton}
-\author{Fred J. Hickernell}
-\author{Yizhi Zhang}
+\author{Fred J. Hickernell} \ead{hickernell@iit.edu}
+\author{Yizhi Zhang} \ead{yzhang97@hawk.iit.edu}
 \address{Room E1-208, Department of Applied Mathematics, Illinois Institute of Technology,\\ 10 W.\ 32$^{\text{nd}}$ St., Chicago, IL 60616}
 
 \begin{abstract} 
@@ -67,7 +67,7 @@ adaptive \sep automatic \sep cones \sep function recovery \sep guarantee \sep in
 
 \section{Introduction}
 
-Automatic algorithms conveniently determine the computational effort required to obtain an approximate answer that differs from the true answer by no more than an error tolerance, $\varepsilon$.  The required inputs consist of both $\varepsilon$ and a black-box routine that provides function values.  Unfortunately, most commonly used adaptive, automatic algorithms are not guaranteed to provide answers satisfying the error tolerance. On the other hand, most existing guaranteed automatic algorithms are not adaptive, i.e., they are do not adjust their effort based on information about the function obtained through sampling.  The goal here is to construct adaptive, automatic algorithms that are guaranteed to satisfy the error tolerance.
+Automatic algorithms conveniently determine the computational effort required to obtain an approximate answer that differs from the true answer by no more than an error tolerance, $\varepsilon$.  The required inputs are both $\varepsilon$ and a black-box routine that provides function values.  Unfortunately, most commonly used adaptive, automatic algorithms are not guaranteed to provide answers satisfying the error tolerance. On the other hand, most existing guaranteed automatic algorithms are not adaptive, i.e., they are do not adjust their effort based on information about the function obtained through sampling.  The goal here is to construct adaptive, automatic algorithms that are guaranteed to satisfy the error tolerance.
 
 \subsection{Non-Adaptive, Automatic Algorithms for Balls of Input Functions} \label{nonadaptintrosubsec}
 Let $\cf$ be a \emph{linear space} of input functions defined on $\cx$ with \emph{semi-norm} $\Fnorm{\cdot}$, let $\cg$ be a linear space of outputs with \emph{norm} $\norm[\cg]{\cdot}$, and let $S:\cf \to \cg$ be a \emph{solution operator}.  Suppose that one has a sequence of fixed-cost algorithms, $\{A_n\}_{n \in \ci}$, indexed by their computational cost, $n$, with $\ci \subseteq \natzero$.  Furthermore, suppose that there is some known error bound for these fixed-cost algorithms:
@@ -554,12 +554,12 @@ The next two sections illustrate the theorems of Section \ref{genthmsec} and \re
 
 \section{Addressing Questions and Concerns About Adaptive, Automatic Algorithms} \label{overcomesec}
 
-Adaptive, automatic algorithms are popular, especially for univariate integration problems.  As mentioned in the introduction, MATLAB \cite{TrefEtal12,MAT7.12} and the NAG \cite{NAG23} library all have one or more automatic integration routines.  In spite of this popularity certain questions and concerns have been raised about adaptive algorithms.  This section attempts to address them.
+Adaptive, automatic algorithms are popular, especially for univariate integration problems.  Several general purpose numerical computing environments have one or more automatic integration routines, such as MATLAB \cite{TrefEtal12,MAT8.1} and the NAG \cite{NAG23} library.  In spite of their popularity their remain important questions and concerns regarding adaptive algorithms.  This section attempts to address them.
 
 
 \subsection{All Automatic Algorithms Can Be Fooled}  
 
-Guarantees of success for automatic algorithms still require that certain assumptions on the input functions be satisfied.  Any algorithm that solves a problem involving an infinite-dimensional space of input functions can be fooled by a spiky function, i.e., one that yields zero data where probed by the algorithm, but is nonzero elsewhere.   Figure \ref{fig:foolquad}a) depicts a spiky integrand whose integral is $\approx 0.3694$, but for which MATLAB's {\tt quad}, which is based on adaptive Simpson's rule  \cite{GanGau00a}, gives the answer $0$, even with an error tolerance of $10^{-14}$.  Guaranteed algorithms specify sufficient conditions for success that rule out spiky functions.  Non-adaptive algorithms such as Algorithm \ref{nonadaptalgo} require that input functions lie in a ball, while adaptive algorithms, such as  Algorithms \ref{twostagedetalgo} and \ref{multistagealgo}, require that input functions line in a cone.
+Any algorithm that solves a problem involving an infinite-dimensional space of input functions can be fooled by a spiky function, i.e., one that yields zero data where probed by the algorithm, but is nonzero elsewhere.   Figure \ref{fig:foolquad}a) depicts a spiky integrand whose integral is $\approx 0.3694$, but for which MATLAB's {\tt quad}, which is based on adaptive Simpson's rule  \cite{GanGau00a}, gives the answer $0$, even with an error tolerance of $10^{-14}$.  Our criticism of algorithms like {\tt quad} is not that they can be fooled, but that there is no available theory to tell us what went wrong with the integrand when they are fooled.  Guaranteed algorithms specify conditions that rule out spiky functions that might fool them.  Non-adaptive algorithms such as Algorithm \ref{nonadaptalgo} require that input functions lie in a ball, while adaptive algorithms, such as  Algorithms \ref{twostagedetalgo} and \ref{multistagealgo}, require that input functions line in a cone.
 
 \begin{figure}
 \centering 
@@ -574,13 +574,13 @@ a) & b)
 
 \subsection{Why Cones?}
 
-Traditionally, error bounds are derived for balls of input functions, $\cb_{\sigma}$, and these lead to non-adaptive, automatic algorithms, such as Algorithm \ref{nonadaptalgo}. The analysis here derives data-driven error bounds for cones of input functions, $\cc_{\tau}$.  We have two reasons for favoring cones.  
+Most existing numerical analysis is focused on balls of input functions, $\cb_{\sigma}$, and the automatic algorithms arising from this analysis are non-adaptive, automatic such as Algorithm \ref{nonadaptalgo}. The analysis here focuses on cones of input functions, $\cc_{\tau}$, which allows us to derive data-driven error bounds and construct adaptive, automatic algorithms. We have two reasons for favoring cones.  
 
-First, we note that the solution operator, $S$, and the fixed-cost algorithms, $\{A_n\}_{n\in \ci}$, commonly encountered in practice are positively homogeneous, which makes the error functional, $\err_n(\cdot) = \Gnorm{S(\cdot)-A_n(\cdot)}$ also positively homogeneous.  This naturally suggests data-driven error bounds, $\herr_n(\cdot)$, that are positively homogeneous.  If $\herr_n(\cdot)$ is reliable for $f$, then it must be reliable for $cf$. This naturally leads us to consider cones of input functions.
+Since the solution operator, $S$, and the fixed-cost algorithms, $\{A_n\}_{n\in \ci}$, commonly encountered in practice are positively homogeneous, the error functional, $\err_n(\cdot) = \Gnorm{S(\cdot)-A_n(\cdot)}$ is also positively homogeneous.  This naturally suggests data-driven error bounds, $\herr_n(\cdot)$, that are positively homogeneous.  If $\herr_n(\cdot)$ is reliable for $f$, then it must be reliable for $cf$. This naturally leads us to consider cones of input functions.
 
-A second reason is that we want to spend less effort solving problems for input functions that are ``easy'', i.e., we want an adaptive algorithm.  This point was touched on at the end of Section \ref{coneoptsubsec} where it was noted that the adaptive algorithm possesses a stronger optimality than the non-adaptive one.  Note also in Theorems \ref{multistageintegthm} and \ref{multistageappxthm} that the costs of the non-adaptive algorithms do not depend on the norms of the input functions, but the costs of the adaptive algorithms do in a favorable way.
+A second reason is that we want to spend less effort solving problems for input functions that are ``easy'', i.e., we want an adaptive algorithm.  At the end of Section \ref{coneoptsubsec} it was noted that our adaptive algorithms possess a stronger optimality than the non-adaptive one.  In particular, in Theorems \ref{multistageintegthm} and \ref{multistageappxthm} the costs of the non-adaptive algorithms do not depend on the norms of the input functions, but the costs of the adaptive algorithms do so in a favorable way.
 
-There are rigorous results from information based complexity theory giving general conditions under which adaptive algorithms have no significant advantage over non-adaptive algorithms (e.g., see \cite[Chapter 4, Theorem 5.2.1]{TraWasWoz88} and \cite{Nov96a}). Thus, for adaption to be useful, we must violate one of these conditions.  In particular, we violate the condition that the set of input functions be convex.
+There are rigorous results from information based complexity theory giving general conditions under which adaptive algorithms have no significant advantage over non-adaptive algorithms (e.g., see \cite[Chapter 4, Theorem 5.2.1]{TraWasWoz88} and \cite{Nov96a}). For adaption to be useful, we must violate one of these conditions.  In particular, we violate the condition that the set of input functions be convex.
 
 To see why $\cc_{\tau}$ is not convex, let $f_{\text{in}}$ and $f_{\text{out}}$ be functions in $\cf$ with nonzero $\tcf$-semi-norms, where $f_{\text{in}}$  lies in the interior of this cone, and $f_{\text{out}}$ lies outside the cone.  This means that 
 \[
@@ -590,12 +590,12 @@ Next define two functions $f_{\pm} = (\tau-\tau_{\text{in}}) \Ftnorm{f_{\text{in
 Since 
 \begin{multline*} 
 \Fnorm{f_{\pm}} \le (\tau-\tau_{\text{in}}) \Ftnorm{f_{\text{in}}} \Fnorm{f_{\text{out}}}  + (\tau + \tau_{\text{out}}) \Ftnorm{f_{\text{out}}} \Fnorm{f_{\text{in}}}\\
-= [\tau_{\text{out}} (\tau-\tau_{\text{in}})  + \tau_{\text{in}} (\tau + \tau_{\text{out}})] \Ftnorm{f_{\text{in}}} \Ftnorm{f_{\text{out}}} =  \tau (\tau_{\text{out}} +\tau_{\text{in}}) \Ftnorm{f_{\text{in}}} \Ftnorm{f_{\text{out}}}
+= [\tau_{\text{out}} (\tau-\tau_{\text{in}})  + \tau_{\text{in}} (\tau + \tau_{\text{out}})] \Ftnorm{f_{\text{in}}} \Ftnorm{f_{\text{out}}} =  \tau (\tau_{\text{out}} +\tau_{\text{in}}) \Ftnorm{f_{\text{in}}} \Ftnorm{f_{\text{out}}},
 \end{multline*}
 and 
 \begin{multline*} 
 \Ftnorm{f_{\pm}} \ge -(\tau-\tau_{\text{in}}) \Ftnorm{f_{\text{in}}} \Ftnorm{f_{\text{out}}}  + (\tau + \tau_{\text{out}}) \Ftnorm{f_{\text{out}}} \Ftnorm{f_{\text{in}}}\\
- =  \tau (\tau_{\text{out}} +\tau_{\text{in}}) \Ftnorm{f_{\text{in}}} \Ftnorm{f_{\text{out}}},
+ =  (\tau_{\text{out}} +\tau_{\text{in}}) \Ftnorm{f_{\text{in}}} \Ftnorm{f_{\text{out}}},
 \end{multline*}
 it follows that $\Fnorm{f_{\pm}} \le \tau \Ftnorm{f_{\pm}}$, and so $f_{\pm} \in \cc_{\tau}$.  On the other hand, the average of $f_{\pm}$, which is a convex combination, is $(f_- + f_+)/2 = (\tau-\tau_{\text{in}}) \Ftnorm{f_{\text{in}}} f_{\text{out}}$.  Since $\tau > \tau_{\text{in}}$, this is a nonzero multiple of $f_{\text{out}}$, and it lies outside $\cc_{\tau}$.  Thus, this cone is not convex.
 
@@ -607,30 +607,30 @@ For instance, consider the univariate integration problem and the trapezoidal ru
 \begin{equation} \label{traperrest}
 \herr_i(f):=\frac{T_{n_{i}}(f)-T_{n_{i-1}}(f)}{3} \approx \int_0^1 f(x) \, \dif x - T_{n_i}(f) =:\err_i(f).
 \end{equation}
-Since $T_{n_i}(f)+ \herr_i(f)$ is exactly Simpson's rule, it follows that $\err_i(f) -\herr_i(f) = \Theta(16^{-i} \Var(f^{(3)}))$.  The error estimate may be good for moderate $i$, but it can only be guaranteed with some a priori knowledge of $\Var(f^{(3)}))$.
+Since $T_{n_i}(f)+ \herr_i(f)$ is exactly Simpson's rule, it follows that $\err_i(f) -\herr_i(f) = \Theta(16^{-i} \Var(f^{(3)}))$.  The error estimate may be good for moderate $i$, but it can only be guaranteed with some a priori knowledge of $\Var(f^{(3)})$.
 
 In his provocatively titled SIAM Review article, \emph{When Not to Use an Automatic Quadrature Routine} \cite[p.\ 69]{Lyn83}, James Lyness makes the following claim.
 \begin{quote}
 While prepared to take the risk of being misled by chance alignment of zeros in the integrand function, or by narrow peaks which are ``missed,'' the user may wish to be reassured that for ``reasonable'' integrand functions which do not have these characteristics all will be well. It is the purpose of the rest of this section to demonstrate by example that he cannot be reassured on this point. In fact the routine is likely to be unreliable in a significant proportion of the problems it faces (say $1$ to $5\%$) and there is no way of predicting in a straightforward way in which of any set of apparently reasonable problems this will happen.
 \end{quote}
 
-Lyness's argument, with its pessimistic conclusion, is correct for many commonly used adaptive, automatic algorithms.  Figure \ref{fig:foolquad}b depicts an integrand inspired by \cite{Lyn83} that we would call ``fluky''.  MATLAB's {\tt quad} gives the answer $\approx 0.1733$, for an absolute error tolerance of $\varepsilon=10^{-14}$, but the true answer is $\approx 0.1925$.  The {\tt quad} routine splits the interval of integration into three separate intervals and initially calculates Simpson's rule with one and two parabolas for each of the three intervals.  The data taken are denoted by $\bullet$ in Figure \ref{fig:foolquad}.  Since this fluky integrand is designed so that the two Simpson's rules match exactly for each of the three intervals, {\tt quad} is fooled into thinking that it knows the correct value of the integral and terminates immediately.
+Lyness's argument, with its pessimistic conclusion, is correct for commonly used adaptive, automatic algorithms.  Figure \ref{fig:foolquad}b depicts an integrand inspired by \cite{Lyn83} that we would call ``fluky''.  MATLAB's {\tt quad} gives the answer $\approx 0.1733$, for an absolute error tolerance of $\varepsilon=10^{-14}$, but the true answer is $\approx 0.1925$.  The {\tt quad} routine splits the interval of integration into three separate intervals and initially calculates Simpson's rule with one and two parabolas for each of the three intervals.  The data taken are denoted by $\bullet$ in Figure \ref{fig:foolquad}.  Since this fluky integrand is designed so that the two Simpson's rules match exactly for each of the three intervals, {\tt quad} is fooled into thinking that it knows the correct value of the integral and terminates immediately.
 
-Lyness's warning in \cite{Lyn83} is a valid objection to stopping criteria that are based on a simple measure of the difference between two successive algorithms, e.g., error estimate \eqref{traperrest}. However, it should not be taken as a wholesale objection to adaptive, automatic algorithms, and it does not apply apply to the algorithms presented here.
+Lyness's warning in \cite{Lyn83} is a valid objection to commonly used stopping criteria based on a simple measure of the difference between two successive algorithms, e.g., error estimate \eqref{traperrest}. However, it is not a valid objection to adaptive, automatic algorithms in general, and it does not apply apply to our adaptive algorithms.
 
 \section{Discussion and Further Work} \label{furthersec}
 
-We believe that there should be more adaptive, automatic algorithms that have rigorous guarantees of their success.  Users ought to be able to integrate functions, approximate functions, optimize functions, etc., without needing to manually tune the sample size.  Here we have shown how this might be done in general, as well as specifically for two case studies.  We hope that this will inspire further research in this direction.
+We believe that there should be more adaptive, automatic algorithms with rigorous guarantees of their success.  Users ought to be able to integrate functions, approximate functions, optimize functions, etc., without needing to manually tune the sample size.  Here we have shown how this might be done in general, as well as specifically for two case studies.  We hope that this will inspire further research in this direction.
 
-The results presented here suggest a number of other interesting open problems, some of which we are working on.  Here is a summary.
+The results presented here suggest a number of interesting open problems, some of which we are working on.  Here is a summary.
 
 \begin{itemize}
 
-\item This analysis should be extended to \emph{relative} error.  
+\item This analysis should be extended to \emph{relative} error tolerances.  
 
 \item The algorithms in Sections \ref{integsec} and \ref{approxsec} have low order convergence.  Guaranteed adaptive algorithms with \emph{higher order convergence rates} for smoother input functions are needed.
 
-\item Other types of problems, e.g., differential equations and nonlinear optimization, fit the general framework presented here.  These problems have adaptive, automatic algorithms, but without guarantees so far.
+\item Other types of problems, e.g., linear differential equations and nonlinear optimization, fit the general framework presented here.  These problems have adaptive, automatic algorithms, but without guarantees so far.
 
 \item The algorithms developed here are \emph{globally adaptive}, in the sense that the function data determines the sample size, but does not lead to denser sampling in areas of interest.  Since local adaption seems beneficial in practice, we need to develop such algorithms with guarantees.
 

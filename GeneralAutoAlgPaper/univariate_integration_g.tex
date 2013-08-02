@@ -204,7 +204,7 @@ For $\tau>2$, the complexity of the integration problem over the cone of functio
 The adaptive trapezoidal Algorithm \ref{multistageintegalgo} has optimal order for integration of functions in $\cc_{\tau}$ in the sense of Corollary \ref{optimcor}.
 \end{theorem}
 
-\subsection{Numerical Example}
+\subsection{Numerical Example} \label{integnumexamplesec}
 
 Consider the family of bump test functions defined by
 \begin{equation}\label{testfun}
@@ -234,7 +234,7 @@ Algorithm \ref{multistageintegalgo}
 {\tt integral} & & & 19\% & & $81\%$\\
 {\tt chebfun} & & &29\% & & $71\%$\\
 \end{tabular}
-\caption{Performance of multi-stage, adaptive Algorithm \ref{multistageintegalgo} for various values of $\tau$, and also of other automatic quadrature algorithms. The test function \eqref{testfun} with random parameters, $a$ and $z$, was used. \label{integresultstable}}
+\caption{The probability of the test function lying in the cone for the original and eventual values of $\tau$ and the empirical success rate of Algorithm \ref{multistageintegalgo} as well as other common quadrature algorithms. \label{integresultstable}}
 \end{table}
 
 Some commonly available numerical algorithms in MATLAB are {\tt quad} and {\tt integral} \cite{MAT8.1} and the MATLAB Chebfun toolbox \cite{TrefEtal12}. We applied these three routines to the random family of test functions.  Their success and failure rates are also recorded in Table \ref{integresultstable}.  They do not give warnings of possible failure.

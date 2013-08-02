@@ -1,4 +1,4 @@
-This is BibTeX, Version 0.99d (TeX Live 2012)
+This is BibTeX, Version 0.99d (TeX Live 2013)
 Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: DeterministicAutomatic_g.aux
 The style file: model1b-num-names.bst.bst
@@ -7,45 +7,45 @@ Database file #2: FJHown22.bib
 Warning--empty journal in HicEtal14a
 Warning--empty pages in HicEtal14a
 Warning--empty journal in NiuHic09a
-You've used 24 entries,
+You've used 23 entries,
             2611 wiz_defined-function locations,
-            787 strings with 8315 characters,
-and the built_in function-call counts, 12668 in all, are:
-= -- 923
-> -- 484
-< -- 18
-+ -- 191
-- -- 162
-* -- 1562
-:= -- 1922
+            784 strings with 8272 characters,
+and the built_in function-call counts, 12371 in all, are:
+= -- 904
+> -- 474
+< -- 17
++ -- 187
+- -- 159
+* -- 1538
+:= -- 1867
 add.period$ -- 25
-call.type$ -- 24
-change.case$ -- 171
-chr.to.int$ -- 23
-cite$ -- 27
-duplicate$ -- 860
-empty$ -- 878
-format.name$ -- 242
-if$ -- 2250
+call.type$ -- 23
+change.case$ -- 167
+chr.to.int$ -- 22
+cite$ -- 26
+duplicate$ -- 838
+empty$ -- 856
+format.name$ -- 238
+if$ -- 2201
 int.to.chr$ -- 2
 int.to.str$ -- 1
-missing$ -- 196
-newline$ -- 79
-num.names$ -- 100
-pop$ -- 203
+missing$ -- 193
+newline$ -- 76
+num.names$ -- 96
+pop$ -- 197
 preamble$ -- 2
-purify$ -- 172
+purify$ -- 166
 quote$ -- 0
-skip$ -- 243
+skip$ -- 232
 stack$ -- 0
-substring$ -- 595
-swap$ -- 735
+substring$ -- 585
+swap$ -- 723
 text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 198
+type$ -- 189
 warning$ -- 3
-while$ -- 99
+while$ -- 96
 width$ -- 0
-write$ -- 277
+write$ -- 267
 (There were 3 warnings)

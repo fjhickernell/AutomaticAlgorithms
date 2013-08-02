@@ -166,7 +166,7 @@ The adaptive linear spline Algorithm \ref{multistageapproalgo} has optimal order
 \subsection{Numerical Example}
 
 To illustrate Algorithm \ref{multistageapproalgo} we choose the same  family of test functions as in \eqref{testfun}, but now with  $\log_{10}(a) \sim \cu[-4,-1]$, $z \sim \cu[2a,1-2a]$, and $b=1/(2a^2)$.   Since $\norm[\infty]{f'-f(0)+f(1)}=1/a$ and $\norm[\infty]{f''}=1/a^2$, the probability that $f \in \cc_{\tau}$ is $\min\left(1,\max(0,\left(\log_{10}(\tau)-1\right)/3)\right).$
-For initial $\tau$ values of $10, 100 , 1000$ we choose a sample of  $10000$ functions and an error tolerance of  $\varepsilon = 10^{-8}$.  The probability that $f$ initially lies in $\cc_{\tau}$ is the smaller number in the second column of Table \ref{approxnumerical}, while the larger number is the empirical probability that $f$ eventually lies in $\cc_{\tau}$ after possible increases in $\tau$ made by Stage 2 of Algorithm \ref{multistageapproalgo}.  Algorithm \ref{multistageapproalgo} yields the correct value to within the error tolerance for all $f$ that finally lie inside $\cc_{\tau}$ plus some functions that lie outside $\cc_{\tau}$.  The empirical probability of success is given in Table \ref{approxnumerical}.
+For number of random functions chosen, the error tolerance, the initial $\tau$ values, and the cost budget are the same as in Section \ref{integnumexamplesec}.  Table \ref{approxnumerical} shows results that are analogous to Table \ref{integresultstable}.  Algorithm \ref{multistageapproalgo} yields the correct value to within the error tolerance for all $f$ that finally lie inside $\cc_{\tau}$ and for which the algorithm does not try to exceed the cost budget.
 
 \begin{table}[h]
 \centering
@@ -178,7 +178,7 @@ $10$ & $0\% \rightarrow  25\% $ & $25\%$  & $0\%$  &$75\%$ \\
 $100$ & $33 \% \rightarrow 58\% $ & $56\%$ & $1\%$ & $42\%$ \\
 $1000$ & $67\% \rightarrow 89\% $& $76\%$ & $5\%$ & $11\%$\\
 \end{tabular}
-\caption{The probability of the input function lying in the cone for the original and eventual values of $\tau$ and the empirical success rate of Algorithm \ref{multistageapproalgo}.  \label{approxnumerical}}
+\caption{The probability of the test function lying in the cone for the original and eventual values of $\tau$ and the empirical success rate of Algorithm \ref{multistageapproalgo}.  \label{approxnumerical}}
 \end{table}
 
 
