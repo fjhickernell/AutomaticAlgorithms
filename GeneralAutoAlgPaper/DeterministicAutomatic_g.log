@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=latex 2013.7.24)  1 AUG 2013 22:20
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=latex 2013.7.24)  1 AUG 2013 23:49
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -627,4 +627,4 @@ Here is how much of TeX's memory you used:
  957 hyphenation exceptions out of 8191
  56i,18n,55p,1033b,359s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on DeterministicAutomatic_g.dvi (32 pages, 150112 bytes).
+Output written on DeterministicAutomatic_g.dvi (32 pages, 150036 bytes).

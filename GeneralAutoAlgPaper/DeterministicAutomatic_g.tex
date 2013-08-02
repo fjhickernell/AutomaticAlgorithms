@@ -616,7 +616,7 @@ While prepared to take the risk of being misled by chance alignment of zeros in 
 
 Lyness's argument, with its pessimistic conclusion, is correct for many commonly used adaptive, automatic algorithms.  Figure \ref{fig:foolquad}b depicts an integrand inspired by \cite{Lyn83} that we would call ``fluky''.  MATLAB's {\tt quad} gives the answer $\approx 0.1733$, for an absolute error tolerance of $\varepsilon=10^{-14}$, but the true answer is $\approx 0.1925$.  The {\tt quad} routine splits the interval of integration into three separate intervals and initially calculates Simpson's rule with one and two parabolas for each of the three intervals.  The data taken are denoted by $\bullet$ in Figure \ref{fig:foolquad}.  Since this fluky integrand is designed so that the two Simpson's rules match exactly for each of the three intervals, {\tt quad} is fooled into thinking that it knows the correct value of the integral and terminates immediately.
 
-Lyness's warning in \cite{Lyn83} is a valid objection to stopping criteria that are based on a simple measure of the difference between two successive algorithms, e.g., the error estimate in \eqref{traperrest}. However, it should not be taken as a wholesale objection to adaptive, automatic algorithms, and it does not apply apply to the algorithms presented here.
+Lyness's warning in \cite{Lyn83} is a valid objection to stopping criteria that are based on a simple measure of the difference between two successive algorithms, e.g., error estimate \eqref{traperrest}. However, it should not be taken as a wholesale objection to adaptive, automatic algorithms, and it does not apply apply to the algorithms presented here.
 
 \section{Discussion and Further Work} \label{furthersec}
 
@@ -634,7 +634,7 @@ The results presented here suggest a number of other interesting open problems, 
 
 \item The algorithms developed here are \emph{globally adaptive}, in the sense that the function data determines the sample size, but does not lead to denser sampling in areas of interest.  Since local adaption seems beneficial in practice, we need to develop such algorithms with guarantees.
 
-\item For some numerical problems the error bound of the non-adaptive algorithm involves an $\tcf$- or $\cf$-semi-norm that is very hard to approximate because of its complexity.  An example is multivariate quadrature using quasi-Monte Carlo algorithms, where the error depends on the \emph{variation} of the integrand.  To obtain guaranteed automatic, adaptive algorithms one must either find an efficient way to approximate the variation of the function or find other suitable error bounds that can be reliably obtained from the function data.  
+\item For some numerical problems the error bound of the non-adaptive algorithm involves an $\tcf$- or $\cf$-semi-norm that is difficult to approximate.  An example is multivariate quadrature using quasi-Monte Carlo algorithms, where the error depends on the \emph{variation} of the multivariate integrand.  To obtain guaranteed automatic, adaptive algorithms one must either find an efficient way to approximate the semi-norm or find other suitable error bounds that can be reliably obtained from the function data.  
 
 \item This article considers only the worst case error of deterministic algorithms.  Random algorithms must be analyzed by somewhat different methods.  A guaranteed Monte Carlo algorithm for estimating the mean of a random variable, which includes multivariate integration as a special case, has been proposed in \cite{HicEtal14a}.
 
