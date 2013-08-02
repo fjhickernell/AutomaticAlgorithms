@@ -193,7 +193,7 @@ Automatic Algorithm \ref{nonadaptalgo} is built from a sequence of fixed-cost al
 \vL(cf) = c \vL(f), \ \
 \phi(c\vy) = c\phi(\vy), \ \ A_n(cf) = cA_n(f) \quad \forall c \ge 0, \ \vy \in \reals^m,
 \end{equation*}
-so its error is homogeneous.
+so its error, $\Gnorm{S(f)-A_n(f)}$, is positively homogeneous.
 
 The adaptive algorithms in the next section use sequences of fixed-cost algorithms indexed by their cost that converge to the true answer:
 \begin{subequations} \label{algseqerrcond}
@@ -260,7 +260,7 @@ Then $\tau \fC \tF_{n_{\tF}}(f)$ is a reliable upper bound on $\Fnorm{f}$.
 \end{description}
 \end{algo}
 
-The bounds in Lemma \ref{Gnormlem} involving $\tF_n$ imply bounds on the cost in the algorithm above.  Since $h^{-1}$ is non-increasing, it follows that for all $f \in \cc_{\tau}$,
+The bounds in Lemma \ref{Gnormlem} involving $\tF_n$ imply bounds on the cost of the algorithm above.  Since $h^{-1}$ is non-increasing, it follows that for all $f \in \cc_{\tau}$,
 \begin{equation*}
 h^{-1}\left(\frac{\varepsilon}{\Fnorm{f}}\right) \le  h^{-1}\left(\frac{\varepsilon}{\tau\Ftnorm{f}}\right)  \le h^{-1}\left(\frac{\varepsilon}{\tau \fC \tF_{n_{\tF}}(f)}\right) \le 
 \begin{cases} \displaystyle  h^{-1}\left(\frac{\varepsilon}{\tau \fC \tfc \Ftnorm{f}}\right) \\[2ex]
@@ -289,21 +289,14 @@ There are a several points to note about this result.
 \begin{rem} This algorithm and its accompanying theorem assume the existence of fixed-cost algorithms for approximating the weaker norm and for approximating the solution, both with known error bounds. Sections \ref{integsec} and \ref{approxsec} provide concrete examples where these conditions are satisfied.
 \end{rem}
 
-\begin{rem} The maximum and minimum costs of Algorithm \ref{twostagedetalgo} in \eqref{auto2stagedetcost} depend on the $\cf$- and $\tcf$-semi-norms of the input function, $f$.  However, the semi-norms of $f$ are not input to the algorithm, but rather are bounded by the algorithm.  The number of samples used to obtain the approximation to $S(f)$ is adjusted adaptively based on these bounds.
+\begin{rem} The maximum and minimum costs of Algorithm \ref{twostagedetalgo} in \eqref{auto2stagedetcost} depend on the $\cf$- and $\tcf$-semi-norms of the input function, $f$.  However, the semi-norms of $f$ are not input to the algorithm, but rather are bounded by the algorithm.  The number of samples needed by Algorithm \ref{twostagedetalgo} is adjusted adaptively based on these bounds.
 \end{rem}
 
-%\begin{rem} Instead of choosing $\tau$ as an input parameter for Algorithm \ref{twostagedetalgo}, one may alternatively choose the inflation factor $\fC >1$.  This then implies that 
-%\begin{equation*} \label{taufromnC}
-%\tau = \left(1 - \frac{1}{\fC}\right)\frac{1}{h_{+}(n_{\tF})},
-%\end{equation*}
-%which is equivalent to \eqref{norminflate}.
-%\end{rem}
-
-\begin{rem} \label{neccondrem} In some cases it is possible to find a lower bound on the $\cf$-norm of the input function.  This means that there exists an algorithm $F_n$ using the same function values as $\tF_n$, such that
+\begin{rem} \label{neccondrem} In some cases it is possible to find a lower bound on the $\cf$-norm of the input function, i.e., an algorithm $F_n$ using the same function values as $\tF_n$, such that
 \[
 F_n(f) \le \Fnorm{f} \qquad \forall f \in \cf.
 \]
-When such an $F_n$ is known, Lemma \ref{Gnormlem} can be used to derive a necessary condition that $f$ is in the cone $\cc_\tau$:
+When such an $F_n$ is known, Lemma \ref{Gnormlem} can be used to derive a necessary condition that $f$ lies in the cone $\cc_\tau$:
 \begin{align}
 \nonumber
 f \in \cc_\tau 
@@ -312,13 +305,13 @@ f \in \cc_\tau
 \label{neccondFn}
 \end{align}
 For Algorithm \ref{twostagedetalgo} the relevant value of $n$ is $n_{\tF}$, whereas for Algorithm \ref{multistagealgo} the relevant value of $n$ is $n_i$.
-This is not a sufficient condition for $f$ to lie in $\cc_{\tau}$, so Algorithm \ref{twostagedetalgo} or \ref{multistagealgo} may yield an incorrect answer even if \eqref{neccondFn} is satisfied but $f \notin \cc_{\tau}$.  However, this argument suggests modifying Algorithms \ref{twostagedetalgo} and \ref{multistagealgo} to increasing $\tau$ to $2 \tau_{\min,n}$ whenever  $\tau_{\min,n}$ rises above $\tau$. 
+Condition \eqref{neccondFn} is not sufficient for $f$ to lie in $\cc_{\tau}$, so Algorithm \ref{twostagedetalgo} or \ref{multistagealgo} may yield an incorrect answer even if \eqref{neccondFn} is satisfied but $f \notin \cc_{\tau}$.  However, this argument suggests modifying Algorithms \ref{twostagedetalgo} and \ref{multistagealgo} to increasing $\tau$ to $2 \tau_{\min,n}$ whenever  $\tau_{\min,n}$ rises above $\tau$. 
 \end{rem}
 
-\begin{rem} \label{Nmaxrem}  For practical reasons one may impose a computational cost budget, $N_{\max}$.  If this is done, Algorithm \ref{twostagedetalgo} will compute the correct answer within budget for $f \in \cc_{\tau}$ for which either of the cost upper bounds in Theorem \ref{TwoStageDetermThm} do not exceed $N_{\max}$.  An analogous result holds for Algorithm \ref{multistagealgo} and Theorem \ref{MultiStageThm}.
+\begin{rem} \label{Nmaxrem}  For practical reasons one may impose a computational cost budget, $N_{\max}$.  If this is done, Algorithm \ref{twostagedetalgo} will compute the correct answer within budget for $f \in \cc_{\tau}$ if either of the cost upper bounds in Theorem \ref{TwoStageDetermThm} do not exceed $N_{\max}$.  An analogous result holds for Algorithm \ref{multistagealgo} and Theorem \ref{MultiStageThm}.
 \end{rem}
 
-\subsection{Adaptive Algorithms Based on Embedded Algorithms $\{A_n\}_{n \in \ci}$}
+\subsection{Adaptive Algorithms Based on Embedded Algorithms}
 
 Suppose that $\{A_n\}_{n \in \ci}$, $A_n  \in \ca_{\fix}(\cf,\cg,S,\Lambda)$ now have the added property that some are embedded in others, as mentioned in Section \ref{adapintrosec}.  Let $r$ be the minimum cost multiple described there.  Moreover, suppose that each $\tF_n$ uses the same data as $A_n$. These embedded algorithms suggest the following iterative adaptive algorithm.
 
@@ -340,7 +333,7 @@ If this is true, return $A_{n_i}(f)$ and terminate the algorithm.
 
 This iterative algorithm is guaranteed to converge also, and its cost can be bounded.  Define 
 \begin{equation*} \label{hhdef}
-h_1(n) := \fC_n\tfc_n h(n) \ge h(n), \quad h_2(n) := \fC_n\fc_n h(n) \ge h(n) \qquad n \in \ci.
+h_1(n) := \fC_n\tfc_n h(n) \ge h(n), \quad h_2(n) := \fC_n\fc_n h(n) \ge h(n) \qquad n \in \ci,
 \end{equation*}
 and note that $h_1$ and $h_2$ are non-increasing functions.  Let $h_1^{-1}$ and $h_2^{-1}$ be defined analogously to $h^{-1}$ as in \eqref{hinvdef}.  These definitions imply that the quantity appearing on the left hand side in \eqref{multistageconv}, has the following upper and lower bounds based on \eqref{twosidedGineq} for $f \in \cc_{\tau}$:
 \begin{subequations}\label{hh1h2bounds}
@@ -387,11 +380,8 @@ Statement i) holds because of the bounds in \eqref{Anerrbound} and in Lemma \ref
 
 If \eqref{multistageconv} is not satisfied for $i$, then it follows from  the inequality in \eqref{hh1h2bounds} that 
 \[
-n_{i} \le 
-\begin{cases} 
-\displaystyle h_1^{-1}\left(\frac{\varepsilon}{\tau\Ftnorm{f}}\right) \\[2ex]
-\displaystyle h_2^{-1}\left(\frac{\tau_{\min}\varepsilon}{\tau\Fnorm{f}}\right)
-\end{cases} .
+n_{i} \le h_1^{-1}\left(\frac{\varepsilon}{\tau\Ftnorm{f}}\right) \qquad \text{and} \qquad 
+n_{i} \le h_2^{-1}\left(\frac{\tau_{\min}\varepsilon}{\tau\Fnorm{f}}\right).
 \] 
 The algorithm then considers the candidate $n^*_{i+1} = h^{-1}(\varepsilon \tfc_{n_{i}}/[\tau \tF_{n_{i}}(f)])$ as a possible choice for $n_{i+1}$.  If $n^*_{i+1} \le n_{i}$, then $n^*_{i+1}$ is a bad choice for $n_{i+1}$, and Stage 3 chooses $n_{i+1}$ to be the smallest element of $\ci$ that exceeds $n_{i}$ and for which $A_{n_{i}}$ is embedded in $A_{n_{i+1}}$.  By the definition of $r$ it follows that $n_{i+1} \le r  n_{i}$, and so by the above inequalities for $n_{i}$, it follows that $n_{i+1}$ is bounded above by the right hand sides of the inequalities in \eqref{automultistagedetcost}.
 
@@ -417,10 +407,10 @@ Let $\cj$ be a subset of $\natzero$.  Suppose that for any $n \in \cj$, and for 
 \Fnorm{f_1} \le 1, \qquad \vL(f_1)= \vzero, \qquad
 \norm[\cg]{S(f_1)} \ge g(n), 
 \end{equation}
-for some positive, non-increasing function $g$ defined on $\cj$ with $\inf_{n \in \cj} g(n)=0$.  For example, one might have $g(n)=a n^{-p}$ for $n \in \naturals$ with positive $a$ and $p$.
+for some non-increasing function $g:\cj \to (0,+\infty)$ with $\inf_{n \in \cj} g(n)=0$.  For example, one might have $g(n)=a n^{-p}$ for $n \in \naturals$ with positive $a$ and $p$.
 
 \subsection{Problems Defined on Balls} 
-Suppose that $A$ is any successful automatic algorithm for the ball $\cb_{\sigma}$, i.e., $A \in \ca(\cb_{\sigma},\cg,S,\Lambda)$, and $\Gnorm{S(f)-A(f)}\le \varepsilon$ for all $f \in \cb_{\sigma}$.  For any fixed $s \le \sigma$ and $\varepsilon>0$, let $\vL$ be the design used by the algorithm for the zero function.  Let $N_{j}$ and $N_{j+1}$ be two successive elements of $\cj$ with $N_{j}+1 \le \$(\vL) \le N_{j+1}$. Since $0 \in \cb_s$, it follows that $\$(\vL) \le \maxcost(A,\cb_{\sigma},\varepsilon,\cb_{s})$, and so $N_{j}+1$ is a lower bound on $\maxcost(A,\cb_{\sigma},\varepsilon,\cb_{s})$.
+Suppose that $A$ is any successful automatic algorithm for the ball $\cb_{\sigma}$, i.e., $A \in \ca(\cb_{\sigma},\cg,S,\Lambda)$, and $\Gnorm{S(f)-A(f)}\le \varepsilon$ for all $f \in \cb_{\sigma}$.  For any fixed $s \le \sigma$ and $\varepsilon>0$, let $\vL$ be the design used by the algorithm for the zero function.  Let $N_{j}$ and $N_{j+1}$ be two successive elements of $\cj$ with $N_{j}+1 \le \$(\vL) \le N_{j+1}$.
 
 Let $f_1$ be constructed according to \eqref{assumpfone} for this $\vL$.  Since the data for the functions $\pm s f_1$ are all zero, it follows that $A(s f_1)=A(-s f_1)$.  Also note that $\pm s f_1 \in \cb_{s}$.  Since $A$ must be successful for $\pm s f_1$, it follows that 
 \begin{align*}
@@ -430,7 +420,7 @@ Let $f_1$ be constructed according to \eqref{assumpfone} for this $\vL$.  Since 
 & = \norm[\cg]{S(sf_1)}= s\norm[\cg]{S(f_1)}  \\
 & \ge s g(N_{j+1}).
 \end{align*}
-This implies that the smallest that $N_{j}$ can be is the largest $n \in \cj$ with $s g(n) > \varepsilon$.  Thus, $g^{-1}(\varepsilon/s) \le N_{j}+1 \le \maxcost(A,\cb_{\sigma},\varepsilon,\cb_{s})$, where $g^{-1}$ is defined by
+Since $\pm s f_1 \in \cb_s$, it follows that $N_{j}+1 \le \$(\vL) \le \maxcost(A,\cb_{\sigma},\varepsilon,\cb_{s})$.  The inequality $g(N_{j+1}) \le \varepsilon/s$ implies that $N_{j}$ can be no smaller than the largest $n \in \cj$ with $g(n) > \varepsilon/s$.  Thus, $g^{-1}(\varepsilon/s) \le N_{j}+1 \le \maxcost(A,\cb_{\sigma},\varepsilon,\cb_{s})$, where $g^{-1}$ is defined by
 \begin{equation*} \label{ginvdef}
 g^{-1}(\varepsilon) = \max \{ n \in \cj : g(n) > \varepsilon\}+1.
 \end{equation*}
@@ -443,7 +433,7 @@ g ^{-1}(\varepsilon/\min(\sigma,s)).
 \end{equation*}
 \end{theorem}
 
-The lower bound in this theorem combined with the upper bound in Theorem \ref{NonAdaptDetermThm} leads to a simple condition that guarantees the optimality of Algorithm \ref{nonadaptalgo}.  One only need to look at the ratio $h(n)/g(n)$.
+The lower bound in this theorem and the upper bound in Theorem \ref{NonAdaptDetermThm} lead to a simple condition that guarantees the optimality of Algorithm \ref{nonadaptalgo}.  One only need to look at the ratio $h(n)/g(n)$.
 
 \begin{theorem} \label{optimalprop} Suppose that there exist fixed-cost algorithms $\{A_n\}_{n \in \ci}$, with $A_n  \in \ca_{\fix}(\cf,\cg,S,\Lambda)$, for which the upper error bounds satisfy \eqref{algoerr} for known $h$ defined on $\ci$, which satisfies \eqref{Inobiggap}.  Suppose also that $g$ is defined on $\cj \supseteq \ci$. If 
 \begin{equation}\label{ghcond}
