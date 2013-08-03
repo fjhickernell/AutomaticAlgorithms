@@ -171,17 +171,13 @@ For number of random functions chosen, the error tolerance, the initial $\tau$ v
 \begin{table}[h]
 \centering
 \begin{tabular}{cccccc}
-&&\multicolumn{2}{c}{Success} & Failure \\
-$\tau$ &  $\Prob(f \in \cc_{\tau}) $ & No Warning & Warning & No Warning \\
+&&\multicolumn{2}{c}{Success} & \multicolumn{2}{c}{Failure} \\
+$\tau$ &  $\Prob(f \in \cc_{\tau}) $ & No Warning & Warning & No Warning & Warning\\
 \toprule
-$10$ & $0\% \rightarrow  25\% $ & $25\%$  & $0\%$  &$75\%$ \\
-$100$ & $33 \% \rightarrow 58\% $ & $56\%$ & $1\%$ & $42\%$ \\
-$1000$ & $67\% \rightarrow 89\% $& $76\%$ & $5\%$ & $11\%$\\
+$10$ & $0\% \rightarrow  26\% $ & $26\%$  & $<1\%$  &$74\%$ & $<1\%$\\
+$100$ & $33 \% \rightarrow 57\% $ & $56\%$ & $1\%$ & $43\%$ & $1\%$\\
+$1000$ & $67\% \rightarrow 88\% $& $75\%$ & $5\%$ & $12\%$ & $8\%$\\
 \end{tabular}
 \caption{The probability of the test function lying in the cone for the original and eventual values of $\tau$ and the empirical success rate of Algorithm \ref{multistageapproalgo}.  \label{approxnumerical}}
 \end{table}
-
-
-
-
 
