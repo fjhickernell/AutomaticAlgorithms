@@ -2,7 +2,7 @@ Now we consider the problem of $\cl_{\infty}$ recovery of functions, i.e.,
 \[
 S(f):=\APP(f):=f, \qquad \cg:=\cl_{\infty}, \qquad \norm[\cg]{S(f)-A(f)}=\norm[\infty]{f-A(f)}.
 \]
-The space of functions to be recovered is the Sobolev space $\cf := \mathcal{W}^{2,\infty}$, as defined in \eqref{defSobolev}.  Our adaptive algorithm will be defined on the following cone of functions
+The space of functions to be recovered is the Sobolev space $\cf := \mathcal{W}^{2,\infty}$, as defined in \eqref{defSobolev}.  Our adaptive algorithm is defined on the following cone of functions
 \begin{subequations} \label{coneappxdef}
 \begin{gather}
 \Ftnorm{f}:=\norm[\infty]{f'-f(1)+f(0)}, \qquad \Fnorm{f}:=\norm[\infty]{f''}, \\
@@ -39,7 +39,7 @@ Note that $\tF_{n}(f)$ never overestimates $\Ftnorm{f}$ because
 &\ge \sup_{i=1, \ldots, n-1} (n-1)\abs{\int_{x_i}^{x_{i+1}} [f'(x) - f(1)+f(0)] \, \dif x }\\
 &= \sup_{i=1, \ldots, n-1} (n-1)\abs{f(x_{i+1})-f(x_i) - \frac{f(1)-f(0)}{n-1}} = \tF_n(f).
 \end{align*}
-Thus, $h_{-}(n)=0$ and $\fc_n=\tfc_n=1$.
+Thus, $h_{-}(n):=0$ and $\fc_n=\tfc_n=1$.
 
 The difference between $f$ and its linear spline can be bounded in terms of an integral involving the second derivative using integration by parts.  For $x \in [x_i,x_{i+1}]$ it follows that
 \begin{align}
@@ -51,7 +51,7 @@ f'(x)-A_n(f)'(x) & = (n-1) \int_{x_i}^{x_{i+1}} \frac{\partial v_i}{\partial x}(
 \end{align}
 where the continuous and piecewise differentiable kernel inside these integrals is defined as
 \begin{equation*}
-v_i(t,x) =\begin{cases} (x_{i+1}-x)(x_i-t), & x_i\leq t\leq x,\\
+v_i(t,x) :=\begin{cases} (x_{i+1}-x)(x_i-t), & x_i\leq t\leq x,\\
 (x-x_{i})(t- x_{i+1}), & x< t \leq x_{i+1},
 \end{cases}.
 \end{equation*}
@@ -64,7 +64,7 @@ since $(f-A_n(f))(x)$ vanishes for $x=0,1$. Using \eqref{fprimeintermsfdoubprime
 \begin{align*}
 \Ftnorm{f} - \tF_{n}(f) & \le \bignorm[\infty]{f' -A_n(f)'} \\
 & = \sup_{\substack{x_i \le x \le x_{i+1}\\ i=1, \ldots, n-1 }} \abs{f'(x) -(n-1)[f(x_{i+1})-f(x_i)]} \, \dif x \\
-&\le(n-1) \sup_{\substack{x_i \le x \le x_{i+1}\\ i=1, \ldots, n-1 }} \abs{ \int_{x_i}^{x_{i+1}} \frac{\partial v_i}{\partial x}(t,x) f''(t) \, \dif t} \\
+&=(n-1) \sup_{\substack{x_i \le x \le x_{i+1}\\ i=1, \ldots, n-1 }} \abs{ \int_{x_i}^{x_{i+1}} \frac{\partial v_i}{\partial x}(t,x) f''(t) \, \dif t} \\
 & \le (n-1) \norm[\infty]{f''} \sup_{\substack{x_i \le x \le x_{i+1}\\ i=1, \ldots, n-1 }} \int_{x_i}^{x_{i+1}} \abs{\frac{\partial v_i}{\partial x}(t,x)} \, \dif t \\
 &=(n-1)\norm[\infty]{f''} \sup_{\substack{x_i \le x \le x_{i+1}\\ i=1, \ldots, n-1 }} \left \{\frac{1}{2(n-1)^2} - (x-x_i)(x_{i+1}-x) \right\} \\
 &= h_+(n) \norm[\infty]{f''}, \qquad \qquad  h_+(n):= \frac{1}{2(n-1)}.
@@ -144,7 +144,7 @@ f'_{1}(x)=
 \[
 f''_{1}(x)=\sgn(4x-\xi_j-3\xi_{j+1}) - \sgn(4x-3\xi_j-\xi_{j+1}) + 1.
 \]
-This is the same bump function used in the numerical examples in the previous section and this one.  For this bump $\norm[\infty]{f''_1}=1$, and
+This bump function is similar to the one used in the numerical examples in the previous section and this section.  For this bump $\norm[\infty]{f''_1}=1$, and
 \[
 \norm[\infty]{f_1}=f_1((\xi_j+\xi_{j+1})/2)= \frac{(\xi_{j+1} - \xi_j)^2}{16} \ge \frac{1}{16(n+1)^2} =: g(n).
 \]
@@ -165,8 +165,8 @@ The adaptive linear spline Algorithm \ref{multistageapproalgo} has optimal order
 
 \subsection{Numerical Example}
 
-To illustrate Algorithm \ref{multistageapproalgo} we choose the same  family of test functions as in \eqref{testfun}, but now with  $\log_{10}(a) \sim \cu[-4,-1]$, $z \sim \cu[2a,1-2a]$, and $b=1/(2a^2)$.   Since $\norm[\infty]{f'-f(0)+f(1)}=1/a$ and $\norm[\infty]{f''}=1/a^2$, the probability that $f \in \cc_{\tau}$ is $\min\left(1,\max(0,\left(\log_{10}(\tau)-1\right)/3)\right).$
-For number of random functions chosen, the error tolerance, the initial $\tau$ values, and the cost budget are the same as in Section \ref{integnumexamplesec}.  Table \ref{approxnumerical} shows results that are analogous to Table \ref{integresultstable}.  Algorithm \ref{multistageapproalgo} yields the correct value to within the error tolerance for all $f$ that finally lie inside $\cc_{\tau}$ and for which the algorithm does not try to exceed the cost budget.
+To illustrate Algorithm \ref{multistageapproalgo} we choose the same  family of test functions as in \eqref{testfun}, but now with $b=1/(2a^2)$.   Since $\norm[\infty]{f'-f(0)+f(1)}=1/a$ and $\norm[\infty]{f''}=1/a^2$, the probability that $f \in \cc_{\tau}$ is $\min\left(1,\max(0,\left(\log_{10}(\tau)-1\right)/3)\right).$
+The number of random functions chosen, the error tolerance, the initial $\tau$ values, and the cost budget are the same as in Section \ref{integnumexamplesec}.  Table \ref{approxnumerical} shows results that are analogous to Table \ref{integresultstable}.  Algorithm \ref{multistageapproalgo} yields the correct value to within the error tolerance for all $f$ that finally lie inside $\cc_{\tau}$ and for which the algorithm does not try to exceed the cost budget.
 
 \begin{table}[h]
 \centering

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=latex 2013.7.24)  3 AUG 2013 23:33
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=latex 2013.7.24)  4 AUG 2013 17:18
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -612,6 +612,6 @@ Here is how much of TeX's memory you used:
  14747 multiletter control sequences out of 15000+600000
  16104 words of font info for 63 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
- 56i,18n,55p,1312b,322s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 56i,18n,55p,1332b,322s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on DeterministicAutomatic_g.dvi (32 pages, 151360 bytes).
+Output written on DeterministicAutomatic_g.dvi (32 pages, 151416 bytes).

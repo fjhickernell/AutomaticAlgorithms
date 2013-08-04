@@ -21,16 +21,16 @@
 
 \bigskip
 
-Thanks to the editor and two referees for their encouraging words and very helpful comments.  Below is our response to all of the points raised merged together.  
+Thanks to the editor and two referees for their encouraging words and very helpful comments.  They have inspired a lot of thought about how we can clarify and improve our manuscript.  Below is our response to all of the points raised.  
 
-We have tried to be consistent with the ideas of the information-based complexity (IBC), and define our terms and explain our results in a way that this community would understand.  However, some of our ideas do not quite fit the classical IBC mold.  We have needed to stretch the mold, hopefully without breaking it.  Moreover, we are also seeking to reach a broader audience, i.e., those who use automatic algorithms like MATLAB's {\tt quad}, and expect them to work correctly.  This is why we stress the need for rigorous theoretical guarantees, which are not available for practical algorithms like {\tt quad}, but which might be taken for granted in the IBC world.
+We have tried to be consistent with the ideas of the information-based complexity (IBC), and define our terms and explain our results in a way that this community would understand.  However, some of our ideas do not quite fit the classical IBC mold.  We have needed to stretch the mold, hopefully without breaking it.  Moreover, we are also seeking to reach a broader audience, i.e., those who use automatic algorithms such as MATLAB's {\tt quad}, and expect them to work correctly.  This is why we stress the need for rigorous theoretical guarantees, which are not available for practical algorithms like {\tt quad}, but which might be taken for granted in the IBC world.
 
 \begin{enumerate}
 \renewcommand{\labelenumi}{\arabic{enumi}.}
 
 \item We have shortened the manuscript.  The introduction has been shrunk. The tables and list in the introduction have been deleted.  Lemma 1, our first new result, is now on p.\ 7 rather than p.\ 11.  
 
-\item We have relegated the cost budget, $N_{\max}$, to a remark.  It is not mentioned in the algorithms or theorems.
+\item We have relegated the cost budget, $N_{\max}$, to a remark and to the numerical examples.  It is not mentioned in the algorithms or theorems.
 
 \item We have clarified the meaning of ``automatic'' to mean all algorithms that adjust the cost relative to the error tolerance given.  All our full-fledged algorithms are automatic, including those that are not adaptive.  Fixed-cost building block algorithms are used construct the automatic algorithms.  ``Adaptive" means that the algorithm adjusts its computational effort based on function data as well as the error tolerance.
 
@@ -44,15 +44,15 @@ We have tried to be consistent with the ideas of the information-based complexit
 
 \item We have altered our discussion of previous work on adaptive algorithms.
 
-\item Our perspective may differ from one referee, who states ``Adaption is not an advantage or a disadvantage per se, it is needed if [the set of interest] is a cone.'' If the set of input functions of interest has been fixed then it is true that one only wants to find the best algorithm irrespective of whether it is adaptive.  But we would argue that adaption \emph{does} have an advantage.
+\item Our perspective may differ from one referee, who states ``Adaption is not an advantage or a disadvantage per se, it is needed if [the set of interest] is a cone.'' If the set of input functions of interest has been fixed then it is true that one only wants to find the best algorithm irrespective of whether it is adaptive.  But we would argue that adaption \emph{does} offer an advantage.
 
-Algorithms used in practice (and referenced in our manuscript) are adaptive.  The reason they are is that this allows one to expend more computational effort for a harder problem and less effort for an easier problem.  We define our cost in Section 2.2 to reflect that reality.   For algorithms that are defined over some nice subset, $\cn$, of the normed space of input functions, $\cf$, we define the cost of the algorithm as the maximum cost over functions in $\cn \cap \cb_s$, where $\cb_s$ is a ball or radius $s$.  Thus the cost depends both on $\varepsilon$ and $s$.  Adaptive algorithms defined on $\cn$ may have a cost that decreases as $s$ decreases, while non-adaptive algorithms have a fixed cost independent of $s$.  This is the case whether or not $\cn$ is bounded and whether it is a ball or a cone.
+Algorithms used in practice (and referenced in our manuscript) are adaptive.  The reason they are is that this allows one to expend more computational effort for a harder problem and less effort for an easier problem.  We define our cost in Section 2.2 to reflect that reality.   All of our automatic algorithms that are defined over some nice subset, $\cn$, of the normed space of input functions, $\cf$, e.g., $\cn$ may be the ball $\cb_{\sigma}$ or the cone $\cc_{\tau}$. We define the cost of the algorithm as the maximum cost over functions in $\cn \cap \cb_s$, where $0 < s < \infty$.  Thus the cost depends both on $\varepsilon$ and $s$.  Adaptive algorithms defined on $\cn$ may have a cost that decreases as $s$ decreases, while non-adaptive algorithms have a fixed cost independent of $s$.
 
 At the end of Section 4.2 we argue that our adaptive algorithms defined on cones enjoy a stronger sense of optimality because their cost decreases as $s$ decreases.  This is not the case for the traditional non-adaptive algorithms defined on the ball. This point is mentioned again in Section 7.2.
 
 Unfortunately, the adaptive algorithms used in practice have no theoretical guarantees, but they often do a great job.  We in the numerical analysis and IBC communities should be working to find guarantees, and we suggest that guarantees will only be found if we move away from balls.  We would argue that cones provide the best setting to have practical and theoretically justified adaptive algorithms.  
 
-\item We use the word ``guarantee'' a lot in our article for a reason.  For the reader who is only concerned with theoretically justified algorithms, guarantees are assumed.  However, for users of readily available adaptive, automatic software, guarantees are not a given, but are sometimes incorrectly implied.  For example, the abstract of \cite{BatTre04a}, which describes the Chebfun toolbox, reads ``All functions live on $[-1,1]$ and are represented by values at sufficiently many Chebyshev points for the polynomial interpolant to be \emph{accurate to close to machine precision}.''  (emphasis ours).  This statement is true for many functions, but not all, and there are no guarantees that specify the conditions under which this statement is true.  It is for the audience of practitioners that we use the word ``guarantee'' often.
+\item We use the word ``guarantee'' a lot in our article for a reason.  For the reader who is only concerned with theoretically justified algorithms, guarantees are assumed.  However, for users of readily available adaptive, automatic software, guarantees are usually not provided, but are sometimes incorrectly implied.  For example, the abstract of \cite{BatTre04a}, which describes the Chebfun toolbox, reads ``All functions live on $[-1,1]$ and are represented by values at sufficiently many Chebyshev points for the polynomial interpolant to be \emph{accurate to close to machine precision}.''  (emphasis ours).  This statement is true for many functions, but not all, and there are no guarantees that specify the conditions under which this statement is true.  It is for the audience of practitioners that we use the word ``guarantee'' often.
 
 \item The condition $\phi(c\vy) = c\phi(\vy)$ is now only needed for the building block non-automatic algorithms described in Section 2.3.
 
@@ -66,7 +66,7 @@ Unfortunately, the adaptive algorithms used in practice have no theoretical guar
 
 \end{enumerate}
 
-Finally, we greatly appreciate the careful attention that the referees and the editor have given to our paper.  The comments have inspired a number of changes that we hope have improved the paper.  We look forward to your feedback.
+Finally, we greatly appreciate the careful attention that the referees and the editor have given to our paper.  The comments have led to a number of changes that we hope have improved the paper.  We look forward to your feedback.
 
 \bibliographystyle{spbasic}
 \bibliography{FJH22,FJHown22}
