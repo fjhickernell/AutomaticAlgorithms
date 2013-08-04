@@ -1,17 +1,17 @@
 Now we consider the problem of $\cl_{\infty}$ recovery of functions, i.e.,
 \[
-S(f)=\APP(f):=f, \qquad \cg=\cl_{\infty}, \qquad \norm[\cg]{S(f)-A(f)}=\norm[\infty]{f-A(f)}.
+S(f):=\APP(f):=f, \qquad \cg:=\cl_{\infty}, \qquad \norm[\cg]{S(f)-A(f)}=\norm[\infty]{f-A(f)}.
 \]
-The space of functions to be recovered is the Sobolev space $\cf = \mathcal{W}^{2,\infty}$, as defined in \eqref{defSobolev}.  Our adaptive algorithm will be defined on the following cone of functions
+The space of functions to be recovered is the Sobolev space $\cf := \mathcal{W}^{2,\infty}$, as defined in \eqref{defSobolev}.  Our adaptive algorithm will be defined on the following cone of functions
 \begin{subequations} \label{coneappxdef}
 \begin{gather}
-\Ftnorm{f}=\norm[\infty]{f'-f(1)+f(0)}, \qquad \Fnorm{f}=\norm[\infty]{f''}, \\
-\cc_{\tau}=\{f \in  \mathcal{W}^{2,\infty} : \norm[\infty]{f''}\leq \tau\norm[\infty]{f'-f(1)+f(0)}\}.
+\Ftnorm{f}:=\norm[\infty]{f'-f(1)+f(0)}, \qquad \Fnorm{f}:=\norm[\infty]{f''}, \\
+\cc_{\tau}:=\{f \in  \mathcal{W}^{2,\infty} : \norm[\infty]{f''}\leq \tau\norm[\infty]{f'-f(1)+f(0)}\}.
 \end{gather}
 \end{subequations}
 
 The basic fixed-cost algorithm used to approximate functions is the linear spline algorithm given in \eqref{linearspline}.
-The cost of $A_n$ is $n$, and the minimum cost multiple is $r=2$.
+The cost of $A_n$ is $n$, and the cost multiple is $r=2$.
 
 Using this same data one may approximate the $\cl_\infty$ norm of $f'-f(1)+f(0)$ by the algorithm
 \begin{multline}\label{estfirstderiv}
@@ -171,7 +171,7 @@ For number of random functions chosen, the error tolerance, the initial $\tau$ v
 \begin{table}[h]
 \centering
 \begin{tabular}{cccccc}
-&&\multicolumn{2}{c}{Success} & \multicolumn{2}{c}{Failure} \\
+&&Success & Success & Failure & Failure \\
 $\tau$ &  $\Prob(f \in \cc_{\tau}) $ & No Warning & Warning & No Warning & Warning\\
 \toprule
 $10$ & $0\% \rightarrow  26\% $ & $26\%$  & $<1\%$  &$74\%$ & $<1\%$\\

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=latex 2013.7.24)  2 AUG 2013 21:38
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=latex 2013.7.24)  3 AUG 2013 23:33
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -558,13 +558,13 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 LaTeX Font Info:    Try loading font information for U+euf on input line 232.
  (/usr/local/texlive/2013/texmf-dist/tex/latex/amsfonts/ueuf.fd
 File: ueuf.fd 2013/01/14 v3.01 Euler Fraktur
-) [7] [8] [9] [10] [11] [12] [13]
-Underfull \hbox (badness 1314) in paragraph at lines 538--538
+) [7] [8] [9] [10] [11] [12] [13] [14]
+Underfull \hbox (badness 1314) in paragraph at lines 542--542
 []\OT1/cmr/m/n/8 Table 1: Costs of var-i-ous al-go-rithms, $\OML/cmm/m/it/8 A$\
 OT1/cmr/m/n/8 , guar-an-teed to sat-isfy the tol-er-ance, i.e.,
  []
 
-[14] (./univariate_integration_g.tex [15] [16]
+(./univariate_integration_g.tex [15] [16]
 LaTeX Font Info:    Try loading font information for U+bbm on input line 77.
 
 (/usr/local/texlive/2013/texmf-dist/tex/latex/bbm-macros/ubbm.fd
@@ -579,24 +579,24 @@ Overfull \hbox (1.01271pt too wide) in paragraph at lines 224--237
  [][] 
  []
 
-) (./ApproxUnivariate_g.tex [22] [23]
+) (./ApproxUnivariate_g.tex [22] [23] [24]
 Overfull \hbox (7.04253pt too wide) in paragraph at lines 90--91
 []\OT1/cmr/m/n/10 Compute $[](\OML/cmm/m/it/10 f\OT1/cmr/m/n/10 )$
  []
 
-[24] [25] [26])
+[25] [26]) [27]
 File: Foolquadbw.eps Graphic file (type eps)
  <Foolquadbw.eps>
 File: foolbwquadexample.eps Graphic file (type eps)
- <foolbwquadexample.eps> [27] [28] [29]
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 629.
+ <foolbwquadexample.eps> [28] [29]
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 633.
 
 
 (/usr/local/texlive/2013/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 629.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 633.
  [30]
 (./DeterministicAutomatic_g.bbl
 Underfull \hbox (badness 2707) in paragraph at lines 21--26
@@ -608,10 +608,10 @@ put-ing,
 Here is how much of TeX's memory you used:
  11563 strings out of 493312
  206890 string characters out of 6137876
- 264999 words of memory out of 5000000
+ 260999 words of memory out of 5000000
  14747 multiletter control sequences out of 15000+600000
  16104 words of font info for 63 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
- 56i,18n,55p,1322b,322s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 56i,18n,55p,1312b,322s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on DeterministicAutomatic_g.dvi (32 pages, 150444 bytes).
+Output written on DeterministicAutomatic_g.dvi (32 pages, 151360 bytes).
