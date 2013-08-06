@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=latex 2013.7.24)  4 AUG 2013 21:26
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=latex 2013.7.24)  5 AUG 2013 23:19
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -515,7 +515,10 @@ Excluding comment 'comment')
 (/usr/local/texlive/2013/texmf-dist/tex/latex/multirow/multirow.sty
 \bigstrutjot=\dimen185
 )
-(./FJHDef.tex
+(/usr/local/texlive/2013/texmf-dist/tex/latex/url/url.sty
+\Urlmuskip=\muskip11
+Package: url 2006/04/12  ver 3.3  Verb mode for urls, etc.
+) (./FJHDef.tex
 \overwdth=\skip59
 )
 \c@theorem=\count134
@@ -524,7 +527,8 @@ Excluding comment 'comment')
 \c@algo=\count137
 \c@condit=\count138
 \c@rem=\count139
- (./DeterministicAutomatic_g.aux)
+
+(./DeterministicAutomatic_g.aux)
 \openout1 = `DeterministicAutomatic_g.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 37.
@@ -539,8 +543,7 @@ LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 37.
 LaTeX Font Info:    ... okay on input line 37.
 LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 37.
 LaTeX Font Info:    ... okay on input line 37.
-
-ABD: EveryShipout initializing macros
+ ABD: EveryShipout initializing macros
 LaTeX Font Info:    Try loading font information for U+msa on input line 66.
 
 (/usr/local/texlive/2013/texmf-dist/tex/latex/amsfonts/umsa.fd
@@ -555,16 +558,16 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 
 ] [2]
 [3] [4] [5] [6]
-LaTeX Font Info:    Try loading font information for U+euf on input line 232.
+LaTeX Font Info:    Try loading font information for U+euf on input line 227.
  (/usr/local/texlive/2013/texmf-dist/tex/latex/amsfonts/ueuf.fd
 File: ueuf.fd 2013/01/14 v3.01 Euler Fraktur
-) [7] [8] [9] [10] [11] [12] [13] [14]
-Underfull \hbox (badness 1314) in paragraph at lines 535--535
+) [7] [8] [9] [10] [11] [12] [13]
+Underfull \hbox (badness 1314) in paragraph at lines 530--530
 []\OT1/cmr/m/n/8 Table 1: Costs of var-i-ous al-go-rithms, $\OML/cmm/m/it/8 A$\
 OT1/cmr/m/n/8 , guar-an-teed to sat-isfy the tol-er-ance, i.e.,
  []
 
-(./univariate_integration_g.tex [15] [16]
+[14] (./univariate_integration_g.tex [15] [16]
 LaTeX Font Info:    Try loading font information for U+bbm on input line 79.
 
 (/usr/local/texlive/2013/texmf-dist/tex/latex/bbm-macros/ubbm.fd
@@ -579,24 +582,24 @@ Overfull \hbox (1.01271pt too wide) in paragraph at lines 226--239
  [][] 
  []
 
-) (./ApproxUnivariate_g.tex [22] [23] [24]
-Overfull \hbox (7.04253pt too wide) in paragraph at lines 90--91
+) (./ApproxUnivariate_g.tex [22] [23]
+Overfull \hbox (7.04253pt too wide) in paragraph at lines 89--90
 []\OT1/cmr/m/n/10 Compute $[](\OML/cmm/m/it/10 f\OT1/cmr/m/n/10 )$
  []
 
-[25] [26]) [27]
+[24] [25] [26])
 File: Foolquadbw.eps Graphic file (type eps)
  <Foolquadbw.eps>
 File: foolbwquadexample.eps Graphic file (type eps)
- <foolbwquadexample.eps> [28] [29]
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 626.
+ <foolbwquadexample.eps> [27] [28] [29]
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 621.
 
 
 (/usr/local/texlive/2013/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 626.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 621.
  [30]
 (./DeterministicAutomatic_g.bbl
 Underfull \hbox (badness 2707) in paragraph at lines 21--26
@@ -606,12 +609,12 @@ put-ing,
 
 [31]) [32] (./DeterministicAutomatic_g.aux) ) 
 Here is how much of TeX's memory you used:
- 11563 strings out of 493312
- 206890 string characters out of 6137876
- 261000 words of memory out of 5000000
- 14747 multiletter control sequences out of 15000+600000
+ 11635 strings out of 493312
+ 207782 string characters out of 6137876
+ 266070 words of memory out of 5000000
+ 14815 multiletter control sequences out of 15000+600000
  16104 words of font info for 63 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
  56i,19n,55p,1332b,322s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on DeterministicAutomatic_g.dvi (32 pages, 151752 bytes).
+Output written on DeterministicAutomatic_g.dvi (32 pages, 152280 bytes).
