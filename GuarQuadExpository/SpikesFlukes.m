@@ -1,26 +1,32 @@
 %Construct Spiky and Fluky Functions for 
 %   Ordinary Trapezoidal Rule
-%% Garbage collection
-clear all, close all
-format long, format compact
-set(0,'defaultaxesfontsize',30,'defaulttextfontsize',30)
 
-%32 Subinterval Example
+%% Garbage collection
+format compact %remove blank lines from output
+clear all %clear all variables
+close all %close all figures
+set(0,'defaultaxesfontsize',24,'defaulttextfontsize',24) %make font larger
+set(0,'defaultLineLineWidth',3) %thick lines
+set(0,'defaultTextInterpreter','latex') %latex axis labels
+set(0,'defaultLineMarkerSize',40) %latex axis labels
+
+%16 Subinterval Example
 %% Initial Data
-n=32; % number of trapezoids
+n=16; % number of trapezoids
 xnodes=(0:n)'/n;
-zoom=0.1;
+zoom=0.2;
 xnodeszoom=xnodes(xnodes<=zoom);
 pink=[1,0.75,0.75];
 ltgrn=[0.75,1,0.75];
 
 %% Spiky Function
 fhump=@(x,a,b) -1 + 60*((x - a).^2).*((b - x).^2)./(b - a)^4;
+%fhump=@(x,a,b) 3-4*abs(2*x - (a+b))./(b - a);
 fallhumps=@(x,n) fhump(mod(n*x,1),0,1);
 fnodes=fallhumps(xnodes,n);
 fnodeszoom=fallhumps(xnodeszoom,n);
-trapspiken=sum(fnodes.*[1; 2*ones(n-1,1); 1])/(2*n);
-trapspikenov2=sum(fnodes(1:2:n+1).*[1; 2*ones(n/2-1,1); 1])/n;
+trapspiken=sum(fnodes.*[1; 2*ones(n-1,1); 1])/(2*n)
+trapspikenov2=sum(fnodes(1:2:n+1).*[1; 2*ones(n/2-1,1); 1])/n
 
 %Plot spiky function
 nplot=500; 
@@ -28,12 +34,11 @@ xplot=(0:nplot)'/nplot;
 xplotzoom=zoom*(0:nplot)'/nplot;
 fplotzoom=fallhumps(xplotzoom,n);
 plot(xplotzoom,fplotzoom,'k-',...
-    xnodeszoom,fnodeszoom,'b.',...
-    'linewidth',2,'markersize',30)
-xlabel('$x$','Interpreter','Latex')
-ylabel('Spiky Integrand','Interpreter','Latex')
+    xnodeszoom,fnodeszoom,'b.')
+xlabel('$x$')
+ylabel('Spiky Integrand')
 axis([0 zoom -1.5 3])
-print -depsc 'SpikyIntegFigcolor.eps'
+eval(['print -depsc SpikyInteg' int2str(n) 'TrapFigcolor.eps'])
 
 %% Fluky Function
 bern2=@(x) 1/6 - x.*(1-x);
@@ -47,12 +52,12 @@ trapflukenov2=sum(fnodes(1:2:n+1).*[1; 2*ones(n/2-1,1); 1])/n
 fplot=ffluke(xplot,n);
 figure
 plot(xplot,fplot,'k-',...
-    xnodes,fnodes,'b.',...
-    'linewidth',2,'markersize',30)
-xlabel('$x$','Interpreter','Latex')
-ylabel('Fluky Integrand','Interpreter','Latex')
-axis([0 1 -6e5 6e5])
-print -depsc 'FlukyIntegFigcolor.eps'
+    xnodes,fnodes,'b.')
+xlabel('$x$')
+ylabel('Fluky Integrand')
+axis([0 1 -4e4 4e4])
+eval(['print -depsc FlukyInteg' int2str(n) 'TrapFigcolor.eps'])
+break
 
 %4 Subinterval Example
 %% Initial Data

@@ -34,7 +34,7 @@
 
 \begin{document}
 
-\title{Reliable Automatic Quadrature for Cones of Integrands}
+\title{Reliable Adaptive, Automatic Quadrature for Cones of Integrands}
 \author{Fred J. Hickernell}
 \author{Martha Razo}
 \author{Sunny Yun}
@@ -47,38 +47,54 @@
 
 \section{Introduction} 
 
+Although some mathematical problems can be solved using pencil and paper, many can only be solved via numerical algorithms.  These algorithms typically generate a sequence of approximations that converge to the true solution.  The user wants to know at what point in the sequence the approximation differs from the true solution by no more than a specified tolerance. Stopping rules used in practice are based either on inconvenient assumptions or on heuristics without guarantees.  Here we describe a practical, adaptive trapezoidal rule for integration that is guaranteed to provide the correct answer.  The key is to consider cones of integrands.  We also suggest changing the way numerical quadrature is taught.
+
+\subsection{Why Numerical Integration Is Needed?}
+There are many methods that we learn for evaluating integrals, e.g., substitution, integration by parts, partial fractions, etc.  Unfortunately, there are many elementary functions whose integrals \emph{cannot} be expressed as elementary functions.  An important example is the standard normal probability density, $\phi: x \mapsto \me^{-x^2}/\sqrt{2 \pi}$, whose integral is the standard normal distribution, $\Phi : x \mapsto \int_{-\infty}^x \phi(t) \, \dif t$.  Since the $\Phi$ is not an elementary function, values of $\Phi$ must be provided via tables in statistics textbooks and special functions in calculators. By contrast, the derivatives of elementary functions are always elementary functions.  
+
+\subsection{The Trapezoidal Rule}
+To compute integrals that are not amenable to analytic methods one must turn to numerical integration (quadrature) methods such as the trapezoidal rule, $T_n$, which is often introduced in calculus courses:
+\begin{equation}
+\int_0^1 f(x) \, \dif x \approx T_n(f) := \frac{1}{2n} \left [ f(0) + 2 f(1/n) + \cdots + 2 f(1-1/n) + f(1) \right].
+\end{equation}
+The trapezoidal rule is the integral of the piecewise linear spline approximation to the integrand.  The name of the rule comes from the fact that the integral of the linear spline is a sum of areas of trapezoids (see Figure \ref{??}). Under mild smoothness conditions on $f$ one observes that $T_n(f)$ approaches $\int_0^1 f(x) \, \dif x$ as $n$ increases. 
+
+For the user's convenience one would like to turn $T_n$ into an \emph{automatic} quadrature algorithm --- one that automatically chooses $n$ to ensure that the trapezoidal rule error is small enough.  Given the user's tolerance for error, $\varepsilon$, an automatic trapezoidal rule should choose $n$ such that 
+\begin{equation} \label{errdef}
+\err(f,n) := \abs{\int_0^1 f(x) \, \dif x - T_n(f)} \le \varepsilon.
+\end{equation}
+
+Although $\err(f,n)$ is rarely known exactly, there exist rigorous upper bounds on the error that are proportional to $1/n^2$ and the roughness of the integrand, e.g., \ocite{BraPet11a}*{Sect.\ 7.2, (7.15)}: 
+\begin{equation} \label{traperrbd}
+\err(f,n) \le \frac{\Var(f')}{8n^2}, \qquad n \in \naturals := \{1, 2, \ldots \}. 
+\end{equation}
+Here $\Var(\cdot)$ represents the (total) variation, which is defined as
+%\begin{equation} \label{vardef}
+%\Var(f) := \sup_{\substack{n \in \naturals\\ 0 \le x_0 < x_1 < \cdots < x_{n} \le 1}} \sum_{i=1}^n \abs{f(x_i)-f(x_{i-1})}.
+%\end{equation}
+\begin{equation} \label{vardef}
+\Var(f) := \sup \left \{ \sum_{i=1}^n \abs{f(x_i)-f(x_{i-1})} : n \in \naturals, \ 0 \le x_0 < x_1 < \cdots < x_{n} \le 1 \right\}.
+\end{equation}
+The trapezoidal rule gives the exact answer for linear integrands.  Error bound \eqref{traperrbd} reflects this fact since if $f(x)=ax+b$, then $f'(x)=a$, and so $\Var(f')=0$.
+
+To illustrate this error bound, consider the normal probability example mentioned above.  The trapezoidal rule approximation using $n=16$ trapezoids, the actual error, and the error bound are given as follows:
+\[
+f(x) = \phi(x) = \frac{\me^{-x^2}}{\sqrt{2 \pi}}, \qquad
+\]
+(The exact value of the integral to four significant digits may be found by a variety of different quadrature rules.)  The point to not is that $\int_0^1 \me^{-x^2}/\sqrt{2 \pi} \, \dif x$.  Figure \ref{??}  above with 
+
+Error bound \eqref{traperrbd} helps us determine how large $n$ must be to meet the error tolerance, but unlike the above example, we do not know how large $\Var(f')$ is for most $f$ occurring in practice. Section \ref{autoballsec} provides in the details for integrands lying in a prescribed ball.  Section \ref{flawstopsec} describes stopping rule that is taught in elementary numerical analysis courses, but which is not guaranteed to succeed.  A guaranteed stopping rule for integrands lying in cones is described in Section \ref{???}.
+
+
+\section{An Automatic Algorithm for Balls of Integrands} \label{autoballsec}
+
+If $f$ has a simple form, one might be able to derive an upper bound on $\Var(f')$ and turn error bound \eqref{traperrbd} into an automatic algorithm.  The algorithm below is guaranteed to produce $\err(f,n)\le \varepsilon$ provided that $\Var(f') \le M_1$.  
+
 Automatic numerical algorithms for univariate integration appear in many widely used software packages, such as MATLAB \ycite{MAT8.1}, Mathematica \ycite{Mat9a}, NAG \ycite{NAG23}, and R \ycite{R2512}.  Automatic algorithms determine adaptively where and how much to sample the integrand by estimating the algorithm error from the sampled function values.  Unfortunately, such error estimation methods are unreliable, as pointed out by James Lyness \ycite{Lyn83}.
 
 Here we show how to overcome Lyness's objections by employing a new paradigm for error bounds, which is based on cones, rather than balls, of integrands rather than balls.  This article illustrates with greater detail the more general setting in \ocite{HicEtal14b}.  We argue that the traditional way of teaching error estimation for numerical integration should be changed to reflect this new paradigm.  Moreover, this paradigm can, and should, be applied to other problems requiring automatic algorithms. 
 
-\subsection{Why Numerical Integration Is Needed?}
-Soon after a calculus student first learns about integration, she learns that the integrals of many elementary functions are \emph{not} themselves elementary functions.  An important example is the standard normal probability density function, $\phi: x \mapsto \me^{-x^2}/\sqrt{2 \pi}$.  Since the antiderivative of $\phi$ cannot be expressed in terms of elementary functions, values of the standard normal distribution function $\Phi : x \mapsto \int_{-\infty}^x \phi(t) \, \dif t$ must be provided in tables in textbooks and special functions in calculators. By contrast, the derivatives of elementary functions are elementary functions.  
 
-\subsection{The Trapezoidal Rule}
-Students need to know that no analytic answer does not mean no answer, so calculus students are often introduced to numerical integration (quadrature) methods such as the trapezoidal rule, $T_n$:
-\begin{equation}
-\int_0^1 f(x) \, \dif x \approx T_n(f) := \frac{1}{2n} \left [ f(0) + 2 f(1/n) + \cdots + 2 f(1-1/n) + f(1) \right].
-\end{equation}
-One may ask ``How large should the number of trapezoids, $n$, be so that the absolute error of $T_n(f)$ does not exceed a tolerance $\varepsilon$?''  Theoretical and rigorous error bounds are proportional to $1/n^2$, e.g., \ocite{BraPet11a}*{Sect.\ 7.2, (7.15)}: 
-\begin{equation} \label{traperrbd}
-\err(f,n) := \abs{\int_0^1 f(x) \, \dif x - T_n(f)} \le \frac{\Var(f')}{8n^2}, \qquad n \in \naturals = \{1, 2, \ldots \}. 
-\end{equation}
-The error bound is also proportional to the total variation of the first derivative of the integrand.  The total variation, $\Var(\cdot)$, is defined as
-\begin{equation} \label{vardef}
-\Var(f) := \sup_{\substack{n \in \naturals\\ 0 = x_0 < x_1 < \cdots < x_{n} =1}} \sum_{i=1}^n \abs{f(x_i)-f(x_{i-1})}.
-\end{equation}
-The trapezoidal rule approximates the integrand by a piecewise linear spline and thus gives the exact answer for such integrands.  Error bound \eqref{traperrbd} reflects this since  $\Var(f')$ vanishes when $f(x)=ax+b$.
-
-The total variation is closely related to the $\cl_1$-norm:
-\begin{gather*}
-\Var(f)= \norm[1]{f'} \text{ if } \norm[1]{f'}< \infty, \\ 
-\text{where} \qquad \qquad \norm[p]{f}:= \begin{cases} \displaystyle \left[\int_0^1 \abs{f(x)}^p \, \dif x \right]^{1/p}, & 1 \le p < \infty,\\[1ex]
-\displaystyle  \sup_{0 \le x \le 1} \abs{f'(x)}, & p=\infty.
-\end{cases}
-\end{gather*}
-Error bounds resembling \eqref{traperrbd} exist in terms of $\norm[p]{f''}$ for $1 \le p \le \infty$ with leading constants depending on $p$.  
-
-If $f$ has a simple form, one might be able to derive an upper bound on $\Var(f')$ and turn error bound \eqref{traperrbd} into an automatic algorithm.  The algorithm below is guaranteed to produce $\err(f,n)\le \varepsilon$ provided that $\Var(f') \le M_1$.  
 
 \begin{algo} Given an error tolerance, $\varepsilon$, set 
 \begin{equation}\label{algo1n}
@@ -89,7 +105,7 @@ and return the trapezoidal rule approximation $T_n(f)$ as the answer.
 
 For example, for $\phi$ defined above, $\Var(f')=1/\sqrt{2 \pi \me}$, and so one may choose any $n \ge 1/\sqrt{8\sqrt{2 \pi \me} \, \varepsilon}$.  However, not all integrands have first derivatives whose variations are so easy to bound.  
 
-\section{The Flaws in the Prevalent Data-Based Error Estimate}
+\section{The Flaws in the Prevalent Data-Based Error Estimate} \label{flawstopsec}
 Automatic quadrature algorithms do not require the user to specify $M_1$, but bound or estimate the error based solely on the function values, $f(x_i)$, and then determine the sample size accordingly.  Here we focus on this error estimation process.  As we demonstrate in this section, the popular error estimate for the trapezoidal rule is flawed. 
 
 Numerical methods texts, such as \ocite{BurFai10}*{p.\ 223--224}, \ocite{CheKin12a}*{p.\ 233}, and  \ocite{Sau12a}*{p.\ 270}, advise readers to estimate the error of $T_n(f)$ in terms of its from $T_{n/2}(f)$, specifically,
@@ -122,8 +138,8 @@ Figure \ref{spikeflukefig} shows  examples of two integrands satisfying these co
 
 \begin{figure}
 \centering 
-\includegraphics[width=6cm]{SpikyIntegFigcolor.eps} \quad
-\includegraphics[width=6cm]{FlukyIntegFigcolor.eps}
+\includegraphics[width=6cm]{SpikyInteg16TrapFigcolor.eps} \quad
+\includegraphics[width=6cm]{FlukyInteg16TrapFigcolor.eps}
 \caption{Examples of a spiky integrand (left) and a fluky integrand (right), which satisfy the failure conditions \eqref{failcond} for $n=32$. \label{spikeflukefig}}
 \end{figure}
 

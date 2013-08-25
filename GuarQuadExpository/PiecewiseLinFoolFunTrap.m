@@ -1,9 +1,12 @@
 % Piecewise liear fooling function for the trapezoid rule
 
 %% Garbage collection
-clear all, close all
-format long, format compact
-set(0,'defaultaxesfontsize',20,'defaulttextfontsize',20)
+format compact %remove blank lines from output
+clear all %clear all variables
+close all %close all figures
+set(0,'defaultaxesfontsize',24,'defaulttextfontsize',24) %make font larger
+set(0,'DefaultLineLineWidth',3) %thick lines
+set(0,'defaultTextInterpreter','latex') %latex axis labels
 
 %% Parameters
 n=12; N=2^n; %number of nodes - 1 to define function
@@ -69,14 +72,12 @@ fftrap=f(1:L:N+1);
 fctrap=f(1:twoL:N+1);
 plot(xfun,f,'k-',...
     xftrap,fftrap,'b-', ...
-    xctrap,fctrap,'r-', ... 
-    'linewidth',2)
+    xctrap,fctrap,'r-')
 
 figure;
 plot(xfun(1:2*twoL),f(1:2*twoL),'k-',...
     xftrap(1:5),fftrap(1:5),'b-', ...
-    xctrap(1:3),fctrap(1:3),'r-', ... 
-    'linewidth',2)
+    xctrap(1:3),fctrap(1:3),'r-')
 
 
 %Check results
