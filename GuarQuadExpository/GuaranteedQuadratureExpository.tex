@@ -79,9 +79,9 @@ The trapezoidal rule gives the exact answer for linear integrands.  Error bound 
 
 To illustrate this error bound, consider the normal probability example mentioned above.  The trapezoidal rule approximation using $n=16$ trapezoids, the actual error, and the error bound are given as follows:
 \[
-f(x) = \phi(x) = \frac{\me^{-x^2}}{\sqrt{2 \pi}}, \qquad
+f(x) = \phi(x) = \frac{\me^{-x^2}}{\sqrt{2 \pi}}, \qquad \int_0^1 f(x)  \, \dif x = , \qquad T_{16}(f)= ??, \qquad \err(f,16)=???.
 \]
-(The exact value of the integral to four significant digits may be found by a variety of different quadrature rules.)  The point to not is that $\int_0^1 \me^{-x^2}/\sqrt{2 \pi} \, \dif x$.  Figure \ref{??}  above with 
+(The exact value of the integral to four significant digits may be found by a variety of different quadrature rules.)  The point to note is that ???.  Figure \ref{??}  above with 
 
 Error bound \eqref{traperrbd} helps us determine how large $n$ must be to meet the error tolerance, but unlike the above example, we do not know how large $\Var(f')$ is for most $f$ occurring in practice. Section \ref{autoballsec} provides in the details for integrands lying in a prescribed ball.  Section \ref{flawstopsec} describes stopping rule that is taught in elementary numerical analysis courses, but which is not guaranteed to succeed.  A guaranteed stopping rule for integrands lying in cones is described in Section \ref{???}.
 
