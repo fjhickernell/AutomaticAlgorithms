@@ -34,7 +34,7 @@ xplot=(0:nplot)'/nplot;
 xplotzoom=zoom*(0:nplot)'/nplot;
 fplotzoom=fallhumps(xplotzoom,n);
 plot(xplotzoom,fplotzoom,'k-',...
-    xnodeszoom,fnodeszoom,'b.')
+    xnodeszoom,fnodeszoom,'k.')
 xlabel('$x$')
 ylabel('Spiky Integrand')
 axis([0 zoom -1.5 3])
@@ -52,7 +52,7 @@ trapflukenov2=sum(fnodes(1:2:n+1).*[1; 2*ones(n/2-1,1); 1])/n
 fplot=ffluke(xplot,n);
 figure
 plot(xplot,fplot,'k-',...
-    xnodes,fnodes,'b.')
+    xnodes,fnodes,'k.')
 xlabel('$x$')
 ylabel('Fluky Integrand')
 axis([0 1 -4e4 4e4])

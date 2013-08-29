@@ -1,4 +1,4 @@
-% Piecewise liear fooling function for the trapezoid rule
+% Piecewise linear fooling function for the trapezoid rule
 
 %% Garbage collection
 format compact %remove blank lines from output
