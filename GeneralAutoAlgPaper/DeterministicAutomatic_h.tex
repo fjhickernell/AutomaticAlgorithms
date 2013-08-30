@@ -350,7 +350,7 @@ These inequalities may be used to prove the following theorem about Algorithm \r
 \begin{theorem}  \label{MultiStageThm}  Let $\cf$, $\Fnorm{\cdot}$, $\Ftnorm{\cdot}$, $\cg$, $\Gnorm{\cdot}$, and $S$ be as described above.  Under the assumptions of Algorithm \ref{multistagealgo}, let $r$ be the cost multiple described in Section \ref{adapintrosec}.  
 Then it follows that Algorithm \ref{multistagealgo}, which lies in $\ca(\cc_{\tau},\cg,S,\Lambda)$, is successful,  i.e.,  $\norm[\cg]{S(f)-A(f,\varepsilon)} \le \varepsilon$ for all $f \in \cc_\tau$.  Moreover, the cost of this algorithm is bounded above and below in terms of the unknown $\tcf$- and $\cf$-semi-norms of the input function as follows:
 \begin{multline} \label{automultistagedetcost}
-\max \left(n_1, h^{-1}\left(\frac{\varepsilon}{\tau \Ftnorm{f}} \right) \right) \le \max \left(n_1, h^{-1}\left(\frac{\varepsilon}{\Fnorm{f}} \right) \right) \\ \le
+\max \left(n_1, h^{-1}\left(\frac{\varepsilon}{\tau \Fnorm{f}} \right) \right) \le \max \left(n_1, h^{-1}\left(\frac{\varepsilon}{\Ftnorm{f}} \right) \right) \\ \le
 \cost(A,f,\varepsilon)
 \le \begin{cases}\displaystyle \max \left(n_1, rh_1^{-1}\left(\frac{\varepsilon}{\tau \Ftnorm{f}} \right) \right)\\[2ex]
 \displaystyle \max \left(n_1, rh_2^{-1}\left(\frac{\tau_{\min}\varepsilon}{\tau \Fnorm{f}} \right) \right)
@@ -424,7 +424,7 @@ g ^{-1}(\varepsilon/\min(\sigma,s)).
 \end{equation*}
 \end{theorem}
 
-The lower bound in this theorem and the upper bound in Theorem \ref{NonAdaptDetermThm} lead to a simple condition that guarantees the optimality of Algorithm \ref{nonadaptalgo}.  One only need to look at the ratio $h(n)/g(n)$.
+The lower bound in this theorem and the upper bound in Theorem \ref{NonAdaptDetermThm} lead to a simple condition that guarantees the optimality of Algorithm \ref{nonadaptalgo}.  One only needs to look at the ratio $h(n)/g(n)$.
 
 \begin{theorem} \label{optimalprop} Suppose that there exist fixed-cost algorithms $\{A_n\}_{n \in \ci}$, with $A_n  \in \ca_{\fix}(\cf,\cg,S,\Lambda)$, for which the upper error bounds satisfy \eqref{algoerr} for known $h$ defined on $\ci$, which satisfies \eqref{Inobiggap}.  Suppose also that $g$ is defined on $\cj \supseteq \ci$. If 
 \begin{equation}\label{ghcond}
@@ -551,7 +551,7 @@ Adaptive, automatic algorithms are popular, especially for univariate integratio
 
 \subsection{All Automatic Algorithms Can Be Fooled}  
 
-Any algorithm that solves a problem involving an infinite-dimensional space of input functions can be fooled by a spiky function, i.e., one that yields zero data where probed by the algorithm, but is nonzero elsewhere.   Figure \ref{fig:foolquad}a) depicts a spiky integrand whose integral is $\approx 0.3694$, but for which MATLAB's {\tt quad}, which is based on adaptive Simpson's rule  \cite{GanGau00a}, gives the answer $0$, even with an error tolerance of $10^{-14}$.  Our criticism of algorithms like {\tt quad} is not that they can be fooled, but that there is no available theory to tell us what is wrong with the integrand when they are fooled.  Guaranteed algorithms specify conditions that rule out spiky functions that might fool these algorithms.  Non-adaptive algorithms such as Algorithm \ref{nonadaptalgo} require that input functions lie in a ball, while adaptive algorithms, such as  Algorithms \ref{twostagedetalgo} and \ref{multistagealgo}, require that input functions lie in a cone.
+Any algorithm that solves a problem involving an infinite-dimensional space of input functions can be fooled by a spiky function, i.e., one that yields zero data where probed by the algorithm, but is nonzero elsewhere.   Figure \ref{fig:foolquad}a) depicts a spiky integrand whose integral is $\approx 0.3694$, but for which MATLAB's {\tt quad}, which is based on adaptive Simpson's rule  \cite{GanGau00a}, gives the answer $0$, even with an error tolerance of $10^{-14}$.  Our criticism of algorithms like {\tt quad} is not that they can be fooled, but that there is no available theory to tell us what is wrong with the integrand when they are fooled.  Guaranteed algorithms specify conditions that rule out spiky functions that might fool these algorithms.  Non-adaptive algorithms such as Algorithm \ref{nonadaptalgo} are tailored for input functions lying in a ball, while adaptive algorithms, such as  Algorithms \ref{twostagedetalgo} and \ref{multistagealgo}, are well-suited for input functions lying in a cone.
 
 \begin{figure}
 \centering 
