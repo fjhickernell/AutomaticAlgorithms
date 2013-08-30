@@ -3,7 +3,7 @@
 \usepackage{amsmath,amssymb,amsthm,mathtools,bbm,booktabs,array,tikz,pifont,comment,multirow,url,graphicx}
 \input FJHDef.tex
 
-%Requires ApproxUnivariate.tex, univariate_integration.tex, foolbwquadexample.eps 
+%Requires ApproxUnivariate.tex, univariate_integration.tex, Foolquadbw.eps, foolbwquadexample.eps 
 
 \DeclareMathOperator{\Var}{Var}
 \DeclareMathOperator{\INT}{INT}
@@ -549,9 +549,9 @@ The next two sections illustrate the results of Section \ref{genthmsec} and \ref
 Adaptive, automatic algorithms are popular, especially for univariate integration.  Several general purpose numerical computing environments have one or more automatic integration routines, such as MATLAB \cite{TrefEtal12,MAT8.1} and the NAG \cite{NAG23} library.  In spite of their popularity there remain important questions and concerns regarding adaptive algorithms.  This section attempts to address them.
 
 
-\subsection{All Automatic Algorithms Can Be Fooled}  
+\subsection{All Automatic Algorithms Can Be Fooled by Spiky Functions}  
 
-Any algorithm that solves a problem involving an infinite-dimensional space of input functions can be fooled by a spiky function, i.e., one that yields zero data where probed by the algorithm, but is nonzero elsewhere.   Figure \ref{fig:foolquad}a) depicts a spiky integrand whose integral is $\approx 0.3694$, but for which MATLAB's {\tt quad}, which is based on adaptive Simpson's rule  \cite{GanGau00a}, gives the answer $0$, even with an error tolerance of $10^{-14}$.  Our criticism of algorithms like {\tt quad} is not that they can be fooled, but that there is no available theory to tell us what is wrong with the integrand when the algorithms are fooled.  Guaranteed algorithms specify sufficient conditions for success that do not apply to spiky functions that fool these algorithms.  For non-adaptive algorithms such as Algorithm \ref{nonadaptalgo} input functions may not be so spiky that they lie outside a ball.  For adaptive algorithms, such as  Algorithms \ref{twostagedetalgo} and \ref{multistagealgo}, input functions may not be so spiky that they lie outside a cone.
+Any algorithm that solves a problem involving an infinite-dimensional space of input functions can be fooled by a spiky function, i.e., one that yields zero data where probed by the algorithm, but is nonzero elsewhere.   Figure \ref{fig:foolquad}a) depicts a spiky integrand whose integral is $\approx 0.3694$, but for which MATLAB's {\tt quad}, which is based on adaptive Simpson's rule  \cite{GanGau00a}, gives the answer $0$, even with an error tolerance of $10^{-14}$.  Our criticism of algorithms like {\tt quad} is not that they can be fooled, but that there is no available theory to tell us what is wrong with the integrand when the algorithms are fooled.  Guaranteed algorithms specify sufficient conditions for success that do not apply to the spiky functions that fool these algorithms.  The guarantee for non-adaptive Algorithm \ref{nonadaptalgo} requires input functions to lie in a ball, which rules out functions that are too spiky.  The guarantees for adaptive Algorithms \ref{twostagedetalgo} and \ref{multistagealgo} require input functions to lie in a cone, which rules out functions that are too spiky.
 
 \begin{figure}
 \centering 
