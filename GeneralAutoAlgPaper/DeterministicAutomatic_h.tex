@@ -195,7 +195,7 @@ Automatic Algorithm \ref{nonadaptalgo} is built from a sequence of fixed-cost al
 \end{equation*}
 so its error, $\Gnorm{S(f)-A_n(f)}$, is positively homogeneous.
 
-The adaptive algorithms in the next section use sequences of fixed-cost algorithms, $\{A_n\}_{n \in \ci}$ with $A_n  \in \ca_{\fix}(\cf,\cg,S,\Lambda)$ and indexed by their cost, $n=\cost(A_n)$.  The sequence $\{A_n(f)\}_{n \in \ci}$ converges to the true answer for all $f\in \cf$, as guaranteed by the conditions in \eqref{algoerr}.  Furthermore the index set, $\ci=\{N_1, N_2, \ldots\} \subseteq \natzero$, satisfies $N_i < N_{i+1}$ and
+The adaptive algorithms in the next section use sequences of fixed-cost algorithms, $\{A_n\}_{n \in \ci}$ with $A_n  \in \ca_{\fix}(\cf,\cg,S,\Lambda)$ and $n=\cost(A_n)$.  The sequence $\{A_n(f)\}_{n \in \ci}$ converges to the true answer for all $f\in \cf$, as guaranteed by the conditions in \eqref{algoerr}.  Furthermore the index set, $\ci=\{N_1, N_2, \ldots\} \subseteq \natzero$, satisfies $N_i < N_{i+1}$ and
 \begin{subequations} \label{algseqerrcond}
 \begin{equation} \label{Inobiggap}
 \sup_{i\ge 2} \frac{N_{i+1}}{N_i} \le \rho <\infty.
@@ -222,7 +222,7 @@ As mentioned in Section \ref{adapintrosec}, adaptive, automatic algorithms requi
 \ge \left [\frac{1}{\tau}-h_{+}(n) \right]\Fnorm{f}.
 \end{gather*}
 
-\begin{lem} \label{Gnormlem} Any sequence of fixed-cost algorithms  $\{\tF_n\}_{n \in \ci}$ as described above with two sided error bound \eqref{Gerrbds} yields an approximation to the $\tcf$-semi-norm of functions in the cone $\cc_{\tau}$ with the following upper and lower bounds:
+\begin{lem} \label{Gnormlem} Suppose that $h_{ +}(n) < 1/\tau$.  It follows that any sequence of fixed-cost algorithms $\{\tF_n\}_{n \in \ci}$ as described above with two sided error bound \eqref{Gerrbds} provides both lower and upper bounds on the $\tcf$- and $\cf$-semi-norms of functions in the cone $\cc_{\tau}$:
 \begin{equation} \label{twosidedGineq}
  \frac{\Fnorm{f}}{\tau \fC_n}  \le \frac{\Ftnorm{f}}{\fC_n}  \le \tF_n(f) \le  \begin{cases} \tfc_n \Ftnorm{f} \\[1ex]
 \displaystyle \frac{\fc_n \Fnorm{f} }{\tau_{\min}}
@@ -232,7 +232,7 @@ where the $\fc_n$, $\tfc_n$, and $\fC_n$ are non-increasing in $n$ and defined a
 \begin{gather} \label{normdeflate}
 \tfc_n :=1 + \tau h_{ -}(n)  \ge \fc_n :=1 + \tau_{\min} h_{ -}(n)  \ge 1, \\
 \label{norminflate}
-\fC_n :=\frac{1}{1 - \tau h_{ +}(n)}, \qquad  \fC_n \ge 1 \text{ for } h_{ +}(n) < 1/\tau.
+\fC_n :=\frac{1}{1 - \tau h_{ +}(n)} \ge 1.
 \end{gather}
 \end{lem}
 
@@ -304,7 +304,7 @@ For Algorithm \ref{twostagedetalgo} the relevant value of $n$ is $n_{\tF}$, wher
 Condition \eqref{neccondFn} is not sufficient for $f$ to lie in $\cc_{\tau}$, so Algorithm \ref{twostagedetalgo} or \ref{multistagealgo} may yield an incorrect answer even if \eqref{neccondFn} is satisfied but $f \notin \cc_{\tau}$.  However, this argument suggests modifying Algorithms \ref{twostagedetalgo} and \ref{multistagealgo} by increasing $\tau$ to $2 \tau_{\min,n}$ whenever  $\tau_{\min,n}$ rises above $\tau$. 
 \end{rem}
 
-\begin{rem} \label{Nmaxrem}  For practical reasons one may impose a computational cost budget, $N_{\max}$.  If this is done, Algorithm \ref{twostagedetalgo} will compute the correct answer within budget for $f \in \cc_{\tau}$ if either of the cost upper bounds in Theorem \ref{TwoStageDetermThm} does not exceed $N_{\max}$.  An analogous result holds for Algorithm \ref{multistagealgo} and Theorem \ref{MultiStageThm}.
+\begin{rem} \label{Nmaxrem}  For practical reasons one may impose a computational cost budget, $N_{\max}$.  If this is done, Algorithm \ref{twostagedetalgo} will compute the correct answer within budget for $f \in \cc_{\tau}$ provided either of the cost upper bounds in Theorem \ref{TwoStageDetermThm} does not exceed $N_{\max}$.  An analogous result holds for Algorithm \ref{multistagealgo} and Theorem \ref{MultiStageThm}.
 \end{rem}
 
 \subsection{Adaptive Algorithms Based on Embedded Algorithms}
@@ -426,7 +426,7 @@ g ^{-1}(\varepsilon/\min(\sigma,s)).
 
 The lower bound in this theorem and the upper bound in Theorem \ref{NonAdaptDetermThm} lead to a simple condition that guarantees the optimality of Algorithm \ref{nonadaptalgo}.  One only needs to look at the ratio $h(n)/g(n)$.
 
-\begin{theorem} \label{optimalprop} Suppose that there exist fixed-cost algorithms $\{A_n\}_{n \in \ci}$, with $A_n  \in \ca_{\fix}(\cf,\cg,S,\Lambda)$, for which the upper error bounds satisfy \eqref{algoerr} for known $h$ defined on $\ci$, which satisfies \eqref{Inobiggap}.  Suppose also that $g$ is defined on $\cj \supseteq \ci$. If 
+\begin{theorem} \label{optimalprop} Suppose that there exist fixed-cost algorithms $\{A_n\}_{n \in \ci}$, with $A_n  \in \ca_{\fix}(\cf,\cg,S,\Lambda)$, for which the upper error bounds satisfy \eqref{algoerr} for known $h$ defined on $\ci$, with $h$ and $\ci$ satisfying \eqref{Inobiggap}.  Suppose also that $g$ is defined on $\cj \supseteq \ci$. If 
 \begin{equation}\label{ghcond}
 \sup_{n \in \ci} \frac{h(n)}{g(n)} < \infty,
 \end{equation}
@@ -546,12 +546,12 @@ The next two sections illustrate the results of Section \ref{genthmsec} and \ref
 
 \section{Addressing Questions and Concerns About Adaptive, Automatic Algorithms} \label{overcomesec}
 
-Adaptive, automatic algorithms are popular, especially for univariate integration problems.  Several general purpose numerical computing environments have one or more automatic integration routines, such as MATLAB \cite{TrefEtal12,MAT8.1} and the NAG \cite{NAG23} library.  In spite of their popularity there remain important questions and concerns regarding adaptive algorithms.  This section attempts to address them.
+Adaptive, automatic algorithms are popular, especially for univariate integration.  Several general purpose numerical computing environments have one or more automatic integration routines, such as MATLAB \cite{TrefEtal12,MAT8.1} and the NAG \cite{NAG23} library.  In spite of their popularity there remain important questions and concerns regarding adaptive algorithms.  This section attempts to address them.
 
 
 \subsection{All Automatic Algorithms Can Be Fooled}  
 
-Any algorithm that solves a problem involving an infinite-dimensional space of input functions can be fooled by a spiky function, i.e., one that yields zero data where probed by the algorithm, but is nonzero elsewhere.   Figure \ref{fig:foolquad}a) depicts a spiky integrand whose integral is $\approx 0.3694$, but for which MATLAB's {\tt quad}, which is based on adaptive Simpson's rule  \cite{GanGau00a}, gives the answer $0$, even with an error tolerance of $10^{-14}$.  Our criticism of algorithms like {\tt quad} is not that they can be fooled, but that there is no available theory to tell us what is wrong with the integrand when they are fooled.  Guaranteed algorithms specify conditions that rule out spiky functions that might fool these algorithms.  Non-adaptive algorithms such as Algorithm \ref{nonadaptalgo} are tailored for input functions lying in a ball, while adaptive algorithms, such as  Algorithms \ref{twostagedetalgo} and \ref{multistagealgo}, are well-suited for input functions lying in a cone.
+Any algorithm that solves a problem involving an infinite-dimensional space of input functions can be fooled by a spiky function, i.e., one that yields zero data where probed by the algorithm, but is nonzero elsewhere.   Figure \ref{fig:foolquad}a) depicts a spiky integrand whose integral is $\approx 0.3694$, but for which MATLAB's {\tt quad}, which is based on adaptive Simpson's rule  \cite{GanGau00a}, gives the answer $0$, even with an error tolerance of $10^{-14}$.  Our criticism of algorithms like {\tt quad} is not that they can be fooled, but that there is no available theory to tell us what is wrong with the integrand when the algorithms are fooled.  Guaranteed algorithms specify sufficient conditions for success that do not apply to spiky functions that fool these algorithms.  For non-adaptive algorithms such as Algorithm \ref{nonadaptalgo} input functions may not be so spiky that they lie outside a ball.  For adaptive algorithms, such as  Algorithms \ref{twostagedetalgo} and \ref{multistagealgo}, input functions may not be so spiky that they lie outside a cone.
 
 \begin{figure}
 \centering 
@@ -568,7 +568,7 @@ a) & b)
 
 Most existing numerical analysis is focused on balls of input functions, $\cb_{\sigma}$, and the automatic algorithms arising from this analysis are non-adaptive, automatic such as Algorithm \ref{nonadaptalgo}. The analysis here focuses on cones of input functions, $\cc_{\tau}$, which allows us to derive data-driven error bounds and construct adaptive, automatic algorithms. We have two reasons for favoring cones.  
 
-Since the solution operator, $S$, and the fixed-cost algorithms, $\{A_n\}_{n\in \ci}$, commonly encountered in practice are positively homogeneous, the error functional, $\err_n(\cdot) = \Gnorm{S(\cdot)-A_n(\cdot)}$ is also positively homogeneous.  This naturally suggests data-driven error bounds, $\herr_n(\cdot)$, that are positively homogeneous.  If $\err_n(f) \le \herr_n(f)$, then $\err_n(cf) \le \herr_n(cf)$ for $c\ge 0$. This leads us to consider cones of input functions.
+Since the solution operator, $S$, and the fixed-cost algorithms, $\{A_n\}_{n\in \ci}$, commonly encountered in practice are positively homogeneous, the error functional, $\err_n(\cdot) = \Gnorm{S(\cdot)-A_n(\cdot)}$ is also positively homogeneous.  This naturally suggests data-driven error bounds, $\herr_n(\cdot)$, that are positively homogeneous.  If $\err_n(f) \le \herr_n(f)$, then $\err_n(cf) \le \herr_n(cf)$ for $c\ge 0$, so the set of input functions for which a positively homogeneous error bound is valid is a cone.
 
 A second reason to favor cones is that we want to spend less effort solving problems for input functions that are ``easy'', i.e., we want an adaptive algorithm.  At the end of Section \ref{coneoptsubsec} it was noted that our adaptive algorithms possess a stronger optimality than the non-adaptive one.  In particular, in Theorems \ref{multistageintegthm} and \ref{multistageappxthm} the costs of the non-adaptive algorithms do not depend on the norms of the input functions, but the costs of the adaptive algorithms do so in a favorable way.
 
@@ -630,7 +630,7 @@ The results presented here suggest a number of interesting open problems, some o
 
 \item This article considers only the worst case error of deterministic algorithms.  Random algorithms must be analyzed by somewhat different methods.  A guaranteed Monte Carlo algorithm for estimating the mean of a random variable, which includes multivariate integration as a special case, has been proposed in \cite{HicEtal14a}.
 
-\item Some of the authors and their collaborators are implementing the algorithms described here, along with others, in the open-source Guaranteed Automatic Integration Library (GAIL) for MATLAB (see \url{https://code.google.com/p/gail/}).  This library will also contain scripts that generate the tables and figures in this paper.
+\item Some of the authors and their collaborators are implementing the algorithms described here, along with others, in an open source library \cite{ChoiEtal13a}.  This library will also contain scripts that generate the tables and figures in this paper.
 
 \end{itemize}
 
