@@ -1,18 +1,12 @@
-\documentclass[]{amsart}
+\documentclass[]{article}
 \setlength{\marginparwidth}{0.5in}
 \usepackage{amsmath,amssymb,amsthm,mathtools,booktabs,array,tikz,pifont,comment,graphicx}
 \usepackage[author-year]{amsrefs}
 \input FJHDef.tex
 
-%Requires ApproxUnivariate.tex, univariate_integration.tex, foolbwquadexample.eps 
 
 \DeclareMathOperator{\Var}{Var}
 \newcommand{\tVar}{\widetilde{\Var}}
-\DeclareMathOperator{\INT}{INT}
-\DeclareMathOperator{\lin}{lin}
-\DeclareMathOperator{\up}{up}
-\DeclareMathOperator{\lo}{lo}
-\DeclareMathOperator{\fix}{non}
 \DeclareMathOperator{\err}{err}
 \DeclareMathOperator{\maxcost}{maxcost}
 \DeclareMathOperator{\mincost}{mincost}
@@ -38,9 +32,7 @@
 \begin{document}
 
 \title{Reliable Adaptive, Automatic Quadrature for Cones of Integrands}
-\author{Fred J. Hickernell}
-\author{Martha Razo}
-\author{Sunny Yun}
+\author{Fred J. Hickernell, Martha Razo, and Sunny Yun}
 \maketitle 
 
 
@@ -50,10 +42,10 @@
 
 \section{Introduction} 
 
-Although some mathematical problems can be solved using pencil and paper, many can only be solved via numerical algorithms.  These algorithms typically generate a sequence of approximations that converge to the true solution.  The user wants to know at what point in the sequence the approximation differs from the true solution by no more than a specified tolerance. Stopping criteria used in practice are based either on inconvenient assumptions or on heuristics without guarantees.  Here we describe a practical, adaptive trapezoidal algorithm for integration that is guaranteed to provide the correct answer.  The key is to consider cones of integrands.  We also suggest changing the way numerical quadrature is taught.
+Although some mathematical problems can be solved using pencil and paper, many others can only be solved via numerical algorithms.  These algorithms typically generate a sequence of approximations that converge to the true solution.  The user wants to know at what point in the sequence the approximation differs from the true solution by no more than a specified tolerance. Existing stopping criteria are based either on inconvenient assumptions or on heuristics without guarantees.  Here we describe a new stopping criterion for cones of integrands.  This criterion leads to an adaptive trapezoidal algorithm for integration that is guaranteed to provide the correct answer.  We also suggest changing the way numerical quadrature is taught and propose a new paradigm for constructing numerical algorithms.
 
 \subsection{Why Numerical Integration Is Needed?}
-There are many methods that we learn for evaluating integrals, e.g., substitution, integration by parts, partial fractions, etc.  Unfortunately, there are many elementary functions whose integrals \emph{cannot} be expressed as elementary functions.  An important example is the standard normal probability density, $\phi: x \mapsto \me^{-x^2/2}/\sqrt{2 \pi}$, whose integral is the standard normal distribution, $\Phi : x \mapsto \int_{-\infty}^x \phi(t) \, \dif t$.  Since the $\Phi$ is not an elementary function, values of $\Phi$ must be provided via tables in statistics textbooks and special functions in calculators. By contrast, the derivatives of elementary functions are always elementary functions.  
+There are various analytic methods for evaluating integrals, e.g., substitution, integration by parts, and partial fractions.  Unfortunately, many elementary functions have integrals that \emph{cannot} be expressed as elementary functions.  One example is the standard normal probability density, $\phi: x \mapsto \me^{-x^2/2}/\sqrt{2 \pi}$, whose integral is the standard normal distribution, $\Phi : x \mapsto \int_{-\infty}^x \phi(t) \, \dif t$.  Since the $\Phi$ is not an elementary function, values of $\Phi$ must be provided via tables in statistics textbooks and special functions in calculators. By contrast, the derivatives of elementary functions are always elementary functions.  
 
 \subsection{The Basic Trapezoidal Rule}
 To compute integrals that are not amenable to analytic methods one must turn to numerical integration (quadrature) methods such as the trapezoidal rule, $T_n$, which is often introduced in calculus courses:
@@ -67,24 +59,25 @@ For the user's convenience one would like to turn $T_n$ into an \emph{automatic}
 \err(f,n) := \abs{\int_0^1 f(x) \, \dif x - T_n(f)} \le \varepsilon.
 \end{equation}
 
-Although $\err(f,n)$ is rarely known exactly, there exist rigorous upper bounds on the error that are proportional to $1/n^2$ and the roughness of the integrand, e.g., \ocite{BraPet11a}*{Sect.\ 7.2, (7.15)}: 
+Although $\err(f,n)$ is rarely known exactly, there exist rigorous upper bounds on the error that are proportional to $1/n^2$ and the roughness of the integrand, e.g., see \ocite{BraPet11a}*{Sect.\ 7.2, (7.15)}: 
 \begin{equation} \label{traperrbd}
 \err(f,n) \le \oerr(f,n):=\frac{\Var(f')}{8n^2}, \qquad n \in \naturals := \{1, 2, \ldots \}. 
 \end{equation}
 Here $\Var(\cdot)$ represents the (total) variation of a function, which is defined as
-\begin{equation} \label{vardef}
-\Var(f) := \sup \left \{ \sum_{i=1}^n \abs{f(x_i)-f(x_{i-1})} : n \in \naturals, \ 0 \le x_0 < x_1 < \cdots < x_{n} \le 1 \right\}.
-\end{equation}
+\begin{multline} \label{vardef}
+\Var(f) \\
+:= \sup \left \{ \sum_{i=1}^n \abs{f(x_i)-f(x_{i-1})} : n \in \naturals, \ 0 \le x_0 < x_1 < \cdots < x_{n} \le 1 \right\}.
+\end{multline}
 Intuitively, $\Var(f)$ is the total vertical distance up and down that one travels on a roller coaster whose track is the graph of $f$. The function $f \mapsto \Var(f')$ is a semi-norm. The trapezoidal rule gives the exact answer for linear integrands.  Error bound \eqref{traperrbd} reflects this fact since if $f(x)=ax+b$, then $f'(x)=a$, and so $\Var(f')=0$.
 
 To illustrate this error bound, consider the normal probability example mentioned above.  The trapezoidal rule approximation using $n=4$ trapezoids, the actual error, and the error bound are as follows:
 \begin{subequations} \label{GaussExample}
 \begin{gather}
 f(x) = 2\phi(2x) = \sqrt{\frac{2}{\pi}} \me^{-2x^2}, \qquad \int_0^1 f(x)  \, \dif x = 0.4772, \qquad T_{4}(f)= 0.4750, \\
-\Var(f') = 1.5038, \qquad \err(f,4)=0.0022 \le 0.0117 = \oerr(f,n).
+\Var(f') = 1.5038, \qquad \err(f,4)=0.0022 \le 0.0117 = \oerr(f,4).
 \end{gather}
 \end{subequations}
-(The value of the integral to four significant digits may be found by a variety of different quadrature algorithms.)  Figure \ref{Gausstrapfig} depicts the integrand and the trapezoidal rule approximation. Note that the error is bounded above by the error bound in \eqref{traperrbd}.
+(The value of the integral to four significant digits may be found by a variety of quadrature algorithms.)  Figure \ref{Gausstrapfig} depicts the integrand and the trapezoidal rule approximation. As expected, the actual error is bounded above by the error bound in \eqref{traperrbd}.
 
 \begin{figure}
 \centering 
@@ -92,12 +85,12 @@ f(x) = 2\phi(2x) = \sqrt{\frac{2}{\pi}} \me^{-2x^2}, \qquad \int_0^1 f(x)  \, \d
 \caption{The integrand in \eqref{GaussExample} and the trapezoidal rule approximation for the integral. \label{Gausstrapfig}}
 \end{figure}
 
-Error bound \eqref{traperrbd} can help us determine how large $n$ must be to meet the error tolerance if an upper bound on $\Var(f')$ is available. Section \ref{autoballsec} provides the details of an automatic algorithm for such cases.  In practice nothing may be known a priori about $\Var(f')$. Adaptive algorithms do not require an upper bound on $\Var(f')$ but estimate the error based on the function values sampled and then apply a stopping criterion to determine how many function values are required.  Section \ref{flawstopsec} describes the stopping criterion commonly taught in elementary numerical analysis courses, but which has significant flaws, as pointed out by James Lyness \ycite{Lyn83}.  An improved stopping criterion for integrands lying in cones is described in Section \ref{newalgosec}.  A general framework for guaranteed automatic algorithms is presented in \ocite{HicEtal14b}, which also describes the new adaptive trapezoidal algorithm presented here.  In this article we describe the new algorithm and its ramifications in greater detail and argue why we should change how we teach error estimation for numerical integration. 
+Error bound \eqref{traperrbd} can help us determine how large $n$ must be to meet the error tolerance if an upper bound on $\Var(f')$ is available. Section \ref{autoballsec} provides the details of an automatic algorithm for such cases.  Unfortunately, in practice nothing may be known a priori about $\Var(f')$. Adaptive algorithms do not require an upper bound on $\Var(f')$ but estimate the error based on the function values sampled and then apply a stopping criterion to determine how many function values are required.  Section \ref{flawstopsec} describes the stopping criterion commonly taught in numerical analysis courses, but which has significant flaws, as pointed out by James Lyness \ycite{Lyn83}.  An improved stopping criterion for integrands lying in cones is described in Section \ref{newalgosec}.  Much of this section is taken from \ocite{HicEtal14b}, which presents a general framework for guaranteed automatic algorithms and also describes the new adaptive trapezoidal algorithm presented here.  In this article we discuss in greater detail the new adaptive trapezoidal algorithm.  In Section \ref{discusssec} we discuss the ramifications of these developments for for how we teach numerical integration in calculus courses and later on.  We also discuss the how we should go about developing new numerical algorithms.
 
 
 \section{An Automatic Algorithm for Balls of Integrands} \label{autoballsec}
 
-If $f$ has a simple form, then one may be able to derive an upper bound on $\Var(f')$.  In this case the following automatic algorithm based on error bound \eqref{traperrbd} may be used.  
+If $f$ has a simple form, like the example in \eqref{GaussExample}, then one may be able to derive an upper bound on $\Var(f')$.  In this case the following automatic algorithm based on error bound \eqref{traperrbd} may be used.  
 
 \begin{algo}[Automatic, for Balls] \label{ballalgo} Given a $\sigma>0$ and an error tolerance, $\varepsilon$, set 
 \begin{equation}\label{algo1n}
@@ -117,7 +110,7 @@ For $f$ in \eqref{GaussExample}, one may choose $\sigma=\Var(f')=1.5038$, and th
 
 \section{An Adaptive Trapezoidal Algorithm with a Flawed Stopping Criterion} \label{flawstopsec}
 
-Automatic quadrature algorithms do not require the user to specify $\sigma$.  Instead, they bound or estimate the error using only function values and then determine the sample size accordingly.  MATLAB \ycite{MAT8.1}, Mathematica \ycite{Mat9a}, NAG \ycite{NAG23}, and R \ycite{R2512} all contain automatic quadrature algorithms.  Unfortunately, their stopping criteria are unreliable, as pointed out by James Lyness \ycite{Lyn83}.  To illustrate the flawed logic that leads to unreliable error estimation in these sophisticated algorithms, we focus on the simpler case of an adaptive trapezoidal algorithm.
+Adaptive quadrature algorithms do not require the user to specify $\sigma$.  Instead, they bound or estimate the error using only function values and then determine the sample size accordingly.  MATLAB \ycite{MAT8.1}, Mathematica \ycite{Mat9a}, NAG \ycite{NAG23}, and R \ycite{R2512} all contain automatic quadrature algorithms.  Unfortunately, their stopping criteria are unreliable, as pointed out by James Lyness \ycite{Lyn83}.  To illustrate the flawed logic that leads to unreliable error estimation in these sophisticated algorithms, we focus on the simpler case of an adaptive trapezoidal algorithm.
 
 \subsection{A Popular Error Estimate}
 Texts such as \ocite{BurFai10}*{p.\ 223--224}, \ocite{CheKin12a}*{p.\ 233}, and  \ocite{Sau12a}*{p.\ 270}, advise readers to estimate the error of $T_n(f)$ by comparing it to $T_{n/2}(f)$, specifically,
@@ -140,33 +133,35 @@ This error estimate leads to the following adaptive, automatic  quadrature algor
 
 \end{algo}
 
-Error estimate \ref{baderr} may be justified by noting that Simpson's rule may be written as 
+Error estimate \eqref{baderr} may be justified by noting that Simpson's rule may be written as 
 \begin{align*}
 S_n(f) &:= \frac{4T_n(f) - T_{n/2}(f)}{3} =  T_n(f) + \frac{T_n(f) - T_{n/2}(f)}{3}= \\
 & = \frac{1}{3n} \left [ f(0) + 4 f(1/n) + 2 f(2/n) + 4 f(3/n) + \cdots + 4 f(1-1/n) + f(1) \right].
 \end{align*}
-The error bound of Simpson's rule then serves as an bound on the error of the error estimate \cite{BraPet11a}*{Sect.\ 7.3, p.\ 231}:
+The error bound for Simpson's rule then serves as an bound on the error of $\herr(f,n)$ \cite{BraPet11a}*{Sect.\ 7.3, p.\ 231}:
 \begin{align} \label{Simperrbd}
 \abs{\err(f,n) - \herr(f,n)} & \le \abs{\int_0^1 f(x) \, \dif x - T_n(f) - \frac{T_n(f) - T_{n/2}(f)}{3}} \\
 \nonumber
 & = \abs{\int_0^1 f(x) \, \dif x - S_n(f)}  \le \frac{\Var(f''')}{36n^4}, \qquad \frac{n}2 \in \naturals. 
 \end{align}
-Comparing the orders of convergence in \eqref{Simperrbd} and \eqref{traperrbd}, it follows that the trapezoidal rule error estimate does an excellent job \emph{for $n$ large enough}, assuming finite $\Var(f''')$.
+Comparing the orders of convergence in \eqref{traperrbd} and \eqref{Simperrbd}, it follows that $\herr(f,n)$ does an excellent job in approximating $\err(f,n)$ \emph{for $n$ large enough}, assuming finite $\Var(f''')$.
 
-The success of Algorithm \ref{baderralgo} requires the error estimate, $\herr(f,n)$, to be reliable, and this requires an upper bound on $\Var(f''')$.  However, if an upper bound on $\Var(f''')$ is known, then it makes more sense to apply Simpson's rule directly to obtain a higher order convergence rate than that given by Algorithm \ref{baderralgo}.  Therefore, we do not formulate any theorem guaranteeing Algorithm \ref{baderralgo}.
+Unfortunately, without knowing an upper bound on $\Var(f''')$, one cannot know how large $n$ must be for $\herr(f,n)$ to be reliable.  If one really does have an upper bound on $\Var(f''')$, then it makes more sense to apply Simpson's rule and obtain a higher order convergence rate than that of Algorithm \ref{baderralgo}.  Since there is no really rigorous and compelling argument to use Algorithm \ref{baderralgo}, we do not formulate any theorem guaranteeing it.
 
-Without any constraint on $\Var(f''')$ one may easily construct integrands, $f$, that fool the error estimate completely, e.g.,
+Without any constraint on $\Var(f''')$ one may identify integrands, $f$, that fool the error estimate completely, e.g.,
 \begin{equation} \label{failcond}
 \int_0^1 f(x) \, \dif x =  1, \quad T_{n}(f)=T_{n/2}(f) = -1, \quad \err(f,n)=2 \ne 0 = \herr(f,n).
 \end{equation}
-Figure \ref{spikeflukefig} shows two integrands satisfying these conditions. These two integrands illustrate two different ways in which the error estimate $\herr(\cdot)$, and Algorithm \ref{baderralgo}, can fail.  One way is ultimately unavoidable but ought to be quantifiable.  The other way is inexcusable, but is prevalent in widely used automatic numerical quadrature.
+Figure \ref{spikeflukefig} shows two integrands satisfying these conditions. These two integrands illustrate two different ways in which the error estimate $\herr(\cdot)$ fails, and hence, Algorithm \ref{baderralgo} also fails.  One way is ultimately unavoidable but ought to be quantifiable.  The other way is inexcusable, but is prevalent in widely used automatic numerical quadrature.
 
 \begin{figure}
 \centering 
-\includegraphics[width=6cm]{SpikyInteg16TrapFigcolor.eps} \quad
-\includegraphics[width=6cm]{FlukyInteg16TrapFigcolor.eps}
+\includegraphics[width=5.5cm]{SpikyInteg16TrapFigcolor.eps} \qquad
+\includegraphics[width=5.5cm]{FlukyInteg16TrapFigcolor.eps}
 \caption{Examples of a spiky integrand (left) and a fluky integrand (right), which satisfy the failure conditions \eqref{failcond} for $n=16$. \label{spikeflukefig}}
 \end{figure}
+
+The failure of Algorithm \ref{baderralgo} cannot be solved by using a more conservative stopping criterion of the form $C\herr(f,n_j) \le \varepsilon$ in Step 2 where $C>1$.  Integrands satisfying \eqref{failcond} have an estimated error of $C\herr(f,n)=0$ regardless of how large $C$ is.
 
 \subsection{Spiky Integrands} 
 
@@ -174,20 +169,16 @@ Figure \ref{spikeflukefig} (left) depicts the following spiky integrand:
 \begin{equation} \label{spiky}
 f_{\text{spiky}}(x;n) = -1 + 60[\bbl nx \bbr(1-\bbl nx \bbr)]^2, \qquad n \in \naturals, \quad \bbl x \bbr := x \bmod 1.
 \end{equation}
-The integrand $f_{\text{spiky}}(\cdot;n)$ satisfies \eqref{failcond} for even $n$ and has 
-\begin{itemize}
-\item $n+1$ local minima of $-1$ at $x=0, 1/n, \ldots, 1$, and
-\item $n$ local maxima of $11/4$ at $x=1/(2n), 3/(2n), \ldots, 1-1/(2n)$.
-\end{itemize}
-The variation of the first and third derivatives of $f(\cdot;n)$ increase with $n$, specifically,
+The spiky integrand is constructed to be constant at the data points with spikes in between.  The integrand $f_{\text{spiky}}(\cdot;n)$ satisfies \eqref{failcond} for even $n$.  It has  $n+1$ local minima of $-1$, and $n$ local maxima of $11/4$.
+The variation of the first and third derivatives of $f_{\text{spiky}}(\cdot;n)$ increase with $n$ as follows:
 \begin{equation*}
 \Var(f'_{\text{spiky}}(\cdot;n))= \frac{80n^2}{\sqrt{3}}, \qquad \Var(f'''_{\text{spiky}}(\cdot;n))= 1440n^4.
 \end{equation*}
-Thus, it is not surprising that the error of the trapezoidal rule and the error of the error estimate both stay constant even as $n$ increases.
+Given the behavior of the variations of the derivatives of $f_{\text{spiky}}$ it is understandable that neither $\err(f_{\text{spiky}},n)$ or $\err(f_{\text{spiky}},n)-\oerr(f_{\text{spiky}},n)$ decay to zero as $n$ increases.
 
-The problem of handling spiky integrands is not unique to Algorithm \ref{baderralgo}.  \emph{Any} quadrature algorithm that depends only on function values to estimate error will be fooled by sufficiently spiky integrands.  Suppose that the quadrature algorithm samples the integrand at a seqeunce of points, $\xi_1, \xi_2, \ldots$, and suppose that $f(\xi_i)$ is the same value for all $\xi_i$.  Here the algorithm may even be adaptive, meaning that $\xi_{i+1}$ may depend on $(\xi_1, f(\xi_1)), \ldots, (\xi_i, f(\xi_i))$.  Eventually the algorithm stops at $n$ points.  Under mild conditions on the set of integrands of interest the best estimate of the integral is that constant. However, one can construct non-constant functions that have any value of the integral.
+The problem of handling spiky integrands is not unique to Algorithm \ref{baderralgo}.  \emph{Any} quadrature algorithm that depends only on function values to estimate error will be fooled by sufficiently spiky integrands.  Suppose that the quadrature algorithm samples the integrand at a seqeunce of points, $\xi_1, \xi_2, \ldots$, and suppose that $f(\xi_i)=-1$ for all $\xi_i$.  Here the algorithm may even be adaptive, meaning that $\xi_{i+1}$ may depend on $(\xi_1, f(\xi_1)), \ldots, (\xi_i, f(\xi_i))$.  Eventually the algorithm stops.  If the algorithm is to be accurate for the constant integrand, $x \mapsto -1$, then the estimate of the integral to be $-1$ (or very close).  However, one can construct a non-constant function that shares the same data --- $f(\xi_i)=-1$ for all $\xi_i$ --- while having any value of the integral one wants. Such functions completely fool the algorithm.
 
-Algorithm \ref{ballalgo} for balls of integrands can be fooled by spiky integrands, however, Theorem \ref{ballalgothm} is valid because those spiky integrands lie outside the ball.  Increasing the radius of the ball allows one to accommodate spikier integrands.  Algorithm \ref{conealgo} in Section \ref{newalgosec} below can also be fooled by spiky integrands, however, its guarantee in Theorem \ref{conealgothm} is valid because those spiky integrands lie outside the cone.  Increasing the cone parameter allows one to accommodate spikier integrands.  Moreover, the cone parameter itself corresponds to an inverse length scale corresponding to the amount of spikiness that one wishes to tolerate.
+Although Algorithm \ref{ballalgo} for balls of integrands can be fooled by spiky integrands, Theorem \ref{ballalgothm} remains valid because those spiky integrands lie outside the ball $\cb_{\sigma}$.  Increasing $\sigma$ allows one to accommodate spikier integrands.  Algorithm \ref{conealgo} in Section \ref{newalgosec} below can also be fooled by spiky integrands, however, its guarantee in Theorem \ref{conealgothm} remains valid because those spiky integrands lie outside the cone, $\cc_{\tau}$.  Increasing $\tau$ allows one to accommodate spikier integrands.  Moreover, the cone parameter itself corresponds to an inverse length scale corresponding to the amount of spikiness that one wishes to tolerate.
 
 \subsection{Fluky Integrands} \label{flukysubsec}
 
@@ -195,30 +186,29 @@ Thirty years ago James Lyness wrote a SIAM Review article, \emph{When Not to Use
 \begin{quote}
 While prepared to take the risk of being misled by chance alignment of zeros in the integrand function, or by narrow peaks which are ``missed,'' the user may wish to be reassured that for ``reasonable'' integrand functions which do not have these characteristics all will be well. It is the purpose of the rest of this section to demonstrate by example that he cannot be reassured on this point. In fact the routine is likely to be unreliable in a significant proportion of the problems it faces (say $1$ to $5\%$) and there is no way of predicting in a straightforward way in which of any set of apparently reasonable problems this will happen.
 \end{quote}
-Lyness went on to describe how to construct, what we would call a \emph{fluky} integrand.  
+Lyness went on to describe how to construct a ``reasonable'' integrand that fools an automatic quadrature algorithm.  We would call this a \emph{fluky} integrand.  
 
-Figure \ref{spikeflukefig} (right) plots a fluky integrand that is defined in terms of the quadratic and quartic Bernoulli polynomials:
+Figure \ref{spikeflukefig} (right) plots a fluky integrand for Algorithm \ref{baderralgo}:
 \begin{equation} \label{fluky}
 f_{\text{fluky}}(x;n) = \frac{2 - 5 n^2 + n^4}{2}+ 15n^2 x(1-x)\{1 - n^2 x(1-x)\}, \qquad n \in \naturals.
 \end{equation}
-The integrand $f_{\text{fluky}}(\cdot;n)$ satisfies \eqref{failcond} for even $n$ and has only 
-\begin{itemize}
-\item $1$ local minimum of $(16 + 20 n^2 - 7 n^4)/16$ at $x=1/2$, and
-\item $2$ local maxima of $(19 - 10 n^2 + 2 n^4)/4$ at $x=(1 \pm \sqrt{1 -2/n^2})/2$.
-\end{itemize}
-The variation of the first and third derivatives of $f(\cdot;n)$ increase with $n$, specifically,
+The integrand $f_{\text{fluky}}(\cdot;n)$ satisfies \eqref{failcond} for even $n$.   In contrast to the spiky integrand, this fluky integrand has only one local minimum of size $\Order(n^4)$ located at $1/2$ and two local maxima of size at $\Order(n^4)$ located at $\Order(n^{-2})$ and $1-\Order(n^{-2})$.  The variation of the first and third derivatives of $f_{\text{fluky}}(\cdot;n)$ increase with $n$, specifically,
 \begin{equation*}
 \Var(f'_{\text{fluky}}(\cdot;n))= \frac{10 n}{3}  \Bigl[9 n + 2 \sqrt{3(-2 + n^2)^3} \Bigr ], \qquad
 \Var(f'''_{\text{fluky}}(\cdot;n))= 360n^4.
 \end{equation*}
-We describe integrands like $f_{\text{fluky}}$ as fluky because their construction is rather delicate.  They satisfy conditions \eqref{failcond} with a small number of local optima.  
+Disregarding its large magnitude $f_{\text{fluky}}$ appears to quite ``reasonable''.  We describe integrands like this one as fluky because their construction is rather delicate, and they satisfy conditions \eqref{failcond} with a small number of local optima.  In this case $f_{\text{fluky}}$ was chosen to be a fourth degree polynomial --- to ensure a small number of local optima --- with symmetry about $1/2$.  The remaining coefficients were then determined uniquely by the constraints in \eqref{failcond}.  
 
-The failure of the error estimate in \eqref{baderr} for $f_{\text{fluky}}$ seems avoidable. Although the values of the trapezoidal rule are moderate, for moderate $n$ one already observes a wide range of the sampled function values, $\bigl(f_{\text{fluky}}(i/n;n)\bigr)_{i=1}^{n}$, which implies that $\Var(f_{\text{fluky}})$ must be large.  This is not the case for the sampled function values of $f_{\text{spiky}}$.  In the next section we transform this intuition into a better method for bounding the error of the trapezoidal rule.
+Algorithm \ref{baderralgo} is not the only adaptive quadrature algorithm that fails to integrate fluky functions.  Figure ??? 
+
+The failure of the error estimate in \eqref{baderr} for $f_{\text{fluky}}$ seems avoidable. Although the values of the trapezoidal rule are moderate, the sampled function values, $\bigl(f_{\text{fluky}}(i/n;n)\bigr)_{i=1}^{n}$ vary widely, which implies that $\Var(f_{\text{fluky}})$ must be large.  In the next section we transform this intuition into a better method for bounding the error of the trapezoidal rule.
 
 
 \section{A Guaranteed, Adaptive, Automatic Trapezoidal Algorithm} \label{newalgosec}
 
-We know from \eqref{traperrbd} that the error of the trapezoidal rule is bounded in terms of $\Var(f')$.  Estimating $\Var(f')$ reliably requires additional smoothness assumptions on $f$, but if we assume more smoothness, then we ought to use a different rule, like Simpson's rule.  On the other hand, finite $\Var(f')$ does allow us to reliably estimate, a weaker semi-norm of $f$, such as $\Var(f)$.  As observed in Section \ref{flukysubsec} above, the fluky algorithms that fool Algorithm \ref{baderralgo} have large $\Var(f)$.  The approach taken in this section is to explore what can be accomplished by estimating a weaker semi-norm.
+Algorithm \ref{ballalgo} does not use any values of $f$ to determine how many trapezoids are needed to approximate the integral of $f$ because an upper bound on $\Var(f')$ is assumed.  Algorithm \ref{baderralgo} uses values of $f$ determine how how many trapezoids are needed, but the way Algorithm \ref{baderralgo} uses these values does not always allow it to detect an occurrence of large $\Var(f')$.  In this section we present a way for reliably estimating $f'$, which then can be used to construct a reliable stopping criterion for an adaptive trapezoidal algorithm.
+
+Estimating $\Var(f')$ reliably and directly requires additional smoothness assumptions on $f$, but if we assume more smoothness, then we ought to use a different rule, like Simpson's rule.  On the other hand, knowing that $\Var(f')$ is finite does allow us to reliably estimate, a weaker semi-norm of $f$, such as $\Var(f)$.  As observed in Section \ref{flukysubsec} above, the fluky algorithms that fool Algorithm \ref{baderralgo} not only have large $\Var(f')$ but also large $\Var(f)$.  The approach taken in this section is to explore what can be accomplished by estimating a weaker semi-norm.
 
 Let $A_n$ denote the linear spline approximation using $n+1$ equally spaced points, i.e., 
 \begin{equation}
@@ -262,7 +252,7 @@ Plugging \eqref{varfprimeless} into \eqref{traperrbd} yields the following guara
 \end{equation}
 This new error bound can then be used to construct the following adaptive, automatic quadrature algorithm, which is a simplification of \ocite{HicEtal14b}*{Algorithm 4}:
 
-\begin{algo}[Adaptive, Automatic, for Cones] \label{newalgo} Given $\tau>0$, and an error tolerance, $\varepsilon$, let $j=1$ and $n_1=\lceil (\tau+1)/2 \rceil$.
+\begin{algo}[Adaptive, Automatic, for Cones] \label{conealgo} Given $\tau>0$, and an error tolerance, $\varepsilon$, let $j=1$ and $n_1=\lceil (\tau+1)/2 \rceil$.
 
 \begin{description} 
 
@@ -277,7 +267,7 @@ This new error bound can then be used to construct the following adaptive, autom
 
 Error bound \eqref{guarerr} is used to prove that Algorithm \ref{newalgo} is successful for integrands in $\cc_{\tau}$.  Let $N(f,\varepsilon,\tau)$ denote the eventual number of trapezoids required by this algorithm.  Because the algorithm is adaptive, the number of trapezoids does depend on the particulars of $f$.  The two bounds \eqref{varfprimeless} and \eqref{varfprimegreat} may be used to derive both lower and upper bounds on $N(f,\varepsilon,\tau)$:
 
-\begin{theorem}\cite{HicEtal14b}*{Theorem 7} \label{newalgothm}
+\begin{theorem}\cite{HicEtal14b}*{Theorem 7} \label{conealgothm}
 Let $N(f,\varepsilon,\tau)$ denote the final $n_j$ in Algorithm \ref{newalgo}.  Then this algorithm is successful for all functions in $\cc_{\tau}$,  i.e.,  $\abs{\int_0^1 f(x) \, \dif x - T_{N(f,\varepsilon,\tau)}(f)} \le \varepsilon$.  Moreover, $N(f,\varepsilon,\tau)$ is bounded below and above as follows:
 \begin{multline}
 \max \left(\left \lceil\frac{\tau+1}{2} \right \rceil, \left \lceil \sqrt{\frac{ \Var(f')}{8\varepsilon}} \right \rceil \right) \\

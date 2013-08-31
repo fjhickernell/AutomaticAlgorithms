@@ -14,7 +14,7 @@ set(0,'defaultLineMarkerSize',40) %latex axis labels
 %% Initial Data
 n=16; % number of trapezoids
 xnodes=(0:n)'/n;
-zoom=0.2;
+zoom=1;
 xnodeszoom=xnodes(xnodes<=zoom);
 pink=[1,0.75,0.75];
 ltgrn=[0.75,1,0.75];
