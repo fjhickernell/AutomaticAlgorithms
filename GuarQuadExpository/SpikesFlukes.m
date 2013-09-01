@@ -1,7 +1,7 @@
 %Construct Spiky and Fluky Functions for 
 %   Ordinary Trapezoidal Rule
 
-%% Garbage collection
+%% Garbage collection and initialization
 format compact %remove blank lines from output
 clear all %clear all variables
 close all %close all figures
