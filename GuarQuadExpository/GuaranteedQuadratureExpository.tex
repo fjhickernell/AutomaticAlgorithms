@@ -148,11 +148,12 @@ Comparing the orders of convergence in \eqref{traperrbd} and \eqref{Simperrbd}, 
 
 Unfortunately, without knowing an upper bound on $\Var(f''')$, one cannot know how large $n$ must be for $\herr(f,n)$ to be reliable.  If one really does have an upper bound on $\Var(f''')$, then it makes more sense to apply Simpson's rule and obtain a higher order convergence rate than that of Algorithm \ref{baderralgo}.  Since there is no really rigorous and compelling argument to use Algorithm \ref{baderralgo}, we do not formulate any theorem guaranteeing it.
 
-Without any constraint on $\Var(f''')$ one may identify integrands, $f$, that fool the error estimate completely, e.g.,
+One may identify integrands, $f$, that fool the error estimate completely, e.g.,
 \begin{equation} \label{failcond}
 \int_0^1 f(x) \, \dif x =  1, \quad T_{n}(f)=T_{n/2}(f) = -1, \quad \err(f,n)=2 \ne 0 = \herr(f,n).
 \end{equation}
-Figure \ref{spikeflukefig} shows two integrands satisfying these conditions. These two integrands illustrate two different ways in which the error estimate $\herr(\cdot)$ fails, and hence, Algorithm \ref{baderralgo} also fails.  One way is ultimately unavoidable but ought to be quantifiable.  The other way is inexcusable, but is prevalent in widely used automatic numerical quadrature.
+The error bound for the trapezoidal rule in \eqref{traperrbd} and the error bound on the error estimate in \eqref{Simperrbd} imply that unless $n$ is small, $\Var(f')$ and $\Var(f''')$ must both be large for the integrands satisfying \eqref{failcond}.
+Figure \ref{spikeflukefig} shows two such integrands for $n=16$. These two integrands illustrate two different ways in which the error estimate $\herr(\cdot)$ fails, and hence, Algorithm \ref{baderralgo} also fails.  One way is ultimately unavoidable but should be quantifiable.  The other way is inexcusable, but is prevalent in widely used automatic numerical quadrature.
 
 \begin{figure}
 \centering 

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=latex 2013.7.24)  31 AUG 2013 15:46
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=latex 2013.7.24)  1 SEP 2013 17:10
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -561,20 +561,20 @@ File: FlukyInteg16TrapFigcolor.eps Graphic file (type eps)
  <FlukyInteg16TrapFigcolor.eps>
 [5] [6] [7] [8]
 
-LaTeX Warning: Reference `newalgo' on page 9 undefined on input line 268.
+LaTeX Warning: Reference `newalgo' on page 9 undefined on input line 269.
 
 
-LaTeX Warning: Reference `newalgo' on page 9 undefined on input line 271.
+LaTeX Warning: Reference `newalgo' on page 9 undefined on input line 272.
 
 [9]
 
-LaTeX Warning: Reference `newalgo' on page 10 undefined on input line 282.
+LaTeX Warning: Reference `newalgo' on page 10 undefined on input line 283.
 
 
-LaTeX Warning: Reference `newalgo' on page 10 undefined on input line 282.
+LaTeX Warning: Reference `newalgo' on page 10 undefined on input line 283.
 
 
-LaTeX Warning: Reference `newalgo' on page 10 undefined on input line 282.
+LaTeX Warning: Reference `newalgo' on page 10 undefined on input line 283.
 
 (./GuaranteedQuadratureExpository.bbl
 
@@ -594,4 +594,4 @@ Here is how much of TeX's memory you used:
  957 hyphenation exceptions out of 8191
  56i,12n,55p,1392b,658s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on GuaranteedQuadratureExpository.dvi (11 pages, 46516 bytes).
+Output written on GuaranteedQuadratureExpository.dvi (11 pages, 46764 bytes).
