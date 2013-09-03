@@ -198,7 +198,18 @@ The integrand $f_{\text{fluky}}(\cdot;n)$ satisfies \eqref{failcond} for even $n
 \end{equation*}
 Disregarding its large magnitude, $f_{\text{fluky}}$ appears to quite ``reasonable''.  We describe integrands like this one as fluky because their construction is rather delicate, and they satisfy conditions \eqref{failcond} with a small number of local optima.  In this case $f_{\text{fluky}}$ was chosen to be a fourth degree polynomial --- to ensure a small number of local optima --- with symmetry about $1/2$.  The remaining coefficients were then determined uniquely by the constraints in \eqref{failcond}.  
 
-Algorithm \ref{baderralgo} is not the only adaptive quadrature algorithm that fails to integrate fluky functions.  Figure ??? 
+Nearly all existing adaptive quadrature algorithms can be fooled by both spiky and fluky integrands.  Figure \ref{fig:foolquad} displays two integrands that fool MATLAB's {\tt quad} routine.  
+
+\begin{figure}
+\centering 
+\begin{tabular}{cc}
+\includegraphics[width=5.5cm]{ExpositoryPaperSpikyquad.eps}
+&
+\includegraphics[width=5.5cm]{ExpositoryPaperFlukyquad.eps} \\
+a) & b)
+\end{tabular}
+\caption{a) A spiky integrand designed to fool MATLAB's {\tt quad} and the data sampled by {\tt quad}; b) A fluky integrand designed to fool {\tt quad}. \label{fig:foolquad}}
+\end{figure}
 
 The failure of the error estimate in \eqref{baderr} for $f_{\text{fluky}}$ seems avoidable. Although the values of the trapezoidal rule are moderate, the sampled function values, $\bigl(f_{\text{fluky}}(i/n;n)\bigr)_{i=1}^{n}$ vary widely, which implies that $\Var(f_{\text{fluky}})$ must be large.  In the next section we transform this intuition into a better method for bounding the error of the trapezoidal rule.
 
