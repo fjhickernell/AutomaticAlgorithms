@@ -62,7 +62,7 @@ To find an upper bound on $\Ftnorm{f}-\tF_{n}(f)$, note that
 since $(f-A_n(f))(x)$ vanishes for $x=0,1$. Using \eqref{fprimeintermsfdoubprime} it then follows that
 \begin{align*}
 \Ftnorm{f} - \tF_{n}(f) & \le \bignorm[\infty]{f' -A_n(f)'} \\
-& = \sup_{\substack{x_i \le x \le x_{i+1}\\ i=1, \ldots, n-1 }} \abs{f'(x) -(n-1)[f(x_{i+1})-f(x_i)]} \, \dif x \\
+& = \sup_{\substack{x_i \le x \le x_{i+1}\\ i=1, \ldots, n-1 }} \abs{f'(x) -(n-1)[f(x_{i+1})-f(x_i)]} \\
 &=(n-1) \sup_{\substack{x_i \le x \le x_{i+1}\\ i=1, \ldots, n-1 }} \abs{ \int_{x_i}^{x_{i+1}} \frac{\partial v_i}{\partial x}(t,x) f''(t) \, \dif t} \\
 & \le (n-1) \norm[\infty]{f''} \sup_{\substack{x_i \le x \le x_{i+1}\\ i=1, \ldots, n-1 }} \int_{x_i}^{x_{i+1}} \abs{\frac{\partial v_i}{\partial x}(t,x)} \, \dif t \\
 &=(n-1)\norm[\infty]{f''} \sup_{\substack{x_i \le x \le x_{i+1}\\ i=1, \ldots, n-1 }} \left \{\frac{1}{2(n-1)^2} - (x-x_i)(x_{i+1}-x) \right\} \\
@@ -76,7 +76,7 @@ To derive the error bounds for $A_n(f)$ we make use of \eqref{fintermsfdoubprime
 \norm[\infty]{f-A_n(f)}
 & \le \sup_{\substack{x_i \le x \le x_{i+1}\\ i=1, \ldots, n-1 }} \abs{f(x)-A_n (f)(x)}\\
 &= (n-1)\sup_{\substack{x_i \le x \le x_{i+1}\\ i=1, \ldots, n-1 }}  \int_{x_i}^{x_{i+1}} \abs{v_i(t,x) f''(t)} \, \dif t\\
-&= (n-1)\norm[\infty]{f''} \sup_{\substack{x_i \le x \le x_{i+1}\\ i=1, \ldots, n-1 }}  \int_{x_i}^{x_{i+1}} \abs{v_i(t,x)} \, \dif t\\
+&\le (n-1)\norm[\infty]{f''} \sup_{\substack{x_i \le x \le x_{i+1}\\ i=1, \ldots, n-1 }}  \int_{x_i}^{x_{i+1}} \abs{v_i(t,x)} \, \dif t\\
 &=\norm[\infty]{f''} \sup_{\substack{x_i \le x \le x_{i+1}\\ i=1, \ldots, n-1 }}  \frac{(x-x_i)(x_{i+1}-x)}2 \\
 &= h(n) \norm[\infty]{f''}, \qquad \qquad  h(n):= \frac{1}{8(n-1)^2}.
 \end{align*}
