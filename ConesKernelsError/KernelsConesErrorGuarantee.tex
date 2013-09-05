@@ -165,7 +165,7 @@ For each fixed $\vt$, $K_{\cp}(\cdot,\vt)$ is a linear combination of the functi
 \end{multline*}
 Thus, $\ch(K_{\cp})$ is a subspace of $\ch$.
 
-Let $\ch_{\perp}$ denote the orthogonal complement of $\ch(K_{\cp})$.  It is now shown that $K_{\perp})$ as defined above is the reproducing kernel for this Hilbert space.  To demonstrate this, it is first shown that $K_{\perp}(\cdot,\vx) \in \ch_{\perp}$ by showing that $K_{\perp}(\cdot,\vx)$ is  perpendicular to all functions residing in $\ch(K_{\cp})$.  Such functions take the form  $\vb^T\vk$ for some $\vb$, and
+Let $\ch_{\perp}$ denote the orthogonal complement of $\ch(K_{\cp})$.  It is now shown that $K_{\perp}$ as defined above is the reproducing kernel for this Hilbert space.  To demonstrate this, it is first shown that $K_{\perp}(\cdot,\vx) \in \ch_{\perp}$ by showing that $K_{\perp}(\cdot,\vx)$ is  perpendicular to all functions residing in $\ch(K_{\cp})$.  Such functions take the form  $\vb^T\vk$ for some $\vb$, and
 \[
 \ip[\ch]{\vb^T\vk(\cdot)}{K_{\perp}(\cdot,\vx)}=\ip[\ch]{\vb^T\vk(\cdot)}{K(\cdot,\vx) - \vk^T(\cdot) \mK^{-1} \vk(\vx)} = \vb^T \vk(\vx) - \vb^T \mK \mK^{-1} \vk(\vx) = 0.
 \]
@@ -248,7 +248,7 @@ given that $1-\tau\tildeh(n)>0$. This implies that
 \left[\int_{\cx} \sup_{\substack{g \in \ch \\ \norm[\ch]{g} \le \norm[\ch]{f} \\g(\vx_i)=f(\vx_i) }} \abs{g(\vx) - A_n(f)(\vx)}^2 \rho(\vx) \, \dif x \right ]^{1/2} \le \frac{\tau h(n) \tH_n(f)}{1-\tau \tildeh(n)}
 \]
 
-\begin{algo}  Given $\tau>0$, $\varepsilon>0$, and $f \in \cc_\tau$, choose $n_1$ such that $\tildeh(n) < 1/\tau$
+\begin{algo}  Given $\tau>0$, $\varepsilon>0$, and $f \in \cc_\tau$, choose $n_1$ such that $\tildeh(n_1) < 1/\tau$
 
 \begin{description}
 \item[Stage 1] Check if $\tau h(n_i) \tH_{n_i}(f) \le \varepsilon[1-\tau \tildeh(n_i)]$.  If so, return the answer $A_{n_i}(f)$.
