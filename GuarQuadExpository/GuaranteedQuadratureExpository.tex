@@ -198,7 +198,7 @@ The integrand $f_{\text{fluky}}(\cdot;n)$ satisfies \eqref{failcond} for even $n
 \end{equation*}
 Disregarding its large magnitude, $f_{\text{fluky}}$ appears to quite ``reasonable''.  We describe integrands like this one as fluky because their construction is rather delicate, and they satisfy conditions \eqref{failcond} with a small number of local optima.  In this case $f_{\text{fluky}}$ was chosen to be a fourth degree polynomial --- to ensure a small number of local optima --- with symmetry about $1/2$.  The remaining coefficients were then determined uniquely by the constraints in \eqref{failcond}.  
 
-Nearly all existing adaptive quadrature algorithms can be fooled by both spiky and fluky integrands.  Figure \ref{fig:foolquad} displays two integrands that fool MATLAB's {\tt quad} routine.  
+Nearly all existing adaptive quadrature algorithms can be fooled by both spiky and fluky integrands.  Figure \ref{fig:foolquad} displays two integrands that fool MATLAB's {\tt quad} routine by satisfying \eqref{failcond}.
 
 \begin{figure}
 \centering 
@@ -216,7 +216,7 @@ The failure of the error estimate in \eqref{baderr} for $f_{\text{fluky}}$ seems
 
 \section{A Guaranteed, Adaptive, Automatic Trapezoidal Algorithm} \label{newalgosec}
 
-Algorithm \ref{ballalgo} does not use any values of $f$ to determine how many trapezoids are needed to approximate the integral of $f$ because an upper bound on $\Var(f')$ is assumed.  Algorithm \ref{baderralgo} uses values of $f$ determine how how many trapezoids are needed, but the way Algorithm \ref{baderralgo} uses these values does not always allow it to detect an occurrence of large $\Var(f')$.  In this section we present a way for reliably estimating $f'$, which then can be used to construct a reliable stopping criterion for an adaptive trapezoidal algorithm.
+Algorithm \ref{ballalgo} does not use any values of $f$ to determine how many trapezoids are needed to approximate the integral of $f$ because an upper bound on $\Var(f')$ is assumed.  Algorithm \ref{baderralgo} uses values of $f$ determine how how many trapezoids are needed, but in a way that allows it to detect an occurrence of large $\Var(f')$.  In this section we present a way for reliably estimating $f'$, which then can be used to construct a reliable stopping criterion for an adaptive trapezoidal algorithm.
 
 Estimating $\Var(f')$ reliably and directly requires additional smoothness assumptions on $f$, but if we assume more smoothness, then we ought to use a different rule, like Simpson's rule.  On the other hand, knowing that $\Var(f')$ is finite does allow us to reliably estimate, a weaker semi-norm of $f$, such as $\Var(f)$.  As observed in Section \ref{flukysubsec} above, the fluky algorithms that fool Algorithm \ref{baderralgo} not only have large $\Var(f')$ but also large $\Var(f)$.  The approach taken in this section is to explore what can be accomplished by estimating a weaker semi-norm.
 
@@ -238,7 +238,7 @@ The data-driven quantity
 \begin{equation} \label{weaknormalgo}
 \norm[1]{A_n(f)'-f(1)+f(0)}= \sum_{i=1}^n \abs{f\left(\frac in \right)-f\left(\frac{i-1}n \right) - \frac{f(1)-f(0)}{n}}
 \end{equation}
-approximates $\norm[1]{f'-f(1)+f(0)}$ well provided that $\Var(f')$ is not too large. Again in \ocite{HicEtal14b}*{Section 5.1} it is shown that 
+always underestimates $\norm[1]{f'-f(1)+f(0)}$, but not by much provided that $\Var(f')$ is not too large. Again in \ocite{HicEtal14b}*{Section 5.1} it is shown that 
 \begin{equation} \label{errweaknorm}
 0 \le \norm[1]{f'-f(1)+f(0)} - \norm[1]{A_n(f)'-f(1)+f(0)} \le \frac{\Var(f')}{2n}.
 \end{equation}
@@ -248,9 +248,10 @@ At this point it seems that we have reached a dead end because we have an error 
 \cc_{\tau} := \{f : \Var(f') \le \tau \norm[1]{f'-f(1)+f(0)} \}.
 \end{equation}
 This cone consists of functions whose stronger semi-norms are not too much greater than their weaker semi-norms.  The set $\cc_{\tau}$ is called a cone because $f \in \cc_{\tau}$ implies that $cf \in \cc_{\tau}$ for all $c \in \reals$.  Substituting this upper bound on $\Var(f')$ into \eqref{errweaknorm} and re-arranging the terms implies a data-driven upper bound on  $\Var(f')$:
-\begin{equation} \label{varfprimeless}
-\Var(f') \le \tau \norm[1]{f'-f(1)+f(0)}  \le \frac{\tau \norm[1]{A_n(f)'-f(1)+f(0)}}{1-\tau/(2n)} \qquad \forall f \in \cc_{\tau},
-\end{equation}
+\begin{multline} \label{varfprimeless}
+\Var(f') \le \tau \norm[1]{f'-f(1)+f(0)}  \\
+\le \frac{\tau \norm[1]{A_n(f)'-f(1)+f(0)}}{1-\tau/(2n)} \qquad \forall f \in \cc_{\tau},
+\end{multline}
 provided that $n>\tau/2$.  There is also a companion bound in the other direction based on \eqref{weaknorm} and \eqref{errweaknorm}:
 \begin{equation} \label{varfprimegreat}
 \norm[1]{A_n(f)'-f(1)+f(0)} \le \norm[1]{f'-f(1)+f(0)} \le \frac{\Var(f')}{2}.
@@ -275,10 +276,10 @@ This new error bound can then be used to construct the following adaptive, autom
 \end{description}
 \end{algo}
 
-Error bound \eqref{guarerr} is used to prove that Algorithm \ref{newalgo} is successful for integrands in $\cc_{\tau}$.  Let $N(f,\varepsilon,\tau)$ denote the eventual number of trapezoids required by this algorithm.  Because the algorithm is adaptive, the number of trapezoids does depend on the particulars of $f$.  The two bounds \eqref{varfprimeless} and \eqref{varfprimegreat} may be used to derive both lower and upper bounds on $N(f,\varepsilon,\tau)$:
+Error bound \eqref{guarerr} is used to prove that Algorithm \ref{conealgo} is successful for integrands in $\cc_{\tau}$.  Let $N(f,\varepsilon,\tau)$ denote the eventual number of trapezoids required by this algorithm.  Because the algorithm is adaptive, the number of trapezoids depends on the particulars of $f$ as well as the error tolerance.  The two bounds \eqref{varfprimeless} and \eqref{varfprimegreat} may be used to derive both lower and upper bounds on $N(f,\varepsilon,\tau)$:
 
 \begin{theorem}\cite{HicEtal14b}*{Theorem 7} \label{conealgothm}
-Let $N(f,\varepsilon,\tau)$ denote the final $n_j$ in Algorithm \ref{newalgo}.  Then this algorithm is successful for all functions in $\cc_{\tau}$,  i.e.,  $\abs{\int_0^1 f(x) \, \dif x - T_{N(f,\varepsilon,\tau)}(f)} \le \varepsilon$.  Moreover, $N(f,\varepsilon,\tau)$ is bounded below and above as follows:
+Let $N(f,\varepsilon,\tau)$ denote the final $n_j$ in Algorithm \ref{conealgo}.  Then this algorithm is successful for all functions in $\cc_{\tau}$,  i.e.,  $\abs{\int_0^1 f(x) \, \dif x - T_{N(f,\varepsilon,\tau)}(f)} \le \varepsilon$.  Moreover, $N(f,\varepsilon,\tau)$ is bounded below and above as follows:
 \begin{multline}
 \max \left(\left \lceil\frac{\tau+1}{2} \right \rceil, \left \lceil \sqrt{\frac{ \Var(f')}{8\varepsilon}} \right \rceil \right) \\
 \le \max \left(\left \lceil\frac{\tau+1}{2} \right \rceil, \left \lceil \sqrt{\frac{\tau \norm[1]{f'-f(1)+f(0)}}{8\varepsilon}} \right \rceil \right) \\
@@ -289,7 +290,16 @@ N(f,\varepsilon,\tau) \\
 \end{multline}
 \end{theorem}
 
-Note that the cost of the algorithm depends on $\Var(f')$, but without $\Var(f')$ needing to be known in advance. For an integrand like \eqref{GaussExample} where $\Var(f')$ is known, the number of trapezoids required by Algorithm \ref{newalgo} is no greater than  $\sqrt{\tau \Var(f') /(4\varepsilon)} + \tau + 3$, whereas for Algorithm \ref{ballalgo} with $\sigma=\Var(f')$ the number of trapezoids is no more than $\bigl \lceil \sqrt{\Var(f') /(8\varepsilon)} \, \bigr\rceil$.  The extra cost for Algorithm \ref{newalgo} comes in the form of the factor $\sqrt{2\tau}$ and the additional additive term of $\tau+1$.  On the other hand, if $\Var(f')$ is not known in advance, then the disadvantage of Algorithm  \ref{ballalgo} is that if $\Var(f')$ is not known in advance, and $\sigma$ is chosen conservatively, then Algorithm \ref{newalgo} could cost arbitrarily more than $\sqrt{\Var(f') /(8\varepsilon)}+1$ in the limit of , 
+Note that the cost of the algorithm depends on $\Var(f')$, but without the algorithm needing to know $\Var(f')$ in advance.   Comparing the two error bounds on which Algorithms \ref{ballalgo} and \ref{conealgo} are based and applying the , we note that 
+\begin{equation*}
+\frac{\Var(f')}{\sigma} \le
+\frac{\terr(f,n)}{\oerr(f,n)}
+\le \frac{\tau\Var(f')}{\sigma (2-\tau/n)}.
+\end{equation*}
+
+
+
+For an integrand like \eqref{GaussExample} where $\Var(f')$ is known, the number of trapezoids required by Algorithm \ref{conealgo} is no greater than  $\sqrt{\tau \Var(f') /(4\varepsilon)} + \tau + 3$, whereas for Algorithm \ref{ballalgo} with $\sigma=\Var(f')$ the number of trapezoids is no more than $\bigl \lceil \sqrt{\Var(f') /(8\varepsilon)} \, \bigr\rceil$.  The extra cost for Algorithm \ref{newalgo} comes in the form of the factor $\sqrt{2\tau}$ and the additional additive term of $\tau+1$.  On the other hand, if $\Var(f')$ is not known in advance, then the disadvantage of Algorithm  \ref{ballalgo} is that if $\Var(f')$ is not known in advance, and $\sigma$ is chosen conservatively, then Algorithm \ref{newalgo} could cost arbitrarily more than $\sqrt{\Var(f') /(8\varepsilon)}+1$ in the limit of , 
 
 \section{Acknowledgements}  The authors are grateful for discussions with a number of colleagues. This research is supported in part by grant NSF-DMS-1115392.
 
