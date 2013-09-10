@@ -60,7 +60,7 @@ adaptive \sep automatic \sep cones \sep function recovery \sep guarantee \sep in
 \section{Introduction}
 
 In \cite{HicEtal14b} we considered the problem of integration and the cone of integrands
-\begin{equation}\label{origconeinteg}
+\begin{equation}\label{origcone}
 \cc_{\tau}:=\{f\in \cv^{1}:\Var(f')\leq\tau\norm[1]{f'-f(1)+f(0)}\},
 \end{equation}
 where the total variation and the $\cl_p$ norms are defined as
@@ -105,10 +105,65 @@ The variation of the first derivative of $f$ is bounded below by the variation o
 
 \section{New Cone, New Algorithm}
 The new cone considered here is defined as
-\begin{equation} \label{newcone}
-\hcc_{\htau}:= \{ f \in \cv^1 :  \Var(f'-A_n(f)') \le \htau(n) \Var(f') \ \forall n \in \ci \},
+\begin{equation} \label{Fcone}
+\hcc_{\htau}:= \{ f \in \cv^1 :  \Var(f'-A_n(f)') \le \htau(n) F_n(f) \ \forall n \in \ci \},
 \end{equation}
-Here $\htau : \ci \to [0,1]$ is some specified non-increasing function that defines the cone.  Integrands in this cone satisfy the following useful properties.
+Here $\htau : \ci \to [0,\infty]$ is some specified non-increasing function that defines the cone.  
+\begin{algo}[New Cone Adaptive Univariate Integration] \label{newconealgo}
+Let the sequence of algorithms $\{T_n\}_{n\in \mathcal{I}}$ $\{F_n\}_{n\in \mathcal{I}}$, and $\hcc_{\htau}$ be as described above.  Set $i=1$, and let $n_1=N_{\min}$. For any error tolerance $\varepsilon$ and input function $f$, do the following:
+\begin{description}
+\item[Step 1.\ Bound {$\Var(f')$} and check for convergence.] Compute $F_{n_i}(f)$ in \eqref{Fnormalg}.  Check whether $n_i$ is large enough to satisfy the error tolerance, i.e.
+    \begin{equation*}
+      \htau(n_i) F_{n_i}(f) \le 8 (n_i-1)^2 \varepsilon.
+    \end{equation*}
+If this is true, then return $T_{n_i}(f)$ and terminate the algorithm.   
+
+\item[Step 2.\ Increase the number of trapezoids.]  If the above condition is false, choose
+$$
+n_{i+1}=\min \{ n \in \naturals : (n-1)/(n_i-1) \in \{2, 3, \ldots \}, \  \htau(n) F_{n_i}(f) \le 8 (n-1)^2 \}.
+$$
+Go to Step 1.
+\end{description}
+\end{algo}
+
+
+\section{The New Cone's Relationship to Other Cones}
+
+The cone defined in \eqref{Fcone} makes Algorithm \ref{newconealgo} work.  In this section we show that it contains and is contained in other cones that might be more intuitive.  One family of cones of interest is defined by replacing $F_n(f)$ by $\Var(f')$ in \eqref{Fcone}:
+\begin{equation}\label{varcone}
+\tcc_{\ttau}:=\{f\in \cv^{1}:\Var(f'-A_n(f)')\leq\ttau(n)\Var(f'), \ n \in  \ci\},
+\end{equation}
+where $\ttau:\ci \to [0,2]$ is non-increasing.  Another family of cones is related to \eqref{origcone} and is defined as
+\begin{equation}\label{origconefamily}
+\cc_{\otau}:=\{f\in \cv^{1}:\Var(f'-A_n(f)')\leq\otau(n)\norm[1]{f'-A_n(f)'}, \ n \in  \ci\},
+\end{equation}
+where $\otau:\ci \to [0,\infty]$.  Under this definition $\cc_{\tau}$ corresponds to defining $\otau(2)=\tau$, $\otau(n)=\infty$ for $n>2$.
+
+To facilitate the comparison of  $\hcc_{\htau}$,  $\tcc_{\ttau}$, and $\cc_{\otau}$ we note several inequalities. For all $f \in \cv^1$,
+\begin{gather}
+\label{varfprimeineq}
+\Var(f') \le \Var(f'-A_n(f)') + \Var(A_n(f)') = \Var(f'-A_n(f)') + F_n(f), \\
+\label{varfprimeminineq}
+\Var(f'-A_n(f)') \le \Var(f')+ \Var(A_n(f')) = \Var(f')+ F_n(f).
+\end{gather} prove the following lemma.
+From \eqref{Fnormalg} and \eqref{varfprimeminineq} it follows that 
+\[
+\Var(f'-A_n(f)') \le 2\Var(f') \qquad \forall f \in \cv^1,
+\]
+which is why $\ttau(n) \le 2$ for all $n$.
+
+\begin{theorem} Given the function $\htau:\ci \to [0,\infty]$, suppose that $\ttau_j : \ci \to [0,2]$, $j=1,2$ satisfy the inequality
+\[
+\ttau_1(n) \le \frac{\htau(n)}{1+\htau(n)} \le \min(2,\htau(n)) \le \ttau_2(n) \qquad \forall  n \in \ci.
+\]
+It follows that $\tcc_{\ttau_1} \le \hcc_{\htau} \subseteq \tcc_{\ttau_2}$.
+
+\end{theorem}
+\begin{proof}
+\end{proof}
+
+
+Integrands in this cone satisfy the following useful properties.
 
 \begin{lem}\label{newconeprop} Let $N_{\min} = \min \{n\in \ci : \htau(n) < 1\}$, and $\hci =\{N_{\min}, N_{\min}+1, \ldots\}$.  For $f \in \hcc_{\htau}$ it follows that
 \[
@@ -124,27 +179,8 @@ Here $\htau : \ci \to [0,1]$ is some specified non-increasing function that defi
 Rearranging the terms in this inequality leads to the desired results provided that $\htau(n) < 1$.
 \end{proof}
 
-\begin{algo}[New Cone Adaptive Univariate Integration] \label{newconealgo}
-Let the sequence of algorithms $\{T_n\}_{n\in \mathcal{I}}$ $\{F_n\}_{n\in \mathcal{I}}$, and $\hcc_{\htau}$ be as described above.  Set $i=1$, and let $n_1=N_{\min}$. For any error tolerance $\varepsilon$ and input function $f$, do the following:
-\begin{description}
-\item[Step 1.\ Bound {$\Var(f')$} and check for convergence.] Compute $F_{n_i}(f)$ in \eqref{Fnormalg}.  Check whether $n_i$ is large enough to satisfy the error tolerance, i.e.
-    \begin{equation*}
-      \htau(n) F_{n_i}(f) \le 8 (n-1)^2 \varepsilon.
-    \end{equation*}
-If this is true, then return $T_{n_i}(f)$ and terminate the algorithm.   
 
-\item[Step 2.\ Increase the number of trapezoids.]  If the above condition is false, choose
-$$
-n_{i+1}=\min \{ n \in \naturals : (n-1)/(n_i-1) \in \{2, 3, \ldots \}, \  \htau(n) F_{n_i}(f) \le 8 (n-1)^2 \}.
-$$
-Go to Step 1.
-\end{description}
-\end{algo}
-
-
-\section{The New Cone's Relationship to Other Cones}
-
-The cone defined in \eqref{newcone} makes Algorithm \ref{newconealgo} work.  In this section we show that it contains and is contained in other cones that might be more intuitive.  The family of cones of interest are defined as
+The cone defined in \eqref{Fcone} makes Algorithm \ref{newconealgo} work.  In this section we show that it contains and is contained in other cones that might be more intuitive.  The family of cones of interest are defined as
 \begin{equation}\label{origconefamilyinteg}
 \cc_{\ttau}:=\{f\in \cv^{1}:\Var(f'-A_n(f)')\leq\ttau(n)\norm[1]{f'-A_n(f)'}, \ n \in  \ci\},
 \end{equation}
