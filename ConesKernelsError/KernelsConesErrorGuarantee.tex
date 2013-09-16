@@ -184,9 +184,9 @@ Let $L_{\vx}$ be the evaluation functional, i.e, $L_{\vx}(f)=f(\vx)$.  For this 
 \nonumber
  &\le \int_{\cx} \Phi_{L_{\vx}}^2 \rho(\vx) \, \dif x \\
 \nonumber
-& = \int_{\cx} [K(\vx,\vx) + \vk^T(\vx)\mK^{-1} \vk(\vx) ] \rho(\vx) \, \dif x\\
+& = \int_{\cx} [K(\vx,\vx) - \vk^T(\vx)\mK^{-1} \vk(\vx) ] \rho(\vx) \, \dif x\\
 \nonumber
-& = \int_{\cx} K(\vx,\vx) \rho(\vx) \, \dif x + \trace\left( \mK^{-1} \tmK \right) \\
+& = \int_{\cx} K(\vx,\vx) \rho(\vx) \, \dif x - \trace\left( \mK^{-1} \tmK \right) \\
 \nonumber
 &=: h^2(n)
 \end{align}
