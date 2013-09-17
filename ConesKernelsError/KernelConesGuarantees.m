@@ -4,16 +4,16 @@ clear all
 close all
 format compact
 set(0,'defaultaxesfontsize',20,'defaulttextfontsize',20)
-testfun=@(x) sin(8*pi*x);
+testfun=@(x) sin(2*pi*x);
 tau=8*pi;
 epsilon = 1e-2;
 
 %% Kernel
-a=10;
+a=.5;
 kernel=@(x,t) exp(-(a.^2)*(bsxfun(@minus,x,t')).^2);
 
 %% Data and spline approximation
-n=25;
+n=20;
 xnode=linspace(0,1,n)';
 Kmat=kernel(xnode,xnode);
 condK=cond(Kmat)
