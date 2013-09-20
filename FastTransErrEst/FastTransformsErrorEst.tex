@@ -274,6 +274,24 @@ If so, we're done.  If not, increment $j$ by one and repeat.
 
 
 $\dtf$ $a^{\dtf}$ $a_{\dtf}$
+
+\section{The Discrete Transform in Its Gory Detail}
+
+We stick with base $2$ for simplicity.  For any $i\in \natzero$ let $\ai \in \{0,1\}^\infty$ be the vector denoting its binary digits, i.e., 
+\[
+i=i_0+2i_1+2^2i_2+ \cdots \quad \iff \quad \ai=(i_0,i_1,i_2, \ldots ).
+\]
+Let $\{\vt_0, \vt_1, \ldots\}$ be a sequence of points with the property that 
+\[
+t_i= i_1 \vt_1 +i_2 \vt_2 + i_3 \vt_4 + \cdots + i_\ell \vt_{2^{\ell-1}} + \cdots, \quad \text{where } \ai=(i_0,i_1,i_2, \ldots ).
+\]
+
+For any $\vk \in \bbK$, define $\nu: \bbK \to  \{0,1\}^\infty$ recursively as follows. Letting $\akappa=\nu(\vk)$, 
+\[
+\kappa_1 = 2\ip{\vk}{\vt_1} \pmod 2
+\]  
+
+
 \bibliographystyle{model1b-num-names.bst}
 \bibliography{FJH22,FJHown22}
 \end{document}
