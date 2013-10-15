@@ -74,7 +74,7 @@ where the total variation and the $\cl_p$ norms are defined as
 \end{gather*}
 We derived an algorithm \cite[Algorithm 4]{HicEtal14b} that was guaranteed for integrands in $\cc_{\tau}$.  In this note we consider another algorithm and other cones.  
 
-First we recall some notation and results from \cite{HicEtal14b}.  For all $n \in \mathcal{I}:=\{2,3,\ldots\}$ we have the linear spline:
+First we recall some notation and results from \cite{HicEtal14b}.  For all $n \in \mathcal{I}:=\{0,2,3,\ldots\}$ we have the linear spline.  By convention $A_0(f)=0$, and for $n>0$, 
 \begin{subequations} \label{linearspline}
 \begin{equation}
 x_{i,n}:=x_{i}:=\frac{i-1}{n-1}, \qquad i=1, \ldots, n,
@@ -86,29 +86,48 @@ A_{n}(f)(x):=(n-1) \left[ f(x_{i})(x_{i+1}-x) +f(x_{i+1})(x-x_{i}) \right] \\ \t
 The cost of each function value is one and so the cost of  $A_n$ is $n$. The dependence of the nodes, $x_i$ on $n$ is often suppressed for simplicity.  Integrating the linear spline gives us the trapezoidal rule based on $n-1$ trapezoids:
 \begin{equation*}
     T_{n}(f) := \int_0^1 A_n(f) \, \dif x
-    =\frac{1}{2n-2}[f(x_{1})+2f(x_{2})+\cdots+2f(x_{n-1})+f(x_{n})].
+    =\frac{1}{2n-2}[f(x_{1})+2f(x_{2})+\cdots+2f(x_{n-1})+f(x_{n})]
 \end{equation*}
+for $n\ge 2$ and $T_0(f)=0$.
 
-The error of the trapezoidal rule has the following upper bound:
-\begin{equation} \label{errbd}
-\abs{\int_0^1 f(x) \, dx - T_n(f)} \le \frac{\Var(f'-A_n(f)')}{8(n-1)^2} \le \frac{\Var(f')}{8(n-1)^2}.
+The error of the trapezoidal rule has the following upper bound \cite[(7.15)]{BraPet11a}:
+\begin{equation} \label{errbda}
+\abs{\int_0^1 f(x) \, dx - T_n(f)} \le \frac{\Var(f')}{8(n-1)^2} \qquad n \in \ci\setminus \{0\}.
 \end{equation}
-The variation of the first derivative of $f$ is bounded below by the variation of the first derivative of of the linear spline of $f$:
+For any $n\in \ci$, let $\cj_n = \{m \in \naturals : (n-1)/(m-1) \in \naturals \}$.  This means that $T_n$ integrates exactly any function that is a linear spline using $m$ nodes for $m\in \cj_n$. This implies that  
+\begin{align} 
+\nonumber
+\abs{\int_0^1 f(x) \, dx - T_n(f)} &= \abs{\int_0^1 [f(x)-A_m(f)(x)] \, dx - T_n(f- A_m(f))}\\
+\label{errbdb}
+& \le \frac{\Var(f'-A_m(f)')}{8(n-1)^2} \qquad \forall m \in \cj_n, \ n \in \ci\setminus \{0\}.
+\end{align}
+
+The variation of the first derivative of $f$ is bounded below by the variation of the first derivative of of the linear spline of $f$.  For all $f \in \cv^1$ it follows that
 \begin{multline} 
 \Var(f') \ge F_n(f) :=\Var(A_n(f)') \\
- = \begin{cases} 0, & n=2, \\
+ = \begin{cases} 0, & n=0,2, \\
 \displaystyle (n-1)\sum_{i=1}^{n-2} \bigabs{f(x_{i}) - 2 f(x_{i+1})+f(x_{i+2})}, 
 & n\ge 3. 
 \end{cases}
 \label{Fnormalg}
 \end{multline}
+Also note that
+\begin{equation} \label{Fnbounda}
+F_m(f) = F_m(A_n(f)) \le \Var(A_n(f)') = F_n(f) \qquad \forall m \in \cj_n.
+\end{equation}
+The bound in  further implies that 
+\begin{multline} \label{Fnboundb}
+F_n(f) \le \Var(f')  \le \Var(f'-A_m(f)') + \Var(A_m(f)) \\
+= \Var(f'-A_m(f)') + F_m(f).
+\end{multline}
+
 
 \section{New Cone, New Algorithm}
 The new cone considered here is defined as
 \begin{equation} \label{Fcone}
-\hcc_{\htau}:= \{ f \in \cv^1 :  \Var(f'-A_n(f)') \le \htau(n) F_n(f) \ \forall n \in \hci \},
+\hcc_{\htau}:= \{ f \in \cv^1 :  \min_{m \in \cj_n} \Var(f'-A_m(f)') \le \htau(n) F_n(f) \ \forall n \in \hci \},
 \end{equation}
-Here $\htau : \hci \to [0,\infty)$ is some specified function that defines the cone, and $\hci=\{N_{\min}, N_{\min}+1, \ldots \}$, where $N_{\min}$ is some integer no smaller than $2$.  
+Here $\htau : \hci \to [0,\infty)$ is some specified function that defines the cone, and $\hci=\{N_{\min}, N_{\min}+1, \ldots \}$, where $N_{\min}$ is some integer no smaller than $3$.  
 \begin{algo}[New Cone Adaptive Univariate Integration] \label{newconealgo}
 Let the sequence of algorithms $\{T_n\}_{n\in \mathcal{I}}$ $\{F_n\}_{n\in \mathcal{I}}$, and $\hcc_{\htau}$ be as described above.  Set $i=1$, and let $n_1=N_{\min}$. For any error tolerance $\varepsilon$ and input function $f$, do the following:
 \begin{description}
