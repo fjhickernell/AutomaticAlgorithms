@@ -1,0 +1,241 @@
+The algorithms used in this section on integration and the next section on function recovery are all based on linear splines on $[0,1]$.  The node set and the linear spline algorithm using $n$ function values are defined for $n \in \mathcal{I}:=\{2,3,\ldots\}$ as follows:
+\begin{subequations} \label{linearspline}
+\begin{equation}
+x_i=\frac{i-1}{n-1}, \qquad i=1, \ldots, n,
+\end{equation}
+\begin{multline}
+A_{n}(f)(x):=(n-1) \left[ f(x_{i})(x_{i+1}-x) +f(x_{i+1})(x-x_i) \right] \\ \text{for }x_i \leq x \leq x_{i+1}.
+\end{multline}
+\end{subequations}
+The cost of each function value is one and so the cost of  $A_n$ is $n$. The algorithm $A_n$ is imbedded in the algorithm $A_{2n-1}$, which uses $2n-2$ subintervals.  Thus, $r=2$ is the cost multiple as described in Section \ref{adapintrosec}.
+
+The problem to be solved is univariate integration on the unit interval, $S(f):=\INT(f):=\int_{0}^{1}f(x) \, \dif x \in \cg := \reals$.  The fixed cost building blocks to construct the adaptive integration algorithm are the composite trapezoidal rules based on $n-1$ trapezoids:
+\begin{equation*}
+    T_{n}(f) := \int_0^1 A_n(f) \, \dif x
+    =\frac{1}{2n-2}[f(x_1)+2f(x_2)+\cdots+2f(x_{n-1})+f(x_n)].
+\end{equation*}
+
+The space of input functions is $\cf:=\mathcal{V}^{1}$, the space of functions whose first derivatives have finite variation.  The general definitions of some relevant norms and spaces are as follows:
+\begin{subequations} \label{defSobolev}
+\begin{gather}
+\Var(f) := \sup_{\substack{n \in \naturals\\ 0 = x_0 < x_1 < \cdots < x_{n} =1}} \sum_{i=1}^n \abs{f(x_i)-f(x_{i-1})}, \\
+\norm[p]{f}:= \begin{cases} \displaystyle \left[\int_0^1 \abs{f(x)}^p \, \dif x \right]^{1/p}, & 1 \le p < \infty,\\[1ex]
+\displaystyle  \sup_{0 \le x \le 1} \abs{f(x)}, & p=\infty,
+\end{cases}
+\\
+\cv^{k}: =\cv^{k}[0,1]=\{f\in C[0,1]: \Var(f^{(k)}) < \infty \}, \\
+\mathcal{W}^{k,p}=\mathcal{W}^{k,p}[0,1]=\{f\in C[0,1]: \|f^{(k)}\|_{p}<\infty\}.
+\end{gather}
+\end{subequations}
+The stronger semi-norm is $\Fnorm{f}:=\Var(f')$, while the weaker semi-norm is
+\[
+\Ftnorm{f}:=\norm[1]{f'-A_2(f)'}=\norm[1]{f'-f(1)+f(0)}=\Var(f-A_2(f)),
+\]
+where $A_2(f): x \mapsto f(0)(1-x)+f(1)x$ is the linear interpolant of $f$ using the two endpoints of the integration interval. The reason for defining $\Ftnorm{f}$ this way is that $\Ftnorm{f}$ vanishes if $f$ is a linear function, and linear functions are integrated exactly by the trapezoidal rule.  The cone of integrands is defined as
+\begin{equation}\label{coneinteg}
+\cc_{\tau}:=\{f\in \cv^{1}:\Var(f')\leq\tau\|f'-f(1)+f(0)\|_1\}.
+\end{equation}
+
+The algorithm for approximating $\norm[1]{f'-f(1)+f(0)}$ is the $\tcf$-semi-norm of the linear spline, $A_n(f)$:
+\begin{align}
+\nonumber
+\tF_n(f)&:=\Ftnorm{A_n(f)}=\bignorm[1]{A_n(f)'-A_2(f)'} \\
+\label{1direst}
+&=\sum_{i=1}^{n-1}\left|f(x_{i+1})-f(x_{i}) - \frac{f(1)-f(0)}{n-1}\right|.
+\end{align}
+The variation of the first derivative of the linear spline of $f$, i.e.,
+\begin{equation} \label{Fnormalg}
+F_n(f) :=\Var(A_n(f)') = (n-1)\sum_{i=1}^{n-2} \bigabs{f(x_i) - 2 f(x_{i+1})+f(x_{i+2})},
+\end{equation}
+provides a lower bound on $\Var(f')$ for $n \ge 3$, and can be used in the necessary condition that $f$ lies in $\cc_\tau$ as described in Remark \ref{neccondrem}.
+The Mean Value Theorem implies that
+\begin{align*}
+F_n(f) &= (n-1)\sum_{i=1}^{n-1} \bigabs{[f(x_{i+2}) - f(x_{i+1})] - [f(x_{i+1}) - f(x_{i})]} \\
+&= \sum_{i=1}^{n-1} \abs{f'(\xi_{i+1}) - f'(\xi_{i})} \le \Var(f'),
+\end{align*}
+where $\xi_i$ is some point in $[x_i,x_{i+1}]$.
+
+
+\subsection{Adaptive Algorithm and Upper Bound on the Cost}
+
+Constructing the adaptive algorithm for integration requires an upper bound on the error of $T_n$ and a two-sided bound on the error of $\tF_n$.  Note that $\tF_{n}(f)$ never overestimates $\Ftnorm{f}$ because
+\begin{align*}
+\Ftnorm{f} & = \bignorm[1]{f'-A_2(f)'}
+= \sum_{i=1}^{n-1} \int_{x_i}^{x_{i+1}} \abs{f'(x) - A_2(f)'(x)} \, \dif x \\
+& \ge \sum_{i=1}^{n-1} \abs{\int_{x_i}^{x_{i+1}} [f'(x) - A_2(f)'(x)] \, \dif x}=\norm[1]{A_n(f)'-A_2(f)'} = \tF_n(f).
+\end{align*}
+Thus, $h_{-}(n):=0$ and $\fc_n=\tfc_n=1$.
+
+To find an upper bound on $\Ftnorm{f}-\tF_{n}(f)$, note that
+\begin{equation*}
+\Ftnorm{f} - \tF_{n}(f) = \Ftnorm{f} - \bigabs{A_n(f)}_{\tcf} \le \bigabs{f-A_n(f)}_{\tcf} = \bignorm[1]{f' -A_n(f)'},
+\end{equation*}
+since $(f-A_n(f))(x)$ vanishes for $x=0,1$.  Moreover,
+\begin{equation} \label{onenormfp}
+\bignorm[1]{f' -A_n(f)'} = \sum_{i=1}^{n-1} \int_{x_i}^{x_{i+1}} \abs{f'(x) -(n-1)[f(x_{i+1})-f(x_i)]} \, \dif x.
+\end{equation}
+Now we bound each integral in the summation.  For $i=1, \ldots, n-1$, let $\eta_i(x) = f'(x) -(n-1)[f(x_{i+1})-f(x_i)]$, and let $p_i$ denote the probability that $\eta_i(x)$ is non-negative:
+\[
+p_i = (n-1)\int_{x_i}^{x_{i+1}} \bbone_{[0,\infty)} (\eta_i(x)) \, \dif x,
+\]
+and so $1-p_i$ is the probability that $\eta_i(x)$ is negative.  Since $\int_{x_i}^{x_{i+1}} \eta_i(x) \, \dif x =0$, we know that $\eta_i$ must take on both non-positive and non-negative values.  Invoking the Mean Value Theorem, it follows that
+\begin{multline*}
+\frac{p_i}{n-1} \sup_{x_i \le x \le x_{i+1}} \eta_i(x) \ge \int_{x_i}^{x_{i+1}} \max(\eta_i(x),0) \, \dif x \\
+= \int_{x_i}^{x_{i+1}} \max(-\eta_i(x),0) \, \dif x \le \frac{-(1-p_i)}{n-1} \inf_{x_i \le x \le x_{i+1}} \eta_i(x) .
+\end{multline*}
+These bounds allow us to derive bounds on the integrals in \eqref{onenormfp}:
+\begin{align*}
+\MoveEqLeft{\int_{x_i}^{x_{i+1}} \abs{\eta_i(x)} \, \dif x} \\
+ &= \int_{x_i}^{x_{i+1}} \max(\eta_i(x),0) \, \dif x + \int_{x_i}^{x_{i+1}} \max(-\eta_i(x),0) \, \dif x\\
+&=2(1-p_i) \int_{x_i}^{x_{i+1}} \max(\eta_i(x),0) \, \dif x + 2p_i\int_{x_i}^{x_{i+1}} \max(-\eta_i(x),0) \, \dif x\\
+&\le \frac{2p_i(1-p_i)}{n-1} \left[ \sup_{x_i \le x \le x_{i+1}} \eta_i(x) - \inf_{x_i \le x \le x_{i+1}} \eta_i(x) \right]\\
+&\le\frac{1}{2(n-1)} \left[ \sup_{x_i \le x \le x_{i+1}} f'(x) - \inf_{x_i \le x \le x_{i+1}} f'(x) \right],
+\end{align*}
+since $p_i(1-p_i)\le 1/4$.
+
+Plugging this bound into \eqref{onenormfp} yields
+\begin{align*}
+\bignorm[1]{f'-f(1)+f(0)} - \tF_n(f) &= \Ftnorm{f} - \tF_{n}(f)\\
+ & \le \bignorm[1]{f' -A_n(f)'}\\
+&\le \frac{1}{2n-2} \sum_{i=1}^{n-1} \left[ \sup_{x_i \le x \le x_{i+1}} f'(x) - \inf_{x_i \le x \le x_{i+1}} f'(x) \right] \\
+& \le \frac{\Var(f')}{2n-2} = \frac{\Fnorm{f}}{2n-2},
+\end{align*}
+and so
+\begin{equation*}\label{factor}
+h_{+}(n):= \frac{1}{2n-2}, \qquad \mathfrak{C}_n =\frac{1}{1 - \tau/(2n-2)} \qquad \text{for } n>1+\tau/2.
+\end{equation*}
+Since $\tF_2(f)=0$ by definition, the above inequality for $\Ftnorm{f} - \tF_{2}(f)$ implies that
+\begin{equation*} \label{taumininteg}
+2\bignorm[1]{f'-f(1)+f(0)} = 2 \Ftnorm{f} \le \Fnorm{f} = \Var(f'), \qquad \tau_{\min}=2.
+\end{equation*}
+
+The error of the trapezoidal rule in terms of the variation of the first derivative of the integrand is given in \cite[(7.15)]{BraPet11a}:
+%\begin{subequations} \label{integhhtilde}
+\begin{gather*}
+\abs{\int_0^1 f(x) \, dx - T_n(f)} \le h(n) \Var(f') \\
+h(n):= \frac{1}{8(n-1)^2}, \qquad h^{-1}(\varepsilon) = \left \lceil \sqrt{\frac{1}{8\varepsilon}} \right \rceil +1.
+\end{gather*}
+%\end{subequations}
+Given the above definitions of $h, \fC_n, \fc_n$, and $\tfc_n$, it is now possible to also specify
+\begin{subequations} \label{simplifycond}
+\begin{gather}
+h_1(n) = h_2(n) = \fC_n h(n) = \frac{1}{4(n-1)(2n-2-\tau)}, \\
+h_1^{-1}(\varepsilon) = h_2^{-1}(\varepsilon) = 1+ \left \lceil \sqrt{\frac{\tau}{8 \varepsilon} + \frac{\tau^2}{16}} +\frac{\tau}{4} \right \rceil \le 2 + \frac{\tau}{2} + \sqrt{\frac{\tau}{8\varepsilon}}.
+\end{gather}
+Moreover, the left side of \eqref{multistageconv}, the stopping criterion inequality in the multi-stage algorithm, becomes
+\begin{equation}
+\tau h(n_i)\fC_{n_i} \tF_{n_i}(f) = \frac{\tau  \tF_{n_i}(f) } {4(n_i-1)(2n_i-2 -\tau)}.
+\end{equation}
+\end{subequations}
+With these preliminaries, Algorithm \ref{multistagealgo} and Theorem \ref{MultiStageThm} may be applied directly to  yield the following adaptive integration algorithm and its guarantee.
+
+\begin{algo}[Adaptive Univariate Integration] \label{multistageintegalgo}
+Let the sequence of algorithms $\{T_n\}_{n\in \mathcal{I}}$, $\{\tF_n\}_{n\in \mathcal{I}}$, and $\{F_n\}_{n\in \mathcal{I}}$ be as described above.
+Let $\tau\ge2$ be the cone constant. Set $i=1$. Let $n_1=\lceil(\tau+1)/2\rceil+1$. For any error tolerance $\varepsilon$ and input function $f$, do the following:
+\begin{description}
+\item[Stage 1.\ Estimate {$\norm[1]{f'-f(1)+f(0)}$} and bound {$\Var(f')$}.] Compute $\tF_{n_i}(f)$ in \eqref{1direst} and $F_{n_i}(f)$ in \eqref{Fnormalg}.
+
+\item[Stage 2. Check the necessary condition for $f \in \cc_{\tau}$.] Compute
+    \begin{align*}
+     \tau_{\min,n_i} =  \frac{F_{n_i}(f)}{\tF_{n_i}(f)+F_{n_i}(f)/(2n_i-2)}.
+    \end{align*}
+If $\tau \ge \tau_{\min,n_i}$, then go to stage 3.  Otherwise, set $\tau = 2\tau_{\min,n_i}$.  If $n_i \ge (\tau+1)/2$, then go to stage 3.  Otherwise, choose
+$$
+n_{i+1}=1+ (n_i-1)\left\lceil\frac{\tau+1}{2n_i-2}\right\rceil.
+$$
+Go to Stage 1.
+
+\item[Stage 3. Check for convergence.] Check whether $n_i$ is large enough to satisfy the error tolerance, i.e.
+    \begin{equation*}
+     \tF_{n_i}(f) \le \frac{4\varepsilon(n_i-1)(2n_i-2 - \tau)}{\tau}.
+    \end{equation*}
+If this is true, then return $T_{n_i}(f)$ and terminate the algorithm.   If this is not true, choose
+$$
+n_{i+1}=1+ (n_i-1)\max\left\{2,\left\lceil\frac{1}{(n_i-1)}\sqrt{\frac{\tau \tF_{n_i}(f)}{8\varepsilon}}\right\rceil\right\}.
+$$
+Go to Stage 1.
+\end{description}
+\end{algo}
+
+\begin{theorem} \label{multistageintegthm}
+Let $\sigma >0$ be some fixed parameter, and let $\cb_{\sigma}=\{f \in  \mathcal{V}^{1} : \Var(f')\leq \sigma\}$. Let $T \in \ca(\cb_{\sigma}, \reals, \INT, \Lambda^{\std})$ be the non-adaptive trapezoidal rule defined by Algorithm \ref{nonadaptalgo}, and let $\varepsilon>0$ be the error tolerance. Then this algorithm succeeds for $f \in \cb_{\sigma}$, i.e., $\abs{\INT(f) - T(f,\varepsilon)} \le \varepsilon$, and the cost of this algorithm is $\left \lceil \sqrt{\sigma/(8\varepsilon)}\right \rceil + 1$, regardless of the size of $\Var(f')$.
+
+Now let $T \in \ca(\cc_{\tau}, \reals, \INT, \Lambda^{\std})$ be the adaptive trapezoidal rule defined by Algorithm \ref{multistageintegalgo}, and let $\tau$, $n_1$, and $\varepsilon$ be as described there. Let $\cc_\tau$ be the cone of functions defined in \eqref{coneinteg}.  Then it follows that Algorithm \ref{multistageintegalgo} is successful for all functions in $\cc_{\tau}$,  i.e.,  $\abs{\INT(f) - T(f,\varepsilon)} \le \varepsilon$.  Moreover, the cost of this algorithm is bounded below and above as follows:
+\begin{multline}
+\max \left(\left \lceil\frac{\tau+1}{2} \right \rceil, \left \lceil \sqrt{\frac{ \Var(f')}{8\varepsilon}} \right \rceil \right) +1 \\
+\le \max \left(\left \lceil\frac{\tau+1}{2} \right \rceil, \left \lceil \sqrt{\frac{\tau \norm[1]{f'-f(1)+f(0)}}{8\varepsilon}} \right \rceil \right) +1 \\
+\le
+\cost(T,f;\varepsilon) \\
+\le \sqrt{\frac{\tau \norm[1]{f'-f(1)+f(0)}}{2\varepsilon}} + \tau + 4
+\le \sqrt{\frac{\tau \Var(f') }{4\varepsilon}} + \tau + 4.
+\end{multline}
+The algorithm is computationally stable, meaning that the minimum and maximum costs for all integrands, $f$, with fixed $\norm[1]{f'-f(1)+f(0)}$ or $\Var(f')$ are an $\varepsilon$-independent constant of each other.
+\end{theorem}
+
+
+\subsection{Lower Bound on the Computational Cost}
+Next, we derive a lower bound on the cost of approximating functions in the ball $\cb_{\sigma}$ and in the cone $\cc_{\tau}$ by constructing fooling functions. Following the arguments of Section \ref{LowBoundSec}, we choose  the triangle shaped function $f_0: x \mapsto 1/2-\abs{1/2-x}$. Then
+\begin{gather*}
+\Ftnorm{f_0}=\norm[1]{f'_0-f_0(1)+f_0(0)}=\int_0^1 \abs{\sign(1/2-x)} \, \dif x = 1, \\ \Fnorm{f_0}=\Var(f'_0)=2= \tau_{\min}.
+\end{gather*}
+For any $n \in \cj:=\natzero$, suppose that the one has the data $L_i(f)=f(\xi_i)$, $i=1, \ldots, n$ for arbitrary $\xi_i$, where $0=\xi_0 \le \xi_1 < \cdots < \xi_n \le \xi_{n+1} = 1$.  There must be some $j=0, \ldots, n$ such that $\xi_{j+1} - \xi_j \ge 1/(n+1)$.  The function $f_{1}$ is defined as a triangle function on the interval $[\xi_j, \xi_{j+1}]$:
+$$
+f_{1}(x):=\begin{cases} \displaystyle
+\frac{\xi_{j+1}-\xi_{j}-\abs{\xi_{j+1}+\xi_{j}-2x}}{8} & \xi_{j} \le x \leq \xi_{j+1},\\
+0 & \text{otherwise}.
+\end{cases}
+$$
+This is a piecewise linear function whose derivative changes from $0$ to $1/4$ to $-1/4$ to $0$ provided $0 < \xi_j < \xi_{j+1} < 1$, and so $\Fnorm{f_1}=\Var(f'_1)\le 1$. Moreover,
+\begin{gather*}
+\INT(f)=\int_0^1 f_1(x) \, \dif x = \frac{(\xi_{j+1} - \xi_j)^2}{16} \ge \frac{1}{16(n+1)^2} =: g(n),\\
+g^{-1}(\varepsilon)=\left \lceil \sqrt{\frac{1}{16 \varepsilon}} \right \rceil - 1.
+\end{gather*}
+Using these choices of $f_0$ and $f_1$, along with the corresponding $g$ above, one may invoke Theorems \ref{complowbdball}--\ref{complowbd}, and Corollary \ref{optimcor} to obtain the following theorem.
+
+\begin{theorem} \label{complowbdinteg} For $\sigma>0$ let $\cb_{\sigma}=\{f \in \cv^{1} : \Var(f') \le \sigma\}$.  The complexity of integration on this ball is bounded below as
+\begin{equation*}
+\comp(\varepsilon,\ca(\cb_{\sigma},\reals,\INT,\Lambda^{\std}),\cb_{s}) \ge \left \lceil \sqrt{\frac{\min(s,\sigma)}{16 \varepsilon}} \right \rceil -1 .
+\end{equation*}
+Algorithm \ref{nonadaptalgo} using the trapezoidal rule has optimal order in the sense of Theorem \ref{optimalprop}.
+
+For $\tau>2$, the complexity of the integration problem over the cone of functions $\cc_{\tau}$ defined in \eqref{coneinteg} is bounded below as
+\begin{equation*}
+\comp(\varepsilon,\ca(\cc_{\tau},\reals,\INT,\Lambda^{\std}),\cb_{s}) \ge \left \lceil \sqrt{\frac{(\tau-2)s}{32 \tau \varepsilon}} \right \rceil -1 .
+\end{equation*}
+The adaptive trapezoidal Algorithm \ref{multistageintegalgo} has optimal order for integration of functions in $\cc_{\tau}$ in the sense of Corollary \ref{optimcor}.
+\end{theorem}
+
+\subsection{Numerical Example} \label{integnumexamplesec}
+
+Consider the family of bump test functions defined by
+\begin{multline}\label{testfun}
+f(x)= \\
+\begin{cases}
+\displaystyle  b[4a^2 + (x-z)^2-(x-z-a)|x-z-a|\\
+\qquad \qquad -(x-z+a)|x-z+a|], & z-2a\leq x\leq z+2a,\\[2ex]
+\displaystyle  0, & \text{otherwise}.
+\end{cases}
+\end{multline}
+with  $\log_{10}(a) \sim \cu[-4,-1]$, $z \sim \cu[2a,1-2a]$, and $b=1/(4a^3)$ chosen to make $\int_0^1 f(x) \, \dif x = 1$.  It follows that $\norm[1]{f'-f(1)+f(0)}=1/a$ and $\Var(f')=2/a^2$.  The probability that $f \in \cc_{\tau}$ is $\min\left(1,\max(0,\left(\log_{10}(\tau/2)-1\right)/3)\right).$
+
+As an experiment, we chose $10000$ random test functions and applied Algorithm \ref{multistageintegalgo} with an error tolerance of  $\varepsilon = 10^{-8}$ and initial $\tau$ values of $10, 100, 1000$.  The algorithm is considered successful for a particular $f$ if the exact and approximate integrals agree to within $\varepsilon$. The success and failure rates are given in Table \ref{integresultstable}. Our algorithm imposes a cost budget of $N_{\max}=10^7$.  If the proposed $n_{i+1}$ in Stages 2 or 3 exceeds $N_{\max}$, then our algorithm returns a warning and falls back to the largest possible $n_{i+1}$ not exceeding $N_{\max}$ for which $n_{i+1}-1$ is a multiple of $n_i-1$.  The probability that $f$ initially lies in $\cc_{\tau}$ is the smaller number in the third column of Table \ref{integresultstable}, while the larger number is the empirical probability that $f$ eventually lies in $\cc_{\tau}$ after possible increases in $\tau$ made by Stage 2 of Algorithm \ref{multistageintegalgo}.  For this experiment Algorithm \ref{multistageintegalgo} was successful for all $f$ that finally lie inside $\cc_{\tau}$ and for which no attempt was made to exceed the cost budget.  
+
+\begin{table}[h]
+\centering
+\begin{tabular}{cccccc}
+&&&Success & Success & Failure \\
+& $\tau$ &  $\Prob(f \in \cc_{\tau}) $ & No Warning & Warning & No Warning \\
+\toprule
+&$10$ & $0\% \rightarrow  25\% $ & $25\%$ & $<1\%$ & $75\%$  \\
+Algorithm \ref{multistageintegalgo}
+ &$100$ & $23 \% \rightarrow 58\% $ & $56\%$ & $2\%$ & $42\%$ \\
+&$1000$ & $57\% \rightarrow 88\% $& $68\%$ & $20\%$ &$12\%$ \\
+\midrule
+{\tt quad} & & & 8\% & & $92\%$\\
+{\tt integral} & & & 19\% & & $81\%$\\
+{\tt chebfun} & & &29\% & & $71\%$\\
+\end{tabular}
+\caption{The probability of the test function lying in the cone for the original and eventual values of $\tau$ and the empirical success rate of Algorithm \ref{multistageintegalgo} plus the success rates of other common quadrature algorithms. \label{integresultstable}}
+\end{table}
+
+Some commonly available numerical algorithms in MATLAB are {\tt quad} and {\tt integral} \cite{MAT8.1} and the MATLAB Chebfun toolbox \cite{TrefEtal12}. We applied these three routines to the random family of test functions.  Their success and failure rates are also recorded in Table \ref{integresultstable}.  They do not give warnings of possible failure.
