@@ -152,13 +152,16 @@ The next goal is to enumerate cosets of wavenumbers, and do so in a way that fac
 
 \item The vector $\vzero$ always lies in $\cp_{m,0}^{\perp}$.
 
-\item The sets $\cp_{m,0}^{\perp}, \ldots, \cp_{m,b^m-1}^{\perp}$ are disjoint and their union is $\bbK$.
+\item The sets $\cp_{m,0}^{\perp}, \ldots, \cp_{m,b^m-1}^{\perp}$ are disjoint and for $\ell=0, 1, \ldots, m-1$,
+\[
+\cp_{\ell, \nu}^{\perp} = \bigcup_{\substack{\lambda \in \{0, \ldots, 2^{m}-1\} \\ \lambda \bmod 2^\ell = \nu}} \cp_{m,\lambda}^{\perp}.
+\]
 
 \item Letting $\nu \oplus \lambda$ denote digitwise addition, the cosets have an additive structure: $\cp_{m,\nu \oplus \lambda}^{\perp} = \cp_{m,\nu}^{\perp} \oplus \cp_{m,\lambda}^{\perp} := \{\vk \oplus \vl :  \vk \in \cp_{m,\nu}^{\perp},\ \vl \in \cp_{m,\lambda}^{\perp}\}$.
 
-\item For $m>0$ and any $\vk \in \cp_{m,\ve_\ell}$, define $w_{\ell,m}=\ip{\vk}{\vt_{b^m}}$.  This is also uniquely defined.  Moreover,
+\item For $m>0$ and any $\vk \in \cp_{m,\nu}$, $\nu, i \in \{0, \ldots, b^m-1\}$,  $\anu=(\nu_0, \nu_1, \ldots)$, and $\ai=(i_0, i_1, \ldots)$, it follows that 
 \begin{equation} \label{nuwisum}
-\vk\in \cp_{m,\vnu} \text{ and } \ai=(i_1, i_2, \ldots) \Longrightarrow \ip{\vk}{\vt_i} = \sum_{\ell,m=1}^{\infty} \nu_\ell w_{\ell,m} i_m \pmod 1.
+\ip{\vk}{\vt_i} = \frac 1 b \sum_{\ell=0}^{m-1} \nu_\ell i_{\ell} \pmod 1.
 \end{equation}
 
 \end{enumerate}
@@ -170,7 +173,7 @@ The next goal is to enumerate cosets of wavenumbers, and do so in a way that fac
 
 Now suppose that Lemma \ref{cosetlem} holds for $m$.  We show that it also holds for $m+1$.  By the induction hypothesis, $\vzero \in \cp_{m,\vzero}^{\perp}$, and since $\ip{\vzero}{\vt_{b^{m}}}=0$ by \eqref{distrib}, it follows that $\vzero \in \cp_{m+1,\vzero}^{\perp}$, which corresponds to a).
 
-There must be some $\vk \in  \cp_{m,\vzero}^{\perp}$ for which $\ip{\vzero}{\vt_{b^{m}}}\ne 0$.  Otherwise,  
+The conditions that the digits of $\vk$ must satisfy to lie in $\cp_{m,\vzero}^{\perp}$ are  for which $\ip{\vk}{\vt_{b^{m}}}\ne 0$.  Otherwise,  
 
 
 
