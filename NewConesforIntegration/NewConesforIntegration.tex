@@ -16,6 +16,8 @@
 \DeclareMathOperator{\maxcost}{maxcost}
 \DeclareMathOperator{\mincost}{mincost}
 \newcommand{\herr}{\widehat{\err}}
+\newcommand{\occ}{\overline{\cc}}
+\newcommand{\oci}{\overline{\ci}}
 
 \newtheorem{theorem}{Theorem}
 \newtheorem{prop}[theorem]{Proposition}
@@ -120,6 +122,49 @@ The bound in  further implies that
 F_n(f) \le \Var(f')  \le \Var(f'-A_m(f)') + \Var(A_m(f)) \\
 = \Var(f'-A_m(f)') + F_m(f).
 \end{multline}
+
+Another useful fact from ??? is that 
+\begin{equation} \label{boundweaknorm}
+\norm[1]{f'-f(1)+f(0)} \le \tF_n(f) + \tildeh(n) \Var(f') \qquad \forall f \in \cv^1 
+\end{equation}
+
+
+\section{New Cone, New Algorithm}
+Let $\oci$ be some non-empty subset of $\{(\ell,m,n) \in \{2,3,\ldots\}^3 : \ell \in \cj_m, \ m \in \cj_n\}$, and let $\otau:\oci \to (0,\infty)$ be some given function.   The new cone considered here is defined as
+\begin{multline} \label{Fcone}
+\occ_{\otau}:= \{ f \in \cv^1 :  \Var(f'-A_m(f)') \le F_n(f-A_m(f)) + \otau(\ell,m,n) \norm[1]{f' - A_{\ell}(f)'}) \\ \forall (\ell,m,n) \in \oci \}.
+\end{multline}
+Note that for all $(\ell,m,n) \in \oci$
+\begin{align*}
+\norm[1]{f' - A_{\ell}(f)'}) & = \norm[1]{f'-A_m(f)'+A_m(f)' - A_\ell(f)'} \\
+& \le  \norm[1]{f'-A_m(f)'} + \tF_m(f-A_\ell(f)) \\
+& \le  \tF_m(f-A_m(f)) + \tildeh(m)\Var(f'-A_m(f)') + \tF_m(f-A_\ell(f)) \\
+& = \tildeh(m)\Var(f'-A_m(f)') + \tF_m(f-A_\ell(f)) \qquad \text{by \eqref{boundweaknorm}}
+\end{align*}
+
+For all $f \in \occ_{\otau}$ it then follows that
+\begin{align*}
+\Var(f'-A_m(f)') & \le F_n(f-A_m(f)) + \otau(\ell,m,n) \tF_\ell(f)\\
+& \le F_n(f-A_m(f)) + \otau(\ell,m,n) [\tildeh(m)\Var(f'-A_m(f)') \\
+&\qquad \qquad + \tF_m(f-A_\ell(f))] \\
+\Var(f'-A_m(f)') &\le  \frac{F_n(f-A_m(f)) + \otau(\ell,m,n) \tF_m(f-A_\ell(f))}{1-\otau(\ell,m,n) \tildeh(m)}, \\
+&\qquad \qquad \text{provided }\otau(\ell,m,n) \tildeh(m) < 1.
+\end{align*}
+
+Here $\htau : \hci \to [0,\infty)$ is some specified function that defines the cone, and $\hci=\{N_{\min}, N_{\min}+1, \ldots \}$, where $N_{\min}$ is some integer no smaller than $3$.  
+\begin{algo}[New Cone Adaptive Univariate Integration] \label{newconealgo}
+Let the sequence of algorithms $\{T_n\}_{n\in \mathcal{I}}$ $\{F_n\}_{n\in \mathcal{I}}$, and $\hcc_{\htau}$ be as described above.  Set $i=1$, and let $n_1=N_{\min}$. For any error tolerance $\varepsilon$ and input function $f$, do the following:
+\begin{description}
+\item[Step 1.\ Bound {$\Var(f')$} and check for convergence.] Compute $F_{n_i}(f)$ in \eqref{Fnormalg}.  Check whether $n_i$ is large enough to satisfy the error tolerance, i.e.
+    \begin{equation*}
+      \htau(n_i) F_{n_i}(f) \le 8 (n_i-1)^2 \varepsilon.
+    \end{equation*}
+If this is true, then return $T_{n_i}(f)$ and terminate the algorithm.   
+
+\item[Step 2.\ Increase the number of trapezoids.]  If the above condition is false, choose $n_{i+1}=2n_i$, increment $i$, and go to Step 1.
+\end{description}
+\end{algo}
+
 
 
 \section{New Cone, New Algorithm}
