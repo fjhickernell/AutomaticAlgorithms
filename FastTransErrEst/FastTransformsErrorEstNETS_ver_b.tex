@@ -14,7 +14,7 @@
 
 \begin{frontmatter}
 
-\title{Error Estimation for Quasi-Monte Carlo Methods}
+\title{Error Estimation for Cubature Based on Digital Nets}
 \author{Fred J. Hickernell}
 \address{Room E1-208, Department of Applied Mathematics, Illinois Institute of Technology,\\ 10 W.\ 32$^{\text{nd}}$ St., Chicago, IL 60616}
 \begin{abstract} 
@@ -38,7 +38,7 @@ Consider the half open $d$-dimensional unit cube, $\cx:=[0,1)^d$, on which the f
 \end{equation*}
 Let $\vx=(x_1, \ldots, x_d)$, and define the operations are define $\oplus$ as follows:
 \begin{gather*}
-\vx = \left(\sum_{\ell=1}^{\infty} x_{j\ell} b^{-\ell}\right)_{j=1}^d, \qquad \ominus \vx = \left(\sum_{\ell=1}^{\infty} [-x_{j\ell} \bmod b] b^{-\ell}\right)_{j=1}^d \qquad \forall \vx \in \cx  \\ 
+\vx = \left(\sum_{\ell=1}^{\infty} x_{j\ell} b^{-\ell}\right)_{j=1}^d, \qquad \ominus \vx = \left(\sum_{\ell=1}^{\infty} (b-x_{j\ell}) b^{-\ell}\right)_{j=1}^d \qquad \forall \vx \in \cx  \\ 
 \vx \oplus \vt = \left(\sum_{\ell=1}^{\infty} [x_{j\ell} + t_{j\ell} \bmod b] b^{-\ell} \pmod{1} \right)_{j=1}^d \qquad \forall \vx, \vt \in \cx.
 \end{gather*}
 Here $\vzero$ is the additive identity.  The unique additive inverse of $\vx$ is $\ominus \vx$, and $\vx \ominus \vt$ means $\vx \oplus (\ominus \vt)$.  Note that under this definition of $\oplus$,
@@ -46,7 +46,7 @@ Here $\vzero$ is the additive identity.  The unique additive inverse of $\vx$ is
 \underbrace{\vx \oplus \cdots \oplus \vx}_{b \text{ times}} = \vzero \qquad \forall \vx \in \cx.
 \]
 
-For any given $x \in [0,1)$ for which $\ax$ does not end in trailing zeros, let $t$ be defined in terms of $\at=(b-1-x_1, b-1-x_2, \ldots)$.  Then $x \oplus t = 0$, but $t \ne \ominus x$.  Thus, we do not have associativity for all of $\cx$, and $\cx$ is not a group.  However, if one considers $\tcx \subseteq \cx$ for which the digital sum of any two elements does not involved trailing $b-1$, i.e., for any $\vt, \vx \in \tcx$ satisfy 
+For any given $x \in [0,1)$ for which $\ax$ does not end in trailing zeros, let $t$ be defined in terms of $\at=(b-1-x_1, b-1-x_2, \ldots)$.  Then $x \oplus t = 0$, but $t \ne \ominus x$.  Thus, we do not have associativity for all of $\cx$, and $\cx$ is not a group.  However, if one considers $\tcx \subseteq \cx$ for which the digital sum of any two elements does not involved trailing $b-1$, i.e., for any $\vt, \vx \in \tcx$ one has 
 \[
 \forall j \in \{1, \ldots, d\},\ \ell \in \natzero,\  \exists \ell'>\ell \text{ such that } x_{j\ell} + t_{j\ell} \bmod b \ne b-1,
 \]
@@ -59,7 +59,7 @@ If such a subset $\tcx$ is closed under $\oplus$, then $\tcx$ is a commutative g
 Let $\bbK=\natzero^d$.  The set $\bbK$ is used to index the series expressions for the integrands.  There exists an Abelian group structure on $\bbK$, with the additive operation $\oplus$ defined as digit-wise addition.  
 \begin{gather*}
 \ak=(k_0, k_1, \ldots ) \in \bbF_b^\infty \Longleftrightarrow k=\sum_{\ell=0}^\infty k_\ell b^{\ell},\\
-\vk =  \left(\sum_{\ell=0}^{\infty} k_{j\ell} b^{\ell}\right)_{j=1}^d, \qquad \ominus \vk = \left(\sum_{\ell=0}^{\infty} [-k_{j\ell} \bmod b] b^{\ell}\right)_{j=1}^d \qquad \forall \vk \in \bbK, \\
+\vk =  \left(\sum_{\ell=0}^{\infty} k_{j\ell} b^{\ell}\right)_{j=1}^d, \qquad \ominus \vk = \left(\sum_{\ell=0}^{\infty} (b-k_{j\ell}) b^{\ell}\right)_{j=1}^d \qquad \forall \vk \in \bbK, \\
 \vk \oplus \vl = \left(\sum_{\ell=0}^{\infty} [k_{j\ell} + l_{j\ell} \bmod b] b^{\ell}\right)_{j=1}^d \qquad \forall \vk, \vl \in \bbK.
 \end{gather*}
 
@@ -102,17 +102,19 @@ Furthermore, $\cp_\infty$ is assumed to satisfy the following properties:
 \begin{subequations} \label{cpinfvector}
 \begin{gather}
 \{\vt_1, \vt_b, \vt_{b^2}, \ldots\} \text{ is linearly independent}, \\
-\vt_i = \sum_{\ell=0}^{\infty} i_\ell \vt_{b^\ell}, \qquad \text{where }\ai=(i_0, i_1, i_2, \ldots ) \in \bbF_b^\infty.
+\vt_i = \sum_{\ell=0}^{\infty} i_\ell \vt_{b^\ell}, \qquad \text{where }\ai=(i_0, i_1, i_2, \ldots ) \in \bbF_b^\infty, \\
+\ip{\vk}{\vt_i} =  0 \ \forall \vk \in \bbK \ \implies \  i=0, \\
+\ip{\vk}{\vt_i} =  0 \ \forall i \in \natzero   \ \implies \ \vk=\vzero.
 \end{gather}
 \end{subequations}
 Any $\cp_m := \{\vt_i\}_{i=0}^{b^m-1}$ is called a \emph{net}.  Moreover, $\cp_\infty$ is a subspace of $\cp_\infty$ and also a subspace of $\cp_\ell$ for $\ell=m+1, m+2, \ldots$.
 
-For $m \in \natzero$ define the \emph{dual net} corresponding to $\cp_m$ as  
+We also consider $\bbK$ as a vector space with over the field $\bbF_b$.  For $m \in \natzero$ define the \emph{dual net} corresponding to $\cp_m$ as  
 \begin{align*}
 \cp^{\perp}_m &= \{\vk \in \bbK : \ip{\vk}{\vt_i} = 0, \ i=0, \ldots, b^m-1\} \\
 &= \{\vk \in \bbK : \ip{\vk}{\vt_{2^{\ell}}} = 0, \ \ell=0, \ldots, m-1\}.
 \end{align*}
-By this definition $\cp^{\perp}_{0}=\bbK$.  The distributive property, \eqref{distrib}, implies that the dual net $\cp^{\perp}_m$ is a subgroup of the dual net $\cp^{\perp}_\ell$ for all $\ell=0, \ldots, m-1$.  
+By this definition $\cp^{\perp}_{0}=\bbK$.  The distributive property, \eqref{distrib}, implies that the dual net $\cp^{\perp}_m$ is a subgroup, and even a subspace, of the dual net $\cp^{\perp}_\ell$ for all $\ell=0, \ldots, m-1$.
 
 For all $\vk \in \bbK$ and $\vx \in \cp$, it follows that
 \begin{align*} 
@@ -131,7 +133,13 @@ By this equality it follows that the average of a basis function, $\varphi(\cdot
  \end{cases}
 \end{equation*}
 
-The next goal is to enumerate cosets of wavenumbers, and do so in a way that facilitates calculation of the discrete transform.  These cosets, denoted $\cp_{m,\nu}^{\perp}$ are defined for $m\in \natzero$, and $\nu \in \{0, \ldots, b^m-1\}$.  Moreover, as shown in Lemma \ref{cosetlem}, the dual nets are identical to the $\cp_{m,0}^{\perp}$.
+The next goal is to enumerate cosets of wavenumbers in a way that facilitates calculation of the discrete transform.  For any subsets $L_1$ and $L_2$ of $\bbK$, and any $a \in \bbF_b$ let
+\[
+L_1 \oplus L_2 = \{\vk \oplus \vl : \vk \in L_1, \ \vl \in L_2\}, \qquad a L_1 = \{a \vk : \vk \in L_1\}. 
+\]
+
+
+These cosets, denoted $\cp_{m,\nu}^{\perp}$ are defined for $m\in \natzero$, and $\nu \in \{0, \ldots, b^m-1\}$.  Moreover, as shown in Lemma \ref{cosetlem}, the dual nets are identical to the $\cp_{m,0}^{\perp}$.
 
 \begin{defin} \label{noodefalgo} Let $\cp_{0,0}^{\perp}=\cp_{0}^{\perp}=\bbK$.  For $m=0, 1, 2, \ldots$, 
 \begin{enumerate}
@@ -139,25 +147,29 @@ The next goal is to enumerate cosets of wavenumbers, and do so in a way that fac
 \item Define $\cp_{m+1,0}^{\perp}=\{\vk \in \cp_{m,0}^{\perp} : \ip{\vk}{\vt_{b^{m}}}=0\}$.
 \item Define $\cp_{m+1,b^{m}}^{\perp}=\{\vk \in \cp_{m,0}^{\perp} : \ip{\vk}{\vt_{b^{m}}}=1/b\}$.  
 \item For all $\ell=0, \ldots, m$, define $\cp_{m+1,b^{\ell}}^{\perp}=\{\vk \in \cp_{m,b^{\ell}}^{\perp} : \ip{\vk}{\vt_{b^{m}}}=0\}$.
-\item For all $\nu \in \{2, \ldots, b^{m+1}-1\} \setminus \{b, b^2, \ldots, b^m\}$, with $\anu=(\nu_0, \nu_1, \ldots)$ define 
+\item For all $\nu \in \{0, \ldots, b^{m+1}-1\}$ with $\anu=(\nu_0, \nu_1, \ldots, \nu_m)$ define 
 \[
-\cp_{m+1,\nu}^{\perp}= \{\nu_0\vk_0 \oplus \cdots \oplus \nu_{m} \vk_{m}  : \vk_\ell \in \cp_{m+1,b^{\ell}}^{\perp},\  \ell=0, \ldots, m\}.
+\cp_{m+1,\nu}^{\perp}= \cp_{m+1,0} \oplus  \nu_0 \cp_{m+1,1} \oplus \nu_1 \cp_{m+1,b} \oplus \cdots \oplus \nu_m \cp_{m+1,b^m}.
 \]
 \end{enumerate}
 \end{defin}
 
-\begin{lem} \label{cosetlem} The above procedure uniquely defines $\cp_{m,\nu}^{\perp}$  for all $\nu \in \{0, \ldots, b^m-1\}$ and all $m \in \natzero$.  Moreover, for all $m \in \natzero$, the following are true.
+\begin{lem} \label{cosetlem} The above procedure uniquely defines $\cp_{m,\nu}^{\perp}$  for all $\nu \in \{0, \ldots, b^m-1\}$ and all $m \in \natzero$.  Moreover, for all fixed $m \in \natzero$, the following are true.
 \begin{enumerate}
 \renewcommand{\labelenumi}{\alph{enumi})}
 
 \item The vector $\vzero$ always lies in $\cp_{m,0}^{\perp}$.
 
-\item The sets $\cp_{m,0}^{\perp}, \ldots, \cp_{m,b^m-1}^{\perp}$ are disjoint and for $\ell=0, 1, \ldots, m-1$,
+\item The sets $\cp_{m,0}^{\perp}, \ldots, \cp_{m,b^m-1}^{\perp}$ are disjoint. 
+
+\item For $\ell=0, 1, \ldots, m$,
 \[
-\cp_{\ell, \nu}^{\perp} = \bigcup_{\substack{\lambda \in \{0, \ldots, 2^{m}-1\} \\ \lambda \bmod 2^\ell = \nu}} \cp_{m,\lambda}^{\perp}.
+\cp_{\ell, \nu}^{\perp} = \bigcup_{\substack{\lambda \in \{0, \ldots, b^{m}-1\} \\ \lambda \bmod b^\ell = \nu}} \cp_{m,\lambda}^{\perp}.
 \]
 
-\item Letting $\nu \oplus \lambda$ denote digitwise addition, the cosets have an additive structure: $\cp_{m,\nu \oplus \lambda}^{\perp} = \cp_{m,\nu}^{\perp} \oplus \cp_{m,\lambda}^{\perp} := \{\vk \oplus \vl :  \vk \in \cp_{m,\nu}^{\perp},\ \vl \in \cp_{m,\lambda}^{\perp}\}$.
+\item The cosets have an additive structure: $\cp_{m,\nu \oplus \lambda}^{\perp} = \cp_{m,\nu}^{\perp} \oplus \cp_{m,\lambda}^{\perp}$.
+
+\item For all $\ell = 0, 1, \ldots, m$ and all $\vk \in \cp_{m+1,b^\ell}$, it follows that $\ip{\vk}{\vt_{b^{m}}} =  \delta_{\ell,m}/b$.
 
 \item For $m>0$ and any $\vk \in \cp_{m,\nu}$, $\nu, i \in \{0, \ldots, b^m-1\}$,  $\anu=(\nu_0, \nu_1, \ldots)$, and $\ai=(i_0, i_1, \ldots)$, it follows that 
 \begin{equation} \label{nuwisum}
@@ -169,7 +181,7 @@ The next goal is to enumerate cosets of wavenumbers, and do so in a way that fac
 
 
 
-\begin{proof} The proof proceeds by induction.  First consider the case of $m=0$, in which case $\cp_{m,\vnu}^{\perp}$ is uniquely defined as $\bbK$, and a)--??) hold automatically and ?) is vacuous. 
+\begin{proof} The proof proceeds by induction.  First consider the case of $m=0$, in which case $\cp_{m,0}^{\perp}$ is uniquely defined as $\bbK$, and a)--e) hold automatically and f) is vacuous. 
 
 Now suppose that Lemma \ref{cosetlem} holds for $m$.  We show that it also holds for $m+1$.  By the induction hypothesis, $\vzero \in \cp_{m,\vzero}^{\perp}$, and since $\ip{\vzero}{\vt_{b^{m}}}=0$ by \eqref{distrib}, it follows that $\vzero \in \cp_{m+1,\vzero}^{\perp}$, which corresponds to a).
 
