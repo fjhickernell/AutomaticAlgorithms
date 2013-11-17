@@ -4,8 +4,9 @@ clear all
 close all
 format compact
 set(0,'defaultaxesfontsize',20,'defaulttextfontsize',20)
-a=3;
-testfun=@(x) exp(a*x)-1;
+a=pi;
+%testfun=@(x) exp(a*x)-1;
+testfun=@(x) (x.^2/2-1/8).*(x>1/2);
 tau=pi;
 epsilon = 1e-2;
 
