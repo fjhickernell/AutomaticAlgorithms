@@ -7,16 +7,17 @@ set(0,'defaultaxesfontsize',20,'defaulttextfontsize',20)
 a=pi;
 %testfun=@(x) exp(a*x)-1;
 testfun=@(x) (x.^2/2-1/8).*(x>1/2);
-tau=pi;
+tau=2;
 epsilon = 1e-2;
 
 %% Kernel
-gamma=1;
-kernel=@(x,t) gamma*bsxfun(@min,x,t');
+gamma=5;
+kernel=@(x,t) exp(-(gamma^2)*(bsxfun(@minus,x,t')).^2);
+
 
 %% Data and spline approximation
-n=100
-xnode=linspace(1/n,1,n)';
+n=5
+xnode=linspace(0,1,n)';
 Kmat=kernel(xnode,xnode);
 condK=cond(Kmat)
 y=testfun(xnode);
@@ -38,13 +39,13 @@ error2=sqrt(mean((testfun(xtest)-splinef(xtest)).^2))
 error_sup=max(abs(testfun(xtest)-splinef(xtest)))
 %normHsplinef=sqrt(c'*y)
 xtPlus=bsxfun(@plus,xnode,xnode');
-xtTimes=bsxfun(@times,xnode,xnode');
-xtMin=bsxfun(@min,xnode,xnode');
-xtMax=bsxfun(@max,xnode,xnode');
-Ktildemat = gamma^2*(xtMin.^3/3+xtMin.*(xtMax.^2-xtMin.^2)/2+xtTimes.*(1-xtMax));
+xtMinus=bsxfun(@minus,xnode,xnode');
+Ktildemat = (sqrt(pi/2)/(2*gamma)) ...
+    *exp(-((gamma^2)/2)*(xtMinus.^2)) ...
+    .*(-erf((gamma/sqrt(2))*(xtPlus-2)) + erf((gamma/sqrt(2))*xtPlus));
 condKtilde=cond(Ktildemat)
 traceKK=trace(Ktildemat/Kmat)
-Herrbd=sqrt(gamma/2-traceKK)
+Herrbd=sqrt(1-traceKK)
 %guesserrest=Herrbd*normHsplinef
 
 %% Algorithm 1 Stage 1
