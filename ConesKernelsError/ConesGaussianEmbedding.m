@@ -16,7 +16,7 @@ kernel=@(x,t) exp(-(gamma^2)*(bsxfun(@minus,x,t')).^2);
 
 
 %% Data and spline approximation
-n=9
+n=10
 xnode=linspace(a,b,n)';
 Kmat=kernel(xnode,xnode);
 condK=cond(Kmat)
@@ -43,7 +43,12 @@ xtMinus=bsxfun(@minus,xnode,xnode');
 %Ktildemat = (sqrt(pi/2)/(2*gamma))*exp(-((gamma^2)/2)*(xtMinus.^2)).*(-erf((gamma/sqrt(2))*(xtPlus-2)) + erf((gamma/sqrt(2))*xtPlus));
 Ktildemat = 1/sqrt(2*pi)/(2*gamma)*exp(-gamma^2/2*xtMinus.^2).*(erf(gamma/sqrt(2)*xtPlus)-erf(gamma/sqrt(2)*(xtPlus-2*pi)));
 condKtilde=cond(Ktildemat)
+%traceK=trace(Kmat)
+%traceKt=trace(Ktildemat)
 traceKK=trace(Ktildemat/Kmat)
+%eigenKK = eig(Ktildemat/Kmat)
+%figure(2);
+%plot(1:n,eigenKK)
 Herrbd=sqrt(1-traceKK)
 %guesserrest=Herrbd*normHsplinef
 
