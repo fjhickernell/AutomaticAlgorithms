@@ -4,8 +4,8 @@ clear all
 close all
 format compact
 set(0,'defaultaxesfontsize',20,'defaulttextfontsize',20)
-a=pi;
-%testfun=@(x) exp(a*x)-1;
+theta=pi;
+%testfun=@(x) exp(theta*x)-1;
 testfun=@(x) (x.^2/2-1/8).*(x>1/2);
 tau=pi;
 epsilon = 1e-2;
@@ -49,5 +49,4 @@ Herrbd=sqrt(gamma/2-traceKK)
 
 %% Algorithm 1 Stage 1
 normTsplinef=sqrt(c'*Ktildemat*c);
-%htilde=sqrt(2*a^2-trace(Htildemat/Kmat))
 ErrBound = tau*Herrbd*normTsplinef/(1-tau*Herrbd)
