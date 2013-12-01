@@ -310,14 +310,14 @@ These first two quantities, which involve the true series coefficients, cannot b
 
 We now make critical assumptions that $\hS(\ell,m)$ and $S(m)$ can be bounded above in terms of $S(\ell)$, provided that $\ell$ is large enough.  Fix $\ell_* \in \naturals$.  The assumptions are the following:
 \begin{multline}
-S(m) \le \omega(m-\ell) S(\ell), \quad \hS(\ell,m) \le \homega(m-\ell) S(r), \\ 
+S(m) \le \omega(m-\ell) S(\ell), \quad \hS(\ell,m) \le \homega(m-\ell) S(\ell), \\ 
 \ell,m \in \naturals, \ \ell_* \le \ell \le m,
 \end{multline}
 for some functions $\omega$ and $\homega$ with $\lim_{m \to \infty} \omega(m) = \lim_{m \to \infty} \homega(m) = 0$.  
 
 The reason for enforcing these assumptions only  for $\ell \ge \ell_*$ is that for small $\ell$, one might have $S(\ell)$ coincidentally small, since it only involves $b^\ell$ coefficients, while $S(m)$ or $\hS(\ell,m)$ is large.  If $S(m)$ is large compared to $S(\ell)$ for some $m > \ell$, it means that the true series coefficients for the integrand are large for some large wavenumbers.  If $\hS(\ell,m)$ is large compared to $S(\ell)$ for some $m > \ell$, it means that the observed discrete series coefficients may not correspond well to the true coefficients.
 
-Under this assumption, for $\ell, s \in \naturals$, $\ell_* \le \ell \le s$, it is possible to bound the sum of the true coefficients, $S(\ell)$, in terms of the observed sum of the discrete coefficients, $\tS(\ell,s)$, as follows:
+Under this assumption, for $\ell, m \in \naturals$, $\ell_* \le \ell \le m$, it is possible to bound the sum of the true coefficients, $S(\ell)$, in terms of the observed sum of the discrete coefficients, $\tS(\ell,m)$, as follows:
 \begin{align*}
 S(\ell) &= \sum_{\kappa=b^{\ell-1}}^{b^{\ell}-1} \bigl \lvert \hf_{\kappa}\bigr\rvert= \sum_{\kappa=b^{\ell-1}}^{b^{\ell}-1} \abs{\tf_{m,\kappa} - \sum_{\lambda=1}^{\infty} \hf_{\kappa+\lambda b^{m}} \me^{2 \pi \sqrt{-1} \ip{\tvk(\kappa+\lambda b^{m}) \ominus \tvk(\kappa)}{\vDelta}/b}}\\
 &\le \sum_{\kappa=b^{\ell-1}}^{b^{\ell}-1} \bigl \lvert \tf_{m,\kappa} \bigr\rvert + \sum_{\kappa=b^{\ell-1}}^{b^{\ell}-1} \sum_{\lambda=1}^{\infty} \bigl \lvert \hf_{\kappa+\lambda b^{m}}\bigr\rvert = \tS(\ell,m) + \hS(\ell,m) \\
@@ -327,8 +327,8 @@ S(\ell) & \le \frac{\tS(\ell,m)}{1 - \homega(m-\ell)} \qquad \text{provided that
 
 Using this upper bound, one can then conservatively bound the error of integration using the shifted node set.  For for $\ell, m \in \naturals$, $\ell_* \le \ell \le m$, it follows that 
 \begin{align*}
-\MoveEqLeft{\abs{\int_{\cube} f(\vx) \, \dif \vx - \frac{1}{b^m} \sum_{i=0}^{b^m-1} f(\vx) }}\\
-&= \abs{\hf(\vzero) - \tf_m(\vzero)} = \abs{\hf_0 - \tf_{m,0}} = \abs{\sum_{\lambda=1}^{\infty} \hf_{\lambda b^{s}} \me^{2 \pi \sqrt{-1} \vl(\lambda b^{s}) \otimes \vDelta}}\\
+\MoveEqLeft{\abs{\int_{\cube} f(\vx) \, \dif \vx - \frac{1}{b^m} \sum_{i=0}^{b^m-1} f(\vx_i) }}\\
+&= \abs{\hf(\vzero) - \tf_m(\vzero)} = \abs{\hf_0 - \tf_{m,0}} = \abs{\sum_{\lambda=1}^{\infty} \hf_{\lambda b^{s}} \me^{2 \pi \sqrt{-1}\ip{\tvk(\lambda b^{s})}{\vDelta}}}\\
 &\le \sum_{\lambda=1}^{\infty} \bigl \lvert \hf_{\lambda b^{m}} \bigr \rvert \\
 &\le \sum_{\kappa=b^{m}}^{\infty} \bigl \lvert \hf_{\kappa} \bigr \rvert = \sum_{r=m+1}^{\infty} \sum_{\kappa=b^{r-1}}^{b^{r}-1} \bigl \lvert \hf_{\kappa} \bigr \rvert = \sum_{r=m+1}^{\infty} S(r)\\
 &\le \sum_{r=s+1}^{\infty} \omega(r-\ell) S(\ell) =   \sum_{r=1}^{\infty} \omega(r+m-\ell) S(\ell) =  \Omega(m-\ell) S(\ell)\\
