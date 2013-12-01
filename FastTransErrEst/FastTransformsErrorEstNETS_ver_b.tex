@@ -140,14 +140,14 @@ These maps have certain desirable properties.
 
 \item $\hvnu(\vzero)=\vzero$ and $\tnu_m(\vzero) = 0$ for all $m \in \natzero$,
 
-\item for all $\vk, \vl \in \bbK$ and all $a \in \bbF_b$, it follows that $\hvnu(a\vk \oplus \vl)=a\hvnu(\vk) + \hvnu(\vl) \bmod b$ and $\tnu(a\vk \oplus \vl)=a\tnu(\vk) \oplus \tnu(\vl)$,
+\item for all $\vk, \vl \in \bbK$ and all $a \in \bbF_b$, it follows that $\hvnu(a\vk \oplus \vl)=a\hvnu(\vk) + \hvnu(\vl) \bmod b$ and $\tnu_m(a\vk \oplus \vl)=a\tnu_m(\vk) \oplus \tnu_m(\vl)$,
 
-\item for any $m \in \natzero$, $i \in \{0, \ldots, b^m-1\}$,  $\hnu_m(\vk)=(\nu_0, \nu_1, \ldots)$, and $\ai=(i_0, i_1, \ldots)$, it follows that 
+\item for any $m \in \natzero$, $i \in \{0, \ldots, b^m-1\}$,  $\tnu_m(\vk)=\nu_0 + \cdots + b^{m-1} \nu_{m-1}$, and $\ai=(i_0, i_1, \ldots)$, it follows that 
 \begin{equation} \label{nuwisum}
 \ip{\vk}{\vt_i} = \sum_{\ell=0}^{m-1} \nu_\ell i_{\ell} \pmod b,
 \end{equation}
 
-\item for all $m\in \natzero$ and all $\vnu \in \bbF_b^{m}$ there exist a unique $\vk \in \bbK$ with $\hvnu(\vk)=(\nu_0, \ldots, \nu_{m-1}, \ldots)$, and
+\item for all $m\in \natzero$ and all $\nu \in \{0,  \ldots, b^m-1\}$ there exist a unique $\vk \in \bbK$ with $\tnu_m(\vk)=\nu$, and
 
 \item $\hvnu(\vk)=\hvnu(\vl) \Longrightarrow \vk = \vl$.
 
