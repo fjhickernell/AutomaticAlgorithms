@@ -1,0 +1,14 @@
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9 64-bit) (preloaded format=pdftex 2013.12.7)  7 DEC 2013 16:09
+entering extended mode
+**C:/Users/LluísAntoni/Desktop/abstract/FJHown22.bib
+(C:/Users/LluísAntoni/Desktop/abstract/FJHown22.bib
+! Undefined control sequence.
+l.21 @string{art = {\Ignore
+                           {a}Refereed Journal Articles}}
+? 
+! Emergency stop.
+l.21 @string{art = {\Ignore
+                           {a}Refereed Journal Articles}}
+End of file on the terminal!
+
+!  ==> Fatal error occurred, no output PDF file produced!

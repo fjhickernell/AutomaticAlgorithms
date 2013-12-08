@@ -1,0 +1,46 @@
+\documentclass[]{elsarticle}
+\setlength{\marginparwidth}{0.5in}
+\usepackage{amsmath,amssymb,amsthm,natbib,mathtools,bbm,extraipa,accents,graphicx}
+
+\newcommand{\fudge}{\fC}
+\newcommand{\dtf}{\textit{\doubletilde{f}}}
+\newtheorem{lem}{Lemma}
+\theoremstyle{definition}
+\newtheorem{defin}{Definition}
+\newtheorem{algo}{Algorithm}
+\newcommand{\cube}{[0,1)^d}
+\DeclareMathOperator{\trail}{trail}
+\newcommand{\rf}{\mathring{f}}
+\newcommand{\rnu}{\mathring{\nu}}
+
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{Error estimation for multidimensional integration based on rank-1 lattices}
+%\author{Fred J. Hickernell}
+%\address{Room E1-208, Department of Applied Mathematics, Illinois Institute of Technology,\\ 10 W.\ 32$^{\text{nd}}$ St., Chicago, IL 60616}
+\begin{abstract} 
+
+Many applications in physics, finance or mechanics require high dimensional integration. This is often performed using Monte Carlo or quasi-Monte Carlo methods since the error of the estimate does not depend on the dimension. However, there is the problem of determining the sample size needed to satisfy an error tolerance. Methods of error estimation for quasi-Monte Carlo methods tend to be based on heuristics and lack theoretical guarantees.
+
+This project aims to build an efficient algorithm based on extensible rank-1 lattice rules \cite{HicNie03a} capable of providing the solution to high dimensional problems with guarantees. In order to proceed, we compute the a Fast Fourier Transform on the integrand values sampled on an integration lattice and use them to approximate the Fourier coefficients of the integrand.  For example, the extensible generators of Dirk Nuyens \cite{dirknuyens} can be used. The decay rate of the Fourier coefficients helps us approximate the error.
+
+The most important assumption in this work is that the integrands lie inside a given cone. The properties of the cone allow us to bound the error. The novel use of cones to guarantee error estimates provides a new perspective that can be extended to other algorithms.
+
+\end{abstract}
+
+\begin{keyword}
+%% keywords here, in the form: keyword \sep keyword
+Multidimensional integration; Automatic algorithms; Guaranteed algorithms; Quasi-Monte Carlo; Rank-1 lattices; Fast transforms
+%% MSC codes here, in the form: \MSC code \sep code
+%% or \MSC[2008] code \sep code (2000 is the default)
+
+\end{keyword}
+\end{frontmatter}
+
+\bibliographystyle{alpha}
+%\bibliographystyle{model1b-num-names.bst}
+\bibliography{FJHown22}
+\end{document}
