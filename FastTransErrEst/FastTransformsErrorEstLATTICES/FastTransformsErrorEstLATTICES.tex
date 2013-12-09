@@ -88,8 +88,8 @@ The next goal is to define maps $\hvnu : \bbK \to \bbF_b^{\infty}$, and $\tnu_m 
 \begin{subequations} \label{numapdefeq}
 \begin{gather}
 \hvnu(\vk)=(\hnu_0(\vk), \hnu_1(\vk), \hnu_2(\vk), \ldots ), \\
-\hnu_m(\vk)=b\ip{\vk}{\vt_{b^m}}-\ip{\vk}{\vt_{b^{m-1}}}, \quad m \in \natzero, \\
-\tnu_0(\vk) = 0, \qquad \tnu_m(\vk) = \sum_{\ell=0}^{m-1} \hnu_{\ell}(\vk) b^{\ell} \in \{0, \ldots, b^{m}-1\} \quad m \in \naturals.
+\hnu_0(\vk) = 0, \qquad \hnu_m(\vk)=b\ip{\vk}{\vt_{b^m}}-\ip{\vk}{\vt_{b^{m-1}}}, \quad m \in \naturals, \\
+\tnu_0(\vk) = 0, \qquad \tnu_m(\vk) = \sum_{\ell=0}^{m-1} \hnu_{\ell}(\vk) b^{\ell}, \quad m \in \naturals.
 \end{gather}
 \end{subequations}
 \end{defin}
@@ -102,11 +102,13 @@ These maps have certain desirable properties.
 
 \item $\hvnu(\vzero)=\vzero$ and $\tnu_m(\vzero) = 0$ for all $m \in \natzero$,
 
+\item $\hnu_m(\vk)\in \{0,\dots,b-1\}$ and $\tnu_m(\vk)\in \{0,\dots,b^m-1\}$ for all $m\in\natzero$.
+
 \item for all $\vk, \vl \in \bbK$ and all $a \in \bbF_b$, it follows that $\hvnu(a\vk \oplus \vl)=a\hvnu(\vk) + \hvnu(\vl) \bmod b$ and $\tnu(a\vk \oplus \vl)=a\tnu(\vk) \oplus \tnu(\vl)$,
 
-\item for any $m \in \natzero$, $i \in \{0, \ldots, b^m-1\}$,  $\hnu_m(\vk)=(\nu_0, \nu_1, \ldots)$, and $\ai=(i_0, i_1, \ldots)$, it follows that
+\item for any $m \in \natzero$, $i \in \{0, \ldots, b^m-1\}$,  $\tnu_m(\vk)=\nu=(\nu_0, \nu_1, \ldots)$, and $\ai=(i_0, i_1, \ldots)$, it follows that
 \begin{equation} \label{nuwisum}
-\ip{\vk}{\vt_i} = \sum_{\ell=0}^{m-1} \nu_\ell i_{\ell} \pmod b,
+\ip{\vk}{\vt_i} = \sum_{\ell=0}^{m-1} \phi\left(\nu \mod b^{\ell+1}\right) i_{\ell}b^{-\ell} \pmod b,
 \end{equation}
 
 \item for all $m\in \natzero$ and all $\vnu \in \bbF_b^{m}$ there exist a unique $\vk \in \bbK$ with $\hvnu(\vk)=(\nu_0, \ldots, \nu_{m-1}, \ldots)$, and
