@@ -1,0 +1,317 @@
+\documentclass[]{elsarticle}
+\setlength{\marginparwidth}{0.5in}
+\usepackage{amsmath,amssymb,amsthm,natbib,mathtools,bbm,extraipa,accents,graphicx}
+\input FJHDef.tex
+
+\DeclareMathOperator{\e}{e}
+\newcommand{\fudge}{\fC}
+\newcommand{\dtf}{\textit{\doubletilde{f}}}
+\newcommand{\cfourier}[1]{\ensuremath{\e^{-2\pi\sqrt{-1}#1}}}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{prop}[theorem]{Proposition}
+\newtheorem{lem}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{algo}{Algorithm}
+\newtheorem{condit}{Condition}
+%\newtheorem{assump}{Assumption}
+\theoremstyle{remark}
+\newtheorem{rem}{Remark}
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{Error Estimation for Quasi-Monte Carlo Methods}
+\author{Fred J. Hickernell}
+\address{Room E1-208, Department of Applied Mathematics, Illinois Institute of Technology,\\ 10 W.\ 32$^{\text{nd}}$ St., Chicago, IL 60616}
+\begin{abstract}
+\end{abstract}
+
+\begin{keyword}
+%% keywords here, in the form: keyword \sep keyword
+
+%% MSC codes here, in the form: \MSC code \sep code
+%% or \MSC[2008] code \sep code (2000 is the default)
+
+\end{keyword}
+\end{frontmatter}
+
+\section{Bases and Node Sets}
+
+\subsection{Group-Like Structure}
+Consider the half open $d$-dimensional unit cube, $\cx:=[0,1)^d$, on which the functions of interest are to be defined. Define a commutative unidal structure on $\cx$, i.e., a commutative addition operation $\oplus:\cx \times \cx \to \cx$ with identity element $\vzero$ (the zero vector):
+\[
+\vx \oplus \vt = \vx + \vt \pmod 1, \qquad \ominus \vx = -\vx \pmod 1 \qquad \forall \vx, \vt \in \cx.
+\]
+Under this operation, $(\cx,\oplus)$ is a commutative group.
+
+Let $\bbK:=\integers^d$. This set is used to index the series expressions for the functions to be integrated.  $(\bbK,+)$ is also an Abelian group, with the regular additive operation.  Moreover, define the operation $\odot: \bbK \times \cx \to [0,1)$ that has a distributive property under $\oplus$ and $+$:
+\begin{subequations} \label{distrib}
+\begin{gather}
+\vk \odot \vx = \vk^T \vx \pmod 1 \qquad \forall \vx \in \cx, \vk \in \bbK \\
+\vk \odot (\vx \oplus \vt) = (\vk\odot\vx) + (\vk\odot\vt) \pmod 1 \qquad \forall \vk \in \bbK, \vx, \vt \in \cx, \\
+(\vk + \vl) \odot \vx = (\vk\odot\vx) + (\vl\odot\vx) \pmod 1 \qquad \forall \vk,\vl \in \bbK, \vx \in \cx.
+\end{gather}
+\end{subequations}
+
+This is the algebra behind \emph{integration lattices}.
+
+\subsection{Fourier Series}
+
+The integrands are assumed to belong to some subset of $\cl_2(\cx)$, the space of square integrable functions.  The $\cl_2$ inner product is defined as
+\[
+\ip[2]{f}{g} = \int_{\cx} f(\vx) \overline{g(\vx)} \, \dif \vx.
+\]
+Let $\{\varphi(\cdot,\vk) \in \cl_2(\cx) : \vk \in \bbK\}$ be some complete orthonormal \emph{basis} for $\cl_2(\cx)$. In particular, let
+\[
+\varphi(\vx,\vk)  = \me^{2 \pi \sqrt{-1} \vk \odot \vx}, \qquad \vk \in \bbK, \vx \in \cx.
+\]
+Then any function in $\cl_2$ may be written in series form as
+\begin{equation} \label{Fourierdef}
+f(\vx) = \sum_{\vk \in \bbK} \hf(\vk) \varphi(\vx,\vk), \quad \text{where } \hf(\vk) = \ip[2]{f}{\varphi(\cdot,\vk)},
+\end{equation}
+and the inner product of two functions in $\cl_2$ is the $\ell_2$ inner product of their series coefficients:
+\[
+\ip[2]{f}{g} = \sum_{\vk \in \bbK} \hf(\vk)\overline{\hg(\vk)} =: \ip[2]{\bigl(\hf(\vk)\bigr)_{\vk \in \bbK}}{\bigl ( \hg(\vk)\bigr )_{\vk \in \bbK}}.
+\]
+
+\subsection{Node Sets and Their Dual Sets} Now suppose that $\cp$ is any finite subgroup of $\cx$ with cardinality $\abs{\cp}$.  This will be called a \emph{node set}.  It then follows that for all $\vk \in \bbK$ and $\vt \in \cp$,
+\begin{align}
+\nonumber
+0 & = \frac{1}{\abs{\cp}} \sum_{\vx \in \cp} [\varphi(\vx,\vk) - \varphi(\vx \oplus \vt,\vk)]  = \frac{1}{\abs{\cp}} \sum_{\vx \in \cp} [\me^{2 \pi \sqrt{-1} \vk \odot \vx} - \me^{2 \pi \sqrt{-1} \vk \odot (\vx \oplus \vt)}]\\
+\nonumber
+& = \frac{1}{\abs{\cp}} \sum_{\vx \in \cp} [\me^{2 \pi \sqrt{-1} \vk \odot \vx} - \me^{2 \pi \sqrt{-1} \{(\vk \odot \vx) + (\vk \odot\vt)\}}] \quad \text{by } \eqref{distrib}\\
+\label{sumeq}
+& = [1 - \me^{2 \pi \sqrt{-1} \vk \odot\vt)}] \frac{1}{\abs{\cp}} \sum_{\vx \in \cp} \me^{2 \pi \sqrt{-1} \vk \odot \vx}.
+\end{align}
+
+Define the \emph{dual set} corresponding to $\cp$ as
+\begin{equation*}
+\cp^{\perp} = \{\vk \in \bbK : \vk \odot \vx = 0 \ \forall \vx \in \cp\}.
+\end{equation*}
+The distributive property, \eqref{distrib}, implies that dual set is a subgroup of $\bbK$.  By the equality \eqref{sumeq} above it follows that the average of a basis function, $\varphi(\cdot,\vk)$, over the points in a node set is either one or zero, depending on whether $\vk$ is in the dual set or not:
+\begin{equation*}
+ \frac{1}{\abs{\cp}} \sum_{\vx \in \cp} \me^{2 \pi \sqrt{-1} \vk \odot \vx} = \bbone_{\cp^{\perp}}(\vk) = \begin{cases} 1 , & \vk \in \cp^{\perp}\\
+ 0,  & \vk \in \bbK \setminus \cp^{\perp}.
+ \end{cases}
+\end{equation*}
+A \emph{shifted} node set is constructed by adding the same point $\vDelta \in \cx$ to each element in the node set:
+\begin{equation*}
+\cp_{\vDelta} = \{ \vx \oplus \vDelta : \vx \in \cp\}.
+\end{equation*}
+\begin{align*}
+\frac{1}{\abs{\cp_{\vDelta}}} \sum_{\vx \in \cp_{\vDelta}} \me^{2 \pi \sqrt{-1} \vk \odot \vx}
+& = \frac{1}{\abs{\cp}} \sum_{\vx \in \cp} \me^{2 \pi \sqrt{-1} \vk \odot (\vx \oplus \vDelta)} = \frac{1}{\abs{\cp}} \sum_{\vx \in \cp} \me^{2 \pi \sqrt{-1} [(\vk \odot \vx) + (\vk \odot \vDelta)]}\\
+&= \me^{2 \pi \sqrt{-1} \vk \odot \vDelta} \bbone_{\cp^{\perp}}(\vk) = \begin{cases} \me^{2 \pi \sqrt{-1} \vk \odot \vDelta} , & \vk \in \cp^{\perp}\\
+ 0,  & \vk \in \bbK \setminus \cp^{\perp}.
+ \end{cases}
+\end{align*}
+
+\subsection{Discrete Transforms}
+Define the discrete transform of a function, $f$, over the shifted node set $\cp_{\Delta}$ as
+\begin{align}
+\label{tfdef}
+\tf(\vk)
+&:= \frac{1}{\abs{\cp_{\vDelta}}} \sum_{\vx \in \cp_{\vDelta}} \me^{-2 \pi \sqrt{-1} \vk \odot \vx} f(\vx) \\
+\nonumber
+&= \frac{1}{\abs{\cp_{\vDelta}}} \sum_{\vx \in \cp_{\Delta}} \left[\me^{-2 \pi \sqrt{-1} \vk \odot \vx}\sum_{\vl \in \bbK} \hf(\vl) \me^{2 \pi \sqrt{-1} \vl \odot \vx} \right] \\
+\nonumber
+& = \sum_{\vl \in \bbK} \hf(\vl)  \frac{1}{\abs{\cp_{\vDelta}}} \sum_{\vx \in \cp_{\vDelta}}  \me^{2 \pi \sqrt{-1} (\vl \ominus \vk) \odot \vx} \\
+\nonumber
+& = \sum_{\substack{\vl \in \bbK \\ \vl \ominus \vk \in \cp^{\perp}}} \hf(\vl) \me^{2 \pi \sqrt{-1} (\vl \ominus \vk) \odot \vDelta} \\
+\nonumber
+&= \sum_{\vm \in \cp^{\perp}} \hf(\vk\oplus\vm) \me^{2 \pi \sqrt{-1} \vm \odot \vDelta}, \\
+&= \hf(\vk) + \sum_{\vm \in \cp^{\perp}\setminus \vzero} \hf(\vk\oplus\vm) \me^{2 \pi \sqrt{-1} \vm \odot \vDelta}, \qquad \forall \vk \in \bbK. \label{tfassum}
+\end{align}
+It is seen here that the discrete transform $\tf(\vk)$ is equal to the integral transform $\hf(\vk)$, defined in \eqref{Fourierdef}, plus the \emph{aliasing} terms corresponding to $\hf(\vl)$ where $\vl$ and $\vk$ differ (in the $\ominus$ sense) by a nonzero element of the dual set.
+
+Notice that the dual nets can be used to form cosets of wavenumbers.  Let
+\begin{equation*}
+\cp^{\perp}_{\vk} = \{ \vl \in \bbK : \vl \ominus \vk \in \cp^{\perp}\} \qquad \forall \vk \in \bbK.
+\end{equation*}
+This means that $\cp^{\perp}_{\vzero}=\cp^{\perp}$.  Then \eqref{tfassum} above implies that
+\begin{equation}
+\label{tfassumb}
+\tf(\vk) = \sum_{\vl \in \cp^{\perp}_{\vk}} \hf(\vl) \me^{2 \pi \sqrt{-1} (\vl \ominus \vk) \odot \vDelta}.
+\end{equation}
+
+Note that there are $\abs{\cp}$ distinct cosets.
+
+\subsection{Nested Node Sets and Their Corresponding Nested Dual Sets}
+Now consider the situation where there is a sequence of nested sets,
+\[
+\cp_0 = \{\vzero\} \subset \cp_{1} \subset \cp_{2} \subset \cdots, \qquad \abs{\cp_s} = b^s
+\]
+Furthermore, assume that each set equals the previous plus multiples of one element:
+\begin{equation*}
+\cp_s = \{ \vx \oplus \vt : \vx \in \cp_{s-1},\ \vt \in \{\vzero, \vz_s, \vz_s\oplus\vz_s, \ldots, \underbrace{\vz_s \oplus \cdots \oplus \vz_s}_{b-1 \text{ times}} \} \}, \qquad s \in \naturals
+\end{equation*}
+where $\vz_1, \vz_2, \ldots \in \cx$ is some fixed sequence. See that $\{\vzero, \vz_s, \vz_s\oplus\vz_s, \ldots, \underbrace{\vz_s \oplus \cdots \oplus \vz_s}_{b-1 \text{ times}} \}$ is a subgroup of $\cx$, defined as $\cz_s$. According to this definition of nested sets, the dual sets are nested in the opposite direction,
+\begin{equation*}
+\cp_0^\perp = \bbK \supset \cp_{1}^\perp \supset \cp_{2}^\perp \supset \cdots.
+\end{equation*}
+Furthermore, the equivalence classes also obey this nesting:
+\begin{equation*}
+\cp^{\perp}_{s,\vk} = \{ \vl \in \bbK : \vl \ominus \vk \in \cp^{\perp}_s\}, \qquad \cp_{0,\vk}^\perp = \bbK \supset \cp_{1,\vk}^\perp \supset \cp_{2,\vk}^\perp \supset \cdots \quad \forall \vk \in \bbK.
+\end{equation*}
+
+The discrete transforms of for nested sets can be constructed iteratively.  Suppose that the points in these nested sets are ordered such that $\cp_{s,\vDelta}=\{\vx_0, \ldots, \vx_{b^s-1}\}$ for some infinite sequence, $\{\vx_i\}_{i=0}^{\infty}$.  Furthermore, suppose that
+\[
+\vx_{i+jb^s}=\vx_{i}\oplus\underbrace{\vz_s \oplus \cdots \oplus \vz_s}_{j \text{ times}}, \qquad i=0, \ldots, b^{s-1}-1, \ j=0, \ldots, b-1.
+\]
+Nested rank-1 integration lattices are constructed in terms of the radical inverse function, as in \cite{}:
+\begin{subequations}
+\begin{equation}
+\vx_i = \vh \phi_b(i) \mod 1,
+\end{equation}
+where $\vh$ is a $d$-dimensional generating vector of ???? integers
+\begin{equation}
+\phi_b(i) = i_0 b^{-1} + i_1 b^{-2} + \cdots, \quad i=i_0 + i_1 b + \cdots, \quad i_{\ell} \in \{0, \ldots, b-1\}.
+\end{equation}
+\end{subequations}
+
+For $s \in \natzero$, the formula in \eqref{tfdef} becomes
+\begin{align*}
+\tf_s(\vk) &= \frac{1}{b^s} \sum_{i=0}^{b^s-1} \me^{-2 \pi \sqrt{-1} \vk \odot \vx_i} f(\vx_i)\\
+&= \frac{1}{b^s} \sum_{j=0}^{b-1} \sum_{i=0}^{b^{s-1}-1} \me^{-2 \pi \sqrt{-1} \vk \odot \vx_{i+jb^s}} f(\vx_{i+jb^s}) \\
+&= \frac{1}{b} \sum_{j=0}^{b-1} \me^{-2 \pi \sqrt{-1} j (\vk \odot \vz_{s})} \left[ \frac{1}{b^{s-1}}\sum_{i=0}^{b^{s-1}-1} \me^{-2 \pi \sqrt{-1} \vk \odot \vx_{i}} f(\vx_{i+jb^s}) \right] \\
+&= \bbone_{\cz_s^{\perp}}(\vk) \left[ \frac{1}{b^{s-1}}\sum_{i=0}^{b^{s-1}-1} \me^{-2 \pi \sqrt{-1} \vk \odot \vx_{i}} f(\vx_{i+jb^s}) \right] \\
+\end{align*}
+
+\subsection{Tony}
+
+\begin{prop}
+For a prime base $b$, we have the following relationship between the coefficients for different values of $s$
+\begin{equation}
+\tf_{s,\kappa}=\sum_{j=0}^{b^r-1}\tf_{s+r,\kappa+jb^s}
+\end{equation}
+\end{prop}
+\begin{proof}
+We only have to proof that
+\begin{equation}\label{proof_sum}
+\tf_{s,\kappa}=\sum_{j=0}^{b-1}\tf_{s+1,\kappa+jb^s}
+\end{equation}
+
+The general sum is an iteration of $r-1$ times this equality.
+
+Remember that for $a\in\mathbb{Z}_p$ we have $a^{-1}$ because $p$ is prime. For $\kappa=0,\dots,b^s-1$, consider $\cp^{\perp}_{s,\kappa}=\{k\in\bbK:\,k^T[h]_s=\kappa+ab^s\}$
+\begin{equation}
+\begin{split}
+0&=\frac{1}{b^{s+1}}\sum_{a=1}^{b-1}\sum_{k=0}^{b-1}\cfourier{\frac{k}{b}}\sum_{i=ab^s}^{(a+1)b^s-1}f(\mathbf{x}_i)\cfourier{\kappa\phi_b(i)}\\
+&=\sum_{a=1}^{b-1}\sum_{k=0}^{b-1}\frac{1}{b^{s+1}}\sum_{i=0}^{b^s-1}f(\mathbf{x}_{i+ab^s})\cfourier{\left[\kappa\left(\phi_b(i)+\frac{a}{b^{s+1}}\right)+\frac{k}{b}\right]}\\
+&=\sum_{a=1}^{b-1}\sum_{k=0}^{b-1}\frac{1}{b^{s+1}}\sum_{i=0}^{b^s-1}f(\mathbf{x}_{i+ab^s})\cfourier{\left[\left(\phi_b(i)+\frac{a}{b^{s+1}}\right)\left(\kappa+a^{-1}kb^s\right)\right]}\\
+&=\sum_{j=0}^{b-1}\frac{1}{b^{s+1}}\sum_{i=b^s}^{b^{s+1}-1}f(\mathbf{x}_{i})\cfourier{\left[\left(\kappa+jb^s\right)\phi_b(i)\right]}
+\end{split}
+\end{equation}
+
+Then, considering that $0\leq \kappa<b^s$,
+\begin{equation}
+\begin{split}
+\tf_{s,\kappa}=&b\frac{1}{b^{s+1}}\sum_{i=0}^{b^s-1}f(\mathbf{x}_i)\cfourier{\kappa\phi_b(i)}\\
+=&\sum_{j=0}^{b-1}\frac{1}{b^{s+1}}\sum_{i=0}^{b^s-1}f(\mathbf{x}_i)\cfourier{\left(\kappa+jb^s\right)\phi_b(i)}\\
+&+\sum_{j=0}^{b-1}\frac{1}{b^{s+1}}\sum_{i=b^s}^{b^{s+1}-1}f(\mathbf{x}_{i})\cfourier{\left[\left(\kappa+jb^s\right)\phi_b(i)\right]}\\
+=&\sum_{j=0}^{b-1}\tf_{s+1,\kappa+jb^s}
+\end{split}
+\end{equation}
+\end{proof}
+
+Another useful equation:
+
+\begin{equation*}
+k^Tx_{i+lb^s}=k^T[h]_{s+1}\phi_b(i+lb)=k^T[h]_s\phi_b(i)+k^T[h]_{s+1}\phi_b(l)b^-s=k^Tx_{i}+k^T[h]_{s+1}lb^{-(s+1)}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+\tf_{s+1,\kappa}&=\frac{1}{b^{s+1}}\sum_{i=0}^{b^s-1}\sum_{l=0}^{b-1}f(x_{i+lb^s})\cfourier{\left[k^Tx_{i}+k^T[h]_{s+1}lb^{-(s+1)}\right]}\\
+&=\frac{\tf_{s,\kappa}}{b}+\frac{1}{b^{s+1}}\sum_{i=0}^{b^s-1}\sum_{l=1}^{b-1}f(x_{i+lb^s})\cfourier{\left[k^Tx_{i}+k^T[h]_{s+1}lb^{-(s+1)}\right]}
+\end{split}
+\end{equation*}
+
+\section{Error Estimation and an Automatic Algorithm}
+
+\subsection{Wavenumber Map}
+
+Now we are going to map the non-negative numbers into the space of all wavenumbers using the dual sets.  For every $\kappa \in \natzero$, we assign a wavenumber $\vk(\kappa) \in \bbK$ iteratively according to the following constraints:
+\begin{itemize}
+
+\item Let $\vk(0)= \vzero$.
+
+\item For any $s,\lambda \in \naturals$, $\kappa=0, \ldots, b^s-1$, assign $\vk(\kappa)$ and $\vk(\kappa+ \lambda b^s)$ such that $\cp^{\perp}_{s,\vk(\kappa)}=\cp^{\perp}_{s,\vk(\kappa+ \lambda b^s)}$.
+\end{itemize}
+
+This wavenumber map allows us to introduce a shorthand notation that facilitates the later analysis:
+\begin{align*}
+\hf_{\kappa} & =\hf(\vk(\kappa)), \qquad \kappa \in \natzero,\\
+\tf_{s,\kappa}& = \tf(\vk(\kappa)) \\
+& = \frac{1}{b^s} \sum_{\vx \in \cp_{s,\vDelta}} \me^{-2 \pi \sqrt{-1} \vk(\kappa) \odot \vx} f(\vx), \qquad \kappa=0, \ldots, b^s-1, \quad s \in \naturals,\\
+\intertext{ as defined in \eqref{tfdef} based on the shifted nodeset $\cp_{s,\vDelta}$,}
+\cp^{\perp}_{s,\kappa}&=\cp^{\perp}_{s,\vk(\kappa)}, \qquad \kappa=0, \ldots, b^s-1.
+\end{align*}
+According to \eqref{tfassumb}, it follows that
+\begin{align}
+\nonumber
+\tf_{s,\kappa} &= \sum_{\vl \in \cp^{\perp}_{s,\kappa}} \hf(\vl) \me^{2 \pi \sqrt{-1} (\vl \ominus \vk(\kappa)) \odot \vDelta} \\
+\nonumber
+&= \sum_{\lambda=0}^{\infty} \hf_{\kappa+\lambda b^{s}} \me^{2 \pi \sqrt{-1} (\vk(\kappa+\lambda b^{s}) \ominus \vk(\kappa)) \odot \vDelta} \\
+& = \hf_{\kappa} + \sum_{\lambda=1}^{\infty} \hf_{\kappa+\lambda b^{s}} \me^{2 \pi \sqrt{-1} (\vk(\kappa+\lambda b^{s}) \ominus \vk(\kappa)) \odot \vDelta}.
+\label{tfassumc}
+\end{align}
+We want to use $\tf_{s,\kappa}$ to estimate $\hf_{\kappa}$ if $s$ is signficantly larger than $\lfloor \log_b(\kappa) \rfloor$.
+
+\subsection{Sums of Series Coefficients and Their Bounds}
+Consider the following sums of the series coefficients defined for $r,s \in \naturals$, $r \le s$:
+\begin{equation}
+S(r) =  \sum_{\kappa=b^{r-1}}^{b^{r}-1} \bigl \lvert \hf_{\kappa} \bigr \rvert, \quad
+\hS(r,s)  = \sum_{\kappa=b^{r-1}}^{b^{r}-1} \sum_{\lambda=1}^{\infty} \bigl \lvert \hf_{\kappa+\lambda b^{s}}\bigr\rvert, \quad
+\tS(r,s) = \sum_{\kappa=b^{r-1}}^{b^{r}-1} \bigl \lvert \tf_{s,\kappa}\bigr\rvert.
+\end{equation}
+These first two quantities, which involve the true series coefficients, cannot be observed, but the third one, which involves the discrete transform coefficients, can easily be observed.
+
+We now make critical assumptions that $\hS(r,s)$ and $S(s)$ can be bounded above in terms of $S(r)$, provided that $r$ is large enough.  Fix $r_* \in \naturals$.  The assumptions are the following:
+\begin{equation}
+S(s) \le \omega(s-r) S(r), \quad \hS(r,s) \le \homega(s-r) S(r), \qquad r,s \in \naturals, \ r_* \le r \le s,
+\end{equation}
+for some functions $\omega$ and $\homega$ with $\lim_{s \to \infty} \omega(s) = \lim_{s \to \infty} \homega(s) = 0$.
+
+The reason for enforcing these assumptions only  for $r \ge r_*$ is that for small $r$, one might have $S(r)$ coincidentally small, since it only involves $b^r$ coefficients, while $S(s)$ or $\hS(r,s)$ is large.  If $S(s)$ is large compared to $S(r)$ for some $s > r$, it means that the true series coefficients for the integrand are large for some large wavenumbers.  If $\hS(r,s)$ is large compared to $S(r)$ for some $s > r$, it means that the obserbed discrete series coefficients may not correspond well to the true coefficients.
+
+Under this assumption, for $r, s \in \naturals$, $r_* \le r \le s$, it is possible to bound the sum of the true coefficients, $S(r)$, in terms of the observed sum of the discrete coefficients, $\tS(r,s)$, as follows:
+\begin{align*}
+S(r) &= \sum_{\kappa=b^{r-1}}^{b^{r}-1} \bigl \lvert \hf_{\kappa}\bigr\rvert= \sum_{\kappa=b^{r-1}}^{b^{r}-1} \abs{\tf_{s,\kappa} - \sum_{\lambda=1}^{\infty} \hf_{\kappa+\lambda b^{s}} \me^{2 \pi \sqrt{-1} (\vl(\kappa+\lambda b^{s}) \ominus \vk(\kappa)) \odot \vDelta}}\\
+&\le \sum_{\kappa=b^{r-1}}^{b^{r}-1} \bigl \lvert \tf_{s,\kappa} \bigr\rvert + \sum_{\kappa=b^{r-1}}^{b^{r}-1} \sum_{\lambda=1}^{\infty} \bigl \lvert \hf_{\kappa+\lambda b^{s}}\bigr\rvert = \tS(r,s) + \hS(r,s) \\
+&\le \tS(r,s) + \homega(s-r) S(r) \\
+S(r) & \le \frac{\tS(r,s)}{1 - \homega(s-r)} \qquad \text{provided that } \homega(s-r) < 1.
+\end{align*}
+
+Using this upper bound, one can then conservatively bound the error of integration using the shifted node set $\cp_{s,\vDelta}$.  For for $r, s \in \naturals$, $r_* \le r \le s$, it follows that
+\begin{align*}
+\MoveEqLeft{\abs{\int_{\cx} f(\vx) \, \dif \vx - \frac{1}{b^s} \sum_{\vx \in \cp_{s,\vDelta}} f(\vx) }}\\
+&= \abs{\hf(\vzero) - \tf(\vzero)} = \abs{\hf_0 - \tf_{s,0}} = \abs{\sum_{\lambda=1}^{\infty} \hf_{\lambda b^{s}} \me^{2 \pi \sqrt{-1} \vl(\lambda b^{s}) \odot \vDelta}}\\
+&\le \sum_{\lambda=1}^{\infty} \bigl \lvert \hf_{\lambda b^{s}} \bigr \rvert \\
+&\le \sum_{\kappa=b^{s}}^{\infty} \bigl \lvert \hf_{\kappa} \bigr \rvert = \sum_{r'=s+1}^{\infty} \sum_{\kappa=b^{r'-1}}^{b^{r'}-1} \bigl \lvert \hf_{\kappa} \bigr \rvert = \sum_{r'=s+1}^{\infty} S(r')\\
+&\le \sum_{r'=s+1}^{\infty} \omega(r'-r) S(r) =   \sum_{r'=1}^{\infty} \omega(r'+s-r) S(r) =  \Omega(s-r) S(r)\\
+& \le \frac{\tS(r,s)\Omega(s-r)}{1 - \homega(s-r)}.
+\end{align*}
+where
+\[
+\Omega(\delta)=\sum_{r'=1}^{\infty} \omega(r'+ \delta), \qquad \delta \in \natzero.
+\]
+Assuming that $\Omega(0)$ is finite, $\lim_{\delta \to \infty} \Omega(\delta) = 0$.
+
+This error bound suggests the following algorithm.  Choose $\delta \in \natzero$ such that $\homega(s-r)<1$ and set
+\[
+\fudge = \frac{\Omega(\delta)}{1 - \homega(\delta)}.
+\]
+Define $r_j=r_*+j-1$ and $s_j=r_j+\delta$.  Given a tolerance $\varepsilon$, and an integrand $f$, do the following:  for $j=1, 2, \ldots$ check whether
+\[
+\fudge \tS(r_j,s_j) \le \varepsilon.
+\]
+If so, we're done.  If not, increment $j$ by one and repeat.
+
+
+$\dtf$ $a^{\dtf}$ $a_{\dtf}$
+\bibliographystyle{model1b-num-names.bst}
+\bibliography{FJH22,FJHown22}
+\end{document}
