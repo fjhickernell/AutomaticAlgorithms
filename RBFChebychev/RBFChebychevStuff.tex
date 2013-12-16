@@ -1,0 +1,125 @@
+% !TEX TS-program = PDFLatexBibtex
+%&LaTeX
+\documentclass[]{elsarticle}
+\setlength{\marginparwidth}{0.5in}
+\usepackage{amsmath,amssymb,amsthm,natbib,mathtools,bbm,extraipa,accents,graphicx}
+\input FJHDef.tex
+
+\newcommand{\fudge}{\fC}
+\newcommand{\dtf}{\textit{\doubletilde{f}}}
+\newtheorem{lem}{Lemma}
+\theoremstyle{definition}
+\newtheorem{defin}{Definition}
+\newtheorem{algo}{Algorithm}
+\newcommand{\cube}{[0,1)^d}
+\renewcommand{\bbK}{\natzero^d}
+\DeclareMathOperator{\trail}{trail}
+\newcommand{\rf}{\mathring{f}}
+\newcommand{\rnu}{\mathring{\nu}}
+\allowdisplaybreaks
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{Positive Definite Kernels Based on Chebychev Functions}
+\author{Greg E. Fasshauer and Fred J. Hickernell}
+\address{Room E1-208, Department of Applied Mathematics, Illinois Institute of Technology,\\ 10 W.\ 32$^{\text{nd}}$ St., Chicago, IL 60616}
+\begin{abstract} 
+\end{abstract}
+
+\begin{keyword}
+%% keywords here, in the form: keyword \sep keyword
+
+%% MSC codes here, in the form: \MSC code \sep code
+%% or \MSC[2008] code \sep code (2000 is the default)
+
+\end{keyword}
+\end{frontmatter}
+
+\section{Chebychev Polynomials and Bernoulli Polynomials}
+Here we summarize some useful properties of some polynomials.  The first are the Chebychev polynomials:
+\begin{align}
+\text{Definition} \quad & T_k(x) = \cos(k \theta), \nonumber \\
+& \qquad \qquad \theta=\cos^{-1}(x), \quad -1 \le x \le 1, \quad \text{\citep[18.5.1]{OlvEtal10a}} \\
+\text{Degree} \quad &T_k(x) \text{ is a polynomial of degree } k \in \natzero  \nonumber \\
+\text{Orthogonality} \quad & \int_{-1}^{1} \frac{T_k(x)T_{l}(x)}{\sqrt{1-x^2}} \, \dif x = \frac{\delta_{k,l}\pi}{2-\delta_{k,0}} , \nonumber \\ 
+& \qquad \qquad k,l \in \natzero \quad \text{\citep[Table 18.3.1]{OlvEtal10a}} 
+\end{align}
+
+Here are some properties of Bernoulli polynomials.
+\begin{align}
+\text{Fourier Series} \quad & B_{2m}(x) = (-1)^{m+1} \frac{2 (2m)!} {(2 \pi)^{2m}} \sum_{k=1}^{\infty} \frac{\cos(2 \pi k x)}{k^{2m}}, \nonumber \\
+& \qquad \qquad  \quad -1 \le x \le 1, \quad \text{\citep[24.8.1]{OlvEtal10a}} \\
+\text{Degree} \quad &B_k(x) \text{ is a polynomial of degree } k \in \natzero  \nonumber \end{align}
+
+Define the orthogonal functions and the probability density function
+\begin{gather}
+\phi(x) = \sqrt{2-\delta_{k,0}} T_k(x) , \quad k \in \natzero, \qquad \rho(x) = \frac{1}{\pi\sqrt{1-x^2}}, \\
+\int_{-1}^{1} \phi_k(x)\phi_{l}(x) \, \rho(x) \, \dif x = \delta_{k,l}, \qquad k,l \in \natzero.
+\end{gather}
+For a fixed positive-valued sequence of eigenvalues $\{\lambda_k\}_{k\in \natzero}$ satisfying $\sum_{k=0}^{\infty} \lambda_k =1$ define the kernel 
+\begin{equation} \label{kerneldef}
+K(x,t) = \sum_{k=0}^{\infty} \lambda_k \phi_k(x)\phi_k(t)
+\end{equation}
+We will look at different choices of $\{\lambda_k\}_{k\in \natzero}$.
+
+\section{Geometrically Decaying Eigenvalues}
+For a fixed $b$, $0<b<1$, define the eigenvalues as 
+\begin{equation}
+\lambda_0=1-a, \qquad \lambda_k = \frac{a (1-b) b^{k}}{b}, \qquad k \in \naturals
+\end{equation}
+Note that 
+\begin{align}
+\nonumber
+\phi_k(x)\phi_k(t) & = (2-\delta_{k,0}) T_k(x)T_k(t) \\
+\nonumber
+&=(2-\delta_{k,0}) \cos(k\theta)\cos(k \omega), \\
+\nonumber
+&\qquad \qquad \qquad x=\cos(\theta), \ t =\cos(\omega), \quad 0 \le \theta,\omega \le \pi \\
+&=\frac{(2-\delta_{k,0})[\cos(k(\theta+\omega)) + \cos(k(\theta-\omega))]}{2} \label{sumcos}\\
+&=\frac{2-\delta_{k,0}}{4}[\me^{\sqrt{-1}k(\theta+\omega)} + \me^{\sqrt{-1}k(\theta-\omega) } \nonumber \\
+& \qquad \qquad + \me^{-\sqrt{-1}k(\theta-\omega)} + \me^{-\sqrt{-1}k(\theta+\omega}]
+\label{sumcompexp}
+\end{align}
+Since
+\begin{align*}
+\sum_{k=0}^{\infty} \lambda_k (2-\delta_{k,0}) \me^{\sqrt{-1}k\alpha} 
+&= 1-a + \frac{2a(1-b)}{b}\sum_{k=0}^{\infty} b^k \me^{\sqrt{-1}k\alpha} \\
+&= 1-a + \frac{2a(1-b)\me^{\sqrt{-1}\alpha}} {1-b\me^{\sqrt{-1}\alpha}},
+\end{align*}
+it follows that
+\begin{align*}
+K(x,t) &= \sum_{k=0}^{\infty} \lambda_k \phi_k(x)\phi_k(t) \\
+&= 1-a + \frac{a(1-b)}{2}\left[ \frac{\me^{\sqrt{-1}(\theta+\omega)}}{1-b\me^{\sqrt{-1}(\theta+\omega)}} + \frac{\me^{-\sqrt{-1}(\theta+\omega)}}{1-b\me^{-\sqrt{-1}(\theta+\omega)}} \right . \\
+& \qquad \qquad \left . + \frac{\me^{\sqrt{-1}(\theta-\omega)}}{1-b\me^{\sqrt{-1}(\theta-\omega)}} + \frac{\me^{-\sqrt{-1}(\theta-\omega)}}{1-b\me^{-\sqrt{-1}(\theta-\omega)}}  \right] \\
+&=  1-a + \frac{a(1-b)}{2} \left[ \frac{\me^{\sqrt{-1}(\theta+\omega)} + \me^{-\sqrt{-1}(\theta+\omega)} - 2b } {1+b^2 -b[\me^{\sqrt{-1}(\theta+\omega)} + \me^{-\sqrt{-1}(\theta+\omega)}] } \right . \\
+& \qquad \qquad \left . + \frac{\me^{\sqrt{-1}(\theta-\omega)}+\me^{-\sqrt{-1}(\theta-\omega)} - 2b } {1+b^2 -b[\me^{\sqrt{-1}(\theta-\omega)} + \me^{-\sqrt{-1}(\theta-\omega)}] }  \right] \\
+&= 1-a + a(1-b) \left[\frac{\cos(\theta+\omega)-b} {1+b^2 -2b\cos(\theta+\omega) } + \frac{\cos(\theta-\omega)-b} {1+b^2 -2b\cos(\theta-\omega) }  \right] \\ 
+&= 1-a + a(1-b) \left[\frac{xt-\sqrt{(1-x^2)(1-t^2)}-b} {1+b^2 -2b[xt-\sqrt{(1-x^2)(1-t^2)}] } \right. \\
+& \qquad \qquad \left .  + \frac{xt+\sqrt{(1-x^2)(1-t^2)}-b} {1+b^2 -2b[xt+\sqrt{(1-x^2)(1-t^2)}] }  \right] \\ 
+\end{align*}
+
+\section{Algebraically Decaying Eigenvalues}
+For a fixed $a$, with $0<a\le 1$ and a fixed $b$, $b \in \naturals$, define the eigenvalues as 
+\begin{equation}
+\lambda_0=1-a, \qquad \lambda_k = \frac{a}{\zeta(2b)k^{2b}}, \quad k \in \naturals
+\end{equation}
+For this choice of algebraically decaying eigenvalues and for $-1 \le \alpha \le 1$ it follows that.
+\begin{align*}
+\sum_{k=0}^{\infty} \lambda_k (2-\delta_{k,0}) \cos(2 \pi k\alpha)
+&= 1-a + \frac{2a}{\zeta(b)}\sum_{k=1}^{\infty} \frac{\cos(2 \pi k\alpha)}{k^{2b}}\\
+&= 1-a + \frac{2a}{\zeta(b)} (-1)^{b+1} \frac{(2 \pi)^{2b}} {2 (2b)!} B_{2b}(\alpha) \\
+&= 1-a + \frac{a (-1)^{b+1}(2 \pi)^{2b}}{(2b)!\zeta(b)} B_{2b}(\alpha).
+\end{align*}
+So it follows from \eqref{sumcos} that
+\begin{align*}
+K(x,t) &= \sum_{k=0}^{\infty} \lambda_k \phi_k(x)\phi_k(t) \\
+&= 1-a + \frac{a (-1)^{b+1}(2 \pi)^{2b}}{(2b)!\zeta(b)} [B_{2b}((\theta + \omega)/(2\pi)) + B_{2b}((\theta - \omega)/(2\pi))]\\
+&= 1-a + \frac{a (-1)^{b+1}(2 \pi)^{2b}}{(2b)!\zeta(b)} \left[B_{2b}\left(\frac{\cos^{-1}(x) + \cost^{-1}(t)}{2\pi}\right) \right .  \\
+& \qquad \qquad \left. + B_{2b}\left(\frac{\cos^{-1}(x) - \cost^{-1}(t)}{2\pi}\right) \right]
+\end{align*}
+
+\bibliographystyle{model1b-num-names.bst}
+\bibliography{FJH22,FJHown22}
+\end{document}
