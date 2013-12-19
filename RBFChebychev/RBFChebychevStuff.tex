@@ -40,13 +40,12 @@
 \section{Chebychev Polynomials and Bernoulli Polynomials}
 Here we summarize some useful properties of some polynomials.  The first are the Chebychev polynomials:
 \begin{align}
-\text{Definition} \quad & T_k(x) = \cos(k \theta), \nonumber \\
-& \qquad \qquad \theta=\cos^{-1}(x), \quad -1 \le x \le 1, \quad \text{\citep[18.5.1]{OlvEtal10a}} \\
+\text{Definition} \quad & T_k(x) = \cos(k \theta), \qquad \theta=\cos^{-1}(x),\nonumber \\
+& \qquad \qquad -1 \le x \le 1, \quad 0 \le \theta \le \pi, \quad \text{\citep[18.5.1]{OlvEtal10a}} \\
 \text{Degree} \quad &T_k(x) \text{ is a polynomial of degree } k \in \natzero  \nonumber \\
-\text{Orthogonality} \quad & \int_{-1}^{1} \frac{T_k(x)T_{l}(x)}{\sqrt{1-x^2}} \, \dif x = \frac{\delta_{k,l}\pi}{2-\delta_{k,0}} , \nonumber \\ 
-& \qquad \qquad k,l \in \natzero \quad \text{\citep[Table 18.3.1]{OlvEtal10a}} 
+\text{Orthogonality} \quad & \int_{-1}^{1} \frac{T_k(x)T_{l}(x)}{\sqrt{1-x^2}} \, \dif x = \frac{\delta_{k,l}\pi}{2-\delta_{k,0}} ,  \qquad k,l \in \natzero \nonumber \\ 
+& \qquad \qquad \qquad \qquad \qquad \qquad  \text{\citep[Table 18.3.1]{OlvEtal10a}} 
 \end{align}
-
 Here are some properties of Bernoulli polynomials.
 \begin{align}
 \text{Fourier Series} \quad & B_{2m}(x) = (-1)^{m+1} \frac{2 (2m)!} {(2 \pi)^{2m}} \sum_{k=1}^{\infty} \frac{\cos(2 \pi k x)}{k^{2m}}, \nonumber \\
