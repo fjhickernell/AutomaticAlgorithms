@@ -1,3 +1,5 @@
+% !TEX TS-program = PDFLatexBibtex
+%&LaTeX
 \documentclass[]{elsarticle}
 %\setlength{\marginparwidth}{0.5in}
 \usepackage{amsmath,amssymb,amsthm,mathtools,bbm,booktabs,array,tikz,pifont,comment,multirow,url,graphicx}
@@ -123,10 +125,62 @@ F_n(f) \le \Var(f')  \le \Var(f'-A_m(f)') + \Var(A_m(f)) \\
 = \Var(f'-A_m(f)') + F_m(f).
 \end{multline}
 
-Another useful fact from ??? is that 
+The weaker semi-norm is approximated by 
+\begin{multline} \label{tFnorm}
+\tF_n(f) :=\norm[1]{A_n(f)'-f(1)+f(0)} \\
+ = \begin{cases} 0, & n=0,2, \\
+\displaystyle \sum_{i=1}^{n-1} \biggabs{f(x_{i+1}) - f(x_{i}) -\frac{f(1)-f(0)}{n-1}}, 
+& n\ge 3. 
+\end{cases}
+\end{multline}
+Another useful fact from \cite[Sect.\ 5.1]{HicEtal14b} is that 
 \begin{equation} \label{boundweaknorm}
 \norm[1]{f'-f(1)+f(0)} \le \tF_n(f) + \tildeh(n) \Var(f') \qquad \forall f \in \cv^1 
 \end{equation}
+where $\tildeh(n):=1/(2n-2)$ for $n\ge 2$.
+
+
+\section{New Cone, New Algorithm}
+Let $\hci=\{2, 4, 8, 16, \ldots\}$, and $\oci$ be some non-empty subset of $\ci$ such that $i \in \oci$ implies that $j \in \oci$ for all $j \in \hci$ with $j < i$.  Let $\otau:\oci \to (0,\infty)$ be some given function.   The new cone considered here is defined as
+\begin{multline} \label{Fcone}
+\occ_{\otau}:= \{ f \in \cv^1 :  \Var(f') - F_m(f) \le \otau(m) [\norm[1]{f' - f(1)+f(0)}- \tF_m(f)] \\ \forall m \in \oci \}.
+\end{multline}
+
+Combining this cone definition \eqref{Fcone} with the bound on the weaker norm \eqref{boundweaknorm}, it follows that for all $m \in 
+\oci$ and $n \in \ci$
+\begin{align*}
+\Var(f') & \le F_m(f) + \otau(m) [\norm[1]{f' - f(1)+f(0)}- \tF_m(f)]\\
+& \le F_m(f) + \otau(m) [\tF_n(f) + \tildeh(n) \Var(f') - \tF_m(f)]\\
+\Var(f') 
+& \le  \frac{F_m(f) + \otau(m) [\tF_n(f) - \tF_m(f)]}{1-\otau(m) \tildeh(n)}, \qquad \otau(m) \tildeh(n) < 1, \\
+& \le  \frac{F_m(f) + \otau(m) \tildeh(m) F_n(f)}{1-\otau(m) \tildeh(n)}, \qquad \otau(m) \tildeh(n) < 1, \\
+& \le  \frac{1 + \otau(m) \tildeh(m)}{1-\otau(m) \tildeh(n)} F_n(f), \qquad \otau(m) \tildeh(n) < 1.
+\end{align*}
+In light of this inequality, define
+\[
+N_{\min} = \min \{ n \in \hci : \otau(m) \tildeh(n) < 1 \text{ for some } m \in \oci \}.
+\]
+
+\begin{algo}[New Cone Adaptive Univariate Integration] \label{newconealgo}
+Let the sequence of algorithms $\{T_n\}_{n\in \mathcal{I}}$, $\{F_n\}_{n\in \mathcal{I}}$, and $\occ_{\otau}$ be as described above.  Set $i=1$, and let $n_1=N_{\min}$. For any error tolerance $\varepsilon$ and input function $f$, do the following:
+\begin{description}
+\item[Step 1.\ Bound {$\Var(f')$} and check for convergence.] Compute $F_{n_i}(f)$ in \eqref{Fnormalg}.  Check whether $n_i$ is large enough to satisfy the error tolerance, i.e., whether there exists an $m\in \oci$ with $m \le n_i$ such that
+    \begin{equation*}
+      F_m(f) + \otau(m) [\tF_{n_i}(f) - \tF_m(f)] \le 8 (n_i-1)^2 \varepsilon [1-\otau(m) \tildeh(n_i)].
+    \end{equation*}
+If this is true, then return $T_{n_i}(f)$ and terminate the algorithm.   
+
+\item[Step 2.\ Increase the number of trapezoids.]  If the above condition is false, choose $n_{i+1}=2n_i$, increment $i$, and go to Step 1.
+\end{description}
+\end{algo}
+
+Note that if $\oci=\{2\}$, then $m=2$, $\tildeh(m)=1/2$, $F_m(f)=\tF_m(f)=0$, and we are back to the cone in \eqref{origcone}.  If 
+
+\section*{References}
+\bibliographystyle{model1b-num-names.bst}
+%\bibliographystyle{elsarticle-num-names}
+\bibliography{FJH22,FJHown22}
+\end{document}
 
 
 \section{New Cone, New Algorithm}
@@ -164,6 +218,7 @@ If this is true, then return $T_{n_i}(f)$ and terminate the algorithm.
 \item[Step 2.\ Increase the number of trapezoids.]  If the above condition is false, choose $n_{i+1}=2n_i$, increment $i$, and go to Step 1.
 \end{description}
 \end{algo}
+
 
 
 
