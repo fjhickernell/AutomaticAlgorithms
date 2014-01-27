@@ -107,15 +107,15 @@ For a fixed $a$, with $0<a\le 1$ and a fixed $b$, $b \in \naturals$, define the 
 For this choice of algebraically decaying eigenvalues and for $-1 \le \alpha \le 1$ it follows that.
 \begin{align*}
 \sum_{k=0}^{\infty} \lambda_k (2-\delta_{k,0}) \cos(2 \pi k\alpha)
-&= 1-a + \frac{2a}{\zeta(b)}\sum_{k=1}^{\infty} \frac{\cos(2 \pi k\alpha)}{k^{2b}}\\
-&= 1-a + \frac{2a}{\zeta(b)} (-1)^{b+1} \frac{(2 \pi)^{2b}} {2 (2b)!} B_{2b}(\alpha) \\
-&= 1-a + \frac{a (-1)^{b+1}(2 \pi)^{2b}}{(2b)!\zeta(b)} B_{2b}(\alpha).
+&= 1-a + \frac{2a}{\zeta(2b)}\sum_{k=1}^{\infty} \frac{\cos(2 \pi k\alpha)}{k^{2b}}\\
+&= 1-a + \frac{2a}{\zeta(2b)} (-1)^{b+1} \frac{(2 \pi)^{2b}} {2 (2b)!} B_{2b}(\alpha) \\
+&= 1-a + \frac{a (-1)^{b+1}(2 \pi)^{2b}}{(2b)!\zeta(2b)} B_{2b}(\alpha).
 \end{align*}
 So it follows from \eqref{sumcos} that
 \begin{align*}
 K(x,t) &= \sum_{k=0}^{\infty} \lambda_k \phi_k(x)\phi_k(t) \\
-&= 1-a + \frac{a (-1)^{b+1}(2 \pi)^{2b}}{2(2b)!\zeta(b)} [B_{2b}((\theta + \omega)/(2\pi)) + B_{2b}((\theta - \omega)/(2\pi))]\\
-&= 1-a + \frac{a (-1)^{b+1}(2 \pi)^{2b}}{2(2b)!\zeta(b)} \left[B_{2b}\left(\frac{\cos^{-1}(x) + \cost^{-1}(t)}{2\pi}\right) \right .  \\
+&= 1-a + \frac{a (-1)^{b+1}(2 \pi)^{2b}}{2(2b)!\zeta(2b)} [B_{2b}((\theta + \omega)/(2\pi)) + B_{2b}((\theta - \omega)/(2\pi))]\\
+&= 1-a + \frac{a (-1)^{b+1}(2 \pi)^{2b}}{2(2b)!\zeta(2b)} \left[B_{2b}\left(\frac{\cos^{-1}(x) + \cost^{-1}(t)}{2\pi}\right) \right .  \\
 & \qquad \qquad \left. + B_{2b}\left(\frac{\cos^{-1}(x) - \cost^{-1}(t)}{2\pi}\right) \right]
 \end{align*}
 
