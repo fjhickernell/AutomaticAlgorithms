@@ -104,11 +104,11 @@ These maps have certain desirable properties.
 
 \item $\hnu_m(\vk)\in \{0,\dots,b-1\}$ and $\tnu_m(\vk)\in \{0,\dots,b^m-1\}$ for all $m\in\natzero$.
 
-\item for all $\vk, \vl \in \bbK$ and all $a \in \bbF_b$, it follows that $\hvnu(a\vk + \vl)=a\hvnu(\vk) + \hvnu(\vl) \bmod b$. %and $\tnu(a\vk \oplus \vl)=a\tnu(\vk) \oplus \tnu(\vl)$,
+\item for all $\vk, \vl \in \bbK$ and all $a \in \bbF_b$, it follows that $\hvnu(a\vk \oplus \vl)=a\hvnu(\vk) + \hvnu(\vl) \bmod b$ and $\tnu(a\vk \oplus \vl)=a\tnu(\vk) \oplus \tnu(\vl)$,
 
 \item for any $m \in \natzero$, $i \in \{0, \ldots, b^m-1\}$,  $\tnu_m(\vk)=\nu=(\nu_0, \nu_1, \ldots)$, and $\ai=(i_0, i_1, \ldots)$, it follows that
 \begin{equation} \label{nuwisum}
-\ip{\vk}{\vt_i} = \sum_{\ell=0}^{m-1} \phi_b\left(\nu \pmod {b^{\ell+1}}\right) i_{\ell}b^{-\ell} \pmod b,
+\ip{\vk}{\vt_i} = \sum_{\ell=0}^{m-1} \phi\left(\nu \mod b^{\ell+1}\right) i_{\ell}b^{-\ell} \pmod b,
 \end{equation}
 
 \item for all $m\in \natzero$ and all $\vnu \in \bbF_b^{m}$ there exist a unique $\vk \in \bbK$ with $\hvnu(\vk)=(\nu_0, \ldots, \nu_{m-1}, \ldots)$, and
@@ -118,33 +118,26 @@ These maps have certain desirable properties.
 \end{enumerate}
 \end{lem}
 
-\begin{proof}
-\begin{enumerate}
-\renewcommand{\labelenumi}{\alph{enumi})}
-\item It follows directly from the definition.
-\item Recall that, $b\phi_b(b^m)=\phi_b(b^{m-1})$ and by construction, there exists $r_{\vk,m}\in\integers$ such that $\ip{\vk}{\vt_{b^m}}=\vk^T\vt_{b^m}+r_{\vk,m}$. Hence, $\tnu_m(\vk)=br_{\vk,m}-r_{\vk,m-1}\in\integers\cap(-1,\dots,b)=\{0,\dots,b-1\}$, which then also implies $\tnu_m(\vk)\in\{0,\dots,b^m-1\}$.
-\item Recall that 
+\begin{proof} Assertion a) follows directly from the definition.  Assertion b) follows from Definition \ref{numapdef} and \eqref{bilinearlinkprop}:
 \begin{multline*}
-\hnu_m(a\vk + \vl)= b\ip{a\vk + \vl}{\vt_{b^m}}-\ip{a\vk + \vl}{\vt_{b^{m-1}}} \\
- = b[a\ip{\vk}{\vt_{b^m}}+\ip{\vl}{\vt_{b^m}} \pmod 1] - a\ip{\vk}{\vt_{b^{m-1}}}-\ip{\vl}{\vt_{b^{m-1}}} \pmod b \\
+\hnu_m(a\vk \oplus \vl)= \ip{a\vk \oplus \vl}{\vt_{b^m}} = a\ip{\vk}{\vt_{b^m}} + \ip{\oplus \vl}{\vt_{b^m}} \pmod b \\
 = a\hnu_m(\vk) + \hnu_m(\vl) \pmod b \qquad \forall m \in \natzero.
 \end{multline*}
-\item It follows by applying  Definition \ref{numapdef} and \eqref{bilinearlinxprop}:
+Assertion c) follows by applying  Definition \ref{numapdef} and \eqref{bilinearlinxprop}:
 \begin{align*}
 \ip{\vk}{\vt_i} &= \ip{\vk}{\sum_{\ell=0}^{m-1} i_\ell \vt_{b^{\ell}}} = \sum_{\ell=0}^{m-1} i_\ell \ip{\vk}{\vt_{b^{\ell}}} \pmod b \\
 & = \sum_{\ell=0}^{m-1} i_\ell \hnu_\ell(\vk) \pmod b = \sum_{\ell=0}^{m-1} i_\ell \nu_\ell \pmod b.
 \end{align*}
 
-\item To prove it consider the subspace
+To prove assertion d) consider the subspace
 $\cn_m = \{(\hnu_0(\vk), \ldots,  \hnu_{m-1}(\vk))^T \in \bbF_b^m : \vk \in \bbK\}$.
 Equations \eqref{netpropc} and \eqref{nuwisum} imply that the only $\vi \in \bbF_b^m$ for which $\vi^T\vnu=0$ for all $\vnu \in \cn_m$ is $\vi=\vzero$.  Thus, $\cn_m=\bbF_b^m$, which then implies d).
 
-\item let suppose that $\hvnu(\vk)=\hvnu(\vl)$.  It follows from c) that
+To prove e) let suppose that $\hvnu(\vk)=\hvnu(\vl)$.  It follows from c) that
 \[
 \ip{\vk\ominus\vl}{\vt_i} = \ip{\vk}{\vt_i} - \ip{\vl}{\vt_i} \bmod b = 0 \qquad \forall i\in \natzero.
 \]
 By \eqref{netpropc} one must have $\vk\ominus\vl=\vzero$, which implies that $\vk=\vl$.
-\end{enumerate}
 \end{proof}
 
 \subsection{Fourier Walsh Series and Discrete Transforms}
