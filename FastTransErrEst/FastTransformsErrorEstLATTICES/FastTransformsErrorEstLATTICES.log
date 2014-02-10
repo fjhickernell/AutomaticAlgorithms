@@ -1,10 +1,10 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2013.3.1)  23 JAN 2014 15:38
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2013.3.1)  10 FEB 2014 13:43
 entering extended mode
-**C:/Users/Lluís*Antoni/Documents/GitHub/AutomaticAlgorithms/FastTransErrEst/F
-astTransformsErrorEstLATTICES/FastTransformsErrorEstLATTICES.tex
+**C:/Users/Lluís*Antoni/SourceTree/AutomaticAlgorithms/FastTransErrEst/FastTra
+nsformsErrorEstLATTICES/FastTransformsErrorEstLATTICES.tex
 
-("C:/Users/Lluís Antoni/Documents/GitHub/AutomaticAlgorithms/FastTransErrEst/F
-astTransformsErrorEstLATTICES/FastTransformsErrorEstLATTICES.tex"
+("C:/Users/Lluís Antoni/SourceTree/AutomaticAlgorithms/FastTransErrEst/FastTra
+nsformsErrorEstLATTICES/FastTransformsErrorEstLATTICES.tex"
 LaTeX2e <2011/06/27>
 Babel <v3.8m> and hyphenation patterns for english, afrikaans, ancientgreek, ar
 abic, armenian, assamese, basque, bengali, bokmal, bulgarian, catalan, coptic, 
@@ -100,8 +100,8 @@ File: upsy.fd 2001/06/04 font definitions for U/psy.
 \@sep=\skip43
 \@@sep=\skip44
 
-("C:\Users\Lluís Antoni\Documents\GitHub\AutomaticAlgorithms\FastTransErrEst\F
-astTransformsErrorEstLATTICES\FastTransformsErrorEstLATTICES.spl")
+("C:\Users\Lluís Antoni\SourceTree\AutomaticAlgorithms\FastTransErrEst\FastTra
+nsformsErrorEstLATTICES\FastTransformsErrorEstLATTICES.spl")
 ("C:\Users\Lluís Antoni\AppData\Roaming\MiKTeX\2.9\tex\latex\natbib\natbib.sty
 "
 Package: natbib 2010/09/13 8.31b (PWD, AO)
@@ -254,16 +254,16 @@ Package: accents 2006/05/12 v1.3 Math Accent Tools
 \cc@group=\count112
 \cc@skewchar=\count113
 )
-("C:\Users\Lluís Antoni\Documents\GitHub\AutomaticAlgorithms\FastTransErrEst\F
-astTransformsErrorEstLATTICES\FJHDef.tex"
+("C:\Users\Lluís Antoni\SourceTree\AutomaticAlgorithms\FastTransErrEst\FastTra
+nsformsErrorEstLATTICES\FJHDef.tex"
 \overwdth=\skip57
 )
 \c@lem=\count114
 \c@defin=\count115
 \c@algo=\count116
 
-("C:\Users\Lluís Antoni\Documents\GitHub\AutomaticAlgorithms\FastTransErrEst\F
-astTransformsErrorEstLATTICES\FastTransformsErrorEstLATTICES.aux")
+("C:\Users\Lluís Antoni\SourceTree\AutomaticAlgorithms\FastTransErrEst\FastTra
+nsformsErrorEstLATTICES\FastTransformsErrorEstLATTICES.aux")
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 19.
 LaTeX Font Info:    ... okay on input line 19.
 LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 19.
@@ -316,75 +316,78 @@ LaTeX Warning: Reference `assocprop' on page 1 undefined on input line 64.
 
 {C:/Users/Lluís Antoni/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map}]
 
-LaTeX Warning: Command \; invalid in math mode on input line 74.
+LaTeX Warning: Command \; invalid in math mode on input line 78.
 
 
-LaTeX Warning: Command \; invalid in math mode on input line 74.
+LaTeX Warning: Command \; invalid in math mode on input line 78.
 
 
-LaTeX Warning: Command \; invalid in math mode on input line 74.
+LaTeX Warning: Command \; invalid in math mode on input line 78.
 
 
-LaTeX Warning: Command \; invalid in math mode on input line 74.
+LaTeX Warning: Command \; invalid in math mode on input line 78.
 
 
-LaTeX Warning: Command \; invalid in math mode on input line 74.
+LaTeX Warning: Command \; invalid in math mode on input line 78.
 
 
-LaTeX Warning: Command \; invalid in math mode on input line 74.
+LaTeX Warning: Command \; invalid in math mode on input line 78.
 
 
-LaTeX Warning: Command \; invalid in math mode on input line 74.
+LaTeX Warning: Command \; invalid in math mode on input line 78.
 
 
-LaTeX Warning: Command \; invalid in math mode on input line 74.
-
-
-LaTeX Warning: Reference `bilinear' on page 2 undefined on input line 83.
-
-
-LaTeX Warning: Reference `bilinearlinkprop' on page 2 undefined on input line 1
-21.
+LaTeX Warning: Command \; invalid in math mode on input line 78.
 
 [2]
+Overfull \hbox (28.18765pt too wide) detected at line 117
+[][] \OT1/cmr/m/n/10 = [] \OML/cmm/m/it/10 i[] [] []b[]\OT1/cmr/m/n/10 ([]\OML
+/cmm/m/it/10 b\OT1/cmr/m/n/10 ) = [] \OML/cmm/m/it/10  [] i[]b[]\OT1/cmr/m/n/1
+0 ([]\OML/cmm/m/it/10 b\OT1/cmr/m/n/10 )\OML/cmm/m/it/10 ;
+ []
 
-LaTeX Warning: Reference `bilinearlinxprop' on page 3 undefined on input line 1
+
+LaTeX Warning: Reference `bilinearlinkprop' on page 3 undefined on input line 1
 26.
 
 
 LaTeX Warning: Reference `bilinearlinxprop' on page 3 undefined on input line 1
-71.
-
-
-LaTeX Warning: Reference `bilinearlinxprop' on page 3 undefined on input line 1
-71.
+31.
 
 [3]
-LaTeX Font Info:    Try loading font information for U+bbm on input line 174.
- ("C:\Users\Lluís Antoni\AppData\Roaming\MiKTeX\2.9\tex\latex\bbm\ubbm.fd"
+
+LaTeX Warning: Reference `bilinearlinxprop' on page 4 undefined on input line 1
+76.
+
+
+LaTeX Warning: Reference `bilinearlinxprop' on page 4 undefined on input line 1
+76.
+
+LaTeX Font Info:    Try loading font information for U+bbm on input line 179.
+("C:\Users\Lluís Antoni\AppData\Roaming\MiKTeX\2.9\tex\latex\bbm\ubbm.fd"
 File: ubbm.fd 1999/03/15 V 1.2 Font definition for bbm font - TH
-) [4] [5] [6]
-LaTeX Font Info:    Try loading font information for U+euf on input line 309.
+)
+[4] [5] [6] [7]
+LaTeX Font Info:    Try loading font information for U+euf on input line 314.
  ("C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\ueuf.fd"
 File: ueuf.fd 2009/06/22 v3.00 Euler Fraktur
 )
-[7]
-("C:\Users\Lluís Antoni\Documents\GitHub\AutomaticAlgorithms\FastTransErrEst\F
-astTransformsErrorEstLATTICES\FastTransformsErrorEstLATTICES.bbl") [8]
-("C:\Users\Lluís Antoni\Documents\GitHub\AutomaticAlgorithms\FastTransErrEst\F
-astTransformsErrorEstLATTICES\FastTransformsErrorEstLATTICES.aux")
+("C:\Users\Lluís Antoni\SourceTree\AutomaticAlgorithms\FastTransErrEst\FastTra
+nsformsErrorEstLATTICES\FastTransformsErrorEstLATTICES.bbl") [8]
+("C:\Users\Lluís Antoni\SourceTree\AutomaticAlgorithms\FastTransErrEst\FastTra
+nsformsErrorEstLATTICES\FastTransformsErrorEstLATTICES.aux")
 
 LaTeX Warning: There were undefined references.
 
  ) 
 Here is how much of TeX's memory you used:
- 4843 strings out of 493921
- 60112 string characters out of 3147259
+ 4842 strings out of 493921
+ 60024 string characters out of 3147259
  122693 words of memory out of 3000000
- 8047 multiletter control sequences out of 15000+200000
+ 8046 multiletter control sequences out of 15000+200000
  15797 words of font info for 59 fonts, out of 3000000 for 9000
  841 hyphenation exceptions out of 8191
- 40i,18n,30p,712b,243s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 40i,18n,30p,706b,269s stack positions out of 5000i,500n,10000p,200000b,50000s
  <C:\Users\Lluís Antoni\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\public\bbm\
 dpi600\bbm10.pk><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmb
 x10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx7.pfb><
@@ -407,7 +410,7 @@ fonts/cm/cmti8.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/eul
 er/eufm10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/symbols/
 msbm10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/symbols/msb
 m7.pfb>
-Output written on FastTransformsErrorEstLATTICES.pdf (8 pages, 257904 bytes).
+Output written on FastTransformsErrorEstLATTICES.pdf (8 pages, 262107 bytes).
 PDF statistics:
  122 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
