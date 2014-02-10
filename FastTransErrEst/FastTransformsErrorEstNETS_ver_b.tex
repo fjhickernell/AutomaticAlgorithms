@@ -1,3 +1,5 @@
+% !TEX TS-program = PDFLatexBibtex
+%&LaTeX
 \documentclass[]{elsarticle}
 \setlength{\marginparwidth}{0.5in}
 \usepackage{amsmath,amssymb,amsthm,natbib,mathtools,bbm,extraipa,accents,graphicx}
@@ -112,14 +114,20 @@ Furthermore, $\cp_\infty$ is assumed to satisfy the following properties:
 \ip{\vk}{\vt_i} =  0 \ \forall i \in \natzero   \ \implies \ \vk=\vzero. \label{netpropc}
 \end{gather}
 \end{subequations}
-Any $\cp_m := \{\vt_i\}_{i=0}^{b^m-1}$ is called a \emph{net}.  Moreover, $\cp_m$ is a subspace of $\cp_\infty$ and also a subspace of $\cp_\ell$ for $\ell=m+1, m+2, \ldots$.
+Any $\cp_m := \{\vt_i\}_{i=0}^{b^m-1}$ is called a \emph{net}.  Moreover, $\cp_m$ is a subspace of $\cp_\infty$ and also a subspace of $\cp_\ell$ for $\ell=m+1, m+2, \ldots$, i.e., 
+\[
+\cp_0=\{\vzero\}\subset \cp_1=\{\vzero,\vt_1, \ldots, (b-1) \vt_1\}  \subset \cdots \subset \cp_{\infty} =\{\vt_i\}_{i=0}^{\infty}.
+\]
 
 We also consider $\bbK$ as a vector space with over the field $\bbF_b$.  For $m \in \natzero$ define the \emph{dual net} corresponding to $\cp_m$ as  
 \begin{align*}
 \cp^{\perp}_m &= \{\vk \in \bbK : \ip{\vk}{\vt_i} = 0, \ i=0, \ldots, b^m-1\} \\
 &= \{\vk \in \bbK : \ip{\vk}{\vt_{b^{\ell}}} = 0, \ \ell=0, \ldots, m-1\}.
 \end{align*}
-By this definition $\cp^{\perp}_{0}=\bbK$.  The properties of the bilinear transform, \eqref{bilinear}, implies that the dual net $\cp^{\perp}_m$ is a subgroup, and even a subspace, of the dual net $\cp^{\perp}_\ell$ for all $\ell=0, \ldots, m-1$.
+By this definition $\cp^{\perp}_{0}=\bbK$.  The properties of the bilinear transform, \eqref{bilinear}, implies that the dual net $\cp^{\perp}_m$ is a subgroup, and even a subspace, of the dual net $\cp^{\perp}_\ell$ for all $\ell=0, \ldots, m-1$, i.e., 
+\[
+\cp_0^{\perp}=\natzero^d \supset \cp_1^{\perp}  \supset \cdots \supset \cp_{\infty}^{\perp} =\{\vzero\}.
+\]
 
 The next goal is to define maps $\hvnu : \bbK \to \bbF_b^{\infty}$, and $\tnu_m : \bbK \to \bbF_b^{\infty}$ that facilitate calculation of the discrete Fourier Walsh transform introduced below. 
 
