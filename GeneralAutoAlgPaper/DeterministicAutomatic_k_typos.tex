@@ -1,0 +1,88 @@
+\documentclass[]{elsarticle}
+%\setlength{\marginparwidth}{0.5in}
+\usepackage{amsmath,amssymb,amsthm,mathtools,bbm,booktabs,array,tikz,pifont,comment,multirow,url,graphicx}
+\input FJHDef.tex
+
+%Requires ApproxUnivariate_k.tex, univariate_integration_k.tex, ConesPaperSpikyquad.eps, ConesPaperFlukyquad.eps
+
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\INT}{INT}
+\DeclareMathOperator{\APP}{APP}
+\DeclareMathOperator{\lin}{lin}
+\DeclareMathOperator{\up}{up}
+\DeclareMathOperator{\lo}{lo}
+\DeclareMathOperator{\fix}{fix}
+\DeclareMathOperator{\err}{err}
+\DeclareMathOperator{\maxcost}{maxcost}
+\DeclareMathOperator{\mincost}{mincost}
+\newcommand{\herr}{\widehat{\err}}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{prop}[theorem]{Proposition}
+\newtheorem{lem}{Lemma}
+\newtheorem{cor}{Corollary}
+\theoremstyle{definition}
+\newtheorem{algo}{Algorithm}
+\newtheorem{condit}{Condition}
+%\newtheorem{assump}{Assumption}
+\theoremstyle{remark}
+\newtheorem{rem}{Remark}
+\newcommand{\Fnorm}[1]{\abs{#1}_{\cf}}
+\newcommand{\Ftnorm}[1]{\abs{#1}_{\tcf}}
+\newcommand{\Gnorm}[1]{\norm[\cg]{#1}}
+\newcommand{\flin}{f_{\text{\rm{lin}}}}
+
+\journal{Journal of Complexity}
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{The Cost of Deterministic, Adaptive, Automatic Algorithms:  Cones, Not Balls}
+\author{Nicholas Clancy} \ead{nclancy@hawk.iit.edu}
+\author{Yuhan Ding} \ead{yding2@hawk.iit.edu}
+\author{Caleb Hamilton} \ead{chamilt2@hawk.iit.edu}
+\author{Fred J. Hickernell} \ead{hickernell@iit.edu}
+\author{Yizhi Zhang} \ead{yzhang97@hawk.iit.edu}
+\address{Room E1-208, Department of Applied Mathematics, Illinois Institute of Technology,\\ 10 W.\ 32$^{\text{nd}}$ St., Chicago, IL 60616}
+
+\end{frontmatter}
+
+There are two minor typographical errors that we would appreciate your correcting.
+
+\begin{enumerate}
+
+\item On p.\ 8 in Theorem 3, equation (15) the constant ${\color{red}\tau}$ is misplaced and should be moved(color added for emphasis).  \emph{At present} it reads
+\begin{multline} \tag{15}
+\max \left(n_1, h^{-1}\left(\frac{\varepsilon}{{\color{red}\tau} \Fnorm{f}} \right) \right) \le \max \left(n_1, h^{-1}\left(\frac{\varepsilon}{\Ftnorm{f}} \right) \right) \\ \le
+\cost(A,f,\varepsilon) \le \quad \text{etc.}
+\end{multline}
+but it \emph{should read}
+\begin{multline} \tag{15}
+\max \left(n_1, h^{-1}\left(\frac{\varepsilon}{\Fnorm{f}} \right) \right) \le \max \left(n_1, h^{-1}\left(\frac{\varepsilon}{{\color{red}\tau} \Ftnorm{f}} \right) \right) \\ \le
+\cost(A,f,\varepsilon) \le \quad \text{etc.}
+\end{multline}
+
+\item On p.\ 17 in Section 5.3, equation (28) a minus sign should be a plus sign.  \emph{At present} it reads
+\begin{multline} \tag{28}
+f(x)= \\
+\begin{cases}
+\displaystyle  b[4a^2 + (x-z)^2 {\color{red}-} (x-z-a)|x-z-a|\\
+\qquad \qquad -(x-z+a)|x-z+a|], & z-2a\leq x\leq z+2a,\\[2ex]
+\displaystyle  0, & \text{otherwise}.
+\end{cases}
+\end{multline}
+but it \emph{should read}
+\begin{multline} \tag{28}
+f(x)= \\
+\begin{cases}
+\displaystyle  b[4a^2 + (x-z)^2 {\color{red}+} (x-z-a)|x-z-a|\\
+\qquad \qquad -(x-z+a)|x-z+a|], & z-2a\leq x\leq z+2a,\\[2ex]
+\displaystyle  0, & \text{otherwise}.
+\end{cases}
+\end{multline}
+
+\end{enumerate}
+
+\end{document}
+
