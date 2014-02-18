@@ -48,7 +48,9 @@ Multidimensional integration \sep Automatic algorithms \sep Guaranteed algorithm
 \section{Bases and Node Sets}
 
 \subsection{Group-Like Structures}
-Consider the half open $d$-dimensional unit cube, $\cx:=[0,1)^d$, on which the functions of interest are to be defined. Define $\cx$ to be a field with the additive operation $\oplus:\cx \times \cx \to \cx$, $\vx\oplus\vy=\vx+\vy\pmod 1$. Indeed, $(\cx,\oplus)$ is an Abelian group.
+Consider the half open $d$-dimensional unit cube, $\cx:=[0,1)^d$, on which the functions of interest are to be defined. Define $\cx$ to be a field with the additive operation $\oplus:\cx \times \cx \to \cx$, $\vx\oplus\vy=\vx+\vy\pmod 1$. Indeed, $(\cx,\oplus)$ is an Abelian group. Moreover, such a set $\cx$ is also a vector space under the field $\integers$ and the multiplicative operation $\otimes:\integers \times \cx \to \cx$, $a\otimes\vx=a\vx\pmod 1$.
+
+The set $\bbK:=\integers^d$ is used to index series expressions for the integrands. This is a field with the natural sum and similarly to $\cx$, a vector space under $\integers$.
 
 Now, define the bilinear operation $\ip{\cdot}{\cdot}: \bbK \times \cx \to \cx$,
 \begin{subequations} \label{bilinear}
@@ -56,71 +58,51 @@ Now, define the bilinear operation $\ip{\cdot}{\cdot}: \bbK \times \cx \to \cx$,
 \ip{\vk}{\vx}=\vk^T\vy\pmod 1.
 \end{equation}
 
-For all $\vt, \vx \in \cx$, $\vk, \vl \in \bbK$, and $a \in \bbF_b$, it follows that
+For all $\vt, \vx \in \cx$, $\vk, \vl \in \bbK$, and $a \in \integers$, it follows that
 
-\begin{gather}
+\begin{gather}\label{bilinear}
 \ip{\vk}{\vzero} = \ip{\vzero}{\vx} = 0,\\
-\ip{\vk}{a \vx \oplus \vt} = a\ip{\vk}{\vx} + \ip{\vk}{\vt} \pmod 1 \label{bilinearlinxprop} \\
+\ip{\vk}{(a\otimes \vx) \oplus \vt} = a\ip{\vk}{\vx} + \ip{\vk}{\vt} \pmod 1 \label{bilinearlinxprop} \\
 \ip{a \vk \oplus \vl}{\vx} = a\ip{\vk}{\vx} + \ip{\vl}{\vx} \pmod 1, \label{bilinearlinkprop}\\
 \ip{\vk}{\vx} = 0 \ \forall \vk \in \bbK \ \implies \ \vx=\vzero.
 \end{gather}
 \end{subequations}
 
-
-
-
-
-
-Let $\bbK:=\integers^d$. This set is used to index the series expressions for the functions to be integrated.  $(\bbK,+)$ is also an Abelian group, with the regular additive operation.  Moreover, define the operation $\ip{\cdot}{\cdot}: \bbK \times \cx \to [0,1)$ that has a distributive property under $\oplus$ and $+$:
-\begin{subequations} \label{distrib}
-\begin{gather}
-<\vk,\vx> = \vk^T \vx \pmod 1 \qquad \forall \vx \in \cx, \vk \in \bbK \\
-<\vk,\vx \oplus \vt> = <\vk,\vx> + <\vk,\vt> \pmod 1 \qquad \forall \vk \in \bbK, \vx, \vt \in \cx, \\
-<\vk + \vl,\vx> = <\vk,\vx> + <\vl,\vx> \pmod 1 \qquad \forall \vk,\vl \in \bbK, \vx \in \cx.
-\end{gather}
-\end{subequations}
-
-This is the algebra behind \emph{integration lattices}.
-
-Integration lattices are sets that are closed under addition and subtraction modulo one.  In this setting $\bbK=\integers^d$, and
-\begin{gather*}
-\vx \oplus \vt = \vx + \vt \pmod 1, \qquad \ominus \vx = -\vx \pmod 1 \qquad \forall \vx, \vt \in \cx, \\
-\vk \oplus \vl = \vk + \vl, \qquad \ominus \vk = -\vk \qquad \forall \vk, \vl \in \bbK, \\
-\vk \otimes \vx = \vk^T \vx \pmod 1 \qquad \forall \vx \in \cx, \vk \in \bbK.
-\end{gather*}
-All the properties of the previous section can be shown to hold.  Specifically, associativity, \eqref{assocprop}, and the distributive property, \eqref{distrib}, hold for $\tcx = \cx=[0,1)^d$, so $\cx$ is a group.
-
 \subsection{Sequences, Nets, and Dual Nets}
-Suppose that there exists a sequence of points in $\cube$, denoted $\cp_\infty =\{\vt_i\}_{i=0}^{\infty}$. Any $\cp_m := \{\vt_i\}_{i=0}^{b^m-1}$ doted with $\oplus$ is an Abelian subgroup of $\cp_\infty$. They are called \emph{nets} and all are nested, i.e. $\{0\}=\cp_0\subseteq\dots\subseteq\cp_m\subseteq\dots\subseteq\cp_\infty$.
+Suppose that there exists a sequence of points in $\cx$, denoted $\cp_\infty =\{\vt_i\}_{i=0}^{\infty}$. Any $\cp_m := \{\vt_i\}_{i=0}^{b^m-1}$ doted with $\oplus$ is an Abelian subgroup of $\cp_\infty$. They are called \emph{nets} and all are nested, i.e. $\{0\}=\cp_0\subseteq\dots\subseteq\cp_m\subseteq\dots\subseteq\cp_\infty$.
 
-For $rank-1$ lattices, if $\cp_m :=\left\{\vz\frac{n}{b^m},\ n\in\bbF_{b^m}\right\}$ the nested structure detailed above is well defined. Furthermore, for every $\cp_m$, we can find a generator. If we want $\vt_{b^m-1}=\frac{j_m\vz}{b^m}$ to the the generator of $\cp_m$, it only suffices to verify that $\gcd(j_m,b^m)=1$ with $j_m\in\bbF_{b^m}$.
+For $rank-1$ lattices, if $\cp_m :=\left\{\vz\frac{n}{b^m},\ n\in\bbF_{b^m}\right\}$ the nested structure detailed above is well defined and the vector $\vz$ can be seen in each coordinate as an infinite digit integer. Furthermore, for every $\cp_m$, we can find a generator. If we want $\vt_{b^m-1}=\vz\frac{j_m}{b^m}$ to the the generator of $\cp_m$, it only suffices to verify that $\gcd(j_m,b^m)=1$ with $j_m\in\bbF_{b^m}$. This vector $\vj=(j_0,j_1,\dots)$ will define the order of the sequence $\cp_\infty$.
 
-Note that the order of the terms of the sequence $\cp_\infty$ still needs to be specified. Naturally, we can consider the Sobol order. In this case, we have the following properties:
+Once the generators are fixed, note that the order of the sequence $\cp_\infty$ still needs to be specified. We will naturally consider the Sobol order and in this case, we have the following properties:
 
 \begin{subequations} \label{cpinfvector}
 \begin{gather}
-\{\vt_1, \vt_b, \vt_{b^2}, \ldots\} \text{ are linearly independent}, \\
-\vt_i = \sum_{\ell=0}^{\infty} i_\ell \vt_{b^\ell}, \qquad \text{where }\ai=(i_0, i_1, i_2, \ldots ) \in \bbF_b^\infty, \\
+\{\vt_{b-1}, \vt_{b^2-1}, \vt_{b^3-1}, \ldots\} \text{ are linearly independent}, \\
+\vt_i = \sum_{\ell=0}^{\infty} i_\ell \vt_{b^\ell-1}, \qquad \text{where }\ai=(i_0, i_1, i_2, \ldots ) \in \bbF_b^\infty, \\
 \ip{\vk}{\vt_i} =  0 \ \forall i \in \natzero   \ \implies \ \vk=\vzero. \label{netpropc}
 \end{gather}
 \end{subequations}
 
-If we need a different sequence ordering, a correct $\vj=(j_0,j_1,\dots)$ must be chosen. This could be seen as the scrambled Sobol sequences.............. Remark that taking $\vj=(j_0,j_0,\dots)$ is equivalent to change our $\vz$ to $k_0\vz \pmod b$.
-
-We also consider $\bbK$ as a vector space with over the field $\bbF_b$.  For $m \in \natzero$ define the \emph{dual net} corresponding to $\cp_m$ as
+For $m \in \natzero$ define the \emph{dual net} corresponding to $\cp_m$ as
 \begin{align*}
 \cp^{\perp}_m &= \{\vk \in \bbK : \ip{\vk}{\vt_i} = 0, \ i=0, \ldots, b^m-1\} \\
-&= \{\vk \in \bbK : \ip{\vk}{\vt_{b^{\ell}}} = 0, \ \ell=0, \ldots, m-1\}.
+&= \{\vk \in \bbK : \ip{\vk}{\vt_{b^{\ell}-1}} = 0, \ \ell=0, \ldots, m-1\}.
 \end{align*}
-By this definition $\cp^{\perp}_{0}=\bbK$.  The properties of the bilinear transform, \eqref{distrib}, imply that the dual net $\cp^{\perp}_m$ is a subgroup, and even a subspace, of the dual net $\cp^{\perp}_\ell$ for all $\ell=0, \ldots, m-1$.
+By this definition $\cp^{\perp}_{0}=\bbK$.  The properties of the bilinear transform, \eqref{bilinear}, imply that the dual net $\cp^{\perp}_m$ is a subgroup, and even a subspace, of the dual net $\cp^{\perp}_\ell$ for all $\ell=0, \ldots, m-1$.
 
-The next goal is to define the map $\hvnu : \bbK \to \bbF_b^{\infty}$, and $\tnu_m : \bbK \to \bbF_b^{\infty}$ that facilitates the calculation of the discrete Fourier transform introduced below. For practical purposes in our definition, we shall assume that in our sequence, $b\vt_{b^m}\pmod b=\vt_{b^{m-1}}$. This gives us condition on $j_m$.............
+The next goal is to define the map $\hvnu : \bbK \to \bbF_b^{\infty}$, and $\tnu_m : \bbK \to \bbF_{b^m}$ that facilitates the calculation of the discrete Fourier transform introduced below.
+
+For practical purposes in our definition, we shall assume that in our sequence, 
+\begin{equation}\label{assumgen}
+b\vt_{b^m-1}\pmod 1=\vt_{b^{m-1}-1}
+\end{equation}
+ This gives us another condition on $j_m$, $\vz\frac{j_m-j_{m-1}}{b^{m-1}} \pmod 1 = 0$.
 
 \begin{defin} \label{numapdef} For every $\vk \in \bbK$, let
 \begin{subequations} \label{numapdefeq}
 \begin{gather}
 \hvnu(\vk)=(\hnu_0(\vk), \hnu_1(\vk), \hnu_2(\vk), \ldots ), \\
-\hnu_0(\vk) = b\ip{\vk}{\vt_{1}}, \qquad \hnu_m(\vk)=b\ip{\vk}{\vt_{b^m}}-\ip{\vk}{\vt_{b^{m-1}}}, \quad m \in \naturals, \\
+\hnu_0(\vk) = b\ip{\vk}{\vt_{1}}, \qquad \hnu_m(\vk)=b\ip{\vk}{\vt_{b^m-1}}-\ip{\vk}{\vt_{b^{m-1}-1}}, \quad m \in \naturals, \\
 \tnu_m(\vk) = \sum_{\ell=0}^{m-1} \hnu_{\ell}(\vk) b^{\ell}, \quad m \in \naturals.
 \end{gather}
 \end{subequations}
@@ -150,7 +132,11 @@ These maps have certain desirable properties.
 \end{enumerate}
 \end{lem}
 
-\begin{proof} Assertion a) follows directly from the definition.  Assertion b) follows from Definition \ref{numapdef} and \eqref{bilinearlinkprop}:
+\begin{proof}
+\begin{enumerate}[a)]
+\item It follows directly from the definition.
+\item By construction, $\hnu_m(\vk)\in (-1,b)$. Using the assumption \eqref{assumgen}, $\hnu_m(\vk)\pmod 1=\vk^Tb\vt_{b^m-1}\pmod 1-\vk^T\vt_{b^{m-1}-1}\pmod 1$=0. Then, $\hnu_m(\vk)\in (-1,b)\cap\integers=\{0,\dots,b-1\}$.
+\item Follows from Definition \ref{numapdef} and \eqref{bilinearlinkprop}:
 \begin{multline*}
 \hnu_m(a\vk \oplus \vl)= \ip{a\vk \oplus \vl}{\vt_{b^m}} = a\ip{\vk}{\vt_{b^m}} + \ip{\oplus \vl}{\vt_{b^m}} \pmod b \\
 = a\hnu_m(\vk) + \hnu_m(\vl) \pmod b \qquad \forall m \in \natzero.
@@ -170,6 +156,7 @@ To prove e) let suppose that $\hvnu(\vk)=\hvnu(\vl)$.  It follows from c) that
 \ip{\vk\ominus\vl}{\vt_i} = \ip{\vk}{\vt_i} - \ip{\vl}{\vt_i} \bmod b = 0 \qquad \forall i\in \natzero.
 \]
 By \eqref{netpropc} one must have $\vk\ominus\vl=\vzero$, which implies that $\vk=\vl$.
+\end{enumerate}
 \end{proof}
 
 \subsection{Fourier Walsh Series and Discrete Transforms}
