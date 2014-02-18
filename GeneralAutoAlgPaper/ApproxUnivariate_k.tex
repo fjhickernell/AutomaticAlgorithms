@@ -1,0 +1,182 @@
+Now we consider the problem of $\cl_{\infty}$ recovery of functions, i.e.,
+\[
+S(f):=\APP(f):=f, \qquad \cg:=\cl_{\infty}, \qquad \norm[\cg]{S(f)-A(f)}=\norm[\infty]{f-A(f)}.
+\]
+The space of functions to be recovered is the Sobolev space $\cf := \mathcal{W}^{2,\infty}$, as defined in \eqref{defSobolev}.  Our adaptive algorithm is defined on the following cone of functions
+\begin{subequations} \label{coneappxdef}
+\begin{gather}
+\Ftnorm{f}:=\norm[\infty]{f'-f(1)+f(0)}, \qquad \Fnorm{f}:=\norm[\infty]{f''}, \\
+\cc_{\tau}:=\{f \in  \mathcal{W}^{2,\infty} : \norm[\infty]{f''}\leq \tau\norm[\infty]{f'-f(1)+f(0)}\}.
+\end{gather}
+\end{subequations}
+
+The basic fixed-cost algorithm used to approximate functions is the linear spline algorithm given in \eqref{linearspline}.
+The cost of $A_n$ is $n$, and the cost multiple is $r=2$.
+Using this same data one may approximate the $\cl_\infty$ norm of $f'-f(1)+f(0)$ by the algorithm
+\begin{multline}\label{estfirstderiv}
+\tF_n(f) := \norm[\infty]{A_n(f)' - A_2(f)'} \\
+= \sup_{i=1, \ldots, n-1} \bigabs{(n-1) [f(x_{i+1})-f(x_i)]-f(1)+f(0)}.
+\end{multline}
+Moreover, a lower bound on $\norm[\infty]{f''}$ can be derived similarly to the previous section using a centered difference.  Specifically, for $n \ge 3$,
+\begin{equation} \label{Fnormappxalg}
+F_n(f) := (n-1)^2\sup_{i=1, \ldots, n-2} \abs{f(x_i) - 2 f(x_{i+1})+f(x_{i+2})}.
+\end{equation}
+It follows using the H\"older's inequality that
+\begin{align*}
+F_n(f) &= (n-1)^2\sup_{i=1, \ldots, n-2} \biggabs{\int_{x_i}^{x_{i+2}} \left[\frac{1}{n-1} - \abs{x-x_{i+1}}\right] f''(x) \, \dif x} \\
+&\le (n-1)^2\sup_{i=1, \ldots, n-2} \norm[\infty]{f''} \int_{x_i}^{x_{i+2}} \abs{\frac{1}{n-1} - \abs{x-x_{i+1}}} \, \dif x = \norm[\infty]{f''}.
+\end{align*}
+
+\subsection{Adaptive Algorithm and Upper Bound on the Cost}
+
+Given the algorithms $\tF_n$ and $A_n$, we now turn to deriving the worst case error bounds, $h_{\pm}$ defined in \eqref{Gerrbds} and $h$ defined in \eqref{algoerr} and satisfying \eqref{algseqerrcond} for $\ci:=\{2, 3, \ldots\}$.
+Note that $\tF_{n}(f)$ never overestimates $\Ftnorm{f}$ because
+\begin{align*}
+\Ftnorm{f} &  = \bignorm[\infty]{f'-A_2(f)'}
+= \sup_{\substack{x_i \le x \le x_{i+1}\\ i=1, \ldots, n-1 }} \abs{f'(x) - A_2(f)'(x)} \\
+&\ge \sup_{i=1, \ldots, n-1} (n-1)\int_{x_i}^{x_{i+1}} \abs{f'(x) - f(1)+f(0)} \, \dif x \\
+&\ge \sup_{i=1, \ldots, n-1} (n-1)\abs{\int_{x_i}^{x_{i+1}} [f'(x) - f(1)+f(0)] \, \dif x }\\
+&= \sup_{i=1, \ldots, n-1} (n-1)\abs{f(x_{i+1})-f(x_i) - \frac{f(1)-f(0)}{n-1}} = \tF_n(f).
+\end{align*}
+Thus, $h_{-}(n):=0$ and $\fc_n=\tfc_n=1$.
+
+The difference between $f$ and its linear spline can be bounded in terms of an integral involving the second derivative using integration by parts.  For $x \in [x_i,x_{i+1}]$ it follows that
+\begin{align}
+\nonumber
+f(x)-A_n (f)(x)
+&= f(x) - (n-1) \left[f(x_{i})(x_{i+1}-x) +f(x_{i+1})(x-x_i) \right]\\
+& = (n-1) \int_{x_i}^{x_{i+1}} v_i(t,x) f''(t) \, \dif t, \label{fintermsfdoubprime}\\
+f'(x)-A_n(f)'(x) & = (n-1) \int_{x_i}^{x_{i+1}} \frac{\partial v_i}{\partial x}(t,x) f''(t) \, \dif t, \label{fprimeintermsfdoubprime}
+\end{align}
+where the continuous, piecewise differentiable kernel $v$ is defined as
+\begin{equation*}
+v_i(t,x) :=\begin{cases} (x_{i+1}-x)(x_i-t), & x_i\leq t\leq x,\\
+(x-x_{i})(t- x_{i+1}), & x< t \leq x_{i+1},
+\end{cases}.
+\end{equation*}
+
+To find an upper bound on $\Ftnorm{f}-\tF_{n}(f)$, note that
+\begin{equation*}
+\Ftnorm{f} - \tF_{n}(f) = \Ftnorm{f} - \bigabs{A_n(f)}_{\tcf} \le \bigabs{f-A_n(f)}_{\tcf} = \bignorm[\infty]{f' -A_n(f)'},
+\end{equation*}
+since $(f-A_n(f))(x)$ vanishes for $x=0,1$. Using \eqref{fprimeintermsfdoubprime} it then follows that
+\begin{align*}
+\Ftnorm{f} - \tF_{n}(f) & \le \bignorm[\infty]{f' -A_n(f)'} \\
+& = \sup_{\substack{x_i \le x \le x_{i+1}\\ i=1, \ldots, n-1 }} \abs{f'(x) -(n-1)[f(x_{i+1})-f(x_i)]} \\
+&=(n-1) \sup_{\substack{x_i \le x \le x_{i+1}\\ i=1, \ldots, n-1 }} \abs{ \int_{x_i}^{x_{i+1}} \frac{\partial v_i}{\partial x}(t,x) f''(t) \, \dif t} \\
+& \le (n-1) \norm[\infty]{f''} \sup_{\substack{x_i \le x \le x_{i+1}\\ i=1, \ldots, n-1 }} \int_{x_i}^{x_{i+1}} \abs{\frac{\partial v_i}{\partial x}(t,x)} \, \dif t \\
+&=(n-1)\norm[\infty]{f''} \sup_{\substack{x_i \le x \le x_{i+1}\\ i=1, \ldots, n-1 }} \left \{\frac{1}{2(n-1)^2} - (x-x_i)(x_{i+1}-x) \right\} \\
+&= h_+(n) \norm[\infty]{f''}, \qquad \qquad  h_+(n):= \frac{1}{2(n-1)}.
+\end{align*}
+This implies that $\fC_n =1/[1 - \tau /(2n-2)]$ provided that $n>1+\tau/2$.
+Since $\tF_2(f)=0$ by definition, the above inequality for $\Ftnorm{f} - \tF_{2}(f)$ implies that $\tau_{\min}=2$.
+
+To derive the error bounds for $A_n(f)$ we make use of \eqref{fintermsfdoubprime}:
+\begin{align*}
+\norm[\infty]{f-A_n(f)}
+& \le \sup_{\substack{x_i \le x \le x_{i+1}\\ i=1, \ldots, n-1 }} \abs{f(x)-A_n (f)(x)}\\
+&= (n-1)\sup_{\substack{x_i \le x \le x_{i+1}\\ i=1, \ldots, n-1 }}  \int_{x_i}^{x_{i+1}} \abs{v_i(t,x) f''(t)} \, \dif t\\
+&\le (n-1)\norm[\infty]{f''} \sup_{\substack{x_i \le x \le x_{i+1}\\ i=1, \ldots, n-1 }}  \int_{x_i}^{x_{i+1}} \abs{v_i(t,x)} \, \dif t\\
+&=\norm[\infty]{f''} \sup_{\substack{x_i \le x \le x_{i+1}\\ i=1, \ldots, n-1 }}  \frac{(x-x_i)(x_{i+1}-x)}2 \\
+&= h(n) \norm[\infty]{f''}, \qquad \qquad  h(n):= \frac{1}{8(n-1)^2}.
+\end{align*}
+Since $h_{\pm}(n)$ and $h(n)$, are the same as in the previous section for integration, the simplifications in \eqref{simplifycond} apply here as well.  Then Algorithm \ref{multistagealgo} and Theorem \ref{MultiStageThm} may be applied directly to  yield the following algorithm for function approximation and its guarantee.
+
+\begin{algo}[Adaptive Univariate Function Recovery] \label{multistageapproalgo}
+Let the sequence of algorithms $\{A_n\}_{n\in \mathcal{I}}$, $\{\tF_n\}_{n\in \mathcal{I}}$, and $\{F_n\}_{n\in \mathcal{I}}$ be as described above.
+Let $\tau \ge 2$ be the cone constant. Set $i=1$. Let $n_1=\lceil(\tau+1)/2\rceil+1$. For any error tolerance $\varepsilon$ and input function $f$, do the following:
+\begin{description}
+\item[Stage 1.\ Estimate {$\norm[\infty]{f'-f(1)+f(0)}$} and bound {$\norm[\infty]{f''}$}.] Compute $\tF_{n_i}(f)$ in \eqref{estfirstderiv} and $F_{n_i}(f)$ in \eqref{Fnormappxalg}.
+
+\item[Stage 2. Check the necessary condition for $f \in \cc_{\tau}$.] Compute
+    \begin{align*}
+     \tau_{\min,n_i} =  \frac{F_{n_i}(f)}{\tF_{n_i}(f)+F_{n_i}(f)/(2n_i-2)}.
+    \end{align*}
+If $\tau \ge \tau_{\min,n_i}$, then go to stage 3.  Otherwise, set $\tau = 2\tau_{\min,n_i}$.  If $n_i \ge (\tau+1)/2$, then go to stage 3.  Otherwise, choose
+$$
+n_{i+1}=1+ (n_i-1)\left\lceil\frac{\tau+1}{2n_i-2}\right\rceil.
+$$
+Go to Stage 1.
+
+\item[Stage 3. Check for convergence.] Check whether $n_i$ is large enough to satisfy the error tolerance, i.e.
+    \begin{equation*}
+     \tF_{n_i}(f) \le \frac{4\varepsilon(n_i-1)(2n_i-2 - \tau)}{\tau}.
+    \end{equation*}
+If this is true, then return $A_{n_i}(f)$ and terminate the algorithm.   If this is not true, choose
+$$
+n_{i+1}=1+ (n_i-1)\max\left\{2,\left\lceil\frac{1}{(n_i-1)}\sqrt{\frac{\tau \tF_{n_i}(f)}{8\varepsilon}}\right\rceil\right\}.
+$$
+Go to Stage 1.
+\end{description}
+\end{algo}
+
+\begin{theorem} \label{multistageappxthm}
+Let $\sigma >0$ be some fixed parameter, and let $\cb_{\sigma}=\{f \in  \mathcal{W}^{2,\infty} : \norm[\infty]{f''}\leq \sigma\}$. Let $A \in \ca(\cb_{\sigma}, \cl_{\infty}, \APP, \Lambda^{\std})$ be the non-adaptive linear spline defined by Algorithm \ref{nonadaptalgo}, and let $\varepsilon>0$ be the error tolerance. Then this algorithm succeeds for $f \in \cb_{\sigma}$, i.e., $\norm[\infty]{f - A(f,\varepsilon)} \le \varepsilon$, and the cost of this algorithm is $\left \lceil \sqrt{\sigma/(8\varepsilon)}\right \rceil + 1$, regardless of the size of $\norm[\infty]{f''}$.
+
+Let $A \in \ca(\cc_{\tau}, \cl_{\infty}, \APP, \Lambda^{\std})$ be the adaptive linear spline defined by Algorithm \ref{multistageapproalgo}, and let $\tau$, $n_1$, and $\varepsilon$ be the inputs and parameters described there. Let $\cc_\tau$ be the cone of functions defined in \eqref{coneappxdef}.  Then it follows that Algorithm \ref{multistageapproalgo} is successful for all functions in $\cc_{\tau}$,  i.e.,  $\norm[\infty]{f - A(f,\varepsilon)} \le \varepsilon$.  Moreover, the cost of this algorithm is bounded below and above as follows:
+\begin{multline}
+\max \left(\left \lceil\frac{\tau+1}{2} \right \rceil, \left \lceil \sqrt{\frac{ \norm[\infty]{f''}}{8\varepsilon}} \right \rceil \right) +1 \\
+\le \max \left(\left \lceil\frac{\tau+1}{2} \right \rceil, \left \lceil \sqrt{\frac{\tau \norm[\infty]{f'-f(1)+f(0)}}{8\varepsilon}} \right \rceil \right) +1 \\
+\le
+\cost(A,f;\varepsilon) \\
+\le \sqrt{\frac{\tau \norm[\infty]{f'-f(1)+f(0)}}{2\varepsilon}} + \tau + 4
+\le \sqrt{\frac{\tau \norm[\infty]{f''} }{4\varepsilon}} + \tau + 4.
+\end{multline}
+The algorithm is computationally stable, meaning that the minimum and maximum costs for all integrands, $f$, with fixed $\norm[\infty]{f'-f(1)+f(0)}$ or $\norm[\infty]{f''}$ are an $\varepsilon$-independent constant of each other.
+\end{theorem}
+
+\subsection{Lower Bound on the Computational Cost}
+Next, we derive a lower bound on the cost of approximating functions in the ball $\cb_{\tau}$ and in the cone $\cc_{\tau}$ by constructing fooling functions. Following the arguments of Section \ref{LowBoundSec}, we choose the parabola $f_0: x \mapsto x(1-x)$. Then
+\begin{gather*}
+\Ftnorm{f_0}=\norm[\infty]{f'_0-f_0(1)+f_0(0)}=\sup_{0 \le x \le 1} \abs{1-2x} = 1, \\ \Fnorm{f_0}=\norm[\infty]{f''_0}=2= \tau_{\min}.
+\end{gather*}
+For any $n \in \cj:=\natzero$, suppose that the one has the data $L_i(f)=f(\xi_i)$, $i=1, \ldots, n$ for arbitrary $\xi_i$, where $0=\xi_0 \le \xi_1 < \cdots < \xi_n \le \xi_{n+1} = 1$.  There must be some $j=0, \ldots, n$ such that $\xi_{j+1} - \xi_j \ge 1/(n+1)$.  The function $f_{1}$ is defined as a bump having piecewise constant second derivative on $[\xi_j, \xi_{j+1}]$ and zero elsewhere.  For $\xi_{j} \le x \leq \xi_{j+1}$,
+\begin{multline*}
+f_{1}(x):=
+\frac{1}{32} \left [4(\xi_{j+1}-\xi_j)^2 + (4x-2\xi_j-2\xi_{j+1})^2  \right. \\
+\left. + (4x-\xi_j-3\xi_{j+1})\abs{4x-\xi_j-3\xi_{j+1}} -(4x-3\xi_j-\xi_{j+1})\abs{4x-3\xi_j-\xi_{j+1}} \right],
+\end{multline*}
+\[
+f'_{1}(x)=
+\frac{1}{4} \left [4x-2\xi_j-2\xi_{j+1} + \abs{4x-\xi_j-3\xi_{j+1}} -\abs{4x-3\xi_j-\xi_{j+1}} \right],
+\]
+\[
+f''_{1}(x)=\sgn(4x-\xi_j-3\xi_{j+1}) - \sgn(4x-3\xi_j-\xi_{j+1}) + 1.
+\]
+This bump function is similar to the one used in the numerical examples in the previous section and this section.  For this bump $\norm[\infty]{f''_1}=1$, and
+\[
+\norm[\infty]{f_1}=f_1((\xi_j+\xi_{j+1})/2)= \frac{(\xi_{j+1} - \xi_j)^2}{16} \ge \frac{1}{16(n+1)^2} =: g(n).
+\]
+Using these choices of $f_0$ and $f_1$, along with the corresponding $g$ above, one may invoke Theorems \ref{complowbdball}--\ref{complowbd}, and Corollary \ref{optimcor} to obtain the following theorem.
+
+\begin{theorem} \label{complowbdappr} For $\sigma>0$ let $\cb_{\sigma}=\{f \in \cw^{2,\infty} : \norm[\infty]{f''} \le \sigma\}$.  The complexity of function recovery on this ball is bounded below as
+\begin{equation*}
+\comp(\varepsilon,\ca(\cb_{\sigma},\cl_\infty,\APP,\Lambda^{\std}),\cb_{s}) \ge \left \lceil \sqrt{\frac{\min(s,\sigma)}{16 \varepsilon}} \right \rceil -1 .
+\end{equation*}
+Algorithm \ref{nonadaptalgo} using linear splines has optimal order in the sense of Theorem \ref{optimalprop}.
+
+For $\tau>2$, the complexity of the function recovery problem over the cone of functions $\cc_{\tau}$ defined in \eqref{coneappxdef} is bounded below as
+\begin{equation*}
+\comp(\varepsilon,\ca(\cc_{\tau},\cl_\infty,\APP,\Lambda^{\std}),\cb_{s}) \ge \left \lceil \sqrt{\frac{(\tau-2)s}{32 \tau \varepsilon}} \right \rceil-1 .
+\end{equation*}
+The adaptive linear spline Algorithm \ref{multistageapproalgo} has optimal order for recovering functions in $\cc_{\tau}$ the sense of Corollary \ref{optimcor}.
+\end{theorem}
+
+\subsection{Numerical Example}
+
+To illustrate Algorithm \ref{multistageapproalgo} we choose the same  family of test functions as in \eqref{testfun}, but now with $b=1/(2a^2)$.   Since $\norm[\infty]{f'-f(0)+f(1)}=1/a$ and $\norm[\infty]{f''}=1/a^2$, the probability that $f \in \cc_{\tau}$ is $\min\left(1,\max(0,\left(\log_{10}(\tau)-1\right)/3)\right).$
+The number of random functions chosen, the error tolerance, the initial $\tau$ values, and the cost budget are the same as in Section \ref{integnumexamplesec}.  Table \ref{approxnumerical} shows results that are analogous to Table \ref{integresultstable}.  Algorithm \ref{multistageapproalgo} yields the correct value to within the error tolerance for all $f$ that finally lie inside $\cc_{\tau}$ and for which the algorithm does not try to exceed the cost budget.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{cccccc}
+&&Success & Success & Failure & Failure \\
+$\tau$ &  $\Prob(f \in \cc_{\tau}) $ & No Warning & Warning & No Warning & Warning\\
+\toprule
+$10$ & $0\% \rightarrow  26\% $ & $26\%$  & $<1\%$  &$74\%$ & $<1\%$\\
+$100$ & $33 \% \rightarrow 57\% $ & $56\%$ & $1\%$ & $43\%$ & $1\%$\\
+$1000$ & $67\% \rightarrow 88\% $& $75\%$ & $5\%$ & $12\%$ & $8\%$\\
+\end{tabular}
+\caption{The probability of the test function lying in the cone for the original and eventual values of $\tau$ and the empirical success rate of Algorithm \ref{multistageapproalgo}.  \label{approxnumerical}}
+\end{table}
+
