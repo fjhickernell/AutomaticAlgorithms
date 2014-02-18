@@ -10,7 +10,7 @@
 \newtheorem{defin}{Definition}
 \newtheorem{algo}{Algorithm}
 \newcommand{\cube}{[0,1)^d}
-\renewcommand{\bbK}{\natzero^d}
+%\renewcommand{\bbK}{\natzero^d}
 \DeclareMathOperator{\trail}{trail}
 \newcommand{\rf}{\mathring{f}}
 \newcommand{\rnu}{\mathring{\nu}}
@@ -21,12 +21,22 @@
 \begin{frontmatter}
 
 \title{Error Estimation for Cubature Based on rank-1 lattices}
-%\author{L}
+\author{Fred J. Hickernell}
 \address{Room E1-208, Department of Applied Mathematics, Illinois Institute of Technology,\\ 10 W.\ 32$^{\text{nd}}$ St., Chicago, IL 60616}
+\author{Llu\'{i}s Antoni Jim\'{e}nez Rugama}
+\address{Room E1-120, Department of Applied Mathematics, Illinois Institute of Technology,\\ 10 W.\ 32$^{\text{nd}}$ St., Chicago, IL 60616}
 \begin{abstract}
+
+
+Many applications in physics, finance or mechanics require high dimensional integration. This is often performed using Monte Carlo or quasi-Monte Carlo methods since the error of the estimate does not depend on the dimension. However, there is the problem of determining the sample size needed to satisfy an error tolerance. Methods of error estimation for quasi-Monte Carlo methods tend to be based on heuristics and lack theoretical guarantees.
+
+This project aims to build an efficient algorithm based on extensible rank-1 lattice rules [1] capable of providing the solution to high dimensional problems with guarantees. In order to proceed, we compute the a Fast Fourier Transform on the integrand values sampled on an integration lattice and use them to approximate the Fourier coefficients of the integrand. For example, the extensible generators of Dirk Nuyens [2] can be used. The decay rate of the Fourier coefficients helps us approximate the error.
+
+The most important assumption in this work is that the integrands lie inside a given cone. The properties of the cone allow us to bound the error. The novel use of cones to guarantee error estimates provides a new perspective that can be extended to other algorithms.
 \end{abstract}
 
 \begin{keyword}
+Multidimensional integration \sep Automatic algorithms \sep Guaranteed algorithms \sep Quasi-Monte Carlo \sep Rank-1 lattices \sep Fast transforms
 %% keywords here, in the form: keyword \sep keyword
 
 %% MSC codes here, in the form: \MSC code \sep code
@@ -38,13 +48,30 @@
 \section{Bases and Node Sets}
 
 \subsection{Group-Like Structures}
-Consider the half open $d$-dimensional unit cube, $\cx:=[0,1)^d$, on which the functions of interest are to be defined. Define a commutative unidal structure on $\cx$, i.e., a commutative addition operation $\oplus:\cx \times \cx \to \cx$ with identity element $\vzero$ (the zero vector):
-\[
-\vx \oplus \vt = \vx + \vt \pmod 1, \qquad \ominus \vx = -\vx \pmod 1 \qquad \forall \vx, \vt \in \cx.
-\]
-Under this operation, $(\cx,\oplus)$ is a commutative group.
+Consider the half open $d$-dimensional unit cube, $\cx:=[0,1)^d$, on which the functions of interest are to be defined. Define $\cx$ to be a field with the additive operation $\oplus:\cx \times \cx \to \cx$, $\vx\oplus\vy=\vx+\vy\pmod 1$. Indeed, $(\cx,\oplus)$ is an Abelian group.
 
-Let $\bbK:=\integers^d$. This set is used to index the series expressions for the functions to be integrated.  $(\bbK,+)$ is also an Abelian group, with the regular additive operation.  Moreover, define the operation $<\cdot,\cdot>: \bbK \times \cx \to [0,1)$ that has a distributive property under $\oplus$ and $+$:
+Now, define the bilinear operation $\ip{\cdot}{\cdot}: \bbK \times \cx \to \cx$,
+\begin{subequations} \label{bilinear}
+\begin{equation}
+\ip{\vk}{\vx}=\vk^T\vy\pmod 1.
+\end{equation}
+
+For all $\vt, \vx \in \cx$, $\vk, \vl \in \bbK$, and $a \in \bbF_b$, it follows that
+
+\begin{gather}
+\ip{\vk}{\vzero} = \ip{\vzero}{\vx} = 0,\\
+\ip{\vk}{a \vx \oplus \vt} = a\ip{\vk}{\vx} + \ip{\vk}{\vt} \pmod 1 \label{bilinearlinxprop} \\
+\ip{a \vk \oplus \vl}{\vx} = a\ip{\vk}{\vx} + \ip{\vl}{\vx} \pmod 1, \label{bilinearlinkprop}\\
+\ip{\vk}{\vx} = 0 \ \forall \vk \in \bbK \ \implies \ \vx=\vzero.
+\end{gather}
+\end{subequations}
+
+
+
+
+
+
+Let $\bbK:=\integers^d$. This set is used to index the series expressions for the functions to be integrated.  $(\bbK,+)$ is also an Abelian group, with the regular additive operation.  Moreover, define the operation $\ip{\cdot}{\cdot}: \bbK \times \cx \to [0,1)$ that has a distributive property under $\oplus$ and $+$:
 \begin{subequations} \label{distrib}
 \begin{gather}
 <\vk,\vx> = \vk^T \vx \pmod 1 \qquad \forall \vx \in \cx, \vk \in \bbK \\
