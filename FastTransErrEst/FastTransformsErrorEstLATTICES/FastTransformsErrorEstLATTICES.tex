@@ -119,46 +119,50 @@ These maps have certain desirable properties.
 \begin{enumerate}
 \renewcommand{\labelenumi}{\alph{enumi})}
 
-\item $\hvnu(\vzero)=\vzero$ and $\tnu_m(\vzero) = 0$ for all $m \in \naturals$,
+\item $\hvnu(\vzero)=\vzero$ and $\tnu_m(\vzero) = 0$ for all $m \in \naturals$.
 
 \item $\hnu_m(\vk)\in \{0,\dots,b-1\}$ and $\tnu_m(\vk)\in \{0,\dots,b^m-1\}$ for all $m\in\natzero$.
 
+\item for all $m\in \natzero$ and all $\vnu \in \bbF_b^{m}$ there exist a unique $\vk \in \bbK$ with $\hvnu(\vk)=(\nu_0, \ldots, \nu_{m-1}, \ldots)$.
+    
 \item for any $m \in \natzero$, $i \in \{0, \ldots, b^m-1\}$,  $\tnu_m(\vk)=\nu=(\nu_0, \nu_1, \ldots)$, and $\ai=(i_0, i_1, \ldots)$, it follows that
 \begin{equation} \label{nuwisum}
-\ip{\vk}{\vt_i} = \sum_{\ell=0}^{m-1} i_\ell \sum_{j=0}^{\ell} \nu_jb^{j-(\ell+1)} \pmod b = \sum_{\ell=0}^{m-1} \phi\left(\nu \mod b^{\ell+1}\right) i_{\ell}b^{-\ell} \pmod b,
+\ip{\vk}{\vt_i} = \sum_{\ell=0}^{m-1} i_\ell \sum_{j=0}^{\ell} \nu_jb^{j-(\ell+1)} \pmod 1 
+%= \sum_{\ell=0}^{m-1} \phi\left(\nu \mod b^{\ell+1}\right) i_{\ell}b^{-\ell} \pmod 1
 \end{equation}
-
-\item for all $m\in \natzero$ and all $\vnu \in \bbF_b^{m}$ there exist a unique $\vk \in \bbK$ with $\hvnu(\vk)=(\nu_0, \ldots, \nu_{m-1}, \ldots)$.
 
 \end{enumerate}
 \end{lem}
 
 \begin{proof}
 \begin{enumerate}[a)]
-\item It follows directly from the definition.
+\item Directly from definition.
 \item By construction, $\hnu_0(\vk)\in\{0,\dots,b-1\}$ and $\hnu_m(\vk)\in (-1,b)$. Using the assumption \eqref{assumgen}, $\hnu_m(\vk)\pmod 1=\vk^Tb\vt_{b^m}\pmod 1-\vk^T\vt_{b^{m-1}}\pmod 1=0$. Then, $\hnu_m(\vk)\in (-1,b)\cap\integers=\{0,\dots,b-1\},\;\forall m\in\natzero$.
-\item Follows by applying  Definition \ref{numapdef} and \eqref{bilinearlinxprop}:
-\begin{align*}
-\ip{\vk}{\vt_i} &= \ip{\vk}{\sum_{\ell=0}^{m-1} i_\ell \vt_{b^{\ell}}} = \sum_{\ell=0}^{m-1} i_\ell \ip{\vk}{\vt_{b^{\ell}}} \pmod 1 \\
-& = \sum_{\ell=0}^{m-1} i_\ell \hnu_\ell(\vk) \pmod b = \sum_{\ell=0}^{m-1} i_\ell \nu_\ell \pmod b.
-\end{align*}
 
 \item For injectivity, we prove that $\hvnu(\vk)=\hvnu(\vl) \Rightarrow \vk = \vl$.\\ If $\hvnu(\vk)=\hvnu(\vl)$, $\hnu_m(\vk)=\hnu_m(\vl),\;\forall m\in\natzero$. In particular for $m=0$, this implies $\ip{\vk}{\vt_1}-\ip{\vl}{\vt_1}=0$. Assume now that $\ip{\vk}{\vt_{b^m}}-\ip{\vl}{\vt_{b^m}}=0$. Since $\hnu_{m+1}(\vk)-\hnu_{m+1}(\vl)=0$, then $\ip{\vk}{\vt_{b^{m+1}}}-\ip{\vl}{\vt_{b^{m+1}}}=0$. By induction $\ip{\vk}{\vt_{b^{m}}}-\ip{\vl}{\vt_{b^{m}}}=\ip{\vk-\vl}{\vt_{b^{m}}}=0$ for all $m\in\natzero$. Finally, by \eqref{netpropc}, $\vk=\vl$.
-    
+
     For the surjection, recall that $\gcd(\vz,b)=1$ for at least one coordinate. The first step is proving that we can find $\va$ such that $\hnu_0(\va)=\nu$ for any $\nu$ in $\bbF_b$. This is equivalent to say that we want to find $\va$ for any $\nu$ satisfying,
 \[
 \va^T\vz j_1\pmod b=\nu
 \]
     Since $b$ is prime, $\bbF_b$ is a finite field and thus, there exists $\vk$ with $\vk^T\vz j_1 \pmod b=1$. For this $\vk$, it suffices to consider $\va=\nu\vk$.
-    
+
     Now, for any $m\in\naturals$ and using \eqref{assumgenip},
 \begin{align*}
 \hnu_m(\vk+b^m\va)&=b\ip{\vk+b^m\va}{\vt_{b^m}}-\ip{\vk+b^m\va}{\vt_{b^{m-1}}}\\
 &=b\ip{\vk}{\vt_{b^m}}-\ip{\vk}{\vt_{b^{m-1}}}+b\ip{\va}{\vt_{1}} \pmod b \\
 &=\hnu_m(\vk)+\hnu_0(\va) \pmod b
 \end{align*}
+Remark that for the second equality we use the fact that $\ip{\vk}{\vt_{b^{m-1}}}=\ip{\vk}{\vt_{b^{m-1}}}\pmod b$.
     
     Therefore, $\hvnu(\vk)$ is also surjective.
+
+\item Follows by applying  Definition \ref{numapdef} and \eqref{bilinearlinxprop}:
+\begin{align*}
+\ip{\vk}{\vt_i} &= \ip{\vk}{\sum_{\ell=0}^{m-1} i_\ell \vt_{b^{\ell}}} = \sum_{\ell=0}^{m-1} i_\ell \ip{\vk}{\vt_{b^{\ell}}} \pmod 1 \\
+& = \sum_{\ell=0}^{m-1} i_\ell \sum_{j=0}^{\ell} \nu_jb^{j-(\ell+1)} \pmod 1.
+\end{align*}
+
 \end{enumerate}
 \end{proof}
 
