@@ -1,0 +1,140 @@
+% !TEX TS-program = PDFLatexBibtex
+%&LaTeX
+\documentclass[]{elsarticle}
+\setlength{\marginparwidth}{0.5in}
+\usepackage{amsmath,amssymb,amsthm,natbib,mathtools,bbm,extraipa,accents,graphicx}
+\input FJHDef.tex
+
+\newcommand{\fudge}{\fC}
+\newcommand{\dtf}{\textit{\doubletilde{f}}}
+\newtheorem{lem}{Lemma}
+\theoremstyle{definition}
+\newtheorem{defin}{Definition}
+\newtheorem{algo}{Algorithm}
+\newcommand{\cube}{[0,1)^d}
+\renewcommand{\bbK}{\natzero^d}
+\DeclareMathOperator{\trail}{trail}
+\newcommand{\rf}{\mathring{f}}
+\newcommand{\rnu}{\mathring{\nu}}
+
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{A Look at the Gaussian Kernel and Its Hermite Polynomial Eigenfunctions}
+\author{Greg E. Fasshauer and Fred J. Hickernell}
+\address{Room E1-208, Department of Applied Mathematics, Illinois Institute of Technology,\\ 10 W.\ 32$^{\text{nd}}$ St., Chicago, IL 60616}
+\begin{abstract}
+\end{abstract}
+
+\begin{keyword}
+%% keywords here, in the form: keyword \sep keyword
+
+%% MSC codes here, in the form: \MSC code \sep code
+%% or \MSC[2008] code \sep code (2000 is the default)
+
+\end{keyword}
+\end{frontmatter}
+
+\section{The Kernel in General}
+There exist a couple of basic properties of Hermite functions that we plan to use.  The first is {\em orthogonality} \citep[Sect.\ 18.2-3]{OlvEtal10a}:
+\begin{equation} \label{orthogcond}
+\int_{-\infty}^{\infty} H_n(x) H_m(x) \me^{-x^2} \, \dif x  = \sqrt{\pi} 2^n n! \delta_{m,n}
+\end{equation}
+The second is the {\em Mehler's formula} \citep[Eq.\ 18.18.28]{OlvEtal10a}:
+\begin{equation} \label{Poissonkern}
+\sum_{n=0}^{\infty} \frac{H_n(t) H_n(x) b^n}{2^n n!} = \frac1{\sqrt{1-b^2}} \exp\left[\frac{2txb -b^2(t^2+x^2)}{1-b^2}\right], \qquad 0 \le b < 1.
+\end{equation}
+
+First we generalize the orthogonality condition \eqref{orthogcond} by a change of variable $x=at$, $a>0$:
+\begin{gather*}
+\int_{-\infty}^{\infty} H_m(at) H_n(at) \me^{-a^2t^2} \, a\dif t  = \sqrt{\pi} 2^n n! \delta_{m,n} \\
+\int_{-\infty}^{\infty} \left[H_m(at) \me^{\frac 12 (1-a^2)t^2} \right] \left[ H_n(at) \me^{\frac 12 (1-a^2)t^2} \right]  \me^{-t^2} \, a\dif t  = \sqrt{\pi} 2^n n! \delta_{m,n} \\
+\int_{-\infty}^{\infty} \phi_m(t) \phi_n(t) \rho(t)  \, \dif t  = \delta_{m,n},
+\end{gather*}
+where
+\[
+\phi_n(t) = \sqrt{\frac{a}{2^n n!}} H_n(at) \me^{\frac 12 (1-a^2)t^2}, \quad \rho(t) = \frac{\me^{-t^2}}{\sqrt{\pi}} .
+\]
+This also means that
+\[
+H_n(at) = \sqrt{\frac{2^n n!}{a}} \phi_n(t)  \me^{\frac 12 (a^2-1)t^2}.
+\]
+
+Next we use \label{Poissonkern} to construct a symmetric, positive (semi-) definite kernel, $K:\reals \times \reals \to [0,\infty)$ that is normalized such that $\int_{-\infty}^{\infty} K(x,x) \, \dif x =1$:
+\begin{align}
+\nonumber
+K(t,x) & = (1-b) \sum_{n=0}^{\infty} \phi_n(t)\phi_n(x) b^n, \qquad 0 \le b < 1\\
+\nonumber
+& = (1-b) \sum_{n=0}^{\infty} \frac{a H_n(at) H_n(ax)  b^n}{2^n n!} \me^{\frac 12 (1-a^2)(t^2+x^2)}\\
+\nonumber
+& = \frac{a(1-b)}{\sqrt{1-b^2}} \exp\left[\frac{2a^2txb -a^2b^2(t^2+x^2)}{1-b^2} + \frac 12 (1-a^2)(t^2+x^2) \right]\\
+\nonumber
+& = a\sqrt{\frac{1-b}{1+b}} \\
+\nonumber
+& \qquad \times \exp\left[\frac{-a^2b(t-x)^2-\{a^2b^2-a^2b - \frac12 (1-a^2)(1-b^2)\} (t^2+x^2)}{1-b^2} \right]\\
+\nonumber
+& = a\sqrt{\frac{1-b}{1+b}} \\
+\nonumber
+& \qquad \times \exp\left[\frac{-a^2b(t-x)^2-\frac12\{a^2b^2-2a^2b + a^2 + b^2 - 1\} (t^2+x^2)}{1-b^2} \right]\\
+\nonumber
+& = a\sqrt{\frac{1-b}{1+b}} \exp\left[\frac{-a^2b(t-x)^2+\frac12(1-b)\{1+ b - a^2(1-b)\} (t^2+x^2)}{1-b^2} \right]\\
+& = a\sqrt{\frac{1-b}{1+b}} \exp\left[\frac{-a^2b(t-x)^2}{1-b^2} +\frac12\left\{1 - a^2\frac{1-b}{1+b} \right\} (t^2+x^2) \right] \label{Kernelab}
+\end{align}
+Here $K(x,x)$ may tend to $\infty$ as $x \to \infty$, but no faster than $\me^{x^2}$. Furthermore
+\begin{align*}
+\int_{-1}^1K(x,x_i)K(x,x_j)\rho(x)dx &= \sum_{k=0}^\infty\lambda_k^2\phi_k(x_i)\phi_k(x_j)\\
+&= \frac{a(1-b)^2}{\sqrt{1-b^4}}\exp\left[\frac{-a^2b^2(x_i-x_j)^2}{1-b^4} +\frac12\left\{1 - a^2\frac{1-b^2}{1+b^2} \right\} (x_i^2+x_j^2) \right].
+\end{align*}
+
+\section{When the Kernel is Gaussian}
+If we want the factor multiplying $t^2+x^2$ to vanish then we may choose
+\[
+a = \sqrt{\frac{1+b}{1-b}}.
+\]
+This implies that \eqref{Kernelab} becomes
+\begin{equation}
+K(t,x)  = \exp\left[\frac{-b(t-x)^2}{(1-b)^2} \right]
+\label{KernelGaussb}.
+\end{equation}
+We can also make a change of variable
+\[
+c = \frac{\sqrt{b}}{1-b},
+\]
+which implies that \eqref{Kernelab} is
+\begin{equation}
+K(t,x)  = \exp\left[-c^2(t-x)^2 \right]
+\label{KernelGaussc}.
+\end{equation}
+In this case
+\begin{equation*}
+c = \frac{\sqrt{b}} {1-b} \Longrightarrow c^2(1-b)^2=b \Longrightarrow c^2 b^2 - (2 c^2 +1) b + c^2 = 0,
+\end{equation*}
+\begin{align}
+\nonumber
+b &= \frac{2 c^2 + 1 - \sqrt{(2c^2+1)^2 - 4c^4}}{2c^2} \qquad (\text{since } b<1)\\
+\nonumber
+&= \frac{2 c^2 + 1 - \sqrt{4c^2+1}}{2c^2}\\
+\nonumber
+&= \frac{2 c^2 + 1 - \sqrt{4c^2+1}}{2c^2} \times \frac{2 c^2 + 1 + \sqrt{4c^2+1}}{2 c^2 + 1 + \sqrt{4c^2+1}} \\
+\nonumber
+&= \frac{(2 c^2 + 1)^2 - (4c^2+1)}{2c^2[2 c^2 + 1 + \sqrt{4c^2+1}]} \\
+\nonumber
+&= \frac{4 c^4}{2c^2[2 c^2 + 1 + \sqrt{4c^2+1}]} \\
+&= \frac{c^2}{c^2 + \frac{1}{2}[1 + \sqrt{1+4c^2}]} \label{eigc}
+\end{align}
+This is equivalent to the formula that we have for $\omega_{\gamma}$ in \cite[(3.1)]{FasHicWoz12a}.
+
+\section{When the Kernel is Not Gaussian}
+Now we let the factor multiplying $t^2+x^2$ be arbitrary.  If we want the first term in the exponential function to look like $-c^2(t-x)^2$, then we may choose
+\[
+c = a\sqrt{\frac{b}{1-b^2}}, \qquad a = c\sqrt{\frac{1-b^2}{b}}.
+\]
+This implies that \eqref{Kernelab} becomes
+\begin{equation}
+K(t,x)  = \frac{c(1-b)}{\sqrt{b}} \exp\left[-c^2(t-x)^2 +\frac12\left\{1 - \frac{c^2(1-b)^2}{b} \right\} (t^2+x^2) \right] \label{Kernelbc}.
+\end{equation}
+\bibliographystyle{model1b-num-names.bst}
+\bibliography{FJH22,FJHown22}
+\end{document}
