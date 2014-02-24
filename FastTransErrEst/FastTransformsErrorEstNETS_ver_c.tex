@@ -1,0 +1,363 @@
+% !TEX TS-program = PDFLatexBibtex
+%&LaTeX
+\documentclass[]{elsarticle}
+\setlength{\marginparwidth}{0.5in}
+\usepackage{amsmath,amssymb,amsthm,natbib,mathtools,bbm,extraipa,mathabx,graphicx}
+%accents,
+\input FJHDef.tex
+
+\newcommand{\fudge}{\fC}
+\newcommand{\dtf}{\textit{\doubletilde{f}}}
+\newtheorem{lem}{Lemma}
+\theoremstyle{definition}
+\newtheorem{defin}{Definition}
+\newtheorem{algo}{Algorithm}
+\newcommand{\cube}{[0,1)^d}
+\renewcommand{\bbK}{\natzero^d}
+\DeclareMathOperator{\trail}{trail}
+\newcommand{\rf}{\mathring{f}}
+\newcommand{\rnu}{\mathring{\nu}}
+\newcommand{\natm}{\naturals_{0,m}}
+\newcommand{\wcS}{\widecheck{S}}
+\newcommand{\wcomega}{\widecheck{\omega}}
+
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{Error Estimation for Cubature Based on Digital Nets}
+\author{Fred J. Hickernell}
+\address{Room E1-208, Department of Applied Mathematics, Illinois Institute of Technology,\\ 10 W.\ 32$^{\text{nd}}$ St., Chicago, IL 60616}
+\begin{abstract} 
+\end{abstract}
+
+\begin{keyword}
+%% keywords here, in the form: keyword \sep keyword
+
+%% MSC codes here, in the form: \MSC code \sep code
+%% or \MSC[2008] code \sep code (2000 is the default)
+
+\end{keyword}
+\end{frontmatter}
+
+\section{Bases and Node Sets}
+
+\subsection{Group-Like Structures}
+Consider the half open $d$-dimensional unit cube, $\cube$, on which the functions of interest are to be defined. A commutative additive operation, $\oplus:\cube \times \cube \to \cube$, is defined by taking digit-by-digit addition modulo some fixed prime number $b$.  Specifically, let $\bbF_b:=\{0, \ldots, b-1\}$.  For any $x \in [0,1)$ let $\ax$ denote the sequence of digits of its proper binary expansions, i.e., 
+\begin{equation*}
+\ax=(x_1, x_2, \ldots ) \in \bbF_b^\infty \Longleftrightarrow x=\sum_{\ell=1}^\infty x_{\ell} b^{-\ell}.
+\end{equation*}
+Let $\vx=(x_1, \ldots, x_d)$, and for all $\vx, \vt \in \cube$ define the operations $\oplus$ and $\ominus$ as follows:
+\begin{gather*}
+\vx = \left(\sum_{\ell=1}^{\infty} x_{j\ell} b^{-\ell}\right)_{j=1}^d, \qquad 
+\ominus \vx = \left(\sum_{\ell=1}^{\infty} [-x_{j\ell} \bmod b] b^{-\ell}\right)_{j=1}^d,\\ 
+\vx \oplus \vt = \left(\sum_{\ell=1}^{\infty} [x_{j\ell} + t_{j\ell} \bmod b] b^{-\ell} \pmod{1} \right)_{j=1}^d.
+\end{gather*}
+Here $\vzero$ is the additive identity.  The unique additive inverse of $\vx$ is $\ominus \vx$, and $\vx \ominus \vt$ means $\vx \oplus (\ominus \vt)$.  Note that under this definition of $\oplus$,
+\[
+b \vx = \vzero \quad \forall \vx \in \cube, \qquad \text{where } a \vx:=\underbrace{\vx \oplus \cdots \oplus \vx}_{a \text{ times}}\ \forall a \in \bbF_b.
+\]
+
+For any given $x \in [0,1)$ for which $\ax$ does not end in trailing zeros, let $t$ be defined in terms of $\at=(b-1-x_1, b-1-x_2, \ldots)$.  Then $t \ne \ominus x$, but $x \oplus t = 0$.  Thus, 
+\[
+t \oplus (x \oplus (\ominus x)) = t \ne \ominus x =  (t \oplus x) \oplus (\ominus x),
+\]
+so  we do not have associativity for all of $\cube$, and $(\cube,\oplus)$ is not a group.  
+
+Define the following function that determines where an infinite trail of digits $b-1$ begins when adding two numbers: 
+\begin{subequations} \label{trail}
+\begin{equation} \label{traildef}
+\trail(\vx,\vt)= \min_{j=1,\ldots, d} \sup\{ \ell : (x_{j\ell} + t_{j\ell} \bmod b) \ne b-1\}.
+\end{equation}
+If one has some $\cx \subseteq \cube$ for which 
+\begin{equation} \label{notrailcond}
+\trail(\vx,\vt)=\infty \qquad \forall \vt, \vx \in \cx, 
+\end{equation}
+\end{subequations}
+then associativity does hold for such $\cx$, i.e, 
+\begin{equation} \label{assocprop}
+\vx \oplus (\vt \oplus \vu) = (\vx \oplus \vt) \oplus \vu \qquad \forall \vx,\vt,\vu \in \cx.
+\end{equation}
+If such a subset $\cx$ is closed under $\oplus$, then $\cx$ is a commutative group.  Moreover, such a set $\cx$ is also a vector space under the field $\bbF_b$.  Note that such a set $\cx$ must not have any elements with an infinite trail of any one nonzero digit.
+
+The set $\bbK$ is used to index series expressions for the integrands.  There exists an Abelian group structure on $\bbK$, with the additive operation $\oplus$ defined as digit-wise addition similarly to the situation of points in the unit cube:  
+\begin{gather*}
+\ak=(k_0, k_1, \ldots ) \in \bbF_b^\infty \Longleftrightarrow k=\sum_{\ell=0}^\infty k_\ell b^{\ell},\\
+\vk =  \left(\sum_{\ell=0}^{\infty} k_{j\ell} b^{\ell}\right)_{j=1}^d, \qquad \ominus \vk = \left(\sum_{\ell=0}^{\infty} (b-k_{j\ell}) b^{\ell}\right)_{j=1}^d \qquad \forall \vk \in \bbK, \\
+\vk \oplus \vl = \left(\sum_{\ell=0}^{\infty} [k_{j\ell} + l_{j\ell} \bmod b] b^{\ell}\right)_{j=1}^d \qquad \forall \vk, \vl \in \bbK.
+\end{gather*}
+Since this is a group, we may also define 
+\[
+a \vk:=\underbrace{\vk \oplus \cdots \oplus \vk}_{a \text{ times}}\ \forall a \in \bbF_b
+\]
+and note that $b \vk = \vzero$ for all $\vk \in \bbK$.  Moreover, $\bbK$ is a vector space over the field $\bbF_b$.
+
+Now, define the bilinear operator $\ip{\cdot}{\cdot}: \bbK \times \cube \to \bbF_b$, where addition and multiplication on $\bbF_b$ are done modulo $b$:
+\begin{subequations} \label{bilinear}
+\begin{equation}
+\ip{\vk}{\vx} := \sum_{j=1}^{d} \sum_{\ell=0}^{\infty} k_{j\ell}x_{j,\ell+1}  \pmod b.
+\end{equation}
+For all $\vt, \vx \in \cube$, $\vk, \vl \in \bbK$, and $a \in \bbF_b$, it follows that
+\begin{gather}
+\ip{\vk}{\vx} := \sum_{j=1}^{d} \sum_{\ell=0}^{\infty} k_{j\ell}x_{j,\ell+1}  \pmod b, \\
+\ip{\vk}{\vzero} = \ip{\vzero}{\vx} = 0,\\
+\ip{\vk}{a \vx \oplus \vt} = a\ip{\vk}{\vx} + \ip{\vk}{\vt} \pmod b \quad \text{if } \trail(a\vx,\vt)=\infty \label{bilinearlinxprop} \\
+\ip{a \vk \oplus \vl}{\vx} = a\ip{\vk}{\vx} + \ip{\vl}{\vx} \pmod b, \label{bilinearlinkprop}\\
+\ip{\vk}{\vx} = 0 \ \forall \vk \in \bbK \ \implies \ \vx=\vzero.
+\end{gather}
+\end{subequations}
+
+\subsection{Sequences, Nets, and Dual Nets}
+Suppose that there exists a sequence of points in $\cube$, denoted $\cp_\infty =\{\vt_i\}_{i=0}^{\infty}$ that satisfies \eqref{notrailcond} and is closed under $\oplus$, and so is an abelian group and also a vector space over the field $\bbF_b$. 
+Furthermore, $\cp_\infty$ is assumed to satisfy the following properties:
+\begin{subequations} \label{cpinfvector}
+\begin{gather}
+\{\vt_1, \vt_b, \vt_{b^2}, \ldots\} \text{ is linearly independent}, \\
+\vt_i = \sum_{\ell=0}^{\infty} i_\ell \vt_{b^\ell}, \qquad \text{where }\ai=(i_0, i_1, i_2, \ldots ) \in \bbF_b^\infty, \\
+\ip{\vk}{\vt_i} =  0 \ \forall i \in \natzero   \ \implies \ \vk=\vzero. \label{netpropc}
+\end{gather}
+\end{subequations}
+Any $\cp_m := \{\vt_i\}_{i=0}^{b^m-1}$ is called a \emph{net}.  Moreover, $\cp_m$ is a subspace of $\cp_\infty$ and also a subspace of $\cp_\ell$ for $\ell=m+1, m+2, \ldots$, i.e., 
+\[
+\cp_0=\{\vzero\}\subset \cp_1=\{\vzero,\vt_1, \ldots, (b-1) \vt_1\}  \subset \cdots \subset \cp_{\infty} =\{\vt_i\}_{i=0}^{\infty}.
+\]
+
+We also consider $\bbK$ as a vector space with over the field $\bbF_b$.  For $m \in \natzero$ let $\natm:=\{0, \ldots, b^{m}-1\}$, and define the \emph{dual net} corresponding to $\cp_m$ as  
+\begin{align*}
+\cp^{\perp}_m &= \{\vk \in \bbK : \ip{\vk}{\vt_i} = 0, \ i=\natm\} \\
+&= \{\vk \in \bbK : \ip{\vk}{\vt_{b^{\ell}}} = 0, \ \ell=0, \ldots, m-1\}.
+\end{align*}
+By this definition $\cp^{\perp}_{0}=\bbK$.  The properties of the bilinear transform, \eqref{bilinear}, implies that the dual net $\cp^{\perp}_m$ is a subgroup, and even a subspace, of the dual net $\cp^{\perp}_\ell$ for all $\ell=0, \ldots, m-1$, i.e., 
+\[
+\cp_0^{\perp}=\natzero^d \supset \cp_1^{\perp}  \supset \cdots \supset \cp_{\infty}^{\perp} =\{\vzero\}.
+\]
+
+The next goal is to define a family of maps $\tnu_m : \bbK \to \natm$ for $m \in \natzero$ that facilitate calculation of the discrete Fourier Walsh transform introduced below. 
+
+\begin{defin} \label{numapdef} For every $\vk \in \bbK$, let 
+\begin{equation} \label{numapdefeq}
+\tnu_0(\vk) := 0, \qquad \tnu_m(\vk) := \sum_{\ell=0}^{m-1} \ip{\vk}{\vt_{b^\ell}} b^{\ell} \in \natm, \quad \vk \in \natzero^d,\ m \in \naturals.
+\end{equation}
+\end{defin}
+
+\begin{lem} \label{numaplem} The following is true for the maps defined in Definition \ref{numapdef}.  For all $m \in \natzero$ and $\vk, \vl \in \bbK$,
+\begin{enumerate}
+\renewcommand{\labelenumi}{\alph{enumi})}
+
+\item $\tnu_m(\vzero) = 0$,
+
+\item for all $a \in \bbF_b$ it follows that $\tnu_m(a\vk \oplus \vl)=a\tnu_m(\vk) \oplus \tnu_m(\vl)$,
+
+\item for all $i \in \natm$, $\ai=(i_0, i_1, \ldots)$, and $\tnu_m(\vk)=\nu_0 + \cdots + b^{m-1} \nu_{m-1}$, it follows that 
+\begin{equation} \label{nuwisum}
+\ip{\vk}{\vt_i} = \sum_{\ell=0}^{m-1} \nu_\ell i_{\ell} \pmod b,
+\end{equation}
+
+\item all $\nu \in \natm$ there exists some $\vr \in \bbK$ with $\tnu_m(\vr)=\nu$, and
+
+\item $\tnu_\ell(\vk)=\tnu_\ell(\vl) \, \forall \ell \in \natzero \Longrightarrow \vk = \vl$.
+
+\end{enumerate}
+\end{lem}
+
+\begin{proof} Assertion a) follows directly from the definition.  Assertion b) follows from Definition \ref{numapdef} and \eqref{bilinearlinkprop}: 
+\begin{multline*}
+\tnu_m(a\vk \oplus \vl)= \sum_{\ell=0}^{m-1} \ip{a\vk \oplus \vl}{\vt_{b^\ell}} b^{\ell}  = \sum_{\ell=0}^{m-1} [a\ip{\vk}{\vt_{b^\ell}} + \ip{\vl}{\vt_{b^\ell}} \pmod b] b^{\ell}  \\ 
+= \sum_{\ell=0}^{m-1} a\ip{\vk}{\vt_{b^\ell}}b^{\ell}  \oplus \sum_{\ell=0}^{m-1}  \ip{\vl}{\vt_{b^\ell}} b^{\ell} 
+= a\hnu_m(\vk) \oplus \hnu_m(\vl).
+\end{multline*}
+Assertion c) follows by applying  Definition \ref{numapdef} and \eqref{bilinearlinxprop}:
+\[
+\ip{\vk}{\vt_i} = \ip{\vk}{\sum_{\ell=0}^{m-1} i_\ell \vt_{b^{\ell}}} = \sum_{\ell=0}^{m-1} i_\ell \ip{\vk}{\vt_{b^{\ell}}} \pmod b = \sum_{\ell=0}^{m-1} i_\ell \nu_\ell \pmod b.
+\]
+
+To prove assertion d), consider the vector subspace
+\[
+\cn_m = \{\vnu=(\nu_0, \ldots, \nu_{m-1}) \in \bbF_b^m : \tnu(\vk) = \nu_0 + \nu_1 b + \cdots \nu_{m-1} b^{m-1} \text{ for some } \vk \in \bbK\}.
+\]
+Let $\vi=(i_0, \ldots, i_{m-1}) \in \bbF_b^m$ be orthogonal with respect to all of the vectors in $\cn_m$.  This means that for $i=i_0 + \cdots + i_{m-1}b^{m-1} \in \natm$,   $\ip{\vk}{\vt_i}=0$ for all $\vk \in \bbK$ by \eqref{nuwisum}.  Then by \eqref{netpropc} it follows that $\vi=\vzero$.  Since this is the only vector that is perpendicular to $\cn_m$, we must have $\cn_m=\bbF_b$, which proves d).
+
+To prove e) suppose that $\tnu_\ell(\vk)=\tnu_\ell(\vl)$ for all $\ell \in \natzero$.  It follows from c) that 
+\[
+\ip{\vk\ominus\vl}{\vt_\ell} = \ip{\vk}{\vt_\ell} - \ip{\vl}{\vt_\ell} \pmod b = 0 \qquad \forall \ell \in \natzero.
+\]
+By \eqref{netpropc} one must have $\vk\ominus\vl=\vzero$, which implies that $\vk=\vl$. 
+\end{proof}
+
+\subsection{Fourier Walsh Series and Discrete Transforms}
+
+The integrands are assumed to belong to some subset of $\cl_2(\cube)$, the space of square integrable functions.  The $\cl_2$ inner product is defined as 
+\[
+\ip[2]{f}{g} = \int_{\cube} f(\vx) \overline{g(\vx)} \, \dif \vx.
+\]
+Let $\{\varphi(\cdot,\vk) \in \cl_2(\cube) : \vk \in \bbK\}$ be the complete orthonormal Walsh function \emph{basis} for $\cl_2(\cube)$, i.e., 
+\[
+\varphi(\vx,\vk)  = \me^{2 \pi \sqrt{-1} \ip{\vk}{\vx}/b}, \qquad \vk \in \bbK, \ \vx \in \cube.
+\]
+Then any function in $\cl_2$ may be written in series form as
+\begin{equation} \label{Fourierdef}
+f(\vx) = \sum_{\vk \in \bbK} \hf(\vk) \varphi(\vx,\vk), \quad \text{where } \hf(\vk) = \ip[2]{f}{\varphi(\cdot,\vk)},
+\end{equation}
+and the inner product of two functions in $\cl_2$ is the $\ell_2$ inner product of their series coefficients:
+\[
+\ip[2]{f}{g} = \sum_{\vk \in \bbK} \hf(\vk)\overline{\hg(\vk)} =: \ip[2]{\bigl(\hf(\vk)\bigr)_{\vk \in \bbK}}{\bigl ( \hg(\vk)\bigr )_{\vk \in \bbK}}.
+\]
+
+For all $\vk \in \bbK$ and $\vx \in \cp$, it follows that
+\begin{align*} 
+\nonumber
+0 & = \frac{1}{b^m} \sum_{i=0}^{b^m-1} [\varphi(\vt_i,\vk) - \varphi(\vt_i \oplus \vx,\vk)]  
+= \frac{1}{b^m} \sum_{i=0}^{b^m-1} [\me^{2 \pi \sqrt{-1} \ip{\vk}{\vt_i}} - \me^{2 \pi \sqrt{-1} \ip{\vk}{\vt_i \oplus \vx}}]\\
+\nonumber
+& = \frac{1}{b^m} \sum_{i=0}^{b^m-1} [\me^{2 \pi \sqrt{-1} \ip{\vk}{\vt_i}} - \me^{2 \pi \sqrt{-1} \{\ip{\vk}{\vt_i}+\ip{\vk}{\vx}\}}] \quad \text{by } \eqref{bilinearlinxprop}\\
+\label{sumeq}
+& = [1 - \me^{2 \pi \sqrt{-1} \ip{\vk}{\vx})}] \frac{1}{b^m} \sum_{i=0}^{b^m-1}  \me^{2 \pi \sqrt{-1} \ip{\vk}{\vt_i}}.
+\end{align*}
+By this equality it follows that the average of a basis function, $\varphi(\cdot,\vk)$, over the points in a node set is either one or zero, depending on whether $\vk$ is in the dual set or not.
+\begin{equation*}
+\frac{1}{b^m} \sum_{i=0}^{b^m-1}  \me^{2 \pi \sqrt{-1} \ip{\vk}{\vt_i}} = \bbone_{\cp_m^{\perp}}(\vk) = \begin{cases} 1 , & \vk \in \cp_m^{\perp}\\
+ 0,  & \vk \in \bbK \setminus \cp_m^{\perp}.
+ \end{cases}
+\end{equation*}
+
+Given the digital sequence $\{\vt_i\}_{i=0}^{\infty}$, one may also define a digitally shifted sequence $\{\vx_i=\vt_i \oplus \vDelta \}_{i=0}^{\infty}$, where $\vDelta \in \cube$. Suppose that $\trail(\vt_i,\vDelta) =\infty$ for all $i \in \natzero$. Define the discrete transform of a function, $f$, over the shifted net as 
+\begin{align}
+\label{tfdef}
+\tf_m(\vk) 
+&:= \frac{1}{b^m} \sum_{i=0}^{b^m-1} \me^{-2 \pi \sqrt{-1} \ip{\vk}{\vx_i}/b} f(\vx_i) \\
+\nonumber
+&= \frac{1}{b^m}  \sum_{i=0}^{b^m-1} \left[\me^{-2 \pi \sqrt{-1} \ip{\vk}{\vx_i}/b}\sum_{\vl \in \bbK} \hf(\vl) \me^{2 \pi \sqrt{-1} \ip{\vl}{\vx_i}/b} \right] \\
+\nonumber
+& = \sum_{\vl \in \bbK} \hf(\vl)  \frac{1}{b^m}  \sum_{i=0}^{b^m-1}  \me^{2 \pi \sqrt{-1} \ip{\vl \ominus \vk}{\vx_i}/b} \\
+\nonumber 
+& = \sum_{\vl \in \bbK} \hf(\vl) \me^{2 \pi \sqrt{-1} \ip{\vl \ominus \vk}{\vDelta}/b}  \frac{1}{b^m}  \sum_{i=0}^{b^m-1}  \me^{2 \pi \sqrt{-1} \ip{\vl \ominus \vk}{\vt_i}/b} \\
+\displaybreak[0] \nonumber
+& = \sum_{\vl \in \bbK} \hf(\vl) \me^{2 \pi \sqrt{-1} \ip{\vl \ominus \vk}{\vDelta}/b} \bbone_{\cp_m^{\perp}}(\vl \ominus \vk) \\
+\nonumber
+& = \sum_{\vl \in \cp^{\perp}_m} \hf(\vk\oplus\vl) \me^{2 \pi \sqrt{-1} \ip{\vl}{\vDelta}/b} \\
+&= \hf(\vk) + \sum_{\vl \in \cp^{\perp}_m\setminus \vzero} \hf(\vk\oplus\vl) \me^{2 \pi \sqrt{-1} \ip{\vl}{\vDelta}/b}, \qquad \forall \vk \in \bbK. \label{tfassum}
+\end{align}
+It is seen here that the discrete transform $\tf_m(\vk)$ is equal to the integral transform $\hf(\vk)$, defined in \eqref{Fourierdef}, plus the \emph{aliasing} terms corresponding to $\hf(\vl)$ where $\vl\ominus\vk \in \cp_{m}^{\perp}\setminus \vzero$.
+
+
+\subsection{Computation of the Discrete Transform}
+The discrete transform defined in \eqref{tfdef} may also be expressed as
+\begin{align}
+\nonumber
+\tf_m(\vk) 
+&= \frac{1}{b^m} \sum_{i=0}^{b^m-1} \me^{-2 \pi \sqrt{-1} \ip{\vk}{\vt_i\oplus \vDelta}/b} f(\vt_i\oplus \vDelta) \\
+\nonumber
+&= \frac{\me^{-2 \pi \sqrt{-1} \ip{\vk}{\vDelta}/b}}{b^m} \sum_{i=0}^{b^m-1} \me^{-2 \pi \sqrt{-1} \ip{\vk}{\vt_i}/b} f(\vt_i\oplus \vDelta).
+\end{align}
+Letting $y_i=f(\vt_i\oplus \vDelta)$, 
+\[
+Y_{m,0}(i_0,\ldots, i_{m-1}) = y_i, \qquad i=i_0 + i_1 b + \cdots + i_{m-1} b^{m-1},
+\]
+and invoking Lemma \ref{numaplem}, for any $\vk \in \bbK$ with $\tnu_m(\vk)=\nu = \nu_0 + \nu_1 b  + \cdots + \nu_{m-1} b^{m-1}$ one may write
+\begin{align}
+\nonumber
+\tf_m(\vk) &= \me^{-2 \pi \sqrt{-1} \ip{\vk}{\vDelta}/b}  Y_{m,m}(\nu_0, \ldots, \nu_{m-1}) , \\
+\nonumber
+\MoveEqLeft{Y_{m,m}(\nu_0, \ldots, \nu_{m-1})}\\ 
+\nonumber
+& : = \frac{1}{b^m} \sum_{i=0}^{b^m-1} \me^{-2 \pi \sqrt{-1} \ip{\vk}{\vt_i}/b} y_i \\
+\nonumber
+& = \frac{1}{b^m} \sum_{i_{m-1}=0}^{b-1} \cdots \sum_{i_0=0}^{b-1} \me^{-2 \pi \sqrt{-1} \sum_{\ell=0}^{m-1} \nu_\ell i_\ell/b} Y_{m,0}(i_1,\ldots, i_m) \\
+\nonumber
+& = \frac{1}{b} \sum_{i_{m-1}=0}^{b-1}\me^{-2 \pi \sqrt{-1} \nu_{m-1} i_{m-1}/b}  \cdots \\
+&\qquad \qquad \frac{1}{b} \sum_{i_0=0}^{b-1} \me^{-2 \pi \sqrt{-1} \nu_0 i_0/b} Y_{m,0}(i_1,\ldots, i_m)
+\nonumber
+\end{align}
+This sum can be computed recursively:
+\begin{multline*}
+Y_{m,\ell+1}(\nu_0, \ldots, \nu_{\ell},i_{\ell+1}, \ldots, i_m) \\
+= \frac{1}{b} \sum_{i_\ell=0}^{b-1} \me^{-2 \pi \sqrt{-1} \nu_\ell i_\ell/b } Y_{m,\ell}(\nu_1, \ldots, \nu_{\ell-1},i_{\ell}, \ldots, i_m)
+\end{multline*}
+
+In light of this development we define $\mathring{f}_m(\nu)=Y_{m,m}(\nu_0, \ldots, \nu_{m-1})$ for $\nu=0, \ldots, b^{m}-1$. Then 
+\[
+\tf(\vk) = \me^{-2 \pi \sqrt{-1} \ip{\vk}{\vDelta}/b} \mathring{f}_m(\tnu_m(\vk)).
+\]
+
+\section{Error Estimation and an Automatic Algorithm}
+
+\subsection{Wavenumber Map}
+
+Now we are going to map the non-negative numbers into the space of all wavenumbers using the dual sets.  For every $\kappa \in \natzero$, we assign a wavenumber $\tvk(\kappa) \in \bbK$ iteratively according to the following constraints: 
+\begin{enumerate}
+\renewcommand{\labelenumi}{\roman{enumi})}
+
+\item $\tvk(0)= \vzero$;
+
+\item For any $\lambda, m \in \natzero$ and $\kappa=0, \ldots, b^m-1$, it follows that  $\tnu_m(\tvk(\kappa))=\tnu_m(\tvk(\kappa+\lambda b^m))$.
+
+\end{enumerate}
+This last condition implies that $\tvk(\kappa) \ominus \tvk(\kappa+\lambda b^m) \in \cp_m^{\perp}$.
+
+This wavenumber map allows us to introduce a shorthand notation that facilitates the later analysis for $\kappa \in \natzero$ and $m \in \naturals$:
+\begin{align*}
+\hf_{\kappa} & =\hf(\tvk(\kappa)), \\
+\tf_{m,\kappa}& = \tf_m(\tvk(\kappa))= \me^{-2 \pi \sqrt{-1} \ip{\tvk(\kappa)}{\vDelta}/b} \rf_m(\tnu_m(\tvk(\kappa)))\\
+&= \me^{-2 \pi \sqrt{-1} \ip{\tvk(\kappa)}{\vDelta}/b} \rf_{m,\kappa},
+\end{align*}
+where $\rf_{m,\kappa}:=\rf_m(\tnu_m(\tvk(\kappa)))$. According to \eqref{tfassum}, it follows that 
+\begin{equation}
+\tf_{m,\kappa} = \hf_{\kappa} + \sum_{\lambda=1}^{\infty} \hf_{\kappa+\lambda b^{m}} \me^{2 \pi \sqrt{-1} \ip{\tvk(\kappa+\lambda b^{m}) \ominus \tvk(\kappa)}{\vDelta}/b}.
+\label{tfassumc}
+\end{equation}
+We want to use $\tf_{m,\kappa}$ to estimate $\hf_{\kappa}$ if $m$ is signficantly larger than $\lfloor \log_b(\kappa) \rfloor$.
+
+\subsection{Sums of Series Coefficients and Their Bounds}
+Consider the following sums of the series coefficients defined for $\ell,m \in \natzero$, $\ell \le m$:
+\begin{gather*}
+S(m) =  \sum_{\kappa=\left \lfloor b^{m-1} \right \rfloor}^{b^{m}-1} \bigabs{\hf_{\kappa}}, \qquad 
+\hS(\ell,m)  = \sum_{\kappa=\left \lfloor b^{\ell-1} \right \rfloor}^{b^{\ell}-1} \sum_{\lambda=1}^{\infty} \bigabs{ \hf_{\kappa+\lambda b^{m}}}, \\
+\wcS(m)=\hS(0,m) + \cdots + \hS(m,m)=
+\sum_{\kappa=b^{m}}^{\infty} \bigabs{\hf_{\kappa}}, \\
+\tS(\ell,m) = \sum_{\kappa=\left \lfloor b^{\ell-1}\right \rfloor}^{b^{\ell}-1} \bigabs{\tf_{m,\kappa}} = \sum_{\kappa=\left \lfloor b^{\ell-1}\right \rfloor}^{b^{\ell}-1} \bigabs{\rf_{m,\kappa}}.
+\end{gather*}
+The first three kinds of sums, $S(\cdot)$, $\hS(\cdot,\cdot)$, and $\wcS(\cdot)$, which involve the true series coefficients, cannot be observed, but the last one, $\tS(\cdot, \cdot)$, which involves the discrete transform coefficients, can easily be observed.
+
+We now make critical assumptions that $\hS(\ell,m)$ and $\wcS(m)$ can be bounded above in terms of $S(\ell)$, provided that $\ell$ is large enough.  Let $\ell,m \in \naturals_0$ with $\ell \le m$, and fix $\ell_* \in \naturals$.  It is assumed that their exist known,  non-negative valued functions $\homega$ and $\wcomega$ with $\lim_{m \to \infty} \wcomega(m) = 0$ such that
+\begin{equation} \label{conecond}
+\hS(\ell,m) \le \homega(m-\ell) \wcS(m) \quad \forall \ell, \qquad 
+\wcS(m) \le \wcomega(m-\ell) S(\ell) \quad \forall \ell_* \le \ell.
+\end{equation} 
+By the definition of $\wcS(m)$, the choice $\homega(m):=1$ for all $m$ is always guaranteed to work.  However, one might also consider choosing $\homega(m)=C b^{-m}$ for some $C$.  The reason for enforcing the second assumption only  for $\ell \ge \ell_*$ is that for small $\ell$, one might have a coincidentally small $S(\ell)$, since it only involves $b^\ell$ coefficients, while $\wcS(m)$ is large.
+
+Under this assumption, for $\ell, m \in \naturals$, $\ell_* \le \ell \le m$, it is possible to bound the sum of the true coefficients, $S(\ell)$, in terms of the observed sum of the discrete coefficients, $\tS(\ell,m)$, as follows:
+\begin{align*}
+S(\ell) &= \sum_{\kappa=b^{\ell-1}}^{b^{\ell}-1} \bigl \lvert \hf_{\kappa}\bigr\rvert= \sum_{\kappa=b^{\ell-1}}^{b^{\ell}-1} \abs{\tf_{m,\kappa} - \sum_{\lambda=1}^{\infty} \hf_{\kappa+\lambda b^{m}} \me^{2 \pi \sqrt{-1} \ip{\tvk(\kappa+\lambda b^{m}) \ominus \tvk(\kappa)}{\vDelta}/b}}\\
+&\le \sum_{\kappa=b^{\ell-1}}^{b^{\ell}-1} \bigl \lvert \tf_{m,\kappa} \bigr\rvert + \sum_{\kappa=b^{\ell-1}}^{b^{\ell}-1} \sum_{\lambda=1}^{\infty} \bigl \lvert \hf_{\kappa+\lambda b^{m}}\bigr\rvert = \tS(\ell,m) + \hS(\ell,m) \\
+&\le \tS(\ell,m) + \homega(m-\ell) \wcomega(m-\ell) S(\ell) \\
+S(\ell) & \le \frac{\tS(\ell,m)}{1 - \homega(m-\ell) \wcomega(m-\ell)} \qquad \text{provided that } \homega(m-\ell) < 1.
+\end{align*}
+
+Using this upper bound, one can then conservatively bound the error of integration using the shifted node set.  For for $\ell, m \in \naturals$, $\ell_* \le \ell \le m$, it follows that 
+\begin{align*}
+\MoveEqLeft{\abs{\int_{\cube} f(\vx) \, \dif \vx - \frac{1}{b^m} \sum_{i=0}^{b^m-1} f(\vx_i) }}\\
+&= \abs{\hf(\vzero) - \tf_m(\vzero)} = \abs{\hf_0 - \tf_{m,0}} = \abs{\sum_{\lambda=1}^{\infty} \hf_{\lambda b^{m}} \me^{2 \pi \sqrt{-1}\ip{\tvk(\lambda b^{m})}{\vDelta}}}\\
+&\le \sum_{\lambda=1}^{\infty} \bigabs{\hf_{\lambda b^{m}}} 
+= \hS(0,m) \le \homega(m) \wcS(m) \le \homega(m) \wcomega(m-\ell) S(\ell) \\
+& \le \frac{\tS(\ell,m)\homega(m) \wcomega(m-\ell)}{1 - \homega(m-\ell) \wcomega(m-\ell)}.
+\end{align*}
+
+This error bound suggests the following algorithm.  Choose $r \in \naturals$ such that $\homega(r)\wcomega(r)<1$.  For $j \in \naturals$ define 
+\[
+\ell_j=j+\ell_*-1, \qquad  m_j=j+\ell_*+r-1, \qquad  \fudge = \frac{\wcomega(r)}{1 - \homega(r)\wcomega(r)}.
+\]
+Define $\ell_j=\ell_*+j-1$ and $m_j=\ell_j+r$.  Given a tolerance $\varepsilon$, and an integrand $f$, do the following:  for $j=1, 2, \ldots$ check whether
+\[
+\fudge \homega(m_j)  \tS(\ell_j,m_j) \le \varepsilon.
+\]
+If so, we're done.  If not, increment $j$ by one and repeat.
+
+Given $\homega$, $\wcomega$, and $r$, one can compute $\fC$.  Alternatively, given $\fC$, $\homega$, and $r$, one can compute $\wcomega(r)$:
+\[
+\fudge = \frac{\wcomega(r)}{1 - \homega(r)\wcomega(r)} \ \iff \ \wcomega(r)= \frac{\fC}{1+\fC\homega(r)}.
+\]
+
+\bibliographystyle{model1b-num-names.bst}
+\bibliography{FJH22,FJHown22}
+\end{document}
