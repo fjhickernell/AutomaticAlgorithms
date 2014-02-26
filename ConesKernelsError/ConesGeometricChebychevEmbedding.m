@@ -42,12 +42,12 @@ xtPlus=bsxfun(@plus,xnode,xnode');
 xtTimes=bsxfun(@times,xnode,xnode');
 xtMin=bsxfun(@min,xnode,xnode');
 xtMax=bsxfun(@max,xnode,xnode');
-Ktildemat = gamma^2*(xtMin.^3/3+xtMin.*(xtMax.^2-xtMin.^2)/2+xtTimes.*(1-xtMax));
-condKtilde=cond(Ktildemat)
-traceKK=trace(Ktildemat/Kmat)
-Herrbd=sqrt(gamma/2-traceKK)
-%guesserrest=Herrbd*normHsplinef
-
-%% Algorithm 1 Stage 1
-normTsplinef=sqrt(c'*Ktildemat*c);
-ErrBound = tau*Herrbd*normTsplinef/(1-tau*Herrbd)
+% Ktildemat = (1-a)^2-12*a^2*(;
+% condKtilde=cond(Ktildemat)
+% traceKK=trace(Ktildemat/Kmat)
+% Herrbd=sqrt(gamma/2-traceKK)
+% %guesserrest=Herrbd*normHsplinef
+% 
+% %% Algorithm 1 Stage 1
+% normTsplinef=sqrt(c'*Ktildemat*c);
+% ErrBound = tau*Herrbd*normTsplinef/(1-tau*Herrbd)
