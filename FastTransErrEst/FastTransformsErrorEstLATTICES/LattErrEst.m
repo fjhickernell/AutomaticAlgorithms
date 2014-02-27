@@ -5,37 +5,35 @@ format compact %remove blank lines from output
 format long e %lots of digits
 clear all %clear all variables
 close all %close all figures
-set(0,'defaultaxesfontsize',30,'defaulttextfontsize',30) %make font larger
+set(0,'defaultaxesfontsize',15,'defaulttextfontsize',15) %make font larger
 set(0,'defaultLineLineWidth',3) %thick lines
 set(0,'defaultTextInterpreter','latex') %latex axis labels
-set(0,'defaultLineMarkerSize',40) %latex axis labels
+set(0,'defaultLineMarkerSize',30) %latex axis labels
 tic
 
 %% Initialize parameters
-mmax=20; %maximum number of points is 2^mmax
+mmax=10; %maximum number of points is 2^mmax
 mmin=6; %initial number of points is 2^mmin
 mlag=5;
+latticeseq_b2('init0'); %initializing lattice numbers generator
 %testfun=@(x) x; exactinteg=1/2; d=1; %test function
 %testfun=@(x) x.^2; exactinteg=1/3; d=1; %test function
-a=20; testfun=@(x) sin(a*x); exactinteg=(1-cos(a))/a; d=1; %test function
+%a=20; testfun=@(x) sin(a*x); exactinteg=(1-cos(a))/a; d=1; %test function
 %testfun=@(x) x(:,1).*x(:,2); exactinteg=1/4; d=2; %test function
-%testfun=@(x) sin(x(:,1)).*x(:,2)+exp(x(:,1)); exactinteg=(1-cos(1))/2 + (exp(1)-1); d=2; %test function
-sobstr=sobolset(d);
-sobstr=scramble(sobstr,'MatousekAffineOwen');
-sobol=qrandstream(sobstr);
+testfun=@(x) sin(x(:,1)).*x(:,2)+exp(x(:,1)); exactinteg=(1-cos(1))/2 + (exp(1)-1); d=2; %test function
 Stilde=zeros(mmax-mmin+1,1);
 appxinteg=zeros(mmax-mmin+1,1);
 
 
-%% Initial points and FWT
+%% Initial points and FFT
 n=2^mmin;
-xpts=rand(sobol,n,d);
+xpts=latticeseq_b2(d,n)';
 y=testfun(xpts);
 %keyboard
 yval=y;
-yfwt=fwht(y);
+yfft=fft(y);
 
-%% Compute initial FWT
+%% Compute initial FFT
 for l=0:mmin-1
    nl=2^l;
    nmminlm1=2^(mmin-l-1);
@@ -65,7 +63,7 @@ end
 %keyboard
 
 %% Compute Stilde
-nllstart=2^(mmin-mlag-1);
+nllstart=int64(2^(mmin-mlag-1)); %int64 to convert to integer
 Stilde(1)=sum(abs(y(kappanumap(nllstart+1:2*nllstart))));
 
 %disp('line 68')
@@ -76,11 +74,11 @@ for m=mmin+1:mmax
    n=2^m;
    mnext=m-1;
    nnext=2^mnext;
-   xnext=rand(sobol,nnext,d);
+   xnext=latticeseq_b2(d,nnext)';
    ynext=testfun(xnext);
    yval=[yval; ynext];
 
-   %% Compute initial FWT on next points
+   %% Compute initial FFT on next points
    for l=0:mnext-1
       nl=2^l;
       nmminlm1=2^(mnext-l-1);
@@ -119,7 +117,7 @@ for m=mmin+1:mmax
    %keyboard
 
    %% Compute Stilde
-   nllstart=2^(m-mlag-1);
+   nllstart=int64(2^(m-mlag-1));
    Stilde(m-mmin+1)=sum(abs(y(kappanumap(nllstart+1:2*nllstart))));
 
    %% Approximate integral

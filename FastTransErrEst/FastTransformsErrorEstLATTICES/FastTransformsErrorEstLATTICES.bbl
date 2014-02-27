@@ -1,0 +1,8 @@
+\def\Ignore#1{}\def\notesupp#1{}\def\Ignore#1{}\def\notesupp#1{}\def\Ignore#1{}\def\notesupp#1{}\def\Ignore#1{}\def\notesupp#1{}\def\Ignore#1{}\def\notesupp#1{}\def\Ignore#1{}\def\notesupp#1{}
+\begin{thebibliography}{1}
+
+\bibitem{HicNie03a}
+F.~J. Hickernell and H.~Niederreiter, ``The existence of good extensible rank-1
+  lattices,'' {\em J. Complexity}, vol.~19, pp.~286--300, 2003.
+
+\end{thebibliography}
