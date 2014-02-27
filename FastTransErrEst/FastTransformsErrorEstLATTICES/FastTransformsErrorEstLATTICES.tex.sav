@@ -138,21 +138,22 @@ These maps have certain desirable properties.
 \item For injectivity, we prove that $\hvnu(\vk)=\hvnu(\vl) \Rightarrow \vk = \vl$. If $\hvnu(\vk)=\hvnu(\vl)$, $\hnu_m(\vk)=\hnu_m(\vl),\;\forall m\in\natzero$. In particular for $m=0$, this implies $\ip{\vk}{\vt_1}-\ip{\vl}{\vt_1}=0$. Assume now that $\ip{\vk}{\vt_{b^m}}-\ip{\vl}{\vt_{b^m}}=0$. Since $\hnu_{m+1}(\vk)-\hnu_{m+1}(\vl)=0$, then $\ip{\vk}{\vt_{b^{m+1}}}-\ip{\vl}{\vt_{b^{m+1}}}=0$. By induction $\ip{\vk}{\vt_{b^{m}}}-\ip{\vl}{\vt_{b^{m}}}=\ip{\vk-\vl}{\vt_{b^{m}}}=0$ for all $m\in\natzero$. Thus, by \eqref{netpropd}, $\vk=\vl$.
     
 \vspace{2mm}
-    For the surjection, by \eqref{bilinearlinzeroprop} there exists $\vk$ such that $\hnu_0(\vk)=\nu\neq 0$. Furthermore due to the property \eqref{bilinearlinkprop}, $\hnu_0(a\vk)=a\nu \pmod b$ and recalling the Lagrange's Theorem, any element $\nu$ different of the identity generates the group $\bbF_b$. Therefore, $a=1,...,b-1$ gives us any element of $\bbF_b$.
-    
-    Now, for any $l\leq m\in\naturals$ and using \eqref{assumgenip},
+    For the surjection, recall that due to the Lagrange's Theorem, any element different of the identity generates the group in $\bbF_b$. Using \eqref{bilinearlinzeroprop}, there exists $\va$ such that $\hnu_0(\va)=\nu\neq 0$.
+    The first step is proving that we can find $\va$ such that $\hnu_0(\va)=\nu$ for any $\nu$ in $\bbF_b$. This is equivalent to say that we want to find $\va$ for any $\nu$ satisfying,
+\[
+\va^T\vz j_1\pmod b=\nu
+\]
+    Since $b$ is prime, $\bbF_b$ is a finite field and thus, there exists $\vk$ with $\vk^T\vz j_1 \pmod b=1$. For this $\vk$, it suffices to consider $\va=\nu\vk$.
+
+    Now, for any $m\in\naturals$ and using \eqref{assumgenip},
 \begin{align*}
-\hnu_l(\vk+b^m\va)&=
-\begin{cases}
-b\ip{\vk}{\vt_{b^l}}-\ip{\vk}{\vt_{b^{l-1}}}+b\ip{\va}{\vt_{1}} \pmod b  &\mbox{if } l=m, \\
-b\ip{\vk}{\vt_{b^l}}-\ip{\vk}{\vt_{b^{l-1}}} &\mbox{if } l<m   \end{cases}\\
-&=
-\begin{cases}
-\hnu_l(\vk)+\hnu_0(\va) \pmod b  &\mbox{if } l=m, \\
-\hnu_l(\vk) &\mbox{if } l<m   \end{cases}\\
+\hnu_m(\vk+b^m\va)&=b\ip{\vk+b^m\va}{\vt_{b^m}}-\ip{\vk+b^m\va}{\vt_{b^{m-1}}}\\
+&=b\ip{\vk}{\vt_{b^m}}-\ip{\vk}{\vt_{b^{m-1}}}+b\ip{\va}{\vt_{1}} \pmod b \\
+&=\hnu_m(\vk)+\hnu_0(\va) \pmod b
 \end{align*}
-%Remark that for the first equality we use the fact that $\ip{\vk}{\vt_{b^{m-1}}}=\ip{\vk}{\vt_{b^{m-1}}}\pmod b$.
-Therefore, for all $m\in \natzero$ and all $(\nu_0,\dots,\nu_m) \in \bbF_b^{m+1}$ there exist a $\vk \in \bbK$ with $\hnu_l(\vk)=\nu_l$, $l=0,\dots,m$. This means $\hvnu(\vk)$ is bijective.
+Remark that for the second equality we use the fact that $\ip{\vk}{\vt_{b^{m-1}}}=\ip{\vk}{\vt_{b^{m-1}}}\pmod b$.
+
+    Therefore, $\hvnu(\vk)$ is also surjective.
 
 \item Follows by applying  \eqref{bilinearlinxprop} and Definition \ref{numapdef}:
 \begin{align*}
