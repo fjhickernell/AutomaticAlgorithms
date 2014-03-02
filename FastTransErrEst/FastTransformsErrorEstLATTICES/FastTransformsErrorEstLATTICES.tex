@@ -1,7 +1,11 @@
+% !TEX TS-program = PDFLatexBibtex
+%&LaTeX
 \documentclass[]{elsarticle}
 \setlength{\marginparwidth}{0.5in}
-\usepackage{amsmath,amssymb,amsthm,natbib,mathtools,bbm,extraipa,accents,graphicx}
+\usepackage{amsmath,amssymb,amsthm,natbib,mathtools,bbm,extraipa,mathabx,graphicx}
+%accents,
 \input FJHDef.tex
+
 
 \newcommand{\fudge}{\fC}
 \newcommand{\dtf}{\textit{\doubletilde{f}}}
@@ -14,6 +18,9 @@
 \DeclareMathOperator{\trail}{trail}
 \newcommand{\rf}{\mathring{f}}
 \newcommand{\rnu}{\mathring{\nu}}
+\newcommand{\natm}{\naturals_{0,m}}
+\newcommand{\wcS}{\widecheck{S}}
+\newcommand{\wcomega}{\widecheck{\omega}}
 
 
 \begin{document}
@@ -54,7 +61,7 @@ Consider the half open $d$-dimensional unit cube, $\cx:=[0,1)^d$, on which the f
 a \vx:=\underbrace{\vx \oplus \cdots \oplus \vx}_{a \text{ times}}\ \forall a \in \naturals, \qquad a \vx:=\underbrace{\ominus\vx \ominus \cdots \ominus \vx}_{-a \text{ times}}\ \forall a \in \integers\setminus\natzero.
 \]
 
-The set $\bbK:=\integers^d$ is used to index series expressions for the integrands. This is a field with the natural sum and similarly to $\cx$, a vector space under $\integers$.
+The set $\bbK:=\integers^d$ is used to index series expressions for the integrands. This is a field with the natural sum and multiplication. Similarly to $\cx$, it is also a vector space under $\integers$.
 
 Now, define the bilinear operation $\ip{\cdot}{\cdot}: \bbK \times \cx \to \cx$,
 \begin{subequations} \label{bilinear}
@@ -122,10 +129,11 @@ These maps have certain desirable properties.
 \item for all $m\in \natzero$ and all $\vnu \in \bbF_b^{m}$ there exist a unique $\vk \in \bbK$ with $\hvnu(\vk)=(\nu_0, \ldots, \nu_{m-1}, \ldots)$.
 
 \item for any $m \in \natzero$, $i \in \{0, \ldots, b^m-1\}$,  $\tnu_m(\vk)=\nu=(\nu_0, \nu_1, \ldots)$, and $\ai=(i_0, i_1, \ldots)$, it follows that
-\begin{equation} \label{nuwisum}
-\ip{\vk}{\vt_i} = \sum_{\ell=0}^{m-1} i_\ell \sum_{j=0}^{\ell} \nu_jb^{j-(\ell+1)} \pmod 1
-%= \sum_{\ell=0}^{m-1} \phi\left(\nu \mod b^{\ell+1}\right) i_{\ell}b^{-\ell} \pmod 1
-\end{equation}
+\begin{align} \label{nuwisum}
+\begin{split}
+\ip{\vk}{\vt_i} &= \sum_{\ell=0}^{m-1} i_\ell [\nu \pmod  {b^{(\ell+1)}}]  b^{-(\ell+1)} \pmod 1
+\end{split}
+\end{align}
 
 \end{enumerate}
 \end{lem}
@@ -157,13 +165,14 @@ Therefore, for all $m\in \natzero$ and all $(\nu_0,\dots,\nu_m) \in \bbF_b^{m+1}
 \item Follows by applying  \eqref{bilinearlinxprop} and Definition \ref{numapdef}:
 \begin{align*}
 \ip{\vk}{\vt_i} &= \ip{\vk}{\sum_{\ell=0}^{m-1} i_\ell \vt_{b^{\ell}}} = \sum_{\ell=0}^{m-1} i_\ell \ip{\vk}{\vt_{b^{\ell}}} \pmod 1 \\
-& = \sum_{\ell=0}^{m-1} i_\ell \sum_{j=0}^{\ell} \nu_jb^{j-(\ell+1)} \pmod 1.
+& = \sum_{\ell=0}^{m-1} i_\ell \sum_{j=0}^{\ell} \nu_jb^{j-(\ell+1)} \pmod 1\\
+&=\sum_{\ell=0}^{m-1} i_\ell [\nu \pmod  {b^{(\ell+1)}}]  b^{-(\ell+1)} \pmod 1.
 \end{align*}
 
 \end{enumerate}
 \end{proof}
 
-\subsection{Fourier Walsh Series and Discrete Transforms}
+\subsection{Fourier Series and Discrete Transforms}
 
 The integrands are assumed to belong to some subset of $\cl_2(\cube)$, the space of square integrable functions.  The $\cl_2$ inner product is defined as
 \[
@@ -199,24 +208,24 @@ By this equality it follows that the average of a basis function, $\varphi(\cdot
  \end{cases}
 \end{equation*}
 
-Given the digital sequence $\{\vt_i\}_{i=0}^{\infty}$, one may also define a digitally shifted sequence $\{\vx_i=\vt_i \oplus \vDelta \}_{i=0}^{\infty}$, where $\vDelta \in \cube$. Suppose that $\trail(\vt_i,\vDelta) =\infty$ for all $i \in \natzero$. Define the discrete transform of a function, $f$, over the shifted net as
+Given the sequence $\{\vt_i\}_{i=0}^{\infty}$, one may also define a shifted sequence $\{\vx_i=\vt_i \oplus \vDelta \}_{i=0}^{\infty}$, where $\vDelta \in \cube$. Define the discrete transform of a function, $f$, over the shifted net as
 \begin{align}
 \label{tfdef}
 \tf_m(\vk)
-&:= \frac{1}{b^m} \sum_{i=0}^{b^m-1} \me^{-2 \pi \sqrt{-1} \ip{\vk}{\vx_i}/b} f(\vx_i) \\
+&:= \frac{1}{b^m} \sum_{i=0}^{b^m-1} \me^{-2 \pi \sqrt{-1} \ip{\vk}{\vx_i}} f(\vx_i) \\
 \nonumber
-&= \frac{1}{b^m}  \sum_{i=0}^{b^m-1} \left[\me^{-2 \pi \sqrt{-1} \ip{\vk}{\vx_i}/b}\sum_{\vl \in \bbK} \hf(\vl) \me^{2 \pi \sqrt{-1} \ip{\vl}{\vx_i}/b} \right] \\
+&= \frac{1}{b^m}  \sum_{i=0}^{b^m-1} \left[\me^{-2 \pi \sqrt{-1} \ip{\vk}{\vx_i}}\sum_{\vl \in \bbK} \hf(\vl) \me^{2 \pi \sqrt{-1} \ip{\vl}{\vx_i}} \right] \\
 \nonumber
-& = \sum_{\vl \in \bbK} \hf(\vl)  \frac{1}{b^m}  \sum_{i=0}^{b^m-1}  \me^{2 \pi \sqrt{-1} \ip{\vl \ominus \vk}{\vx_i}/b} \\
+& = \sum_{\vl \in \bbK} \hf(\vl)  \frac{1}{b^m}  \sum_{i=0}^{b^m-1}  \me^{2 \pi \sqrt{-1} \ip{\vl - \vk}{\vx_i}} \\
 \nonumber
-& = \sum_{\vl \in \bbK} \hf(\vl) \me^{2 \pi \sqrt{-1} \ip{\vl \ominus \vk}{\vDelta}/b}  \frac{1}{b^m}  \sum_{i=0}^{b^m-1}  \me^{2 \pi \sqrt{-1} \ip{\vl \ominus \vk}{\vt_i}/b} \\
+& = \sum_{\vl \in \bbK} \hf(\vl) \me^{2 \pi \sqrt{-1} \ip{\vl - \vk}{\vDelta}}  \frac{1}{b^m}  \sum_{i=0}^{b^m-1}  \me^{2 \pi \sqrt{-1} \ip{\vl - \vk}{\vt_i}} \\
 \displaybreak[0] \nonumber
-& = \sum_{\vl \in \bbK} \hf(\vl) \me^{2 \pi \sqrt{-1} \ip{\vl \ominus \vk}{\vDelta}/b} \bbone_{\cp_m^{\perp}}(\vl \ominus \vk) \\
+& = \sum_{\vl \in \bbK} \hf(\vl) \me^{2 \pi \sqrt{-1} \ip{\vl - \vk}{\vDelta}} \bbone_{\cp_m^{\perp}}(\vl - \vk) \\
 \nonumber
-& = \sum_{\vl \in \cp^{\perp}_m} \hf(\vk\oplus\vl) \me^{2 \pi \sqrt{-1} \ip{\vl}{\vDelta}/b} \\
-&= \hf(\vk) + \sum_{\vl \in \cp^{\perp}_m\setminus \vzero} \hf(\vk\oplus\vl) \me^{2 \pi \sqrt{-1} \ip{\vl}{\vDelta}/b}, \qquad \forall \vk \in \bbK. \label{tfassum}
+& = \sum_{\vl \in \cp^{\perp}_m} \hf(\vk+\vl) \me^{2 \pi \sqrt{-1} \ip{\vl}{\vDelta}} \\
+&= \hf(\vk) + \sum_{\vl \in \cp^{\perp}_m\setminus \vzero} \hf(\vk+\vl) \me^{2 \pi \sqrt{-1} \ip{\vl}{\vDelta}}, \qquad \forall \vk \in \bbK. \label{tfassum}
 \end{align}
-It is seen here that the discrete transform $\tf_m(\vk)$ is equal to the integral transform $\hf(\vk)$, defined in \eqref{Fourierdef}, plus the \emph{aliasing} terms corresponding to $\hf(\vl)$ where $\vl\ominus\vk \in \cp_{m}^{\perp}\setminus \vzero$.
+It is seen here that the discrete transform $\tf_m(\vk)$ is equal to the integral transform $\hf(\vk)$, defined in \eqref{Fourierdef}, plus the \emph{aliasing} terms corresponding to $\hf(\vl)$ where $\vl-\vk \in \cp_{m}^{\perp}\setminus \vzero$.
 
 
 \subsection{Computation of the Discrete Transform}
@@ -224,9 +233,9 @@ The discrete transform defined in \eqref{tfdef} may also be expressed as
 \begin{align}
 \nonumber
 \tf_m(\vk)
-&= \frac{1}{b^m} \sum_{i=0}^{b^m-1} \me^{-2 \pi \sqrt{-1} \ip{\vk}{\vt_i\oplus \vDelta}/b} f(\vt_i\oplus \vDelta) \\
+&= \frac{1}{b^m} \sum_{i=0}^{b^m-1} \me^{-2 \pi \sqrt{-1} \ip{\vk}{\vt_i\oplus \vDelta}} f(\vt_i\oplus \vDelta) \\
 \nonumber
-&= \frac{\me^{-2 \pi \sqrt{-1} \ip{\vk}{\vDelta}/b}}{b^m} \sum_{i=0}^{b^m-1} \me^{-2 \pi \sqrt{-1} \ip{\vk}{\vt_i}/b} f(\vt_i\oplus \vDelta).
+&= \frac{\me^{-2 \pi \sqrt{-1} \ip{\vk}{\vDelta}}}{b^m} \sum_{i=0}^{b^m-1} \me^{-2 \pi \sqrt{-1} \ip{\vk}{\vt_i}} f(\vt_i\oplus \vDelta).
 \end{align}
 Letting $y_i=f(\vt_i\oplus \vDelta)$,
 \[
@@ -235,27 +244,27 @@ Y_{m,0}(i_0,\ldots, i_{m-1}) = y_i, \qquad i=i_0 + i_1 b + \cdots + i_{m-1} b^{m
 and invoking Lemma \ref{numaplem}, for any $\vk \in \bbK$ with $\tnu_m(\vk)=\nu = \nu_0 + \nu_1 b  + \cdots + \nu_{m-1} b^{m-1}$ one may write
 \begin{align}
 \nonumber
-\tf_m(\vk) &= \me^{-2 \pi \sqrt{-1} \ip{\vk}{\vDelta}/b}  Y_{m,m}(\nu_0, \ldots, \nu_{m-1}) , \\
+\tf_m(\vk) &= \me^{-2 \pi \sqrt{-1} \ip{\vk}{\vDelta}}  Y_{m,m}(\nu_0, \ldots, \nu_{m-1}) , \\
 \nonumber
 \MoveEqLeft{Y_{m,m}(\nu_0, \ldots, \nu_{m-1})}\\
 \nonumber
-& : = \frac{1}{b^m} \sum_{i=0}^{b^m-1} \me^{-2 \pi \sqrt{-1} \ip{\vk}{\vt_i}/b} y_i \\
+& : = \frac{1}{b^m} \sum_{i=0}^{b^m-1} \me^{-2 \pi \sqrt{-1} \ip{\vk}{\vt_i}} y_i \\
 \nonumber
-& = \frac{1}{b^m} \sum_{i_{m-1}=0}^{b-1} \cdots \sum_{i_0=0}^{b-1} \me^{-2 \pi \sqrt{-1} \sum_{\ell=0}^{m-1} \nu_\ell i_\ell/b} Y_{m,0}(i_1,\ldots, i_m) \\
+& = \frac{1}{b^m} \sum_{i_{m-1}=0}^{b-1} \cdots \sum_{i_0=0}^{b-1} \me^{-2 \pi \sqrt{-1}\sum_{\ell=0}^{m-1} i_\ell [\nu \pmod  {b^{(\ell+1)}}]  b^{-(\ell+1)}} Y_{m,0}(i_0,\ldots, i_{m-1}) \\
 \nonumber
-& = \frac{1}{b} \sum_{i_{m-1}=0}^{b-1}\me^{-2 \pi \sqrt{-1} \nu_{m-1} i_{m-1}/b}  \cdots \\
-&\qquad \qquad \frac{1}{b} \sum_{i_0=0}^{b-1} \me^{-2 \pi \sqrt{-1} \nu_0 i_0/b} Y_{m,0}(i_1,\ldots, i_m)
+& = \frac{1}{b} \sum_{i_{m-1}=0}^{b-1}\me^{-2 \pi \sqrt{-1}  i_{m-1}[\nu \pmod  {b^{m}}]  b^{-m}}  \cdots \\
+&\qquad \qquad \frac{1}{b} \sum_{i_0=0}^{b-1} \me^{-2 \pi \sqrt{-1} i_0 [\nu \pmod  {b}]  b^{-1}} Y_{m,0}(i_0,\ldots, i_{m-1})
 \nonumber
 \end{align}
 This sum can be computed recursively:
 \begin{multline*}
 Y_{m,\ell+1}(\nu_0, \ldots, \nu_{\ell},i_{\ell+1}, \ldots, i_m) \\
-= \frac{1}{b} \sum_{i_\ell=0}^{b-1} \me^{-2 \pi \sqrt{-1} \nu_\ell i_\ell/b } Y_{m,\ell}(\nu_1, \ldots, \nu_{\ell-1},i_{\ell}, \ldots, i_m)
+= \frac{1}{b} \sum_{i_\ell=0}^{b-1} \me^{-2 \pi \sqrt{-1}  i_{\ell}[\nu \pmod  {b^{(\ell+1)}}]  b^{-(\ell+1)}} Y_{m,\ell}(\nu_0, \ldots, \nu_{\ell-1},i_{\ell}, \ldots, i_m)
 \end{multline*}
 
 In light of this development we define $\mathring{f}_m(\nu)=Y_{m,m}(\nu_0, \ldots, \nu_{m-1})$ for $\nu=0, \ldots, b^{m}-1$. Then
 \[
-\tf(\vk) = \me^{-2 \pi \sqrt{-1} \ip{\vk}{\vDelta}/b} \mathring{f}_m(\tnu(\vk)).
+\tf(\vk) = \me^{-2 \pi \sqrt{-1} \ip{\vk}{\vDelta}} \mathring{f}_m(\tnu(\vk)).
 \]
 
 \section{Error Estimation and an Automatic Algorithm}
@@ -271,72 +280,70 @@ Now we are going to map the non-negative numbers into the space of all wavenumbe
 \item For any $\lambda, m \in \natzero$ and $\kappa=0, \ldots, b^m-1$, it follows that  $\tnu_m(\tvk(\kappa))=\tnu_m(\tvk(\kappa+\lambda b^m))$.
 
 \end{enumerate}
-This last condition implies that $\tvk(\kappa) \ominus \tvk(\kappa+\lambda b^m) \in \cp_m^{\perp}$.
+This last condition implies that $\tvk(\kappa) - \tvk(\kappa+\lambda b^m) \in \cp_m^{\perp}$.
 
 This wavenumber map allows us to introduce a shorthand notation that facilitates the later analysis for $\kappa \in \natzero$ and $m \in \naturals$:
 \begin{align*}
 \hf_{\kappa} & =\hf(\tvk(\kappa)), \\
-\tf_{m,\kappa}& = \tf_m(\tvk(\kappa))= \me^{-2 \pi \sqrt{-1} \ip{\tvk(\kappa)}{\vDelta}/b} \rf_m(\tnu_m(\tvk(\kappa)))\\
-&= \me^{-2 \pi \sqrt{-1} \ip{\tvk(\kappa)}{\vDelta}/b} \rf_m(\rnu_m(\kappa)),
+\tf_{m,\kappa}& = \tf_m(\tvk(\kappa))= \me^{-2 \pi \sqrt{-1} \ip{\tvk(\kappa)}{\vDelta}} \rf_m(\tnu_m(\tvk(\kappa)))\\
+&= \me^{-2 \pi \sqrt{-1} \ip{\tvk(\kappa)}{\vDelta}} \rf_{m,\kappa},
 \end{align*}
-where $\rnu_m(\kappa):=\tnu_m(\tvk(\kappa))$. According to \eqref{tfassum}, it follows that
+where $\rf_{m,\kappa}:=\rf_m(\tnu_m(\tvk(\kappa)))$. According to \eqref{tfassum}, it follows that
 \begin{equation}
-\tf_{m,\kappa} = \hf_{\kappa} + \sum_{\lambda=1}^{\infty} \hf_{\kappa+\lambda b^{m}} \me^{2 \pi \sqrt{-1} \ip{\tvk(\kappa+\lambda b^{m}) \ominus \tvk(\kappa)}{\vDelta}/b}.
+\tf_{m,\kappa} = \hf_{\kappa} + \sum_{\lambda=1}^{\infty} \hf_{\kappa+\lambda b^{m}} \me^{2 \pi \sqrt{-1} \ip{\tvk(\kappa+\lambda b^{m}) - \tvk(\kappa)}{\vDelta}}.
 \label{tfassumc}
 \end{equation}
 We want to use $\tf_{m,\kappa}$ to estimate $\hf_{\kappa}$ if $m$ is signficantly larger than $\lfloor \log_b(\kappa) \rfloor$.
 
 \subsection{Sums of Series Coefficients and Their Bounds}
-Consider the following sums of the series coefficients defined for $\ell,m \in \naturals$, $\ell \le m$:
+Consider the following sums of the series coefficients defined for $\ell,m \in \natzero$, $\ell \le m$:
 \begin{gather*}
-S(m) =  \sum_{\kappa=b^{m-1}}^{b^{m}-1} \bigl \lvert \hf_{\kappa} \bigr \rvert, \qquad
-\hS(\ell,m)  = \sum_{\kappa=b^{\ell-1}}^{b^{\ell}-1} \sum_{\lambda=1}^{\infty} \bigl \lvert \hf_{\kappa+\lambda b^{m}}\bigr\rvert, \\
-\tS(\ell,m) = \sum_{\kappa=b^{\ell-1}}^{b^{\ell}-1} \bigl \lvert \tf_{m,\kappa}\bigr\rvert = \sum_{\kappa=b^{\ell-1}}^{b^{\ell}-1} \bigl \lvert \mathring{f}_m(\rnu(\kappa)) \bigr\rvert .
+S(m) =  \sum_{\kappa=\left \lfloor b^{m-1} \right \rfloor}^{b^{m}-1} \bigabs{\hf_{\kappa}}, \qquad 
+\hS(\ell,m)  = \sum_{\kappa=\left \lfloor b^{\ell-1} \right \rfloor}^{b^{\ell}-1} \sum_{\lambda=1}^{\infty} \bigabs{ \hf_{\kappa+\lambda b^{m}}}, \\
+\wcS(m)=\hS(0,m) + \cdots + \hS(m,m)=
+\sum_{\kappa=b^{m}}^{\infty} \bigabs{\hf_{\kappa}}, \\
+\tS(\ell,m) = \sum_{\kappa=\left \lfloor b^{\ell-1}\right \rfloor}^{b^{\ell}-1} \bigabs{\tf_{m,\kappa}} = \sum_{\kappa=\left \lfloor b^{\ell-1}\right \rfloor}^{b^{\ell}-1} \bigabs{\rf_{m,\kappa}}.
 \end{gather*}
-These first two quantities, which involve the true series coefficients, cannot be observed, but the third one, which involves the discrete transform coefficients, can easily be observed.
+The first three kinds of sums, $S(\cdot)$, $\hS(\cdot,\cdot)$, and $\wcS(\cdot)$, which involve the true series coefficients, cannot be observed, but the last one, $\tS(\cdot, \cdot)$, which involves the discrete transform coefficients, can easily be observed.
 
-We now make critical assumptions that $\hS(\ell,m)$ and $S(m)$ can be bounded above in terms of $S(\ell)$, provided that $\ell$ is large enough.  Fix $\ell_* \in \naturals$.  The assumptions are the following:
-\begin{multline}
-S(m) \le \omega(m-\ell) S(\ell), \quad \hS(\ell,m) \le \homega(m-\ell) S(r), \\
-\ell,m \in \naturals, \ \ell_* \le \ell \le m,
-\end{multline}
-for some functions $\omega$ and $\homega$ with $\lim_{m \to \infty} \omega(m) = \lim_{m \to \infty} \homega(m) = 0$.
+We now make critical assumptions that $\hS(\ell,m)$ and $\wcS(m)$ can be bounded above in terms of $S(\ell)$, provided that $\ell$ is large enough.  Let $\ell,m \in \naturals_0$ with $\ell \le m$, and fix $\ell_* \in \naturals$.  It is assumed that their exist known,  non-negative valued functions $\homega$ and $\wcomega$ with $\lim_{m \to \infty} \wcomega(m) = 0$ such that
+\begin{equation} \label{conecond}
+\hS(\ell,m) \le \homega(m-\ell) \wcS(m) \quad \forall \ell, \qquad 
+\wcS(m) \le \wcomega(m-\ell) S(\ell) \quad \forall \ell_* \le \ell.
+\end{equation} 
+By the definition of $\wcS(m)$, the choice $\homega(m):=1$ for all $m$ is always guaranteed to work.  However, one might also consider choosing $\homega(m)=C b^{-m}$ for some $C$.  The reason for enforcing the second assumption only  for $\ell \ge \ell_*$ is that for small $\ell$, one might have a coincidentally small $S(\ell)$, since it only involves $b^\ell$ coefficients, while $\wcS(m)$ is large.
 
-The reason for enforcing these assumptions only  for $\ell \ge \ell_*$ is that for small $\ell$, one might have $S(\ell)$ coincidentally small, since it only involves $b^\ell$ coefficients, while $S(m)$ or $\hS(\ell,m)$ is large.  If $S(m)$ is large compared to $S(\ell)$ for some $m > \ell$, it means that the true series coefficients for the integrand are large for some large wavenumbers.  If $\hS(\ell,m)$ is large compared to $S(\ell)$ for some $m > \ell$, it means that the observed discrete series coefficients may not correspond well to the true coefficients.
-
-Under this assumption, for $\ell, s \in \naturals$, $\ell_* \le \ell \le s$, it is possible to bound the sum of the true coefficients, $S(\ell)$, in terms of the observed sum of the discrete coefficients, $\tS(\ell,s)$, as follows:
+Under this assumption, for $\ell, m \in \naturals$, $\ell_* \le \ell \le m$, it is possible to bound the sum of the true coefficients, $S(\ell)$, in terms of the observed sum of the discrete coefficients, $\tS(\ell,m)$, as follows:
 \begin{align*}
 S(\ell) &= \sum_{\kappa=b^{\ell-1}}^{b^{\ell}-1} \bigl \lvert \hf_{\kappa}\bigr\rvert= \sum_{\kappa=b^{\ell-1}}^{b^{\ell}-1} \abs{\tf_{m,\kappa} - \sum_{\lambda=1}^{\infty} \hf_{\kappa+\lambda b^{m}} \me^{2 \pi \sqrt{-1} \ip{\tvk(\kappa+\lambda b^{m}) \ominus \tvk(\kappa)}{\vDelta}/b}}\\
 &\le \sum_{\kappa=b^{\ell-1}}^{b^{\ell}-1} \bigl \lvert \tf_{m,\kappa} \bigr\rvert + \sum_{\kappa=b^{\ell-1}}^{b^{\ell}-1} \sum_{\lambda=1}^{\infty} \bigl \lvert \hf_{\kappa+\lambda b^{m}}\bigr\rvert = \tS(\ell,m) + \hS(\ell,m) \\
-&\le \tS(\ell,m) + \homega(m-\ell) S(\ell) \\
-S(\ell) & \le \frac{\tS(\ell,m)}{1 - \homega(m-\ell)} \qquad \text{provided that } \homega(m-\ell) < 1.
+&\le \tS(\ell,m) + \homega(m-\ell) \wcomega(m-\ell) S(\ell) \\
+S(\ell) & \le \frac{\tS(\ell,m)}{1 - \homega(m-\ell) \wcomega(m-\ell)} \qquad \text{provided that } \homega(m-\ell) < 1.
 \end{align*}
 
-Using this upper bound, one can then conservatively bound the error of integration using the shifted node set.  For for $\ell, m \in \naturals$, $\ell_* \le \ell \le m$, it follows that
+Using this upper bound, one can then conservatively bound the error of integration using the shifted node set.  For for $\ell, m \in \naturals$, $\ell_* \le \ell \le m$, it follows that 
 \begin{align*}
-\MoveEqLeft{\abs{\int_{\cube} f(\vx) \, \dif \vx - \frac{1}{b^m} \sum_{i=0}^{b^m-1} f(\vx) }}\\
-&= \abs{\hf(\vzero) - \tf_m(\vzero)} = \abs{\hf_0 - \tf_{m,0}} = \abs{\sum_{\lambda=1}^{\infty} \hf_{\lambda b^{s}} \me^{2 \pi \sqrt{-1} \vl(\lambda b^{s}) \otimes \vDelta}}\\
-&\le \sum_{\lambda=1}^{\infty} \bigl \lvert \hf_{\lambda b^{m}} \bigr \rvert \\
-&\le \sum_{\kappa=b^{m}}^{\infty} \bigl \lvert \hf_{\kappa} \bigr \rvert = \sum_{r=m+1}^{\infty} \sum_{\kappa=b^{r-1}}^{b^{r}-1} \bigl \lvert \hf_{\kappa} \bigr \rvert = \sum_{r=m+1}^{\infty} S(r)\\
-&\le \sum_{r=s+1}^{\infty} \omega(r-\ell) S(\ell) =   \sum_{r=1}^{\infty} \omega(r+m-\ell) S(\ell) =  \Omega(m-\ell) S(\ell)\\
-& \le \frac{\tS(\ell,m)\Omega(m-\ell)}{1 - \homega(m-\ell)}.
+\MoveEqLeft{\abs{\int_{\cube} f(\vx) \, \dif \vx - \frac{1}{b^m} \sum_{i=0}^{b^m-1} f(\vx_i) }}\\
+&= \abs{\hf(\vzero) - \tf_m(\vzero)} = \abs{\hf_0 - \tf_{m,0}} = \abs{\sum_{\lambda=1}^{\infty} \hf_{\lambda b^{m}} \me^{2 \pi \sqrt{-1}\ip{\tvk(\lambda b^{m})}{\vDelta}}}\\
+&\le \sum_{\lambda=1}^{\infty} \bigabs{\hf_{\lambda b^{m}}} 
+= \hS(0,m) \le \homega(m) \wcS(m) \le \homega(m) \wcomega(m-\ell) S(\ell) \\
+& \le \frac{\tS(\ell,m)\homega(m) \wcomega(m-\ell)}{1 - \homega(m-\ell) \wcomega(m-\ell)}.
 \end{align*}
-where
-\[
-\Omega(m)=\sum_{\ell=1}^{\infty} \omega(m+ \ell), \qquad m \in \natzero.
-\]
-Assuming that $\Omega(0)$ is finite, $\lim_{m \to \infty} \Omega(m) = 0$.
 
-This error bound suggests the following algorithm.  Choose $r \in \naturals$ such that $\homega(r)<1$ and set
+This error bound suggests the following algorithm.  Choose $r \in \naturals$ such that $\homega(r)\wcomega(r)<1$.  For $j \in \naturals$ define 
 \[
-\fudge = \frac{\Omega(r)}{1 - \homega(r)}.
+\ell_j=j+\ell_*-1, \qquad  m_j=j+\ell_*+r-1, \qquad  \fudge = \frac{\wcomega(r)}{1 - \homega(r)\wcomega(r)}.
 \]
 Define $\ell_j=\ell_*+j-1$ and $m_j=\ell_j+r$.  Given a tolerance $\varepsilon$, and an integrand $f$, do the following:  for $j=1, 2, \ldots$ check whether
 \[
-\fudge \tS(\ell_j,m_j) \le \varepsilon.
+\fudge \homega(m_j)  \tS(\ell_j,m_j) \le \varepsilon.
 \]
 If so, we're done.  If not, increment $j$ by one and repeat.
 
+Given $\homega$, $\wcomega$, and $r$, one can compute $\fC$.  Alternatively, given $\fC$, $\homega$, and $r$, one can compute $\wcomega(r)$:
+\[
+\fudge = \frac{\wcomega(r)}{1 - \homega(r)\wcomega(r)} \ \iff \ \wcomega(r)= \frac{\fC}{1+\fC\homega(r)}.
+\]
 
 \bibliographystyle{ieeetr}
 %\bibliographystyle{model1b-num-names.bst}

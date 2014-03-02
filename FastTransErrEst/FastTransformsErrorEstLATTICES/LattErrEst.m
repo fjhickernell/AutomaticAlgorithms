@@ -1,4 +1,4 @@
-%Automatic cubature with Sobol sequences
+%Automatic cubature with lattices
 
 %% Garbage collection and initialization
 format compact %remove blank lines from output
@@ -11,16 +11,25 @@ set(0,'defaultTextInterpreter','latex') %latex axis labels
 set(0,'defaultLineMarkerSize',30) %latex axis labels
 tic
 
+%% Particular example where the Fourier cone is bounded by b^-k (check paper on function approx)
+f=@(b,x) (b^2-1)./(b^2+1-2*b*cos(2*pi()*x));
+g=@(x) 8./(10-6*cos(2*pi()*x));
+%% Bernoulli polynomial
+ber=@(x) x.^2-x+1/4;
+
 %% Initialize parameters
-mmax=10; %maximum number of points is 2^mmax
+mmax=20; %maximum number of points is 2^mmax
 mmin=6; %initial number of points is 2^mmin
 mlag=5;
 latticeseq_b2('init0'); %initializing lattice numbers generator
 %testfun=@(x) x; exactinteg=1/2; d=1; %test function
-%testfun=@(x) x.^2; exactinteg=1/3; d=1; %test function
+testfun=@(x) x.^2; exactinteg=1/3; d=1; %test function
+%testfun=@(x) g(x); exactinteg=1; d=1; %test function
 %a=20; testfun=@(x) sin(a*x); exactinteg=(1-cos(a))/a; d=1; %test function
 %testfun=@(x) x(:,1).*x(:,2); exactinteg=1/4; d=2; %test function
-testfun=@(x) sin(x(:,1)).*x(:,2)+exp(x(:,1)); exactinteg=(1-cos(1))/2 + (exp(1)-1); d=2; %test function
+%testfun=@(x) g(x(:,1)).*g(x(:,2)); exactinteg=1; d=2; %test function
+%testfun=@(x) ber(x(:,1)).*ber(x(:,2)); exactinteg=1/12^2; d=2; %test function
+%testfun=@(x) sin(x(:,1)).*x(:,2)+exp(x(:,1)); exactinteg=(1-cos(1))/2 + (exp(1)-1); d=2; %test function
 Stilde=zeros(mmax-mmin+1,1);
 appxinteg=zeros(mmax-mmin+1,1);
 
@@ -31,7 +40,7 @@ xpts=latticeseq_b2(d,n)';
 y=testfun(xpts);
 %keyboard
 yval=y;
-yfft=fft(y);
+%yfft=fft(y);
 
 %% Compute initial FFT
 for l=0:mmin-1
@@ -41,7 +50,7 @@ for l=0:mmin-1
    evenval=y(ptind);
    oddval=y(~ptind);
    y(ptind)=(evenval+oddval)/2;
-   y(~ptind)=(evenval-oddval)/2;
+   y(~ptind)=(evenval+exp(2*pi()*sqrt(-1)*2^(-nl-1))*oddval)/2;
 end
 
 %% Approximate integral
@@ -86,18 +95,18 @@ for m=mmin+1:mmax
       evenval=ynext(ptind);
       oddval=ynext(~ptind);
       ynext(ptind)=(evenval+oddval)/2;
-      ynext(~ptind)=(evenval-oddval)/2;
+      ynext(~ptind)=(evenval+exp(2*pi()*sqrt(-1)*2^(-nl-1))*oddval)/2;
    end
    %disp('line 90')
 
-   %% Compute FWT on all points
+   %% Compute FFT on all points
    y=[y;ynext];
    nl=2^mnext;
    ptind=[true(nl,1); false(nl,1)];
    evenval=y(ptind);
    oddval=y(~ptind);
    y(ptind)=(evenval+oddval)/2;
-   y(~ptind)=(evenval-oddval)/2;
+   y(~ptind)=(evenval+exp(2*pi()*sqrt(-1)*2^(-nl-1))*oddval)/2;
    %disp('line 100')
 
    %% Update kappanumap
@@ -139,4 +148,3 @@ set(gca,'Xtick',10.^(minexp:maxexp))
 axis([10.^[minexp maxexp],1e-13 1])
 
 toc
-
