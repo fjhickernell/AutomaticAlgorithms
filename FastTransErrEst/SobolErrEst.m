@@ -17,9 +17,9 @@ mmin=6; %initial number of points is 2^mmin
 mlag=5;
 %testfun=@(x) x; exactinteg=1/2; d=1; %test function
 %testfun=@(x) x.^2; exactinteg=1/3; d=1; %test function
-a=20; testfun=@(x) sin(a*x); exactinteg=(1-cos(a))/a; d=1; %test function
+%a=20; testfun=@(x) sin(a*x); exactinteg=(1-cos(a))/a; d=1; %test function
 %testfun=@(x) x(:,1).*x(:,2); exactinteg=1/4; d=2; %test function
-%testfun=@(x) sin(x(:,1)).*x(:,2)+exp(x(:,1)); exactinteg=(1-cos(1))/2 + (exp(1)-1); d=2; %test function
+testfun=@(x) sin(x(:,1)).*x(:,2)+exp(x(:,1)); exactinteg=(1-cos(1))/2 + (exp(1)-1); d=2; %test function
 sobstr=sobolset(d);
 sobstr=scramble(sobstr,'MatousekAffineOwen');
 sobol=qrandstream(sobstr);

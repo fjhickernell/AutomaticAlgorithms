@@ -18,19 +18,19 @@ g=@(x) 8./(10-6*cos(2*pi()*x));
 ber=@(x) x.^2-x+1/4;
 
 %% Initialize parameters
-mmax=15; %maximum number of points is 2^mmax
+mmax=18; %maximum number of points is 2^mmax
 mmin=6; %initial number of points is 2^mmin
-nu=2^(mmax+1)-1;
 mlag=5;
 latticeseq_b2('init0'); %initializing lattice numbers generator
 %testfun=@(x) x; exactinteg=1/2; d=1; %test function
 %testfun=@(x) x.^2; exactinteg=1/3; d=1; %test function
 %testfun=@(x) g(x); exactinteg=1; d=1; %test function
-a=20; testfun=@(x) sin(a*x); exactinteg=(1-cos(a))/a; d=1; %test function
+%testfun=@(x) ber(x); exactinteg=1/12; d=1; %test function
+%a=20; testfun=@(x) sin(a*x); exactinteg=(1-cos(a))/a; d=1; %test function
 %testfun=@(x) x(:,1).*x(:,2); exactinteg=1/4; d=2; %test function
 %testfun=@(x) g(x(:,1)).*g(x(:,2)); exactinteg=1; d=2; %test function
 %testfun=@(x) ber(x(:,1)).*ber(x(:,2)); exactinteg=1/12^2; d=2; %test function
-%testfun=@(x) sin(x(:,1)).*x(:,2)+exp(x(:,1)); exactinteg=(1-cos(1))/2 + (exp(1)-1); d=2; %test function
+testfun=@(x) sin(x(:,1)).*x(:,2)+exp(x(:,1)); exactinteg=(1-cos(1))/2 + (exp(1)-1); d=2; %test function
 Stilde=zeros(mmax-mmin+1,1);
 appxinteg=zeros(mmax-mmin+1,1);
 
@@ -48,12 +48,14 @@ for l=0:mmin-1
    nl=2^l;
    nmminlm1=2^(mmin-l-1);
    ptind=repmat([true(nl,1); false(nl,1)],nmminlm1,1);
+   coef=exp(-2*pi()*sqrt(-1)*(0:2*nl-1)/(2*nl))';
+   %coef=cos(-2*pi()*(0:2*nl-1)/(2*nl))'+i*sin(-2*pi()*(0:2*nl-1)/(2*nl))';
+   coeff0=repmat(coef(1:nl),nmminlm1,1);
+   coeff1=repmat(coef(nl+1:2*nl),nmminlm1,1);
    evenval=y(ptind);
    oddval=y(~ptind);
-   for k=1:2*nl
-    y(ptind)=(evenval+oddval)/2;
-    y(k:2*nl:end)=(evenval+exp(-2*pi()*sqrt(-1)*(k-1)/(2*nl))*y(k:2*nl:end))/2;
-   end
+   y(ptind)=(evenval+coeff0.*oddval)/2;
+   y(~ptind)=(evenval+coeff1.*oddval)/2;
 end
 
 %% Approximate integral
@@ -95,21 +97,32 @@ for m=mmin+1:mmax
       nl=2^l;
       nmminlm1=2^(mnext-l-1);
       ptind=repmat([true(nl,1); false(nl,1)],nmminlm1,1);
+      coef=exp(-2*pi()*sqrt(-1)*(0:2*nl-1)/(2*nl))';
+      %coef=cos(-2*pi()*(0:2*nl-1)/(2*nl))'+i*sin(-2*pi()*(0:2*nl-1)/(2*nl))';
+      coeff0=repmat(coef(1:nl),nmminlm1,1);
+      coeff1=repmat(coef(nl+1:2*nl),nmminlm1,1);
       evenval=ynext(ptind);
       oddval=ynext(~ptind);
-      ynext(ptind)=(evenval+oddval)/2;
-      ynext(~ptind)=(evenval+exp(-2*pi()*sqrt(-1)*mod(nu,2*nl)/(2*nl))*oddval)/2;
-   end
+      ynext(ptind)=(evenval+coeff0.*oddval)/2;
+      ynext(~ptind)=(evenval+coeff1.*oddval)/2;
+end
+
    %disp('line 90')
 
    %% Compute FFT on all points
    y=[y;ynext];
    nl=2^mnext;
-   ptind=[true(nl,1); false(nl,1)];
+   nmminlm1=2^(mnext-l-1);
+   ptind=repmat([true(nl,1); false(nl,1)],nmminlm1,1);
+   coef=exp(-2*pi()*sqrt(-1)*(0:2*nl-1)/(2*nl))';
+   %coef=cos(-2*pi()*(0:2*nl-1)/(2*nl))'+i*sin(-2*pi()*(0:2*nl-1)/(2*nl))';
+   coeff0=repmat(coef(1:nl),nmminlm1,1);
+   coeff1=repmat(coef(nl+1:2*nl),nmminlm1,1);
    evenval=y(ptind);
    oddval=y(~ptind);
-   y(ptind)=(evenval+oddval)/2;
-   y(~ptind)=(evenval+exp(-2*pi()*sqrt(-1)*mod(nu,2*nl)/(2*nl))*oddval)/2;
+   y(ptind)=(evenval+coeff0.*oddval)/2;
+   y(~ptind)=(evenval+coeff1.*oddval)/2;
+
    %disp('line 100')
 
    %% Update kappanumap
@@ -148,6 +161,6 @@ maxexp=ceil(mmax*log10(2));
 h=loglog(2.^(mmin:mmax),trueerr,'b.',2.^(mmin:mmax),Stilde,'rs');
 set(h(2),'MarkerFaceColor','r','MarkerSize',10);
 set(gca,'Xtick',10.^(minexp:maxexp))
-axis([10.^[minexp maxexp],1e-13 10])
+axis([10.^[minexp maxexp],1e-17 10])
 
 toc
