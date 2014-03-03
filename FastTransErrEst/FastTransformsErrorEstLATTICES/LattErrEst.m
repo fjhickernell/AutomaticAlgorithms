@@ -18,14 +18,15 @@ g=@(x) 8./(10-6*cos(2*pi()*x));
 ber=@(x) x.^2-x+1/4;
 
 %% Initialize parameters
-mmax=20; %maximum number of points is 2^mmax
+mmax=15; %maximum number of points is 2^mmax
 mmin=6; %initial number of points is 2^mmin
+nu=2^(mmax+1)-1;
 mlag=5;
 latticeseq_b2('init0'); %initializing lattice numbers generator
 %testfun=@(x) x; exactinteg=1/2; d=1; %test function
-testfun=@(x) x.^2; exactinteg=1/3; d=1; %test function
+%testfun=@(x) x.^2; exactinteg=1/3; d=1; %test function
 %testfun=@(x) g(x); exactinteg=1; d=1; %test function
-%a=20; testfun=@(x) sin(a*x); exactinteg=(1-cos(a))/a; d=1; %test function
+a=20; testfun=@(x) sin(a*x); exactinteg=(1-cos(a))/a; d=1; %test function
 %testfun=@(x) x(:,1).*x(:,2); exactinteg=1/4; d=2; %test function
 %testfun=@(x) g(x(:,1)).*g(x(:,2)); exactinteg=1; d=2; %test function
 %testfun=@(x) ber(x(:,1)).*ber(x(:,2)); exactinteg=1/12^2; d=2; %test function
@@ -49,8 +50,10 @@ for l=0:mmin-1
    ptind=repmat([true(nl,1); false(nl,1)],nmminlm1,1);
    evenval=y(ptind);
    oddval=y(~ptind);
-   y(ptind)=(evenval+oddval)/2;
-   y(~ptind)=(evenval+exp(2*pi()*sqrt(-1)*2^(-nl-1))*oddval)/2;
+   for k=1:2*nl
+    y(ptind)=(evenval+oddval)/2;
+    y(k:2*nl:end)=(evenval+exp(-2*pi()*sqrt(-1)*(k-1)/(2*nl))*y(k:2*nl:end))/2;
+   end
 end
 
 %% Approximate integral
@@ -95,7 +98,7 @@ for m=mmin+1:mmax
       evenval=ynext(ptind);
       oddval=ynext(~ptind);
       ynext(ptind)=(evenval+oddval)/2;
-      ynext(~ptind)=(evenval+exp(2*pi()*sqrt(-1)*2^(-nl-1))*oddval)/2;
+      ynext(~ptind)=(evenval+exp(-2*pi()*sqrt(-1)*mod(nu,2*nl)/(2*nl))*oddval)/2;
    end
    %disp('line 90')
 
@@ -106,7 +109,7 @@ for m=mmin+1:mmax
    evenval=y(ptind);
    oddval=y(~ptind);
    y(ptind)=(evenval+oddval)/2;
-   y(~ptind)=(evenval+exp(2*pi()*sqrt(-1)*2^(-nl-1))*oddval)/2;
+   y(~ptind)=(evenval+exp(-2*pi()*sqrt(-1)*mod(nu,2*nl)/(2*nl))*oddval)/2;
    %disp('line 100')
 
    %% Update kappanumap
@@ -145,6 +148,6 @@ maxexp=ceil(mmax*log10(2));
 h=loglog(2.^(mmin:mmax),trueerr,'b.',2.^(mmin:mmax),Stilde,'rs');
 set(h(2),'MarkerFaceColor','r','MarkerSize',10);
 set(gca,'Xtick',10.^(minexp:maxexp))
-axis([10.^[minexp maxexp],1e-13 1])
+axis([10.^[minexp maxexp],1e-13 10])
 
 toc
