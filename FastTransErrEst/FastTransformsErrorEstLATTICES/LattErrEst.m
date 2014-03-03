@@ -18,7 +18,7 @@ g=@(x) 8./(10-6*cos(2*pi()*x));
 ber=@(x) x.^2-x+1/4;
 
 %% Initialize parameters
-mmax=18; %maximum number of points is 2^mmax
+mmax=20; %maximum number of points is 2^mmax
 mmin=6; %initial number of points is 2^mmin
 mlag=5;
 latticeseq_b2('init0'); %initializing lattice numbers generator
@@ -48,14 +48,12 @@ for l=0:mmin-1
    nl=2^l;
    nmminlm1=2^(mmin-l-1);
    ptind=repmat([true(nl,1); false(nl,1)],nmminlm1,1);
-   coef=exp(-2*pi()*sqrt(-1)*(0:2*nl-1)/(2*nl))';
-   %coef=cos(-2*pi()*(0:2*nl-1)/(2*nl))'+i*sin(-2*pi()*(0:2*nl-1)/(2*nl))';
-   coeff0=repmat(coef(1:nl),nmminlm1,1);
-   coeff1=repmat(coef(nl+1:2*nl),nmminlm1,1);
+   coef=exp(-2*pi()*sqrt(-1)*(0:nl-1)/(2*nl))';
+   coefv=repmat(coef,nmminlm1,1);
    evenval=y(ptind);
    oddval=y(~ptind);
-   y(ptind)=(evenval+coeff0.*oddval)/2;
-   y(~ptind)=(evenval+coeff1.*oddval)/2;
+   y(ptind)=(evenval+coefv.*oddval)/2;
+   y(~ptind)=(evenval-coefv.*oddval)/2;
 end
 
 %% Approximate integral
@@ -97,14 +95,12 @@ for m=mmin+1:mmax
       nl=2^l;
       nmminlm1=2^(mnext-l-1);
       ptind=repmat([true(nl,1); false(nl,1)],nmminlm1,1);
-      coef=exp(-2*pi()*sqrt(-1)*(0:2*nl-1)/(2*nl))';
-      %coef=cos(-2*pi()*(0:2*nl-1)/(2*nl))'+i*sin(-2*pi()*(0:2*nl-1)/(2*nl))';
-      coeff0=repmat(coef(1:nl),nmminlm1,1);
-      coeff1=repmat(coef(nl+1:2*nl),nmminlm1,1);
+      coef=exp(-2*pi()*sqrt(-1)*(0:nl-1)/(2*nl))';
+      coefv=repmat(coef,nmminlm1,1);
       evenval=ynext(ptind);
       oddval=ynext(~ptind);
-      ynext(ptind)=(evenval+coeff0.*oddval)/2;
-      ynext(~ptind)=(evenval+coeff1.*oddval)/2;
+      ynext(ptind)=(evenval+coefv.*oddval)/2;
+      ynext(~ptind)=(evenval-coefv.*oddval)/2;
 end
 
    %disp('line 90')
@@ -114,14 +110,12 @@ end
    nl=2^mnext;
    nmminlm1=2^(mnext-l-1);
    ptind=repmat([true(nl,1); false(nl,1)],nmminlm1,1);
-   coef=exp(-2*pi()*sqrt(-1)*(0:2*nl-1)/(2*nl))';
-   %coef=cos(-2*pi()*(0:2*nl-1)/(2*nl))'+i*sin(-2*pi()*(0:2*nl-1)/(2*nl))';
-   coeff0=repmat(coef(1:nl),nmminlm1,1);
-   coeff1=repmat(coef(nl+1:2*nl),nmminlm1,1);
+   coef=exp(-2*pi()*sqrt(-1)*(0:nl-1)/(2*nl))';
+   coefv=repmat(coef,nmminlm1,1);
    evenval=y(ptind);
    oddval=y(~ptind);
-   y(ptind)=(evenval+coeff0.*oddval)/2;
-   y(~ptind)=(evenval+coeff1.*oddval)/2;
+   y(ptind)=(evenval+coefv.*oddval)/2;
+   y(~ptind)=(evenval-coefv.*oddval)/2;
 
    %disp('line 100')
 
