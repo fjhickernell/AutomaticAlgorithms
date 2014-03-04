@@ -18,7 +18,7 @@ g=@(x) 8./(10-6*cos(2*pi()*x));
 ber=@(x) x.^2-x+1/4;
 
 %% Initialize parameters
-mmax=17; %maximum number of points is 2^mmax
+mmax=15; %maximum number of points is 2^mmax
 mmin=6; %initial number of points is 2^mmin
 mlag=5;
 latticeseq_b2('init0'); %initializing lattice numbers generator
@@ -26,11 +26,11 @@ latticeseq_b2('init0'); %initializing lattice numbers generator
 %testfun=@(x) x.^2; exactinteg=1/3; d=1; %test function
 %testfun=@(x) g(x); exactinteg=1; d=1; %test function
 %testfun=@(x) ber(x); exactinteg=1/12; d=1; %test function
-a=20; testfun=@(x) sin(a*x); exactinteg=(1-cos(a))/a; d=1; %test function
-a=20; testfun=@(x) sin(a*x)-sin(a)*x; exactinteg=(1-cos(a))/a-sin(a)/2; d=1; %test function
+%a=20; testfun=@(x) sin(a*x); exactinteg=(1-cos(a))/a; d=1; %test function
+%a=20; testfun=@(x) sin(a*x)-sin(a)*x; exactinteg=(1-cos(a))/a-sin(a)/2; d=1; %test function
 %testfun=@(x) 2*x.*(x<0.5)+(2-2*x).*(0.5<=x); exactinteg=1/2; d=1; %test function
 %testfun=@(x) (x-0).^2.*(x-1).^2; exactinteg=1/30; d=1; %test function
-%testfun=@(x) (x(:,1)-0).^2.*(x(:,1)-1).^2.*(x(:,2)-0).^2.*(x(:,2)-1).^2; exactinteg=1/30^2; d=2; %test function
+testfun=@(x) (x(:,1)-0).^2.*(x(:,1)-1).^2.*(x(:,2)-0).^2.*(x(:,2)-1).^2; exactinteg=1/30^2; d=2; %test function
 %testfun=@(x) x(:,1).*x(:,2); exactinteg=1/4; d=2; %test function
 %testfun=@(x) g(x(:,1)).*g(x(:,2)); exactinteg=1; d=2; %test function
 %testfun=@(x) ber(x(:,1)).*ber(x(:,2)); exactinteg=1/12^2; d=2; %test function
@@ -59,6 +59,10 @@ for l=0:mmin-1
    y(ptind)=(evenval+coefv.*oddval)/2;
    y(~ptind)=(evenval-coefv.*oddval)/2;
 end
+
+
+figure
+loglog(1:prod(size(y)),abs(y),'b-',abs(fft(yval)),'k-')
 
 %% Approximate integral
 appxinteg(1)=mean(yval);
