@@ -48,9 +48,9 @@ Here we summarize some useful properties of some polynomials.  The first are the
 \end{align}
 Here are some properties of Bernoulli polynomials.
 \begin{align}
-\text{Fourier Series} \quad & B_{2m}(x) = (-1)^{m+1} \frac{2 (2m)!} {(2 \pi)^{2m}} \sum_{k=1}^{\infty} \frac{\cos(2 \pi k x)}{k^{2m}}, \nonumber \\
+\text{Fourier Series} \quad & B_{2m}(\abs x) = (-1)^{m+1} \frac{2 (2m)!} {(2 \pi)^{2m}} \sum_{k=1}^{\infty} \frac{\cos(2 \pi k x)}{k^{2m}}, \nonumber \\
 & \qquad \qquad  \quad -1 \le x \le 1, \quad \text{\citep[24.8.1]{OlvEtal10a}} \\
-\text{Degree} \quad &B_k(x) \text{ is a polynomial of degree } k \in \natzero  \nonumber \end{align}
+\text{Degree} \quad &B_k(\abs x) \text{ is a polynomial of degree } k \in \natzero  \nonumber \end{align}
 
 Define the orthogonal functions and the probability density function
 \begin{gather}
@@ -84,7 +84,7 @@ Note that
 Since
 \begin{align*}
 \sum_{k=0}^{\infty} \lambda_k (2-\delta_{k,0}) \me^{\sqrt{-1}k\alpha}
-&= 1-a + \frac{2a(1-b)}{b}\sum_{k=0}^{\infty} b^k \me^{\sqrt{-1}k\alpha} \\
+&= 1-a + \frac{2a(1-b)}{b}\sum_{k=1}^{\infty} b^k \me^{\sqrt{-1}k\alpha} \\
 &= 1-a + \frac{2a(1-b)\me^{\sqrt{-1}\alpha}} {1-b\me^{\sqrt{-1}\alpha}},
 \end{align*}
 it follows that
@@ -96,7 +96,14 @@ K(x,t) &= \sum_{k=0}^{\infty} \lambda_k \phi_k(x)\phi_k(t) \\
 & \qquad \qquad \left . + \frac{\me^{\sqrt{-1}(\theta-\omega)}+\me^{-\sqrt{-1}(\theta-\omega)} - 2b } {1+b^2 -b[\me^{\sqrt{-1}(\theta-\omega)} + \me^{-\sqrt{-1}(\theta-\omega)}] }  \right] \\
 &= 1-a + a(1-b) \left[\frac{\cos(\theta+\omega)-b} {1+b^2 -2b\cos(\theta+\omega) } + \frac{\cos(\theta-\omega)-b} {1+b^2 -2b\cos(\theta-\omega) }  \right] \\
 &= 1-a + a(1-b) \left[\frac{xt-\sqrt{(1-x^2)(1-t^2)}-b} {1+b^2 -2b[xt-\sqrt{(1-x^2)(1-t^2)}] } \right. \\
-& \qquad \qquad \left .  + \frac{xt+\sqrt{(1-x^2)(1-t^2)}-b} {1+b^2 -2b[xt+\sqrt{(1-x^2)(1-t^2)}] }  \right] \\
+& \qquad \qquad \left .  + \frac{xt+\sqrt{(1-x^2)(1-t^2)}-b} {1+b^2 -2b[xt+\sqrt{(1-x^2)(1-t^2)}] }  \right].
+\end{align*}
+Furthermore
+\begin{align*}
+\int_{-1}^1K(x,x_i)K(x,x_j)\rho(x)dx &= \int_{-1}^1\left(\sum_{k=0}^\infty\lambda_k\phi_k(x)\phi_k(x_i)\right)\left(\sum_{k=0}^\infty\lambda_k\phi_k(x)\phi_k(x_j)\right)\rho(x)dx\\
+&= \sum_{k=0}^\infty\lambda_k^2\phi_k(x_i)\phi_k(x_j)\\
+&= (1-a)^2 + a^2(1-b)^2\left[\frac{xt-\sqrt{(1-x^2)(1-t^2)}-b^2} {1+b^4 -2b^2[xt-\sqrt{(1-x^2)(1-t^2)}] } \right. \\
+& \qquad \qquad \left .  + \frac{xt+\sqrt{(1-x^2)(1-t^2)}-b^2} {1+b^4 -2b^2[xt+\sqrt{(1-x^2)(1-t^2)}] }  \right].
 \end{align*}
 
 \section{Algebraically Decaying Eigenvalues}
@@ -108,17 +115,33 @@ For this choice of algebraically decaying eigenvalues and for $-1 \le \alpha \le
 \begin{align*}
 \sum_{k=0}^{\infty} \lambda_k (2-\delta_{k,0}) \cos(2 \pi k\alpha)
 &= 1-a + \frac{2a}{\zeta(2b)}\sum_{k=1}^{\infty} \frac{\cos(2 \pi k\alpha)}{k^{2b}}\\
-&= 1-a + \frac{2a}{\zeta(2b)} (-1)^{b+1} \frac{(2 \pi)^{2b}} {2 (2b)!} B_{2b}(\alpha) \\
-&= 1-a + \frac{a (-1)^{b+1}(2 \pi)^{2b}}{(2b)!\zeta(2b)} B_{2b}(\alpha).
+&= 1-a + \frac{2a}{\zeta(2b)} (-1)^{b+1} \frac{(2 \pi)^{2b}} {2 (2b)!} B_{2b}(\abs\alpha) \\
+&= 1-a + \frac{a (-1)^{b+1}(2 \pi)^{2b}}{(2b)!\zeta(2b)} B_{2b}(\abs\alpha).
 \end{align*}
 So it follows from \eqref{sumcos} that
 \begin{align*}
 K(x,t) &= \sum_{k=0}^{\infty} \lambda_k \phi_k(x)\phi_k(t) \\
-&= 1-a + \frac{a (-1)^{b+1}(2 \pi)^{2b}}{2(2b)!\zeta(2b)} [B_{2b}((\theta + \omega)/(2\pi)) + B_{2b}((\theta - \omega)/(2\pi))]\\
-&= 1-a + \frac{a (-1)^{b+1}(2 \pi)^{2b}}{2(2b)!\zeta(2b)} \left[B_{2b}\left(\frac{\cos^{-1}(x) + \cos^{-1}(t)}{2\pi}\right) \right .  \\
-& \qquad \qquad \left. + B_{2b}\left(\frac{\cos^{-1}(x) - \cos^{-1}(t)}{2\pi}\right) \right]
+&= 1-a + \frac{a (-1)^{b+1}(2 \pi)^{2b}}{2(2b)!\zeta(2b)} [B_{2b}(\abs{\theta + \omega}/(2\pi)) + B_{2b}(\abs{\theta - \omega}/(2\pi))]\\
+&= 1-a + \frac{a (-1)^{b+1}(2 \pi)^{2b}}{2(2b)!\zeta(2b)} \left[B_{2b}\left(\frac{\abs{\cos^{-1}(x) + \cos^{-1}(t)}}{2\pi}\right) \right .  \\
+& \qquad \qquad \left. + B_{2b}\left(\frac{\abs{\cos^{-1}(x) - \cos^{-1}(t)}}{2\pi}\right) \right].
+\end{align*}
+Furthermore
+\begin{align*}
+\int_{-1}^1K(x,x_i)K(x,x_j)\rho(x)dx &= \sum_{k=0}^\infty\lambda_k^2\phi_k(x_i)\phi_k(x_j)\\
+&= (1-a)^2-\frac{a^2(2 \pi)^{4b}}{2(4b)!\zeta^2(2b)} \left[B_{4b}\left(\frac{\abs{\cos^{-1}(x_i) + \cos^{-1}(x_j)}}{2\pi}\right) \right .  \\
+& \qquad \qquad \left. + B_{4b}\left(\frac{\abs{\cos^{-1}(x_i) - \cos^{-1}(x_j)}}{2\pi}\right) \right].
 \end{align*}
 
-\bibliographystyle{model1b-num-names.bst}
+For example, take $b=1$ and we have
+$$K(x,t)=1-a+6a\left(B_2\left(\frac{\abs{\cos^{-1}(x)+\cos^{-1}(t)}}{2\pi}\right)+B_2\left(\frac{\abs{\cos^{-1}(x)-\cos^{-1}(t)}}{2\pi}\right)\right),$$
+where
+$$B_2(s)=s^2-s+1/6.$$
+We can proceed to compute that
+\begin{align*}
+\int_{-1}^1K(x,x)\rho(x)dx&=\int_{-1}^1\left(1+6aB_2\left(\frac{\cos^{-1}(x)}\pi\right)\right)\rho(x)dx\\
+&=1-6a\int_0^\pi B_2\left(\frac\theta\pi\right)\frac1{\pi\sqrt{1-\cos^2\theta}}\dif\cos\theta\\
+&=1+6a\int_0^1 B_2(s)ds=1
+\end{align*}
+\bibliographystyle{amsplain}
 \bibliography{FJH22,FJHown22}
 \end{document}
