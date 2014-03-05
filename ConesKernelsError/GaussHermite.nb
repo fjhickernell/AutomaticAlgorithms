@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       157,          7]
-NotebookDataLength[      9124,        309]
-NotebookOptionsPosition[      8658,        288]
-NotebookOutlinePosition[      9004,        303]
-CellTagsIndexPosition[      8961,        300]
+NotebookDataLength[     11457,        392]
+NotebookOptionsPosition[     10803,        365]
+NotebookOutlinePosition[     11148,        380]
+CellTagsIndexPosition[     11105,        377]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -284,10 +284,87 @@ Cell[BoxData[
              SuperscriptBox["c", "2"]}]}], ")"}]}]]]}]]}], 
     ")"}]}]}]], "Output",
  CellChangeTimes->{3.6007931965773153`*^9}]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"K", "[", "x_", "]"}], ":=", 
+  RowBox[{"a", "*", 
+   RowBox[{"Sqrt", "[", 
+    RowBox[{
+     RowBox[{"(", 
+      RowBox[{"1", "-", "b"}], ")"}], "/", 
+     RowBox[{"(", 
+      RowBox[{"1", "+", "b"}], ")"}]}], "]"}], "*", 
+   RowBox[{"Exp", "[", 
+    RowBox[{
+     RowBox[{"(", 
+      RowBox[{"1", "-", 
+       RowBox[{
+        RowBox[{"a", "^", "2"}], "*", 
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{"1", "-", "b"}], ")"}], "/", 
+         RowBox[{"(", 
+          RowBox[{"1", "+", "b"}], ")"}]}]}]}], ")"}], 
+     RowBox[{"x", "^", "2"}]}], "]"}]}]}]], "Input",
+ CellChangeTimes->{{3.6029806012838163`*^9, 3.6029806432502165`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"r", "[", "x_", "]"}], ":=", 
+  RowBox[{
+   RowBox[{"Exp", "[", 
+    RowBox[{"-", 
+     RowBox[{"x", "^", "2"}]}], "]"}], "/", 
+   RowBox[{"Sqrt", "[", "Pi", "]"}]}]}]], "Input",
+ CellChangeTimes->{{3.6029806497365875`*^9, 3.602980668594666*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Integrate", "[", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"K", "[", "x", "]"}], "*", 
+    RowBox[{"r", "[", "x", "]"}]}], ",", 
+   RowBox[{"{", 
+    RowBox[{"x", ",", 
+     RowBox[{"-", "Infinity"}], ",", "Infinity"}], "}"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.6029806706767855`*^9, 3.602980711827139*^9}}],
+
+Cell[BoxData[
+ RowBox[{"ConditionalExpression", "[", 
+  RowBox[{
+   FractionBox[
+    RowBox[{"a", " ", 
+     SqrtBox[
+      FractionBox[
+       RowBox[{"1", "-", "b"}], 
+       RowBox[{"\[Pi]", "+", 
+        RowBox[{"b", " ", "\[Pi]"}]}]]]}], 
+    SqrtBox[
+     FractionBox[
+      RowBox[{
+       SuperscriptBox["a", "2"], "-", 
+       RowBox[{
+        SuperscriptBox["a", "2"], " ", "b"}]}], 
+      RowBox[{"\[Pi]", "+", 
+       RowBox[{"b", " ", "\[Pi]"}]}]]]], ",", 
+   RowBox[{
+    RowBox[{"Re", "[", 
+     FractionBox[
+      RowBox[{
+       SuperscriptBox["a", "2"], " ", 
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"-", "1"}], "+", "b"}], ")"}]}], 
+      RowBox[{"1", "+", "b"}]], "]"}], "<", "0"}]}], "]"}]], "Output",
+ CellChangeTimes->{{3.6029806940791235`*^9, 3.602980716143386*^9}}]
 }, Open  ]]
 },
 WindowSize->{707, 817},
-WindowMargins->{{Automatic, 338}, {48, Automatic}},
+WindowMargins->{{82, Automatic}, {Automatic, 40}},
 FrontEndVersion->"9.0 for Microsoft Windows (64-bit) (November 20, 2012)",
 StyleDefinitions->"Default.nb"
 ]
@@ -309,7 +386,13 @@ Cell[1584, 57, 854, 29, 72, "Output"]
 Cell[2453, 89, 92, 1, 31, "Input"],
 Cell[CellGroupData[{
 Cell[2570, 94, 487, 13, 31, "Input"],
-Cell[3060, 109, 5582, 176, 388, "Output"]
+Cell[3060, 109, 5582, 176, 356, "Output"]
+}, Open  ]],
+Cell[8657, 288, 683, 22, 31, "Input"],
+Cell[9343, 312, 280, 8, 31, "Input"],
+Cell[CellGroupData[{
+Cell[9648, 324, 331, 9, 31, "Input"],
+Cell[9982, 335, 805, 27, 134, "Output"]
 }, Open  ]]
 }
 ]
