@@ -1,46 +1,18 @@
-%Test out fwht
+%Test out nu fft
 close all, clear all
 format long
 format compact
 
-n=2^13; 
-x=(0:n-1)/n; 
-y=sin(x); 
-
-tic
-ywt=fwht(y,[],'sequency'); 
-toc
-tic
-yfft=fft(y); 
-%yfft=[yfft(1:n/2); yfft(n:-1:n/2+1)];
-yfft=yfft(:)';
-toc
-
-sqrt(sum(ywt(1:n/2).^2)), sqrt(sum(ywt.^2))
-sqrt(sum(abs(yfft(1:n/2)).^2)), sqrt(sum(abs(yfft).^2))
-
-%loglog(1:n,abs(ywt),'b-',1:n,abs(yfft),'k-','linewidth',2)
-loglog(abs(yfft))
-figure(gcf)
-break
-
-% %% 2-d example
-% n=2^13; 
-% x=net(sobolset(2),n); 
-% y=sin(x(:,1))+(10-x(:,2)).^2; 
-% 
-% tic
-% ywt=fwht(y,[],'sequency'); 
-% toc
-% tic
-% yfft=fft(y)/n; 
-% yfft=[yfft(1:n/2); yfft(n:-1:n/2+1)];
-% yfft=yfft(:)';
-% toc
-% 
-% sqrt(sum(ywt(1:n/2).^2)), sqrt(sum(ywt.^2))
-% sqrt(sum(abs(yfft(1:n/2)).^2)), sqrt(sum(abs(yfft).^2))
-% 
-% figure
-% loglog(1:n,abs(ywt),'b-',1:n,abs(yfft),'k-','linewidth',2)
-% figure(gcf)
+%% We test that our nufft gives us the same result as the Fourier transform
+n=2^15;
+latticeseq_b2('init0');
+xpts=latticeseq_b2(1,n);
+nfftr=nufft(2,xpts);
+fftr=fft(sort(xpts))/n;
+error=norm(nfftr-fftr);
+plot(abs(nfftr-fftr))
+figure
+loglog(1:n,abs(nfftr),'r-',1:n,abs(fftr),'b-','linewidth',2)
+hold on
+loglog(1:n,abs(nfftr),'r-','linewidth',2)
+loglog(1:n,abs(fftr),'b-','linewidth',2)

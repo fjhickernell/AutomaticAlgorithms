@@ -33,14 +33,14 @@ latticeseq_b2('init0'); %initializing lattice numbers generator
 %testfun=@(x) x(:,1).*x(:,2); exactinteg=1/4; d=2; %test function
 %testfun=@(x) g(x(:,1)).*g(x(:,2)); exactinteg=1; d=2; %test function
 %testfun=@(x) ber(x(:,1)).*ber(x(:,2)); exactinteg=1/12^2; d=2; %test function
-testfun=@(x) sin(x(:,1)).*x(:,2)+exp(x(:,1)); exactinteg=(1-cos(1))/2 + (exp(1)-1); d=2; %test function
+%testfun=@(x) sin(x(:,1)).*x(:,2)+exp(x(:,1)); exactinteg=(1-cos(1))/2 + (exp(1)-1); d=2; %test function
 Stilde=zeros(mmax-mmin+1,1);
 appxinteg=zeros(mmax-mmin+1,1);
 
 %% Adding the Baker's transform? For 1D
-%testfun=@(x) testfun(1-2*abs(x-1/2)); exactinteg=exactinteg; d=1; %test function with Baker transform
+testfun=@(x) testfun(1-2*abs(x-1/2)); exactinteg=exactinteg; d=1; %test function with Baker transform
 %% Adding the Baker's transform? For 2D
-testfun=@(x) testfun([1-2*abs(x(:,1)-1/2),1-2*abs(x(:,2)-1/2)]); exactinteg=exactinteg; d=2; %test function with Baker transform
+testfun=@(x) testfun([1-2*abs(x(:,1)-1/2),1-2*abs(x(:,2)-1/2)]); exactinteg=exactinteg*2; d=2; %test function with Baker transform
 
 %% Initial points and FFT
 n=2^mmin;
