@@ -3,12 +3,17 @@ close all, clear all
 format long
 format compact
 
+
 %% We test that our nufft gives us the same result as the Fourier transform
+f=@(x) sin(x).*exp(cos(x));
 n=2^15;
 latticeseq_b2('init0');
 xpts=latticeseq_b2(1,n);
-nfftr=nufft(2,xpts);
-fftr=fft(sort(xpts))/n;
+ynu=f(xpts);
+[Y,I]=sort(xpts)
+yff=f(sort(xpts));
+nfftr=nufft(2,ynu);
+fftr=fft(yff)/n;
 error=norm(nfftr-fftr);
 plot(abs(nfftr-fftr))
 figure

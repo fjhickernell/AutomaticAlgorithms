@@ -26,6 +26,7 @@ latticeseq_b2('init0'); %initializing lattice numbers generator
 %testfun=@(x) x.^2; exactinteg=1/3; d=1; %test function
 %testfun=@(x) g(x); exactinteg=1; d=1; %test function
 %testfun=@(x) ber(x); exactinteg=1/12; d=1; %test function
+%testfun=@(x) exp(cos(2*pi*x)); exactinteg=1.266065877752008; d=1; %test function
 %a=20; testfun=@(x) sin(a*x); exactinteg=(1-cos(a))/a; d=1; %test function
 %testfun=@(x) 2*x.*(x<0.5)+(2-2*x).*(0.5<=x); exactinteg=1/2; d=1; %test function
 %testfun=@(x) (x-0).^2.*(x-1).^2; exactinteg=1/30; d=1; %test function
@@ -40,7 +41,7 @@ appxinteg=zeros(mmax-mmin+1,1);
 %% Adding the Baker's transform? For 1D
 %testfun=@(x) testfun(1-2*abs(x-1/2)); exactinteg=exactinteg; d=1; %test function with Baker transform
 %% Adding the Baker's transform? For 2D
-testfun=@(x) testfun([1-2*abs(x(:,1)-1/2),1-2*abs(x(:,2)-1/2)]); exactinteg=exactinteg; d=2; %test function with Baker transform
+%testfun=@(x) testfun([1-2*abs(x(:,1)-1/2),1-2*abs(x(:,2)-1/2)]); exactinteg=exactinteg; d=2; %test function with Baker transform
 
 %% Initial points and FFT
 n=2^mmin;
@@ -144,23 +145,32 @@ end
    %% Compute Stilde
    nllstart=int64(2^(m-mlag-1));
    Stilde(m-mmin+1)=sum(abs(y(kappanumap(nllstart+1:2*nllstart))));
-
+   
+   
    %% Approximate integral
    appxinteg(m-mmin+1)=mean(yval);
 
 end
+figure
+ymap=y(kappanumap);
+loglog(abs(ymap))
+
 
 %% Error 
 trueerr=abs(exactinteg-appxinteg);
 %disp([appxinteg trueerr Stilde])
+errorstilde=Stilde.*2.^(-mmin:-1:-mmax)';
 
 %% Plot results
 figure
 minexp=floor(mmin*log10(2));
 maxexp=ceil(mmax*log10(2));
-h=loglog(2.^(mmin:mmax),trueerr,'b.',2.^(mmin:mmax),Stilde,'rs');
+% h=loglog(2.^(mmin:mmax),trueerr,'b.',2.^(mmin:mmax),Stilde,'rs');
+% set(h(2),'MarkerFaceColor','r','MarkerSize',10);
+% set(gca,'Xtick',10.^(minexp:maxexp))
+% axis([10.^[minexp maxexp],1e-17 10])
+figure
+h=loglog(2.^(mmin:mmax),trueerr,'b.',2.^(mmin:mmax),errorstilde,'rs');
 set(h(2),'MarkerFaceColor','r','MarkerSize',10);
-set(gca,'Xtick',10.^(minexp:maxexp))
-axis([10.^[minexp maxexp],1e-17 10])
 
 toc
