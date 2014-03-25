@@ -66,7 +66,7 @@ The set $\bbK:=\integers^d$ is used to index series expressions for the integran
 Now, define the bilinear operation $\ip{\cdot}{\cdot}: \bbK \times \cx \to \cx$,
 \begin{subequations} \label{bilinear}
 \begin{equation}
-\ip{\vk}{\vx}=\vk^T\vy\pmod 1.
+\ip{\vk}{\vx}=\vk^T\vx\pmod 1.
 \end{equation}
 
 For all $\vt, \vx \in \cx$, $\vk, \vl \in \bbK$, and $a \in \integers$, it follows that
@@ -144,10 +144,10 @@ These maps have certain desirable properties.
 \item Using \eqref{netpropc} and by construction, $\hnu_0(\vk)\in\{0,\dots,b-1\}$ and $\hnu_m(\vk)\in (-1,b)$. Using the assumption \eqref{netpropb}, $\hnu_m(\vk)\pmod 1=\vk^Tb\vt_{b^m}\pmod 1-\vk^T\vt_{b^{m-1}}\pmod 1=0$. Then, $\hnu_m(\vk)\in (-1,b)\cap\integers=\{0,\dots,b-1\},\;\forall m\in\natzero$.
 
 \item For injectivity, we prove that $\hvnu(\vk)=\hvnu(\vl) \Rightarrow \vk = \vl$. If $\hvnu(\vk)=\hvnu(\vl)$, $\hnu_m(\vk)=\hnu_m(\vl),\;\forall m\in\natzero$. In particular for $m=0$, this implies $\ip{\vk}{\vt_1}-\ip{\vl}{\vt_1}=0$. Assume now that $\ip{\vk}{\vt_{b^m}}-\ip{\vl}{\vt_{b^m}}=0$. Since $\hnu_{m+1}(\vk)-\hnu_{m+1}(\vl)=0$, then $\ip{\vk}{\vt_{b^{m+1}}}-\ip{\vl}{\vt_{b^{m+1}}}=0$. By induction $\ip{\vk}{\vt_{b^{m}}}-\ip{\vl}{\vt_{b^{m}}}=\ip{\vk-\vl}{\vt_{b^{m}}}=0$ for all $m\in\natzero$. Thus, by \eqref{netpropd}, $\vk=\vl$.
-    
+
 \vspace{2mm}
     For the surjection, by \eqref{bilinearlinzeroprop} there exists $\vk$ such that $\hnu_0(\vk)=\nu\neq 0$. Furthermore due to the property \eqref{bilinearlinkprop}, $\hnu_0(a\vk)=a\nu \pmod b$ and recalling the Lagrange's Theorem, any element $\nu$ different of the identity generates the group $\bbF_b$. Therefore, $a=1,...,b-1$ gives us any element of $\bbF_b$.
-    
+
     Now, for any $l\leq m\in\naturals$ and using \eqref{assumgenip},
 \begin{align*}
 \hnu_l(\vk+b^m\va)&=
@@ -298,7 +298,7 @@ We want to use $\tf_{m,\kappa}$ to estimate $\hf_{\kappa}$ if $m$ is signficantl
 \subsection{Sums of Series Coefficients and Their Bounds}
 Consider the following sums of the series coefficients defined for $\ell,m \in \natzero$, $\ell \le m$:
 \begin{gather*}
-S(m) =  \sum_{\kappa=\left \lfloor b^{m-1} \right \rfloor}^{b^{m}-1} \bigabs{\hf_{\kappa}}, \qquad 
+S(m) =  \sum_{\kappa=\left \lfloor b^{m-1} \right \rfloor}^{b^{m}-1} \bigabs{\hf_{\kappa}}, \qquad
 \hS(\ell,m)  = \sum_{\kappa=\left \lfloor b^{\ell-1} \right \rfloor}^{b^{\ell}-1} \sum_{\lambda=1}^{\infty} \bigabs{ \hf_{\kappa+\lambda b^{m}}}, \\
 \wcS(m)=\hS(0,m) + \cdots + \hS(m,m)=
 \sum_{\kappa=b^{m}}^{\infty} \bigabs{\hf_{\kappa}}, \\
@@ -308,9 +308,9 @@ The first three kinds of sums, $S(\cdot)$, $\hS(\cdot,\cdot)$, and $\wcS(\cdot)$
 
 We now make critical assumptions that $\hS(\ell,m)$ and $\wcS(m)$ can be bounded above in terms of $S(\ell)$, provided that $\ell$ is large enough.  Let $\ell,m \in \naturals_0$ with $\ell \le m$, and fix $\ell_* \in \naturals$.  It is assumed that their exist known,  non-negative valued functions $\homega$ and $\wcomega$ with $\lim_{m \to \infty} \wcomega(m) = 0$ such that
 \begin{equation} \label{conecond}
-\hS(\ell,m) \le \homega(m-\ell) \wcS(m) \quad \forall \ell, \qquad 
+\hS(\ell,m) \le \homega(m-\ell) \wcS(m) \quad \forall \ell, \qquad
 \wcS(m) \le \wcomega(m-\ell) S(\ell) \quad \forall \ell_* \le \ell.
-\end{equation} 
+\end{equation}
 By the definition of $\wcS(m)$, the choice $\homega(m):=1$ for all $m$ is always guaranteed to work.  However, one might also consider choosing $\homega(m)=C b^{-m}$ for some $C$.  The reason for enforcing the second assumption only  for $\ell \ge \ell_*$ is that for small $\ell$, one might have a coincidentally small $S(\ell)$, since it only involves $b^\ell$ coefficients, while $\wcS(m)$ is large.
 
 Under this assumption, for $\ell, m \in \naturals$, $\ell_* \le \ell \le m$, it is possible to bound the sum of the true coefficients, $S(\ell)$, in terms of the observed sum of the discrete coefficients, $\tS(\ell,m)$, as follows:
@@ -321,16 +321,16 @@ S(\ell) &= \sum_{\kappa=b^{\ell-1}}^{b^{\ell}-1} \bigl \lvert \hf_{\kappa}\bigr\
 S(\ell) & \le \frac{\tS(\ell,m)}{1 - \homega(m-\ell) \wcomega(m-\ell)} \qquad \text{provided that } \homega(m-\ell) < 1.
 \end{align*}
 
-Using this upper bound, one can then conservatively bound the error of integration using the shifted node set.  For for $\ell, m \in \naturals$, $\ell_* \le \ell \le m$, it follows that 
+Using this upper bound, one can then conservatively bound the error of integration using the shifted node set.  For for $\ell, m \in \naturals$, $\ell_* \le \ell \le m$, it follows that
 \begin{align*}
 \MoveEqLeft{\abs{\int_{\cube} f(\vx) \, \dif \vx - \frac{1}{b^m} \sum_{i=0}^{b^m-1} f(\vx_i) }}\\
 &= \abs{\hf(\vzero) - \tf_m(\vzero)} = \abs{\hf_0 - \tf_{m,0}} = \abs{\sum_{\lambda=1}^{\infty} \hf_{\lambda b^{m}} \me^{2 \pi \sqrt{-1}\ip{\tvk(\lambda b^{m})}{\vDelta}}}\\
-&\le \sum_{\lambda=1}^{\infty} \bigabs{\hf_{\lambda b^{m}}} 
+&\le \sum_{\lambda=1}^{\infty} \bigabs{\hf_{\lambda b^{m}}}
 = \hS(0,m) \le \homega(m) \wcS(m) \le \homega(m) \wcomega(m-\ell) S(\ell) \\
 & \le \frac{\tS(\ell,m)\homega(m) \wcomega(m-\ell)}{1 - \homega(m-\ell) \wcomega(m-\ell)}.
 \end{align*}
 
-This error bound suggests the following algorithm.  Choose $r \in \naturals$ such that $\homega(r)\wcomega(r)<1$.  For $j \in \naturals$ define 
+This error bound suggests the following algorithm.  Choose $r \in \naturals$ such that $\homega(r)\wcomega(r)<1$.  For $j \in \naturals$ define
 \[
 \ell_j=j+\ell_*-1, \qquad  m_j=j+\ell_*+r-1, \qquad  \fudge = \frac{\wcomega(r)}{1 - \homega(r)\wcomega(r)}.
 \]
