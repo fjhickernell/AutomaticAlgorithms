@@ -1,10 +1,11 @@
 \documentclass[]{article}
 \setlength{\marginparwidth}{0.5in}
-\usepackage{amsmath,amssymb,amsthm,mathtools,booktabs,array,tikz,pifont,comment,graphicx}
+\usepackage{amsmath,amssymb,amsthm,mathtools,booktabs,alltt,xspace,array,tikz,pifont,comment,graphicx}
 \usepackage[author-year]{amsrefs}
 \input FJHDef.tex
 
 
+\newcommand{\integ}{\texttt{integral}\xspace}
 \DeclareMathOperator{\Var}{Var}
 \newcommand{\tVar}{\widetilde{\Var}}
 \DeclareMathOperator{\err}{err}
@@ -31,7 +32,7 @@
 
 \begin{document}
 
-\title{Reliable Adaptive Quadrature for Cones of Integrands}
+\title{Reliable Adaptive Numerical Integration for Cones of Integrands}
 \author{Fred J. Hickernell, Martha Razo, and Sunny Yun}
 \maketitle 
 
@@ -42,35 +43,74 @@
 
 \section{Introduction} 
 
-Although some mathematical problems can be solved using pencil and paper, many others can only be solved via numerical algorithms.  These algorithms typically generate a sequence of approximations that converge to the true solution.  The user wants to know when to stop the approximation process because the error is no greater than the specified error tolerance $\varepsilon$.  Stopping criteria for existing algorithms are based either on inconvenient assumptions or on heuristics.  
+While some mathematical problems can be solved using pencil and paper, many others must be solved by numerical algorithms.  An adaptive algorithm is convenient for the user because it aims to provide an approximate solution with an error no greater than the tolerance, $\varepsilon$, and it automatically determines how much computational effort is needed to do so.  At the core of every adaptive algorithm is a method for estimating the error of the numerical approximation.  Unfortunately, these error estimates are typically based on heuristics and so do not come with guarantees. 
 
-We focus on the problem of integrating cones of integrands and are able to construct a reliable error estimate for the trapezoidal rule that depends on function values.  This leads to an adaptive trapezoidal algorithm that is guaranteed to provide the value of the integral to within the desired absolute error tolerance.  In view of our new algorithm and the known flaws in of existing adaptive quadrature rules, we advocate changing how error estimation for quadrature is taught in elementary numerical analysis courses.  We also explain how our new paradigm for quadrature can be extended to other adaptive numerical algorithms.
+This article constructs an adaptive numerical integration (quadrature) algorithm that is \emph{guaranteed} to provide the value of the integral to within the desired absolute error tolerance, $\varepsilon$.  Our construction succeeds by focusing on a \emph{cone} of integrands.  We also show that our algorithm has an asymptotically optimal computational cost among all possible successful algorithms.  In view of the known flaws in existing adaptive numerical integration rules, we advocate changing how error estimation for numerical integration is taught in numerical analysis courses.  We also explain how our new paradigm for adaptive numerical integration can be extended to adaptive numerical algorithms for other problems.
+
+\subsection{When \texttt{cos} Fails}
+
+Before addressing the more difficult problem of numerical integration, let's consider the simpler problem of producing values of $\cos(x)$ on a computer or calculator with a double precision number system.  Double precision means that calculations are done using about $15$ decimal digits of accuracy, so we expect \texttt{cos($x$)}\footnote{We use the teletype font to denote a numerical algorithm here and elsewhere in this article.} on a computer to satisfy
+\begin{equation} \label{coserrexpect}
+\abs{\cos(x)-\texttt{cos($x$)}} \le 10^{-15}.
+\end{equation}
+
+The numerical calculation \texttt{cos($x$)} first identifies $y=x+n\pi$ near zero, where $n$ is an integer. Noting that $\cos(x)=(-1)^n\cos(y)$, the algorithm approximates $\cos(y)$ by a high degree polynomial or rational function.  This approach achieves the desired accuracy in many cases, but \texttt{cos($x$)} has poor accuracy for very large $x$.  For example, in MATLAB one obtains
+\begin{alltt}
+>> cos(1e17*pi)
+ans =
+    -5.300447339957113e-01
+\end{alltt}
+whereas one might hope for an answer of $1$\footnote{While our numerical examples in this article are coded in MATLAB \cite{MAT8.1}, the principles illustrated apply universally to numerical algorithms implemented in other programming languages or software packages.}.   The reason for the large error here is that the computer number system with $15$ decimal digits cannot distinguish between $10^{17}\pi$ and $(10^{17}+1)\pi$, whose cosine values are quite different. 
+
+This example illustrates that virtually all numerical algorithms can be inaccurate.  The user should know for what inputs an algorithm might not give the desired accuracy.  For the \texttt{cos} algorithm, \eqref{coserrexpect} is wrong and should be replaced by 
+\[
+\abs{\cos(x)-\texttt{cos($x$)}} \le \min(2,10^{-15}(1+\abs{x})).
+\]
 
 \subsection{Why Numerical Integration Is Needed?}
-There are various analytic methods for evaluating integrals, e.g., substitution, integration by parts, and partial fractions.  Unfortunately, many elementary functions have integrals that \emph{cannot} be expressed as elementary functions.  One example is the standard normal probability density, $\phi: x \mapsto \me^{-x^2/2}/\sqrt{2 \pi}$, whose integral is the standard normal distribution, $\Phi : x \mapsto \int_{-\infty}^x \phi(t) \, \dif t$.  Since the $\Phi$ is not an elementary function, values of $\Phi$ must be provided via tables in statistics textbooks and special functions in calculators. By contrast, the derivatives of elementary functions are always elementary functions.  
+Various analytic methods for evaluating integrals are taught in calculus courses, e.g., substitution, integration by parts, and partial fractions.  Unfortunately, many elementary functions have integrals that \emph{cannot} be expressed as elementary functions, no matter how clever one is.  One example is the standard normal probability density, $\phi: x \mapsto \me^{-x^2/2}/\sqrt{2 \pi}$, whose integral is the standard normal cumulative distribution, $\Phi : x \mapsto \int_{-\infty}^x \phi(t) \, \dif t$.  Since the $\Phi$ is not an elementary function, values of $\Phi$ must be provided via tables in statistics textbooks and special functions in calculators. By contrast, the derivatives of elementary functions are always elementary functions.  
 
-\subsection{The Basic Trapezoidal Rule}
-To compute integrals that are not amenable to analytic methods one must turn to numerical integration (quadrature) methods such as the trapezoidal rule, $T_n$, which is often introduced in calculus courses:
-\begin{equation}
-\int_0^1 f(x) \, \dif x \approx T_n(f) := \frac{1}{2n} \left [ f(0) + 2 f(1/n) + \cdots + 2 f(1-1/n) + f(1) \right].
-\end{equation}
-The trapezoidal rule is the integral of the piecewise linear spline approximation to the integrand.  The name of the rule comes from the fact that the integral of the linear spline is a sum of areas of trapezoids (see Figure \ref{Gausstrapfig}). Under mild smoothness conditions on $f$ one observes that $T_n(f)$ approaches $\int_0^1 f(x) \, \dif x$ as $n$ increases. 
+The problem of numerical integration is much harder than the problem of evaluating the cosine function.  For \texttt{cos($x$)} the input $x$ is a number, which is known to $15$ significant digits.  For integration the key input is an imperfectly known function.  One would like to construct an algorithm \integ, such that
+\begin{equation*}
+\abs{\int_a^b f(x) \, \dif x - \texttt{integral($f$,$a$,$b$,$\varepsilon$)}} \le \varepsilon.
+\end{equation*}
+However, what is meant by the input $f$ is only a black-box algorithm that produces function values $f(x)$ for any given $x \in [a,b]$.  Although the algorithm \integ may make assumptions about the smoothness of $f$, the user is not expected to provide detailed information about $f$.
 
-For the user's convenience one would like to turn $T_n$ into an \emph{automatic} quadrature algorithm --- one that automatically chooses $n$ to ensure that the trapezoidal rule error is small enough.  Given the user's tolerance for error, $\varepsilon$, an automatic trapezoidal algorithm should choose $n$ such that 
+The next section reviews what is known about the composite trapezoidal rule and its error.  This is the basic method that we used to build our adaptive numerical integration algorithm.  Section \ref{autoballsec} describes an automatic algorithm based on knowing an upper bound on the variation of the first derivative of the integrand.  Unfortunately, this is not adaptive and rather impractical for many applications.
+
+\section{The Composite Trapezoidal Rule and Its Error Bound}
+The composite trapezoidal rule, $T_n$, which is often introduced in calculus courses, approximates an integral by the sum of the areas of $n$ trapezoids whose heights are function values (see Figure \ref{Gausstrapfig}):
+\begin{multline}
+\int_a^b f(x) \, \dif x \approx T_n(f) := \frac{b-a}{2n} \left [ f(a) + 2 f\biggl(\frac{(n-1)a+b}{n}\biggr) + \cdots  \right .\\
+ \left . + 2 f\biggl(\frac{a+(n-1)b}{n}\biggr) + f(b) \right],
+\end{multline}
+where $n \in \naturals$ denotes the number of trapezoids, and $a$ and $b$ are finite with $a<b$.  The trapezoidal rule can also be thought of as the integral of the piecewise linear spline approximation to the integrand. Under mild smoothness conditions on $f$ one observes that $T_n(f)$ approaches $\int_a^b f(x) \, \dif x$ as $n$ increases (see \eqref{traperrbd} below). 
+
+We would like to turn $T_n$ into an \emph{automatic} quadrature algorithm --- one that automatically chooses $n$ to ensure that the trapezoidal rule error is small enough.  Given the user's tolerance for error, $\varepsilon$, an automatic trapezoidal algorithm should choose $n$ such that 
 \begin{equation} \label{errdef}
 \err(f,n) := \abs{\int_0^1 f(x) \, \dif x - T_n(f)} \le \varepsilon.
 \end{equation}
 
-Although $\err(f,n)$ is rarely known exactly, there exist rigorous upper bounds on the error that are proportional to $1/n^2$ and the roughness of the integrand, e.g., see \ocite{BraPet11a}*{Sect.\ 7.2, (7.15)}: 
-\begin{equation} \label{traperrbd}
-\err(f,n) \le \oerr(f,n):=\frac{\Var(f')}{8n^2}, \qquad n \in \naturals := \{1, 2, \ldots \}. 
-\end{equation}
-Here $\Var(\cdot)$ represents the (total) variation of a function, which is defined as
+Upper bounds on the trapezoidal rule error assumed that the integrand possesses some smoothness.  For any function $f:[a,b]\to \reals$, let $f'$ denote the one-sided derivative:
+\[
+f'(x)=\lim_{\delta \downarrow 0} \frac{f(x+\delta)-f(x)}{\delta}, \quad a \le x < b, \qquad f'(b)=\lim_{\delta \downarrow 0} \frac{f(b)-f(b-\delta)}{\delta}.
+\]
+This makes $f'$ well-defined even when it has jump discontinuities.  All integrands considered in this article have derivatives with bounded variation and lie in the linear space
+\[
+\cv:=\{f : \Var(f')<\infty \}.
+\]
+Here $\Var(\cdot)$ represents the (total) variation of a function:
 \begin{multline} \label{vardef}
 \Var(f) \\
-:= \sup \left \{ \sum_{i=1}^n \abs{f(x_i)-f(x_{i-1})} : n \in \naturals, \ 0 \le x_0 < x_1 < \cdots < x_{n} \le 1 \right\}.
+:= \sup \left \{ \sum_{i=1}^n \abs{f(x_i)-f(x_{i-1})} : n \in \naturals, \ a \le x_0 < x_1 < \cdots < x_{n} \le b \right\}.
 \end{multline}
-Intuitively, $\Var(f)$ is the total vertical distance up and down that one travels on a roller coaster whose track is the graph of $f$. The function $f \mapsto \Var(f')$ is a semi-norm. The trapezoidal rule gives the exact answer for linear integrands.  Error bound \eqref{traperrbd} reflects this fact since if $f(x)=ax+b$, then $f'(x)=a$, and so $\Var(f')=0$.
+Intuitively, $\Var(f)$ is the total vertical distance up and down that one travels on a roller coaster whose track is the graph of $f$. The function $f \mapsto \Var(f')$ is a semi-norm. 
+
+Although the true error, $\err(f,n)$, is rarely known in practice, there exist rigorous upper bounds on the error that are proportional to $\Var(f')/n^2$, e.g., see \ocite{BraPet11a}*{Sect.\ 7.2, (7.15)}: 
+\begin{equation} \label{traperrbd}
+\err(f,n) \le \oerr(f,n):=\frac{(b-a)^3\Var(f')}{8n^2}, \qquad n \in \naturals := \{1, 2, \ldots \}. 
+\end{equation}
+The trapezoidal rule gives the exact answer for linear integrands.  Error bound \eqref{traperrbd} reflects this fact since if $f(x)=ax+b$, then $f'(x)=a$, and so $\Var(f')=0$.
 
 To illustrate this error bound, consider the normal probability example mentioned above.  The trapezoidal rule approximation using $n=4$ trapezoids, the actual error, and the error bound are as follows:
 \begin{subequations} \label{GaussExample}
@@ -79,7 +119,7 @@ f(x) = 2\phi(2x) = \sqrt{\frac{2}{\pi}} \me^{-2x^2}, \qquad \int_0^1 f(x)  \, \d
 \Var(f') = 1.5038, \qquad \err(f,4)=0.0022 \le 0.0117 = \oerr(f,4).
 \end{gather}
 \end{subequations}
-(The value of the integral to four significant digits may be found by a variety of quadrature algorithms.)  Figure \ref{Gausstrapfig} depicts the integrand and the trapezoidal rule approximation. As expected, the actual error is bounded above by the error bound in \eqref{traperrbd}.
+(The value of the integral to four significant digits may be found by a variety of quadrature algorithms.)  Figure \ref{Gausstrapfig} depicts the integrand and the trapezoidal rule approximation. As expected, the actual error is no greater than the error bound in \eqref{traperrbd}.
 
 \begin{figure}
 \centering 
@@ -87,14 +127,14 @@ f(x) = 2\phi(2x) = \sqrt{\frac{2}{\pi}} \me^{-2x^2}, \qquad \int_0^1 f(x)  \, \d
 \caption{The integrand in \eqref{GaussExample} and the trapezoidal rule approximation for the integral. \label{Gausstrapfig}}
 \end{figure}
 
-Error bound \eqref{traperrbd} can help us determine how large $n$ must be to meet the error tolerance if an upper bound on $\Var(f')$ is available. Section \ref{autoballsec} provides the details of an automatic algorithm for such cases.  Unfortunately, in practice nothing may be known a priori about $\Var(f')$. Adaptive algorithms do not require an upper bound on $\Var(f')$ but estimate the error based on the function values sampled and then apply a stopping criterion to determine how many function values are required.  Section \ref{flawstopsec} describes the stopping criterion commonly taught in numerical analysis courses, but which has significant flaws, as pointed out by James Lyness \ycite{Lyn83}.  An improved stopping criterion for integrands lying in cones is described in Section \ref{newalgosec}.  Much of this section is taken from \ocite{HicEtal14b}, which presents a general framework for guaranteed automatic algorithms and also describes the new adaptive trapezoidal algorithm presented here.  In this article we discuss in greater detail the new adaptive trapezoidal algorithm.  In Section \ref{discusssec} we discuss the ramifications of these developments for for how we teach numerical integration in calculus courses and later on.  We also discuss the how we should go about developing new numerical algorithms.
+Error bound \eqref{traperrbd} can help us determine how large $n$ must be to meet the error tolerance if an upper bound on $\Var(f')$ is available. Section \ref{autoballsec} provides the details of an automatic algorithm when an upper bound on $\Var(f')$ is known a priori.  Unfortunately, such situations do not arise frequently in practice. Adaptive algorithms do not require an upper bound on $\Var(f')$ but estimate the error based on the function values sampled and then apply a stopping criterion to determine how many function values are required.  Section \ref{flawstopsec} describes the stopping criterion commonly taught in numerical analysis courses, but which has significant flaws, as pointed out by James Lyness \ycite{Lyn83}.  An improved stopping criterion for integrands lying in cones is described in Section \ref{newalgosec}.  Much of this section is taken from \ocite{HicEtal14b}, which presents a general framework for guaranteed automatic algorithms and also describes the new adaptive trapezoidal algorithm presented here.  In this article we discuss in greater detail the new adaptive trapezoidal algorithm.  In Section \ref{discusssec} we discuss the ramifications of these developments for for how we teach numerical integration in calculus courses and later on.  We also discuss the how we should go about developing new numerical algorithms.
 
 
 \section{An Automatic Algorithm for Balls of Integrands} \label{autoballsec}
 
 If $f$ has a simple form, like the example in \eqref{GaussExample}, then one may be able to derive an upper bound on $\Var(f')$.  In this case the following automatic algorithm based on error bound \eqref{traperrbd} may be used.  
 
-\begin{algo}[Automatic, for Balls] \label{ballalgo} Given a $\sigma>0$ and an error tolerance, $\varepsilon$, set 
+\begin{algo}[Automatic, Non-Adaptive, for Balls] \label{ballalgo} Given a $\sigma>0$ and an error tolerance, $\varepsilon$, set 
 \begin{equation}\label{algo1n}
 n = \left \lceil \sqrt{\sigma/(8\varepsilon)} \right \rceil,
 \end{equation}

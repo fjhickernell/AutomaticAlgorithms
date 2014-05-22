@@ -3,16 +3,6 @@
 \begin{bibdiv}
 \begin{biblist}
 
-\bib{AbrSte64}{book}{
-      editor={Abramowitz, M.},
-      editor={Stegun, I.~A.},
-       title={Handbook of mathematical functions with formulas, graphs and
-  mathematical tables},
-   publisher={U. S. Government Printing Office},
-     address={Washington, DC},
-        date={1964},
-}
-
 \bib{BraPet11a}{book}{
       author={Brass, H.},
       author={Petras, K.},
@@ -44,16 +34,18 @@
         date={2013},
 }
 
-\bib{HicEtal14b}{misc}{
+\bib{HicEtal14b}{article}{
       author={Clancy, N.},
       author={Ding, Y.},
       author={Hamilton, C.},
       author={Hickernell, F.~J.},
       author={Zhang, Y.},
-       title={The complexity of guaranteed automatic algorithms: Cones, not
-  balls},
-        date={2013},
-        note={submitted for publication, arXiv.org:1303.2412 [math.NA]},
+       title={The cost of deterministic, adaptive, automatic algorithms: Cones,
+  not balls},
+        date={2014},
+     journal={J. Complexity},
+      volume={30},
+       pages={21\ndash 45},
 }
 
 \bib{Lyn83}{article}{
