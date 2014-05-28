@@ -18,7 +18,7 @@
       author={Burden, R.~L.},
       author={Faires, J.~D.},
        title={Numerical analysis},
-     edition={Ninth},
+     edition={Ninth Edition},
    publisher={Cengage Brooks/Cole},
      address={Belmont, CA},
         date={2010},
@@ -76,6 +76,13 @@
        title={{MATLAB} 8.1},
      address={Natick, MA},
         date={2013},
+}
+
+\bib{MAT8.3}{manual}{
+      author={{The MathWorks, Inc.}},
+       title={{MATLAB} 8.3},
+     address={Natick, MA},
+        date={2014},
 }
 
 \bib{NAG23}{manual}{
