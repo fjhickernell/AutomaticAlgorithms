@@ -12,7 +12,7 @@ epsilon = 1e-2;
 
 %% Kernel
 a=.5;
-b=.9;
+%b=.9;
 bp2 = @(x) x.^2-x+1/6;
 bp4 = @(x) x.^4-2*x.^3+x.^2-1/30;
 kernel=@(x,t) 1-a+a*6*(bp2(abs(bsxfun(@plus,acos(x),acos(t')))/(2*pi))+bp2(abs(bsxfun(@minus,acos(x),acos(t')))/(2*pi)));
@@ -47,5 +47,5 @@ Herrbd=sqrt(1-traceKK)
 %guesserrest=Herrbd*normHsplinef
 
 %% Algorithm 1 Stage 1
-normTsplinef=sqrt(c'*Ktildemat*c);
+normTsplinef=sqrt(c'*Ktildemat*c)
 ErrBound = tau*Herrbd*normTsplinef/(1-tau*Herrbd)
