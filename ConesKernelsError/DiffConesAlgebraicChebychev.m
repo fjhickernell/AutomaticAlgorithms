@@ -5,7 +5,8 @@ close all
 format compact
 set(0,'defaultaxesfontsize',20,'defaulttextfontsize',20)
 theta=pi;
-testfun=@(x) exp(theta*x)-1;
+%testfun=@(x) exp(theta*x)-1;
+testfun=@(x) sin(2*pi*x);
 %testfun=@(x) (x.^2/2-1/8).*(x>1/2);
 tau=.1;
 epsilon = 1e-2;
@@ -18,7 +19,7 @@ bp4 = @(x) x.^4-2*x.^3+x.^2-1/30;
 kernel=@(x,t) 1-a+a*6*(bp2(abs(bsxfun(@plus,acos(x),acos(t')))/(2*pi))+bp2(abs(bsxfun(@minus,acos(x),acos(t')))/(2*pi)));
 
 %% Data and spline approximation
-n=40
+n=20
 xnode=linspace(-1,1,n)';
 Kmat=kernel(xnode,xnode);
 condK=cond(Kmat)
