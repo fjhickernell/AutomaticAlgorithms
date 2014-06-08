@@ -1,0 +1,303 @@
+\documentclass[acmtoms]{doc_acmtrans2m}
+
+\acmVolume{xx}
+\acmNumber{x}
+\acmYear{xx}
+\acmMonth{xx}
+
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{xspace}
+\usepackage{listings}
+\usepackage{longtable}
+\usepackage{enumerate}
+\usepackage{wrapfig}
+\usepackage{verbatim}   
+\usepackage{color}
+
+\newcommand{\note}[1]{ {\textcolor{red}    { #1 }}}
+ 
+\input{rrr-sss-macros.tex}
+ 
+
+\newcommand{\BibTeX}{{\rm B\kern-.05em{\sc i\kern-.025em b}
+\kern-.08emT\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\usepackage[vlined,ruled,nofillcomment,linesnumbered]{algorithm2e}
+\SetAlgoSkip{}\SetAlgoInsideSkip{smallskip}
+\newcommand{\commentboxA}[1]{\makebox[48ex][l]{#1}}
+\newcommand{\commentboxB}[1]{\makebox[44.3ex][l]{#1}}
+\newenvironment{algo}[1]
+{\begin{algorithm}[#1]%
+    \small%
+    \DontPrintSemicolon%
+    \SetArgSty{texttsf}%
+    \SetTitleSty{textsf}{}%
+    \SetNlSty{textrm}{}{}%
+    \SetKwInput{Inputs}{input}%
+    \SetKwInput{Outputs}{output}%
+    \SetKwData{Converged}{converged}%
+    \SetKwComment{tcc}{[}{]}
+}
+{\end{algorithm}}
+
+
+\newenvironment{ttlongtable}[1]%
+{\ttfamily \begin{longtable}{#1}}%
+{\end{longtable}}
+
+ 
+\title{ALGORITHM xxx:
+      \\Guaranteed Automatic Integration Library (GAIL)}
+\author{SOU-CHENG T.~CHOI
+     \\NORC at the University of Chicago/Illinois Institute of Technology
+     \\YUHAN DING
+     \\FRED J.~HICKENRELL
+     \\LAN JIANG
+     \\LLU\'{I}S ANTONI JIM\'{E}NEZ RUGAMA
+     \\YIZHI ZHANG 
+     \and XUAN ZHOU
+     \\Illinois Institute of  Technology }
+
+\markboth{S.-C. Choi, Y. Ding,  F. Hickernell, L. Jiang, L. Rugama, Y.~Zhang, and X.~Zhou}
+         {ALGORITHM xxx: GAIL}
+ 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{abstract}  s
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Automatic and adaptive numerical approximation and integration of functions in a cone
+with guarantee of accuracy is a relatively new paradigm. Our purpose
+is to create a reliable, open-source MATLAB package,
+Guaranteed Automatic Integration Library (GAIL), following the
+philosophy of reproducible research championed by Jon Claerbout and
+David Donoho, and the principles of robust scientific software
+development.  In this paper, we  review some of the key ideas and
+features in the ongoing theoretical and computational developments of our
+guaranteed algorithms in GAIL, which includes one-dimensional function
+approximation using linear splines, one-dimensional numerical
+integration using trapezoidal and Simpson's rules, and last but not least, estimation
+of mean of a random variable by (Quasi) Monte Carlo methods.
+ 
+\end{abstract}
+
+
+% References:
+% (1) http://toms.acm.org/Authors.html
+% (2) http://www.computer.org/portal/web/publications/acmmath#G1
+\category{G.1.3}{Numerical Analysis}{Numerical Linear Algebra}
+                [linear systems (direct and iterative methods)]
+
+\category{G.3}{Mathematics of Computing}{Probability and Statistics}
+              [statistical computing; statistical software]
+
+\category{G.m}{Mathematics of Computing}{Miscellaneous}
+              [FORTRAN program units]
+
+\terms{Algorithms}
+
+\keywords{automatic, adaptive, fixed-cost, guaranteed, 
+Monte Carlo, Quasi Monte Carlo, linear splines, reliable, reproducible
+%
+\newline\newline  Version 1 of \today}
+
+
+\begin{document}
+
+\lstdefinestyle{numbers}
+{numbers=left, stepnumber=1, numberblanklines=false,
+numberstyle=\tiny, numbersep=8pt}
+\lstdefinestyle{nonumbers}
+{numbers=none}
+
+\lstset{
+language=[90]Fortran, % for Fortran code listing
+basicstyle=\small,    % font size
+style=numbers,        % line number. To toggle, use: style=numbers
+                      % or style=nonumbers
+emptylines=*1,        % not printing any block with more than 1
+                      % empty line
+breaklines=true,      % sets automatic line breaking
+escapeinside=<>,      % for doing latex \vdots
+%framextopmargin=5mm, % space between frame's top and first code line
+framesep=2.5mm,       % framextopmargin and framexbottommargin.
+                      % I am using this for its side effect of
+                      % increased space between caption and frame's
+                      % top line
+%rulesep=5mm          % if frame uses double lines, then this control
+                      % space between the double lines
+}
+
+
+\begin{bottomstuff}
+This work was supported in part by grants from
+the National Science Foundation under grant NSF-DMS-1115392, and
+the Office of Advanced Scientific Computing Research, Office of Science, 
+U.S. Department of Energy, under contract DE-AC02-06CH11357. 
+
+Authors' addresses:
+%
+   S.-C.~T.~Choi, NORC at the University of Chicago,
+   Chicago, IL 60603; email: sctchoi@uchicago.edu;
+%  
+   Y. Ding, Illinois Institute of Technology (IIT),
+   Chicago, IL 60616; email: xxx@iit.edu;  
+%
+   F.~J.~Hickernell, IIT; email: hickernell@iit.edu; 
+%
+   L.~Jiang, IIT; email: xxx@iit.edu; 
+%
+   L.~A.~J.~Rugama, IIT; email: xxx@iit.edu; 
+%
+   Y.~Zhang, IIT; email: xxx@iit.edu; 
+%
+   X.~Zhou, IIT; email: xxx@iit.edu; 
+\end{bottomstuff}
+
+
+\maketitle
+
+\clearpage
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction} \label{sec:intro}  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+ 
+ 
+\subsection{Reliable Reproducible Research}  
+
+
+
+\subsection{Mathematical Problems and Solutions} \label{sec:prob}
+ 
+
+Function recovery, Global Minimization (?), Numerical integration (one dimension)
+
+Numerical integration (higher dimensions)
+
+\subsection{Review} \label{sec:lit}
+ 
+
+Existing work, strengths, and limitations
+
+\subsection{Notation} \label{sec:not}
+
+\subsection{Outline} \label{sec:lit}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Iterative Numerical Methods} 
+\label{sec:meth}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
+\subsection{Cones} \label{sec:cones}
+
+
+\subsection{Discretization} \label{sec:dis}
+Splines for function recovery, Global Minimization (?), Numerical integration (one dimension)
+ 
+Sobol points for numerical integration (higher dimensions)
+
+\subsection{Initial Values}
+
+\subsection{Stopping Conditions}
+
+%************************************************
+\section{Implementations} 
+\label{sec:impl}
+%************************************************
+
+
+\subsection{Main functions and User Interfaces} \label{sec:ui}  
+ 
+ \texttt{funappx\_g.m, etc}
+ 
+ Function handle of function
+ 
+ Structure of inputs and outputs
+ 
+ Main API patterns
+ 
+ (No graphical ui yet)
+ 
+\subsection{Input parsing} 
+  
+
+\subsection{Documentation} \label{sec:doc}
+  
+  Inline comments
+  
+  Text
+  
+  Searchable HTML
+
+\subsection{Tests} \label{sec:tests}  
+ 
+
+Unit tests
+
+Stress tests
+ 
+
+\subsection{Repository, Release, and Installation} 
+ 
+
+%************************************************
+\section{Key Properties}\label{sec:prop}
+%************************************************  
+\subsection{Automatic}
+
+\subsection{Adaptive}
+
+\subsection{Fixed Costs}
+
+\subsection{Complexity}
+
+\subsection{Convergence}
+
+\subsection{Discrepency} 
+
+
+
+
+
+%************************************************
+\section{Examples/Applications}
+\label{sec:ex}
+%************************************************
+  
+  
+%************************************************
+\section{Conclusion}
+\label{sec:con}
+%************************************************
+
+ 
+\subsection{Limitation}
+
+ 
+\subsection{Future Work}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% REFERENCES
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\frenchspacing
+
+
+\bibliographystyle{plain} %abbrv
+\bibliography{rrr-sss-refs}
+
+\vfill
+%************************************************
+\subsection*{Acknowledgments}
+%************************************************
+ 
+
+\bigskip \bigskip \bigskip
+
+{\small }
+
+\end{document}
