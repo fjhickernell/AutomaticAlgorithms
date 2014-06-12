@@ -12,13 +12,13 @@
 \usepackage{longtable}
 \usepackage{enumerate}
 \usepackage{wrapfig}
-\usepackage{verbatim}   
+\usepackage{verbatim}
 \usepackage{color}
 
 \newcommand{\note}[1]{ {\textcolor{red}    { #1 }}}
- 
+
 %\input{rrr-sss-macros.tex}
- 
+
 
 \newcommand{\BibTeX}{{\rm B\kern-.05em{\sc i\kern-.025em b}
 \kern-.08emT\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
@@ -46,7 +46,7 @@
 {\ttfamily \begin{longtable}{#1}}%
 {\end{longtable}}
 
- 
+
 \title{ALGORITHM xxx:
       \\GAIL---Guaranteed Automatic Integration Library}
 \author{SOU-CHENG T.~CHOI
@@ -55,31 +55,35 @@
      \\FRED J.~HICKENRELL
      \\LAN JIANG
      \\LLU\'{I}S ANTONI JIM\'{E}NEZ RUGAMA
-     \\YIZHI ZHANG 
+     \\YIZHI ZHANG
      \and XUAN ZHOU
      \\Illinois Institute of  Technology }
 
-\markboth{S.-C. Choi, Y. Ding,  F. Hickernell, L. Jiang, L. Rugama, Y.~Zhang, and X.~Zhou}
+\markboth{S.-C. Choi, Y. Ding,  F. Hickernell, L. Jiang, L. Jim\'{e}nez Rugama, Y.~Zhang, and X.~Zhou}
          {ALGORITHM xxx: GAIL}
- 
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{abstract}  s
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Automatic and adaptive numerical approximation and integration of functions in a cone
-with guarantee of accuracy is a relatively new paradigm. Our purpose
-is to create a reliable, open-source MATLAB package,
-Guaranteed Automatic Integration Library (GAIL), following the
-philosophy of reproducible research championed by Jon Claerbout and
-David Donoho, and the principles of robust scientific software
-development.  In this paper, we  review some of the key ideas and
-features in the ongoing theoretical and computational developments of our
-guaranteed algorithms in GAIL, which includes one-dimensional function
-approximation using linear splines, one-dimensional numerical
-integration using trapezoidal and Simpson's rules, and last but not least, estimation
-of mean of a random variable by (Quasi) Monte Carlo methods.
- 
+ALGORITHM xxx: GAIL---Guaranteed Automatic Integration Library
+
+
+Automatic and adaptive numerical approximation and integration of
+functions in a cone with guarantee of accuracy is a relatively new
+paradigm. Our purpose is to create a reliable, open-source MATLAB
+package, Guaranteed Automatic Integration Library (GAIL), following
+the philosophy of reproducible research championed by Jon Claerbout
+and David Donoho, and sustainable practices of robust scientific
+software development. In this paper, we review the key ideas and
+features in the ongoing theoretical and computational developments of
+our guaranteed algorithms in GAIL, which includes one-dimensional
+function approximation and minimization using linear splines,
+one-dimensional numerical integration using trapezoidal and Simpson's
+rules, and last but not least, multidimensional numerical integration
+by (Quasi) Monte Carlo methods.
+
 \end{abstract}
 
 
@@ -97,7 +101,7 @@ of mean of a random variable by (Quasi) Monte Carlo methods.
 
 \terms{Algorithms}
 
-\keywords{automatic, adaptive, fixed-cost, guaranteed, 
+\keywords{automatic, adaptive, fixed-cost, guaranteed,
 Monte Carlo, Quasi Monte Carlo, linear splines, reliable, reproducible
 %
 \newline\newline  Version 1 of \today}
@@ -133,26 +137,26 @@ framesep=2.5mm,       % framextopmargin and framexbottommargin.
 \begin{bottomstuff}
 This work was supported in part by grants from
 the National Science Foundation under grant NSF-DMS-1115392, and
-the Office of Advanced Scientific Computing Research, Office of Science, 
-U.S. Department of Energy, under contract DE-AC02-06CH11357. 
+the Office of Advanced Scientific Computing Research, Office of Science,
+U.S. Department of Energy, under contract DE-AC02-06CH11357.
 
 Authors' addresses:
 %
    S.-C.~T.~Choi, NORC at the University of Chicago,
    Chicago, IL 60603; email: sctchoi@uchicago.edu;
-%  
+%
    Y. Ding, Illinois Institute of Technology (IIT),
-   Chicago, IL 60616; email: xxx@iit.edu;  
+   Chicago, IL 60616; email: xxx@iit.edu;
 %
-   F.~J.~Hickernell, IIT; email: hickernell@iit.edu; 
+   F.~J.~Hickernell, IIT; email: hickernell@iit.edu;
 %
-   L.~Jiang, IIT; email: xxx@iit.edu; 
+   L.~Jiang, IIT; email: xxx@iit.edu;
 %
-   L.~A.~J.~Rugama, IIT; email: xxx@iit.edu; 
+   L.~A.~J.~Rugama, IIT; email: xxx@iit.edu;
 %
-   Y.~Zhang, IIT; email: xxx@iit.edu; 
+   Y.~Zhang, IIT; email: xxx@iit.edu;
 %
-   X.~Zhou, IIT; email: xxx@iit.edu; 
+   X.~Zhou, IIT; email: xxx@iit.edu;
 \end{bottomstuff}
 
 \maketitle
@@ -161,21 +165,21 @@ Authors' addresses:
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Introduction} \label{sec:intro}  
+\section{Introduction} \label{sec:intro}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\subsection{Reliable Reproducible Research}  
+\subsection{Reliable Reproducible Research}
 
 \subsection{Mathematical Problems and Solutions} \label{sec:prob}
- 
+
 
 Function recovery, Global minimization (?), Numerical integration (one dimension)
 
 Numerical integration (higher dimensions)
 
 \subsection{Review} \label{sec:lit}
- 
+
 
 Existing work, strengths, and limitations
 
@@ -184,65 +188,67 @@ Existing work, strengths, and limitations
 \subsection{Outline} \label{sec:lit}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Iterative Numerical Methods} 
+\section{Iterative Numerical Methods}
 \label{sec:meth}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
- 
+
 \subsection{Cones} \label{sec:cones}
 
 
 \subsection{Discretization} \label{sec:dis}
 Splines for function recovery, Global Minimization (?), Numerical integration (one dimension)
- 
-Sobol points for numerical integration (higher dimensions)
+
+Uniformly distributed or Sobol points for numerical integration (higher dimensions)
 
 \subsection{Initial Values}
 
 \subsection{Stopping Conditions}
 
 %************************************************
-\section{Implementations} 
+\section{Implementations}
 \label{sec:impl}
 %************************************************
 
 
-\subsection{Main functions and User Interfaces} \label{sec:ui}  
- 
+\subsection{Main functions and User Interfaces} \label{sec:ui}
+
  \texttt{funappx\_g.m, etc}
- 
+
  Function handle of function
- 
+
  Structure of inputs and outputs
- 
+
  Main API patterns
- 
+
  (No graphical ui yet)
- 
-\subsection{Input parsing} 
-  
+
+\subsection{Input parsing}
+
 
 \subsection{Documentation} \label{sec:doc}
-  
+
   Inline comments
-  
+
   Text
-  
+
   Searchable HTML
 
-\subsection{Tests} \label{sec:tests}  
- 
+\subsection{Tests} \label{sec:tests}
+
 
 Unit tests
 
 Stress tests
- 
 
-\subsection{Repository, Release, and Installation} 
- 
+
+\subsection{Repository, Release, and Installation}
+
 
 %************************************************
 \section{Key Properties}\label{sec:prop}
-%************************************************  
+%************************************************
+\subsection{Guaranteed}
+
 \subsection{Automatic}
 
 \subsection{Adaptive}
@@ -253,24 +259,24 @@ Stress tests
 
 \subsection{Convergence}
 
-\subsection{Discrepency} 
+\subsection{Discrepency}
 
 
 %************************************************
 \section{Examples/Applications}
 \label{sec:ex}
 %************************************************
-  
-  
+
+
 %************************************************
 \section{Conclusion}
 \label{sec:con}
 %************************************************
 
- 
+
 \subsection{Limitation}
 
- 
+
 \subsection{Future Work}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -283,11 +289,11 @@ Stress tests
 \bibliographystyle{plain} %abbrv
 \bibliography{rrr-sss-refs}
 
- 
+
 %************************************************
 \subsection*{Acknowledgments}
 %************************************************
-  
+
 
 {\small }
 
