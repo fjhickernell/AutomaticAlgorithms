@@ -11,15 +11,17 @@ tau=2;
 epsilon = 1e-2;
 
 %% Kernel
-a=.5;
-%b=.9;
+a = .5;
+b = 2;
 bp2 = @(x) x.^2-x+1/6;
 bp4 = @(x) x.^4-2*x.^3+x.^2-1/30;
-kernel=@(x,t) 1-a+a*6*(bp2(abs(bsxfun(@plus,acos(x),acos(t')))/(2*pi))+bp2(abs(bsxfun(@minus,acos(x),acos(t')))/(2*pi)));
+bp8 = @(x) x.^8-4*x.^7+14*x.^6/3-7*x.^4/3+2*x.^2/3-1/30;
+kernel=@(x,t) 1-a+a*(-1)^(b+1)*(2*pi)^(2*b)/(2*factorial(2*b)*zeta(2*b))*(bp4(abs(bsxfun(@plus,acos(x),acos(t')))/(2*pi))+bp4(abs(bsxfun(@minus,acos(x),acos(t')))/(2*pi)));
 
 %% Data and spline approximation
-n=100
-xnode=linspace(-1,1,n)';
+n=80
+%xnode=linspace(-1,1,n)';
+xnode = cos(linspace(pi/(2*n),(2*n-1)/(2*n)*pi,n)');
 Kmat=kernel(xnode,xnode);
 condK=cond(Kmat)
 y=testfun(xnode);
@@ -40,7 +42,7 @@ xtest=linspace(-1,1,ntest)';
 error2=sqrt(mean((testfun(xtest)-splinef(xtest)).^2))
 error_sup=max(abs(testfun(xtest)-splinef(xtest)))
 %normHsplinef=sqrt(c'*y)
-Ktildemat = (1-a)^2-12*a^2*(bp4(abs(bsxfun(@plus,acos(xnode),acos(xnode')))/(2*pi))+bp4(abs(bsxfun(@minus,acos(xnode),acos(xnode')))/(2*pi)));
+Ktildemat = (1-a)^2-a^2*(2*pi)^(4*b)/(2*factorial(4*b)*zeta(2*b)^2)*(bp8(abs(bsxfun(@plus,acos(xnode),acos(xnode')))/(2*pi))+bp8(abs(bsxfun(@minus,acos(xnode),acos(xnode')))/(2*pi)));
 condKtilde=cond(Ktildemat)
 traceKK=trace(Ktildemat/Kmat)
 Herrbd=sqrt(1-traceKK)

@@ -19,8 +19,9 @@ bp4 = @(x) x.^4-2*x.^3+x.^2-1/30;
 kernel=@(x,t) 1-a+a*6*(bp2(abs(bsxfun(@plus,acos(x),acos(t')))/(2*pi))+bp2(abs(bsxfun(@minus,acos(x),acos(t')))/(2*pi)));
 
 %% Data and spline approximation
-n=80
-xnode=linspace(-1,1,n)';
+n=20
+%xnode=linspace(-1,1,n)';
+xnode = cos(linspace(pi/(2*n),(2*n-1)/(2*n)*pi,n)');
 Kmat=kernel(xnode,xnode);
 condK=cond(Kmat)
 y=testfun(xnode);
