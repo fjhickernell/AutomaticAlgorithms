@@ -18,7 +18,7 @@
       author={Burden, R.~L.},
       author={Faires, J.~D.},
        title={Numerical analysis},
-     edition={Ninth},
+     edition={Ninth Edition},
    publisher={Cengage Brooks/Cole},
      address={Belmont, CA},
         date={2010},
@@ -48,6 +48,14 @@
        pages={21\ndash 45},
 }
 
+\bib{TrefEtal14}{manual}{
+      author={Hale, N.},
+      author={Trefethen, L.~N.},
+      author={Driscoll, T.~A.},
+       title={Chebfun version 5},
+        date={2014},
+}
+
 \bib{Lyn83}{article}{
       author={Lyness, J.~N.},
        title={When not to use an automatic quadrature routine},
@@ -64,6 +72,13 @@
         date={2012},
 }
 
+\bib{R3.03_2013}{misc}{
+      author={{R Development Core Team}},
+       title={{The R Project for Statistical Computing}},
+         how={GNU Project},
+        date={2013},
+}
+
 \bib{Sau12a}{book}{
       author={Sauer, T.},
        title={Numerical analysis},
@@ -76,6 +91,13 @@
        title={{MATLAB} 8.1},
      address={Natick, MA},
         date={2013},
+}
+
+\bib{MAT8.3}{manual}{
+      author={{The MathWorks, Inc.}},
+       title={{MATLAB} 8.3},
+     address={Natick, MA},
+        date={2014},
 }
 
 \bib{NAG23}{manual}{
