@@ -1,0 +1,628 @@
+%%%%%%%%%%%%%%%%%%%% author.tex %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% sample root file for your "contribution" to a contributed volume
+%
+% Use this file as a template for your own input.
+%
+%%%%%%%%%%%%%%%% Springer %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[graybox,footinfo]{svmult}
+
+\smartqed
+%\usepackage{mathabx}        % own package to use widecheck
+
+\usepackage{mathptmx}       % selects Times Roman as basic font
+\usepackage{helvet}         % selects Helvetica as sans-serif font
+\usepackage{courier}        % selects Courier as typewriter font
+\usepackage{type1cm}        % activate if the above 3 fonts are
+                            % not available on your system
+\usepackage{graphicx}       % standard LaTeX graphics tool
+                            % when including figure files
+
+\usepackage{array,colortbl}
+\usepackage{amsmath,amsfonts,amssymb,bm} % no amsthm, Springer defines Theorem, Lemma, etc themselves
+
+
+% Note that Springer defines the following already:
+%
+% \D upright d for differential d
+% \I upright i for imaginary unit
+% \E upright e for exponential function
+% \tens depicts tensors as sans serif upright
+% \vec depicts vectors as boldface characters instead of the arrow accent
+%
+% Additionally we throw in the following common used macro's:
+\newcommand{\integers}{\mathbb{Z}} % integers
+\newcommand{\C}{\mathbb{C}} % complex numbers
+\newcommand{\R}{\mathbb{R}} % reals
+\newcommand{\naturals}{\mathbb{N}} % natural numbers {1, 2, ...}
+\newcommand{\Q}{\mathbb{Q}} % rationals
+\newcommand{\F}{\mathbb{F}} % field, finite field
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor} % floor
+\newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}    % ceil
+\newcommand{\dif}{\,\mathrm{d}} % differential symbol for use in integrals
+% vectors as boldsymbols:
+\newcommand{\vzero}{\boldsymbol{0}} % vector of zeros
+\newcommand{\bsone}{\boldsymbol{1}}  % vector of ones
+\newcommand{\vt}{\boldsymbol{t}}    % vector t
+\newcommand{\bsu}{\boldsymbol{u}}    % vector u
+\newcommand{\bsv}{\boldsymbol{v}}    % vector v
+\newcommand{\bsw}{\boldsymbol{w}}    % vector w
+\newcommand{\vx}{\boldsymbol{x}}    % vector x
+\newcommand{\vy}{\boldsymbol{y}}    % vector y
+\newcommand{\vz}{\boldsymbol{z}}    % vector z
+\newcommand{\vDelta}{\boldsymbol{\Delta}}    % vector \Delta
+% sets as Euler fraks:
+\newcommand{\setu}{\mathfrak{u}}
+\newcommand{\setv}{\mathfrak{v}}
+% indicator boldface 1:
+\newcommand{\ind}{\mathbbold{1}}
+\usepackage{bbm} % alternative to \ind since it is not working
+\newcommand{\bbone}{\mathbbm{1}}
+
+% our own commands
+\newcommand{\cx}{\mathcal{X}}
+\newcommand{\cube}{[0,1)^d}
+\newcommand{\natzero}{\mathbb{N}_{0}}
+\newcommand{\bbK}{\mathbb{K}}
+\newcommand{\bbF}{\mathbb{F}}
+\newcommand{\ip}[3][{}]{\ensuremath{\left \langle #2, #3 \right \rangle_{#1}}}
+\newcommand{\va}{\boldsymbol{a}}    % vector a
+\newcommand{\vk}{\boldsymbol{k}}    % vector k
+\newcommand{\tvk}{\tilde{\vk}}
+\newcommand{\vl}{\boldsymbol{l}}    % vector l
+\newcommand{\vj}{\boldsymbol{j}}    % vector j
+\newcommand{\vnu}{\boldsymbol{\nu}} % vector nu
+\newcommand{\hvnu}{\widehat{\vnu}}
+\newcommand{\tnu}{\tilde{\nu}}
+\newcommand{\hnu}{\hat{\nu}}
+\newcommand{\cp}{\mathcal{P}}
+\newcommand{\avec}[1]{\vec{#1}}\newcommand{\ai}{\avec{\imath}}
+\newcommand{\cl}{\mathcal{L}}
+\newcommand{\hf}{\hat{f}}
+\newcommand{\tf}{\tilde{f}}
+\newcommand{\hg}{\hat{g}}
+\newcommand{\rf}{\mathring{f}}
+\usepackage{mathtools} % for commands \MoveEqLeft and \widecheck
+\newcommand{\bigabs}[1]{\ensuremath{\bigl \lvert #1 \bigr \rvert}}
+\newcommand{\hS}{\widehat{S}}
+%\newcommand{\wcS}{\widecheck{S}}
+\newcommand{\wcS}{\check{S}}
+%\newcommand{\tS}{\widetilde{S}}
+\newcommand{\tS}{\widetilde{S}}
+%\newcommand{\homega}{\widehat{\omega}}
+\newcommand{\homega}{\widehat{\omega}}
+%\newcommand{\wcomega}{\widecheck{\omega}}
+\newcommand{\wcomega}{\check{\omega}}
+\newcommand{\abs}[1]{\ensuremath{\left \lvert #1 \right \rvert}}
+\newcommand{\fudge}{\mathfrak{C}}
+
+
+\newcommand{\bsz}{\boldsymbol{z}}
+
+\usepackage{microtype} % good font tricks
+
+\usepackage[colorlinks=true,linkcolor=black,citecolor=black,urlcolor=black]{hyperref}
+\urlstyle{same}
+\usepackage{bookmark}
+\pdfstringdefDisableCommands{\def\and{, }}
+\makeatletter % to avoid hyperref warnings:
+  \providecommand*{\toclevel@author}{999}
+  \providecommand*{\toclevel@title}{0}
+\makeatother
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+\title*{Error Estimation for Cubature Based on Rank-1 Lattices}
+% Use \titlerunning{Short Title} for an abbreviated version of
+% your contribution title if the original one is too long
+\author{Fred J.\ Hickernell \and Llu\'is Antoni Jim\'enez Rugama}
+% Use \authorrunning{Short Title} for an abbreviated version of
+% your contribution title if the original one is too long
+\institute{
+Fred J.\ Hickernell
+\at Illinois Institute of Technology, Room E1-208, 10 W.\ 32$^{\text{nd}}$ St., Chicago, USA
+\email{hickernell@iit.edu}
+%
+\and
+%
+Llu\'is Antoni Jim\'enez Rugama
+\at Illinois Institute of Technology, Room E1-120, 10 W.\ 32$^{\text{nd}}$ St., Chicago, USA
+\email{lluisantoni@gmail.com}
+}
+\maketitle
+
+\abstract{Many applications in physics, finance or mechanics require high dimensional integration. This is often performed using Monte Carlo or quasi-Monte Carlo methods since the error of the estimate does not depend on the dimension. However, there is the problem of determining the sample size needed to satisfy an error tolerance. Methods of error estimation for quasi-Monte Carlo methods tend to be based on heuristics and lack theoretical guarantees.
+This project aims to build an efficient algorithm based on extensible rank-1 lattice rules capable of providing the solution to high dimensional problems with guarantees. In order to proceed, we compute the a Fast Fourier Transform on the integrand values sampled on an integration lattice and use them to approximate the Fourier coefficients of the integrand. The decay rate of the Fourier coefficients helps us approximate the error.
+The most important assumption in this work is that the integrands lie inside a given cone. The properties of the cone allow us to bound the error. The novel use of cones to guarantee error estimates provides a new perspective that can be extended to other algorithms.}
+
+
+
+
+\section{Bases and Node Sets}
+
+\subsection{Group-Like Structures}
+Consider the half open $d$-dimensional unit cube, $\cx:=\cube$, on which the functions of interest are to be defined. Define $\cx$ to be a field with the additive operation $\oplus:\cx \times \cx \to \cx$, $\vx\oplus\vy=\vx+\vy\pmod 1$. Indeed, $(\cx,\oplus)$ is an Abelian group. Here $\vzero$ is the additive identity.  The unique additive inverse of $\vx$ is $\ominus \vx:=\bold{1}-\vx$, and $\vx \ominus \vt$ means $\vx \oplus (\ominus \vt)$. Moreover, such a set $\cx$ is also a vector space under the field $\integers$ and the multiplicative operation is seen by means of $\oplus$:
+
+\[
+a \vx:=\underbrace{\vx \oplus \cdots \oplus \vx}_{a \text{ times}}\ \forall a \in \naturals, \qquad a \vx:=\underbrace{\ominus\vx \ominus \cdots \ominus \vx}_{-a \text{ times}}\ \forall a \in \integers\setminus\natzero.
+\]
+
+The set $\bbK:=\integers^d$ is used to index series expressions for the integrands. This is a field with the natural sum and multiplication. Similarly to $\cx$, it is also a vector space under $\integers$.
+
+Now, define the bilinear operation $\ip{\cdot}{\cdot}: \bbK \times \cx \to \cx$,
+\begin{subequations} \label{bilinear}
+\begin{equation}
+\ip{\vk}{\vx}=\vk^T\vx\pmod 1.
+\end{equation}
+
+For all $\vt, \vx \in \cx$, $\vk, \vl \in \bbK$, and $a \in \integers$, it follows that
+
+\begin{gather}
+\ip{\vk}{\vzero} = \ip{\vzero}{\vx} = 0,\\
+\ip{\vk}{a \vx \oplus \vt} = a\ip{\vk}{\vx} + \ip{\vk}{\vt} \pmod 1 \label{bilinearlinxprop} \\
+\ip{a \vk + \vl}{\vx} = a\ip{\vk}{\vx} + \ip{\vl}{\vx} \pmod 1, \label{bilinearlinkprop}\\
+\ip{\vk}{\vx} = 0 \ \forall \vk \in \bbK \ \implies \ \vx=\vzero.\label{bilinearlinzeroprop}
+\end{gather}
+\end{subequations}
+
+\subsection{Sequences, Nets, and Dual Nets}
+Suppose that there exists a sequence of points in $\cx$, denoted $\cp_\infty =\{\vt_i\}_{i=0}^{\infty}$. Any $\cp_m := \{\vt_i\}_{i=0}^{b^m-1}$ doted with $\oplus$ is an Abelian subgroup of $\cp_\infty$. They are called \emph{nets} and all are nested, i.e. $\{\vzero\}=\cp_0\subseteq\dots\subseteq\cp_m\subseteq\dots\subseteq\cp_\infty$. Furthermore, $\cp_\infty$ is assumed to satisfy the following properties:
+
+\begin{subequations} \label{cpinfvector}
+\begin{gather}
+\{\vt_{1}, \vt_{b}, \vt_{b^2}, \ldots\} \text{ are linearly independent}, \\
+b\vt_{b^m}=\vt_{b^{m-1}},\label{netpropb}\\
+\vt_i = \sum_{\ell=0}^{\infty} i_\ell \vt_{b^\ell}, \qquad \text{where }\ai=(i_0, i_1, i_2, \ldots ) \in \bbF_b^\infty, \label{netpropc}\\
+\ip{\vk}{\vt_i} =  0 \ \forall i \in \natzero   \ \implies \ \vk=\vzero. \label{netpropd}
+\end{gather}
+\end{subequations}
+Note that from \eqref{bilinear} together with \eqref{netpropb} it follows,
+\begin{equation}\label{assumgenip}
+\ip{\vk}{\vt_{b^{m-1}}}=\ip{b\vk}{\vt_{b^m}}
+\end{equation}
+
+One example is the extensible $rank-1$ lattices \cite{HicNie03a}. For $\cp_m :=\left\{\vz\frac{n}{b^m},\ n\in\bbF_{b^m}\right\}$ the nested structure detailed above is well defined and the vector $\vz$ can be seen in each coordinate as an infinite digit integer. In addition, for every $\cp_m$ we can find a generator. If we want $\vt_{b^{m-1}}=\vz\frac{j_m}{b^m}$ to the the generator of $\cp_m$, it only suffices to verify that $\gcd(j_m,b^m)=1$ with $j_m\in\bbF_{b^m}$. This vector $\vj=(j_0,j_1,\dots)$ will define the choice of generators for all subgroups of the sequence $\cp_\infty$. In order to satisfy \eqref{netpropc}, note that the order of the sequence $\cp_\infty$ given the generators must be the Sobol order. Equation \eqref{netpropb} also gives us another condition on $j_m$'s: $ b^{m-1} \mid j_m-j_{m-1}\rightarrow j_m=j_{m-1}+b^{m-1},\;\forall m\in\naturals$.
+
+For $m \in \natzero$ define the \emph{dual net} corresponding to $\cp_m$ as
+\begin{align*}
+\cp^{\perp}_m &= \{\vk \in \bbK : \ip{\vk}{\vt_i} = 0, \ i=0, \ldots, b^m-1\} \\
+&= \{\vk \in \bbK : \ip{\vk}{\vt_{b^{\ell}}} = 0, \ \ell=0, \ldots, m-1\}.
+\end{align*}
+By this definition $\cp^{\perp}_{0}=\bbK$.  The properties of the bilinear transform, \eqref{bilinear}, imply that the dual net $\cp^{\perp}_m$ is a subgroup, and even a subspace, of the dual net $\cp^{\perp}_\ell$ for all $\ell=0, \ldots, m-1$. Similarly to the nested $\cp_m$, we have the following embedded tower of subgroups
+\begin{align*}
+\bbK=\cp^{\perp}_0\supseteq\dots\supseteq\cp^{\perp}_m\supseteq\dots\supseteq\cp^{\perp}_\infty=\{\vzero\}.
+\end{align*}
+Note that given $\cp_m$, in addition to the dual net $\cp^{\perp}_{m,0}:=\cp^{\perp}_{m}$, for $r=1,\dots,b^m-1$ another $b^m-1$ cosets are automatically defined,
+\begin{align*}
+\cp^{\perp}_{m,r} &= \left\{\vk \in \bbK : \ip{\vk}{\vt_i} = \frac{r}{b^m}, \ i=0, \ldots, b^m-1\right\}.
+\end{align*}
+
+The next goal is to define the map $\hvnu : \bbK \to \bbF_b^{\infty}$, and $\tnu_m : \bbK \to \bbF_{b^m}$ that facilitates the calculation of the discrete Fourier transform introduced below.
+
+\begin{definition} \label{numapdef} For every $\vk \in \bbK$, let
+\begin{subequations} \label{numapdefeq}
+\begin{gather}
+\hvnu(\vk)=(\hnu_0(\vk), \hnu_1(\vk), \hnu_2(\vk), \ldots ), \\
+\hnu_0(\vk) = b\ip{\vk}{\vt_{1}}, \qquad \hnu_m(\vk)=b\ip{\vk}{\vt_{b^m}}-\ip{\vk}{\vt_{b^{m-1}}}, \quad m \in \naturals, \\
+\tnu_m(\vk) = \sum_{\ell=0}^{m-1} \hnu_{\ell}(\vk) b^{\ell}, \quad m \in \naturals.
+\end{gather}
+\end{subequations}
+\end{definition}
+
+These maps have certain desirable properties.
+
+\begin{lemma} \label{numaplem} The following is true for the maps defined in Definition \ref{numapdef}:
+\begin{enumerate}
+\renewcommand{\labelenumi}{\alph{enumi})}
+
+\item $\hvnu(\vzero)=\vzero$ and $\tnu_m(\vzero) = 0$ for all $m \in \naturals$.
+
+\item $\hnu_m(\vk)\in \{0,\dots,b-1\}$ and $\tnu_m(\vk)\in \{0,\dots,b^m-1\}$ for all $m\in\natzero$.
+
+\item for all $m\in \natzero$ and all $\vnu \in \bbF_b^{m}$ there exist a unique $\vk \in \bbK$ with $\hvnu(\vk)=(\nu_0, \ldots, \nu_{m-1}, \ldots)$.
+
+\item for any $m \in \natzero$, $i \in \{0, \ldots, b^m-1\}$,  $\tnu_m(\vk)=\nu=(\nu_0, \nu_1, \ldots)$, and $\ai=(i_0, i_1, \ldots)$, it follows that
+\begin{align} \label{nuwisum}
+\begin{split}
+\ip{\vk}{\vt_i} &= \sum_{\ell=0}^{m-1} i_\ell [\nu \pmod  {b^{(\ell+1)}}]  b^{-(\ell+1)} \pmod 1
+\end{split}
+\end{align}
+
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+\begin{enumerate}[a)]
+\item Directly from definition.
+\item Using \eqref{netpropc} and by construction, $\hnu_0(\vk)\in\{0,\dots,b-1\}$ and $\hnu_m(\vk)\in (-1,b)$. Using the assumption \eqref{netpropb}, $\hnu_m(\vk)\pmod 1=\vk^Tb\vt_{b^m}\pmod 1-\vk^T\vt_{b^{m-1}}\pmod 1=0$. Then, $\hnu_m(\vk)\in (-1,b)\cap\integers=\{0,\dots,b-1\},\;\forall m\in\natzero$.
+
+\item For injectivity, we prove that $\hvnu(\vk)=\hvnu(\vl) \Rightarrow \vk = \vl$. If $\hvnu(\vk)=\hvnu(\vl)$, $\hnu_m(\vk)=\hnu_m(\vl),\;\forall m\in\natzero$. In particular for $m=0$, this implies $\ip{\vk}{\vt_1}-\ip{\vl}{\vt_1}=0$. Assume now that $\ip{\vk}{\vt_{b^m}}-\ip{\vl}{\vt_{b^m}}=0$. Since $\hnu_{m+1}(\vk)-\hnu_{m+1}(\vl)=0$, then $\ip{\vk}{\vt_{b^{m+1}}}-\ip{\vl}{\vt_{b^{m+1}}}=0$. By induction $\ip{\vk}{\vt_{b^{m}}}-\ip{\vl}{\vt_{b^{m}}}=\ip{\vk-\vl}{\vt_{b^{m}}}=0$ for all $m\in\natzero$. Thus, by \eqref{netpropd}, $\vk=\vl$.
+
+\vspace{2mm}
+    For the surjection, by \eqref{bilinearlinzeroprop} there exists $\vk$ such that $\hnu_0(\vk)=\nu\neq 0$. Furthermore due to the property \eqref{bilinearlinkprop}, $\hnu_0(a\vk)=a\nu \pmod b$ and recalling the Lagrange's Theorem, any element $\nu$ different of the identity generates the group $\bbF_b$. Therefore, $a=1,...,b-1$ gives us any element of $\bbF_b$.
+
+    Now, for any $l\leq m\in\naturals$ and using \eqref{assumgenip},
+\begin{align*}
+\hnu_l(\vk+b^m\va)&=
+\begin{cases}
+b\ip{\vk}{\vt_{b^l}}-\ip{\vk}{\vt_{b^{l-1}}}+b\ip{\va}{\vt_{1}} \pmod b  &\mbox{if } l=m, \\
+b\ip{\vk}{\vt_{b^l}}-\ip{\vk}{\vt_{b^{l-1}}} &\mbox{if } l<m   \end{cases}\\
+&=
+\begin{cases}
+\hnu_l(\vk)+\hnu_0(\va) \pmod b  &\mbox{if } l=m, \\
+\hnu_l(\vk) &\mbox{if } l<m   \end{cases}\\
+\end{align*}
+%Remark that for the first equality we use the fact that $\ip{\vk}{\vt_{b^{m-1}}}=\ip{\vk}{\vt_{b^{m-1}}}\pmod b$.
+Therefore, for all $m\in \natzero$ and all $(\nu_0,\dots,\nu_m) \in \bbF_b^{m+1}$ there exist a $\vk \in \bbK$ with $\hnu_l(\vk)=\nu_l$, $l=0,\dots,m$. This means $\hvnu(\vk)$ is bijective.
+
+\item Follows by applying  \eqref{bilinearlinxprop} and Definition \ref{numapdef}:
+\begin{align*}
+\ip{\vk}{\vt_i} &= \ip{\vk}{\sum_{\ell=0}^{m-1} i_\ell \vt_{b^{\ell}}} = \sum_{\ell=0}^{m-1} i_\ell \ip{\vk}{\vt_{b^{\ell}}} \pmod 1 \\
+& = \sum_{\ell=0}^{m-1} i_\ell \sum_{j=0}^{\ell} \nu_jb^{j-(\ell+1)} \pmod 1\\
+&=\sum_{\ell=0}^{m-1} i_\ell [\nu \pmod  {b^{(\ell+1)}}]  b^{-(\ell+1)} \pmod 1.
+\end{align*}\qed
+\end{enumerate}
+\end{proof}
+
+\subsection{Fourier Series and Discrete Transforms}
+
+The integrands are assumed to belong to some subset of $\cl_2(\cube)$, the space of square integrable functions.  The $\cl_2$ inner product is defined as
+\[
+\ip[2]{f}{g} = \int_{\cube} f(\vx) \overline{g(\vx)} \, \dif \vx.
+\]
+Let $\{\varphi(\cdot,\vk) \in \cl_2(\cube) : \vk \in \bbK\}$ be the complete orthonormal Walsh function \emph{basis} for $\cl_2(\cube)$, i.e.,
+\[
+\varphi(\vx,\vk)  = \E^{2 \pi \sqrt{-1} \ip{\vk}{\vx}/b}, \qquad \vk \in \bbK, \ \vx \in \cube.
+\]
+Then any function in $\cl_2$ may be written in series form as
+\begin{equation} \label{Fourierdef}
+f(\vx) = \sum_{\vk \in \bbK} \hf(\vk) \varphi(\vx,\vk), \quad \text{where } \hf(\vk) = \ip[2]{f}{\varphi(\cdot,\vk)},
+\end{equation}
+and the inner product of two functions in $\cl_2$ is the $\ell_2$ inner product of their series coefficients:
+\[
+\ip[2]{f}{g} = \sum_{\vk \in \bbK} \hf(\vk)\overline{\hg(\vk)} =: \ip[2]{\bigl(\hf(\vk)\bigr)_{\vk \in \bbK}}{\bigl ( \hg(\vk)\bigr )_{\vk \in \bbK}}.
+\]
+
+For all $\vk \in \bbK$ and $\vx \in \cp$, it follows that
+\begin{align*}
+\nonumber
+0 & = \frac{1}{b^m} \sum_{i=0}^{b^m-1} [\varphi(\vt_i,\vk) - \varphi(\vt_i \oplus \vx,\vk)]
+= \frac{1}{b^m} \sum_{i=0}^{b^m-1} [\E^{2 \pi \sqrt{-1} \ip{\vk}{\vt_i}} - \E^{2 \pi \sqrt{-1} \ip{\vk}{\vt_i \oplus \vx}}]\\
+\nonumber
+& = \frac{1}{b^m} \sum_{i=0}^{b^m-1} [\E^{2 \pi \sqrt{-1} \ip{\vk}{\vt_i}} - \E^{2 \pi \sqrt{-1} \{\ip{\vk}{\vt_i}+\ip{\vk}{\vx}\}}] \quad \text{by } \eqref{bilinearlinxprop}\\
+\label{sumeq}
+& = [1 - \E^{2 \pi \sqrt{-1} \ip{\vk}{\vx})}] \frac{1}{b^m} \sum_{i=0}^{b^m-1}  \E^{2 \pi \sqrt{-1} \ip{\vk}{\vt_i}}.
+\end{align*}
+By this equality it follows that the average of a basis function, $\varphi(\cdot,\vk)$, over the points in a node set is either one or zero, depending on whether $\vk$ is in the dual set or not.
+\begin{equation*}
+\frac{1}{b^m} \sum_{i=0}^{b^m-1}  \E^{2 \pi \sqrt{-1} \ip{\vk}{\vt_i}} = \bbone_{\cp_m^{\perp}}(\vk) = \begin{cases} 1 , & \vk \in \cp_m^{\perp}\\
+ 0,  & \vk \in \bbK \setminus \cp_m^{\perp}.
+ \end{cases}
+\end{equation*}
+
+Given the sequence $\{\vt_i\}_{i=0}^{\infty}$, one may also define a shifted sequence $\{\vx_i=\vt_i \oplus \vDelta \}_{i=0}^{\infty}$, where $\vDelta \in \cube$. Define the discrete transform of a function, $f$, over the shifted net as
+\begin{align}
+\label{tfdef}
+\tf_m(\vk)
+&:= \frac{1}{b^m} \sum_{i=0}^{b^m-1} \E^{-2 \pi \sqrt{-1} \ip{\vk}{\vx_i}} f(\vx_i) \\
+\nonumber
+&= \frac{1}{b^m}  \sum_{i=0}^{b^m-1} \left[\E^{-2 \pi \sqrt{-1} \ip{\vk}{\vx_i}}\sum_{\vl \in \bbK} \hf(\vl) \E^{2 \pi \sqrt{-1} \ip{\vl}{\vx_i}} \right] \\
+\nonumber
+& = \sum_{\vl \in \bbK} \hf(\vl)  \frac{1}{b^m}  \sum_{i=0}^{b^m-1}  \E^{2 \pi \sqrt{-1} \ip{\vl - \vk}{\vx_i}} \\
+\nonumber
+& = \sum_{\vl \in \bbK} \hf(\vl) \E^{2 \pi \sqrt{-1} \ip{\vl - \vk}{\vDelta}}  \frac{1}{b^m}  \sum_{i=0}^{b^m-1}  \E^{2 \pi \sqrt{-1} \ip{\vl - \vk}{\vt_i}} \\
+\displaybreak[0] \nonumber
+& = \sum_{\vl \in \bbK} \hf(\vl) \E^{2 \pi \sqrt{-1} \ip{\vl - \vk}{\vDelta}} \bbone_{\cp_m^{\perp}}(\vl - \vk) \\
+\nonumber
+& = \sum_{\vl \in \cp^{\perp}_m} \hf(\vk+\vl) \E^{2 \pi \sqrt{-1} \ip{\vl}{\vDelta}} \\
+&= \hf(\vk) + \sum_{\vl \in \cp^{\perp}_m\setminus \vzero} \hf(\vk+\vl) \E^{2 \pi \sqrt{-1} \ip{\vl}{\vDelta}}, \qquad \forall \vk \in \bbK. \label{tfassum}
+\end{align}
+It is seen here that the discrete transform $\tf_m(\vk)$ is equal to the integral transform $\hf(\vk)$, defined in \eqref{Fourierdef}, plus the \emph{aliasing} terms corresponding to $\hf(\vl)$ where $\vl-\vk \in \cp_{m}^{\perp}\setminus \vzero$.
+
+
+\subsection{Computation of the Discrete Transform}
+The discrete transform defined in \eqref{tfdef} may also be expressed as
+\begin{align}
+\nonumber
+\tf_m(\vk)
+&= \frac{1}{b^m} \sum_{i=0}^{b^m-1} \E^{-2 \pi \sqrt{-1} \ip{\vk}{\vt_i\oplus \vDelta}} f(\vt_i\oplus \vDelta) \\
+\nonumber
+&= \frac{\E^{-2 \pi \sqrt{-1} \ip{\vk}{\vDelta}}}{b^m} \sum_{i=0}^{b^m-1} \E^{-2 \pi \sqrt{-1} \ip{\vk}{\vt_i}} f(\vt_i\oplus \vDelta).
+\end{align}
+Letting $y_i=f(\vt_i\oplus \vDelta)$,
+\[
+Y_{m,0}(i_0,\ldots, i_{m-1}) = y_i, \qquad i=i_0 + i_1 b + \cdots + i_{m-1} b^{m-1},
+\]
+and invoking Lemma \ref{numaplem}, for any $\vk \in \bbK$ with $\tnu_m(\vk)=\nu = \nu_0 + \nu_1 b  + \cdots + \nu_{m-1} b^{m-1}$ one may write
+\begin{align}
+\nonumber
+\tf_m(\vk) &= \E^{-2 \pi \sqrt{-1} \ip{\vk}{\vDelta}}  Y_{m,m}(\nu_0, \ldots, \nu_{m-1}) , \\
+\nonumber
+\MoveEqLeft{Y_{m,m}(\nu_0, \ldots, \nu_{m-1})}\\
+\nonumber
+& : = \frac{1}{b^m} \sum_{i=0}^{b^m-1} \E^{-2 \pi \sqrt{-1} \ip{\vk}{\vt_i}} y_i \\
+\nonumber
+& = \frac{1}{b^m} \sum_{i_{m-1}=0}^{b-1} \cdots \sum_{i_0=0}^{b-1} \E^{-2 \pi \sqrt{-1}\sum_{\ell=0}^{m-1} i_\ell [\nu \pmod  {b^{(\ell+1)}}]  b^{-(\ell+1)}} Y_{m,0}(i_0,\ldots, i_{m-1}) \\
+\nonumber
+& = \frac{1}{b} \sum_{i_{m-1}=0}^{b-1}\E^{-2 \pi \sqrt{-1}  i_{m-1}[\nu \pmod  {b^{m}}]  b^{-m}}  \cdots \\
+&\qquad \qquad \frac{1}{b} \sum_{i_0=0}^{b-1} \E^{-2 \pi \sqrt{-1} i_0 [\nu \pmod  {b}]  b^{-1}} Y_{m,0}(i_0,\ldots, i_{m-1})
+\nonumber
+\end{align}
+This sum can be computed recursively:
+\begin{multline*}
+Y_{m,\ell+1}(\nu_0, \ldots, \nu_{\ell},i_{\ell+1}, \ldots, i_m) \\
+= \frac{1}{b} \sum_{i_\ell=0}^{b-1} \E^{-2 \pi \sqrt{-1}  i_{\ell}[\nu \pmod  {b^{(\ell+1)}}]  b^{-(\ell+1)}} Y_{m,\ell}(\nu_0, \ldots, \nu_{\ell-1},i_{\ell}, \ldots, i_m)
+\end{multline*}
+
+In light of this development we define $\mathring{f}_m(\nu)=Y_{m,m}(\nu_0, \ldots, \nu_{m-1})$ for $\nu=0, \ldots, b^{m}-1$. Then
+\[
+\tf(\vk) = \E^{-2 \pi \sqrt{-1} \ip{\vk}{\vDelta}} \mathring{f}_m(\tnu(\vk)).
+\]
+
+\section{Error Estimation and an Automatic Algorithm}
+
+\subsection{Wavenumber Map}
+
+Now we are going to map the non-negative numbers into the space of all wavenumbers using the dual sets.  For every $\kappa \in \natzero$, we assign a wavenumber $\tvk(\kappa) \in \bbK$ iteratively according to the following constraints:
+\begin{enumerate}
+\renewcommand{\labelenumi}{\roman{enumi})}
+
+\item $\tvk(0)= \vzero$;
+
+\item For any $\lambda, m \in \natzero$ and $\kappa=0, \ldots, b^m-1$, it follows that  $\tnu_m(\tvk(\kappa))=\tnu_m(\tvk(\kappa+\lambda b^m))$.
+
+\end{enumerate}
+This last condition implies that $\tvk(\kappa) - \tvk(\kappa+\lambda b^m) \in \cp_m^{\perp}$.
+
+This wavenumber map allows us to introduce a shorthand notation that facilitates the later analysis for $\kappa \in \natzero$ and $m \in \naturals$:
+\begin{align*}
+\hf_{\kappa} & =\hf(\tvk(\kappa)), \\
+\tf_{m,\kappa}& = \tf_m(\tvk(\kappa))= \E^{-2 \pi \sqrt{-1} \ip{\tvk(\kappa)}{\vDelta}} \rf_m(\tnu_m(\tvk(\kappa)))\\
+&= \E^{-2 \pi \sqrt{-1} \ip{\tvk(\kappa)}{\vDelta}} \rf_{m,\kappa},
+\end{align*}
+where $\rf_{m,\kappa}:=\rf_m(\tnu_m(\tvk(\kappa)))$. According to \eqref{tfassum}, it follows that
+\begin{equation}
+\tf_{m,\kappa} = \hf_{\kappa} + \sum_{\lambda=1}^{\infty} \hf_{\kappa+\lambda b^{m}} \E^{2 \pi \sqrt{-1} \ip{\tvk(\kappa+\lambda b^{m}) - \tvk(\kappa)}{\vDelta}}.
+\label{tfassumc}
+\end{equation}
+We want to use $\tf_{m,\kappa}$ to estimate $\hf_{\kappa}$ if $m$ is signficantly larger than $\lfloor \log_b(\kappa) \rfloor$.
+
+\subsection{Sums of Series Coefficients and Their Bounds}
+Consider the following sums of the series coefficients defined for $\ell,m \in \natzero$, $\ell \le m$:
+\begin{gather*}
+S(m) =  \sum_{\kappa=\left \lfloor b^{m-1} \right \rfloor}^{b^{m}-1} \bigabs{\hf_{\kappa}}, \qquad
+\hS(\ell,m)  = \sum_{\kappa=\left \lfloor b^{\ell-1} \right \rfloor}^{b^{\ell}-1} \sum_{\lambda=1}^{\infty} \bigabs{ \hf_{\kappa+\lambda b^{m}}}, \\
+\wcS(m)=\hS(0,m) + \cdots + \hS(m,m)=
+\sum_{\kappa=b^{m}}^{\infty} \bigabs{\hf_{\kappa}}, \\
+\tS(\ell,m) = \sum_{\kappa=\left \lfloor b^{\ell-1}\right \rfloor}^{b^{\ell}-1} \bigabs{\tf_{m,\kappa}} = \sum_{\kappa=\left \lfloor b^{\ell-1}\right \rfloor}^{b^{\ell}-1} \bigabs{\rf_{m,\kappa}}.
+\end{gather*}
+The first three kinds of sums, $S(\cdot)$, $\hS(\cdot,\cdot)$, and $\wcS(\cdot)$, which involve the true series coefficients, cannot be observed, but the last one, $\tS(\cdot, \cdot)$, which involves the discrete transform coefficients, can easily be observed.
+
+We now make critical assumptions that $\hS(\ell,m)$ and $\wcS(m)$ can be bounded above in terms of $S(\ell)$, provided that $\ell$ is large enough.  Let $\ell,m \in \naturals_0$ with $\ell \le m$, and fix $\ell_* \in \naturals$.  It is assumed that there exist known,  non-negative valued functions $\homega$ and $\wcomega$ with $\lim_{m \to \infty} \wcomega(m) = 0$ such that
+\begin{equation} \label{conecond}
+\hS(\ell,m) \le \homega(m-\ell) \wcS(m) \quad \forall \ell, \qquad
+\wcS(m) \le \wcomega(m-\ell) S(\ell) \quad \forall \ell_* \le \ell.
+\end{equation}
+By the definition of $\wcS(m)$, the choice $\homega(m):=1$ for all $m$ is always guaranteed to work.  However, one might also consider choosing $\homega(m)=C b^{-m}$ for some $C$.  The reason for enforcing the second assumption only  for $\ell \ge \ell_*$ is that for small $\ell$, one might have a coincidentally small $S(\ell)$, since it only involves $b^\ell$ coefficients, while $\wcS(m)$ is large.
+
+Under this assumption, for $\ell, m \in \naturals$, $\ell_* \le \ell \le m$, it is possible to bound the sum of the true coefficients, $S(\ell)$, in terms of the observed sum of the discrete coefficients, $\tS(\ell,m)$, as follows:
+\begin{align*}
+S(\ell) &= \sum_{\kappa=b^{\ell-1}}^{b^{\ell}-1} \bigl \lvert \hf_{\kappa}\bigr\rvert= \sum_{\kappa=b^{\ell-1}}^{b^{\ell}-1} \abs{\tf_{m,\kappa} - \sum_{\lambda=1}^{\infty} \hf_{\kappa+\lambda b^{m}} \E^{2 \pi \sqrt{-1} \ip{\tvk(\kappa+\lambda b^{m}) \ominus \tvk(\kappa)}{\vDelta}/b}}\\
+&\le \sum_{\kappa=b^{\ell-1}}^{b^{\ell}-1} \bigl \lvert \tf_{m,\kappa} \bigr\rvert + \sum_{\kappa=b^{\ell-1}}^{b^{\ell}-1} \sum_{\lambda=1}^{\infty} \bigl \lvert \hf_{\kappa+\lambda b^{m}}\bigr\rvert = \tS(\ell,m) + \hS(\ell,m) \\
+&\le \tS(\ell,m) + \homega(m-\ell) \wcomega(m-\ell) S(\ell) \\
+S(\ell) & \le \frac{\tS(\ell,m)}{1 - \homega(m-\ell) \wcomega(m-\ell)} \qquad \text{provided that } \homega(m-\ell) < 1.
+\end{align*}
+
+Using this upper bound, one can then conservatively bound the error of integration using the shifted node set.  For for $\ell, m \in \naturals$, $\ell_* \le \ell \le m$, it follows that
+\begin{align*}
+\MoveEqLeft{\abs{\int_{\cube} f(\vx) \, \dif \vx - \frac{1}{b^m} \sum_{i=0}^{b^m-1} f(\vx_i) }}\\
+&= \abs{\hf(\vzero) - \tf_m(\vzero)} = \abs{\hf_0 - \tf_{m,0}} = \abs{\sum_{\lambda=1}^{\infty} \hf_{\lambda b^{m}} \E^{2 \pi \sqrt{-1}\ip{\tvk(\lambda b^{m})}{\vDelta}}}\\
+&\le \sum_{\lambda=1}^{\infty} \bigabs{\hf_{\lambda b^{m}}}
+= \hS(0,m) \le \homega(m) \wcS(m) \le \homega(m) \wcomega(m-\ell) S(\ell) \\
+& \le \frac{\tS(\ell,m)\homega(m) \wcomega(m-\ell)}{1 - \homega(m-\ell) \wcomega(m-\ell)}.
+\end{align*}
+
+This error bound suggests the following algorithm.  Choose $r \in \naturals$ such that $\homega(r)\wcomega(r)<1$.  For $j \in \naturals$ define
+\[
+\ell_j=j+\ell_*-1, \qquad  m_j=j+\ell_*+r-1, \qquad  \fudge = \frac{\wcomega(r)}{1 - \homega(r)\wcomega(r)}.
+\]
+Define $\ell_j=\ell_*+j-1$ and $m_j=\ell_j+r$.  Given a tolerance $\varepsilon$, and an integrand $f$, do the following:  for $j=1, 2, \ldots$ check whether
+\[
+\fudge \homega(m_j)  \tS(\ell_j,m_j) \le \varepsilon.
+\]
+If so, we're done.  If not, increment $j$ by one and repeat.
+
+Given $\homega$, $\wcomega$, and $r$, one can compute $\fudge$.  Alternatively, given $\fudge$, $\homega$, and $r$, one can compute $\wcomega(r)$:
+\[
+\fudge = \frac{\wcomega(r)}{1 - \homega(r)\wcomega(r)} \ \iff \ \wcomega(r)= \frac{\fudge}{1+\fudge\homega(r)}.
+\]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section{Section Headings are With Capitals}\label{sec:1}
+
+We give some sample text for illustrative purposes.
+Note that you have to write \verb+\qed+ at the end of a proof explicitly.
+Furthermore there is no \verb+\qedhere+ command so it is best to end your proofs with a sentence.
+The sample text comes from \cite{ACN2013}.
+
+Blah blah blah\ldots\ The optimization problem becomes
+\begin{align}
+ \underset{Q_{\bullet k}\in\mathbb{R}^{2m}}{\text{maximize}} \qquad& \left( \left.\frac{\partial f}{\partial z_k}\right|_{\bsz=\hat{\bsz}_k}\right)^2 \label{eq:optLT}\\
+  \text{subject to} \qquad& \lVert Q_{\bullet k} \rVert=1, \nonumber\\
+                    \qquad& \langle Q^*_{\bullet j},Q_{\bullet k} \rangle=0, \quad j=1,\ldots,k-1.\nonumber
+\end{align}
+
+Similar to \cite{IT2006},
+to find the partial derivatives $\partial \hat{S}_m/\partial z_i$ needed for the optimization algorithm, we obtain the recursive relations (with initial conditions $\partial \log \hat{S}_0 /\partial z_i=0$ and $\partial \hat{V}_0/\partial z_i=0$)
+\begin{align}
+  \frac{\partial \log\hat{S}_{k+1}}{\partial z_i}
+  &=
+  \frac{\partial\log\hat{S}_{k}}{\partial z_i} + \frac{\partial\hat{V}_k}{\partial z_i}f^1_{k} + \left(\rho q_{2k+1,i}+\sqrt{1-\rho^2}q_{2k+2,i}\right
+) f^2_{k}
+  , \label{eq:recLT1} \\
+  \frac{\partial \hat{V}_{k+1}}{\partial z_i}
+ &=
+ \frac{\partial \hat{V}_k}{\partial z_i} f^3_k + q_{2k+1,i} f^4_k
+  \label{eq:recLT2}
+  ,
+\end{align}
+where $k$ goes from $0$ to $m-1$.
+The chain rule is used to obtain
+\begin{align*}
+ \frac{\partial \hat{S}_m}{\partial z_i}
+ &=
+ \hat{S}_m \frac{\partial \log \hat{S}_m}{\partial z_i}
+ .
+\end{align*}
+We will use the following lemma to calculate the transformation matrix.
+\begin{lemma}\label{lem:RecAid}
+  The recursion
+  \begin{align*}
+    F_{k+1} &= a_k F_k + b_k q_k ,
+    \\
+    G_{k+1} &= c_k G_k + d_k q_k + e_k F_k,
+  \end{align*}
+  with initial values $F_0 = G_0 = 0$ can be written at index $k+1$ as a linear combination of the $q_{\ell}$, $\ell=0,\ldots,k$, as follows
+  \begin{align*}
+    F_{k+1} &= \sum_{\ell=0}^k q_{\ell} \, b_{\ell} \prod_{j=\ell+1}^k a_j ,
+    \\
+    G_{k+1} &= \sum_{\ell=0}^k q_{\ell}
+      \left(
+        d_{\ell} \prod_{j=\ell+1}^k c_j
+        +
+        b_{\ell} \sum_{t=\ell+1}^k e_t \prod_{v=t+1}^k c_v \prod_{v=\ell+1}^{t-1} a_v\right)
+    .
+  \end{align*}
+\end{lemma}
+\begin{proof}
+  The formula for $F_{k+1}$ follows immediately by induction.
+  For the expansion of $G_{k+1}$ we first rewrite this formula in a more explicit recursive form
+  \begin{align*}
+    G_{k+1}
+    &=
+    \sum_{\ell=0}^{k} q_{\ell} d_{\ell} \prod_{j=\ell+1}^k c_j
+    +
+    \sum_{\ell=0}^{k-1} q_{\ell} b_{\ell} \sum_{t=\ell+1}^k e_t \prod_{v=t+1}^k c_v  \prod_{v=\ell+1}^{t-1} a_v
+    \\
+    &=
+    \sum_{\ell=0}^{k} q_{\ell} d_{\ell} \prod_{j=\ell+1}^k c_j
+    +
+    \sum_{t=1}^k e_t \prod_{v=t+1}^k c_v \left( \sum_{\ell=0}^{t-1} q_{\ell} b_{\ell} \prod_{v=\ell+1}^{t-1} a_v \right)
+    .
+  \end{align*}
+  The part in-between the braces equals $F_t$ and the proof now follows by induction on~$k$.
+  \qed
+\end{proof}
+
+\begin{proposition}\label{prop:optvLTc}
+ The column vector $Q_{\bullet k}$ that solves the optimization problem~\eqref{eq:optLT} for a call option under the Heston model is given by $Q_{\bullet k} = \pm \bsv / \|\bsv\|$ where
+\begin{align*}
+  v_{2\ell+1} &= \hat{S}_m f^2_{\ell} \rho + \hat{S}_m f^4_{\ell} \sum_{t=\ell+1}^{m-1}f^1_t\prod_{v=\ell+1}^{t-1}f^3_v
+  ,
+  \\
+   v_{2\ell+2} &= \hat{S}_m f^2_{\ell} \sqrt{1-\rho^2},
+\end{align*}
+for $\ell=0,\ldots,m-1$.
+\end{proposition}
+\begin{proof}
+  By \cite[Theorem 1]{IT2006} the solution to the optimization problem~\eqref{eq:optLT} is given by
+  \begin{align*}
+   Q_{\bullet k}
+   &=
+   \pm \frac{\bsv}{\| \bsv \|}
+   ,
+  \end{align*}
+  where $\bsv$ is determined from
+  \begin{align*}
+    Q_{\bullet k}' \bsv
+    &=
+    \frac{\partial \hat{S}_m}{\partial z_k}
+    =
+    \hat{S}_m \frac{\partial \log \hat{S}_m}{\partial z_k}
+    .
+  \end{align*}
+  With the help of Lemma~\ref{lem:RecAid} we find from~\eqref{eq:recLT1} and~\eqref{eq:recLT2}
+  \begin{align*}
+    \frac{\partial \log \hat{S}_m}{\partial z_k}
+    &=
+    \sum_{\ell=0}^{m-1} q_{2\ell+1,k} \left( \rho f^2_{\ell} + f^4_{\ell} \sum_{t=\ell+1}^{m-1} f^1_t \prod_{v=\ell+1}^{t-1} f^3_v \right)
+    +
+    \sum_{\ell=0}^{m-1} q_{2\ell+2,k} \sqrt{1-\rho^2} f^2_{\ell}
+    ,
+  \end{align*}
+  from which the result now follows.
+  \qed
+\end{proof}
+
+\begin{remark}
+    This is a remark.
+\end{remark}
+
+\section{Section Heading}
+\label{sec:2}
+
+This section could be similar to Section~\ref{sec:1} but we decided to include a table here.
+Please see Table~\ref{tab:1}.
+
+
+%
+% For tables use
+%
+\begin{table}
+\caption{Please write your table caption here}\label{tab:1}
+%
+% Follow this input for your own table layout
+%
+\begin{tabular}{p{2cm}p{2.4cm}p{2cm}p{4.9cm}}
+\hline\noalign{\smallskip}
+Classes & Subclass & Length & Action Mechanism  \\
+\noalign{\smallskip}\svhline\noalign{\smallskip}
+Translation & mRNA$^a$  & 22 (19--25) & Translation repression, mRNA cleavage\\
+Translation & mRNA cleavage & 21 & mRNA cleavage\\
+Translation & mRNA  & 21--22 & mRNA cleavage\\
+Translation & mRNA  & 24--26 & Histone and DNA Modification\\
+\noalign{\smallskip}\hline\noalign{\smallskip}
+\end{tabular}
+$^a$ Table foot note (with superscript)
+\end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% The acknowledgements
+\begin{acknowledgement}
+To include acknowledgements use the \verb|acknowledgement| environment.
+\end{acknowledgement}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% The bibliography
+%
+% BibTeX users please use
+\bibliographystyle{spmpsci}
+\bibliography{FJH22,FJHown22}
+% and then copy paste the contents of the .bbl file here for the final version.
+%
+% E.g.:
+\begin{thebibliography}{99.}%
+\nocite{Slo85,NiePil09a,DicEtal14a,DicHicLiu07a,Clancy2013,SloJoe94}
+\bibitem{ACN2013}
+N.~Achtsis, R.~Cools and D.~Nuyens.
+\newblock Conditional sampling for barrier option pricing under the Heston model.
+\newblock In J.~Dick, F.~Y.\ Kuo, G.~W.\ Peters and I.~H.\ Sloan, editors, {\em {M}onte {C}arlo
+  and Quasi-{M}onte {C}arlo Methods 2012}, pages 253--269. Springer-Verlag, 2013.
+
+\end{thebibliography}
+
+\end{document}

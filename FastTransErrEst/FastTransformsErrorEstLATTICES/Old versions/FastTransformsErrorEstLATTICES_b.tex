@@ -33,12 +33,12 @@
 \author{Llu\'{i}s Antoni Jim\'{e}nez Rugama}
 \address{Room E1-120, Department of Applied Mathematics, Illinois Institute of Technology,\\ 10 W.\ 32$^{\text{nd}}$ St., Chicago, IL 60616}
 \begin{abstract}
-%
-%Many applications in physics, finance or mechanics require high dimensional integration. This is often performed using Monte Carlo or quasi-Monte Carlo methods since the error of the estimate does not depend on the dimension. However, there is the problem of determining the sample size needed to satisfy an error tolerance. Methods of error estimation for quasi-Monte Carlo methods tend to be based on heuristics and lack theoretical guarantees.
-%
-%This project aims to build an efficient algorithm based on extensible rank-1 lattice rules [1] capable of providing the solution to high dimensional problems with guarantees. In order to proceed, we compute the a Fast Fourier Transform on the integrand values sampled on an integration lattice and use them to approximate the Fourier coefficients of the integrand. For example, the extensible generators of Dirk Nuyens [2] can be used. The decay rate of the Fourier coefficients helps us approximate the error.
-%
-%The most important assumption in this work is that the integrands lie inside a given cone. The properties of the cone allow us to bound the error. The novel use of cones to guarantee error estimates provides a new perspective that can be extended to other algorithms.
+
+Many applications in physics, finance or mechanics require high dimensional integration. This is often performed using Monte Carlo or quasi-Monte Carlo methods since the error of the estimate does not depend on the dimension. However, there is the problem of determining the sample size needed to satisfy an error tolerance. Methods of error estimation for quasi-Monte Carlo methods tend to be based on heuristics and lack theoretical guarantees.
+
+This project aims to build an efficient algorithm based on extensible rank-1 lattice rules capable of providing the solution to high dimensional problems with guarantees. In order to proceed, we compute the a Fast Fourier Transform on the integrand values sampled on an integration lattice and use them to approximate the Fourier coefficients of the integrand. The decay rate of the Fourier coefficients helps us approximate the error.
+
+The most important assumption in this work is that the integrands lie inside a given cone. The properties of the cone allow us to bound the error. The novel use of cones to guarantee error estimates provides a new perspective that can be extended to other algorithms.
 
 \end{abstract}
 
@@ -80,7 +80,7 @@ For all $\vt, \vx \in \cx$, $\vk, \vl \in \bbK$, and $a \in \integers$, it follo
 \end{subequations}
 
 \subsection{Sequences, Nets, and Dual Nets}
-Suppose that there exists a sequence of points in $\cx$, denoted $\cp_\infty =\{\vt_i\}_{i=0}^{\infty}$. Any $\cp_m := \{\vt_i\}_{i=0}^{b^m-1}$ doted with $\oplus$ is an Abelian subgroup of $\cp_\infty$. They are called \emph{nets} and all are nested, i.e. $\{0\}=\cp_0\subseteq\dots\subseteq\cp_m\subseteq\dots\subseteq\cp_\infty$. Furthermore, $\cp_\infty$ is assumed to satisfy the following properties:
+Suppose that there exists a sequence of points in $\cx$, denoted $\cp_\infty =\{\vt_i\}_{i=0}^{\infty}$. Any $\cp_m := \{\vt_i\}_{i=0}^{b^m-1}$ doted with $\oplus$ is an Abelian subgroup of $\cp_\infty$. They are called \emph{nets} and all are nested, i.e. $\{\vzero\}=\cp_0\subseteq\dots\subseteq\cp_m\subseteq\dots\subseteq\cp_\infty$. Furthermore, $\cp_\infty$ is assumed to satisfy the following properties:
 
 \begin{subequations} \label{cpinfvector}
 \begin{gather}
@@ -102,7 +102,14 @@ For $m \in \natzero$ define the \emph{dual net} corresponding to $\cp_m$ as
 \cp^{\perp}_m &= \{\vk \in \bbK : \ip{\vk}{\vt_i} = 0, \ i=0, \ldots, b^m-1\} \\
 &= \{\vk \in \bbK : \ip{\vk}{\vt_{b^{\ell}}} = 0, \ \ell=0, \ldots, m-1\}.
 \end{align*}
-By this definition $\cp^{\perp}_{0}=\bbK$.  The properties of the bilinear transform, \eqref{bilinear}, imply that the dual net $\cp^{\perp}_m$ is a subgroup, and even a subspace, of the dual net $\cp^{\perp}_\ell$ for all $\ell=0, \ldots, m-1$.
+By this definition $\cp^{\perp}_{0}=\bbK$.  The properties of the bilinear transform, \eqref{bilinear}, imply that the dual net $\cp^{\perp}_m$ is a subgroup, and even a subspace, of the dual net $\cp^{\perp}_\ell$ for all $\ell=0, \ldots, m-1$. Similarly to the nested $\cp_m$, we have the following embedded tower of subgroups
+\begin{align*}
+\bbK=\cp^{\perp}_0\supseteq\dots\supseteq\cp^{\perp}_m\supseteq\dots\supseteq\cp^{\perp}_\infty=\{\vzero\}.
+\end{align*}
+Note that given $\cp_m$, in addition to the dual net $\cp^{\perp}_{m,0}:=\cp^{\perp}_{m}$, for $r=1,\dots,b^m-1$ another $b^m-1$ cosets are automatically defined,
+\begin{align*}
+\cp^{\perp}_{m,r} &= \left\{\vk \in \bbK : \ip{\vk}{\vt_i} = \frac{r}{b^m}, \ i=0, \ldots, b^m-1\right\}.
+\end{align*}
 
 The next goal is to define the map $\hvnu : \bbK \to \bbF_b^{\infty}$, and $\tnu_m : \bbK \to \bbF_{b^m}$ that facilitates the calculation of the discrete Fourier transform introduced below.
 
@@ -345,7 +352,11 @@ Given $\homega$, $\wcomega$, and $r$, one can compute $\fC$.  Alternatively, giv
 \fudge = \frac{\wcomega(r)}{1 - \homega(r)\wcomega(r)} \ \iff \ \wcomega(r)= \frac{\fC}{1+\fC\homega(r)}.
 \]
 
+
+\section{References}
 \bibliographystyle{ieeetr}
 %\bibliographystyle{model1b-num-names.bst}
+\nocite{Slo85,NiePil09a,DicEtal14a,DicHicLiu07a,Clancy2013,SloJoe94}
 \bibliography{FJH22,FJHown22}
+
 \end{document}
