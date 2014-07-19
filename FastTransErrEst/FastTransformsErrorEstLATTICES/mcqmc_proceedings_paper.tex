@@ -140,7 +140,6 @@ The most important assumption in this work is that the integrands lie inside a g
 
 
 \section{Bases and Node Sets}
-
 \subsection{Group-Like Structures}
 Consider the half open $d$-dimensional unit cube, $\cx:=\cube$, on which the functions of interest are to be defined. Define $\cx$ to be a field with the additive operation $\oplus:\cx \times \cx \to \cx$, $\vx\oplus\vy=\vx+\vy\pmod 1$. Indeed, $(\cx,\oplus)$ is an Abelian group. Here $\vzero$ is the additive identity.  The unique additive inverse of $\vx$ is $\ominus \vx:=\bold{1}-\vx$, and $\vx \ominus \vt$ means $\vx \oplus (\ominus \vt)$. Moreover, such a set $\cx$ is also a vector space under the field $\integers$ and the multiplicative operation is seen by means of $\oplus$:
 
@@ -321,6 +320,8 @@ Given the sequence $\{\vt_i\}_{i=0}^{\infty}$, one may also define a shifted seq
 It is seen here that the discrete transform $\tf_m(\vk)$ is equal to the integral transform $\hf(\vk)$, defined in \eqref{Fourierdef}, plus the \emph{aliasing} terms corresponding to $\hf(\vl)$ where $\vl-\vk \in \cp_{m}^{\perp}\setminus \vzero$.
 
 
+\subsection{Periodizing the Integrand}
+
 \subsection{Computation of the Discrete Transform}
 The discrete transform defined in \eqref{tfdef} may also be expressed as
 \begin{align}
@@ -361,7 +362,6 @@ In light of this development we define $\mathring{f}_m(\nu)=Y_{m,m}(\nu_0, \ldot
 \]
 
 \section{Error Estimation and an Automatic Algorithm}
-
 \subsection{Wavenumber Map}
 
 Now we are going to map the non-negative numbers into the space of all wavenumbers using the dual sets.  For every $\kappa \in \natzero$, we assign a wavenumber $\tvk(\kappa) \in \bbK$ iteratively according to the following constraints:
@@ -442,169 +442,26 @@ Given $\homega$, $\wcomega$, and $r$, one can compute $\fudge$.  Alternatively, 
 
 
 
-
-
-
-
-
-
-
-
-
-\section{Section Headings are With Capitals}\label{sec:1}
-
-We give some sample text for illustrative purposes.
-Note that you have to write \verb+\qed+ at the end of a proof explicitly.
-Furthermore there is no \verb+\qedhere+ command so it is best to end your proofs with a sentence.
-The sample text comes from \cite{ACN2013}.
-
-Blah blah blah\ldots\ The optimization problem becomes
-\begin{align}
- \underset{Q_{\bullet k}\in\mathbb{R}^{2m}}{\text{maximize}} \qquad& \left( \left.\frac{\partial f}{\partial z_k}\right|_{\bsz=\hat{\bsz}_k}\right)^2 \label{eq:optLT}\\
-  \text{subject to} \qquad& \lVert Q_{\bullet k} \rVert=1, \nonumber\\
-                    \qquad& \langle Q^*_{\bullet j},Q_{\bullet k} \rangle=0, \quad j=1,\ldots,k-1.\nonumber
-\end{align}
-
-Similar to \cite{IT2006},
-to find the partial derivatives $\partial \hat{S}_m/\partial z_i$ needed for the optimization algorithm, we obtain the recursive relations (with initial conditions $\partial \log \hat{S}_0 /\partial z_i=0$ and $\partial \hat{V}_0/\partial z_i=0$)
-\begin{align}
-  \frac{\partial \log\hat{S}_{k+1}}{\partial z_i}
-  &=
-  \frac{\partial\log\hat{S}_{k}}{\partial z_i} + \frac{\partial\hat{V}_k}{\partial z_i}f^1_{k} + \left(\rho q_{2k+1,i}+\sqrt{1-\rho^2}q_{2k+2,i}\right
-) f^2_{k}
-  , \label{eq:recLT1} \\
-  \frac{\partial \hat{V}_{k+1}}{\partial z_i}
- &=
- \frac{\partial \hat{V}_k}{\partial z_i} f^3_k + q_{2k+1,i} f^4_k
-  \label{eq:recLT2}
-  ,
-\end{align}
-where $k$ goes from $0$ to $m-1$.
-The chain rule is used to obtain
-\begin{align*}
- \frac{\partial \hat{S}_m}{\partial z_i}
- &=
- \hat{S}_m \frac{\partial \log \hat{S}_m}{\partial z_i}
- .
-\end{align*}
-We will use the following lemma to calculate the transformation matrix.
-\begin{lemma}\label{lem:RecAid}
-  The recursion
-  \begin{align*}
-    F_{k+1} &= a_k F_k + b_k q_k ,
-    \\
-    G_{k+1} &= c_k G_k + d_k q_k + e_k F_k,
-  \end{align*}
-  with initial values $F_0 = G_0 = 0$ can be written at index $k+1$ as a linear combination of the $q_{\ell}$, $\ell=0,\ldots,k$, as follows
-  \begin{align*}
-    F_{k+1} &= \sum_{\ell=0}^k q_{\ell} \, b_{\ell} \prod_{j=\ell+1}^k a_j ,
-    \\
-    G_{k+1} &= \sum_{\ell=0}^k q_{\ell}
-      \left(
-        d_{\ell} \prod_{j=\ell+1}^k c_j
-        +
-        b_{\ell} \sum_{t=\ell+1}^k e_t \prod_{v=t+1}^k c_v \prod_{v=\ell+1}^{t-1} a_v\right)
-    .
-  \end{align*}
-\end{lemma}
-\begin{proof}
-  The formula for $F_{k+1}$ follows immediately by induction.
-  For the expansion of $G_{k+1}$ we first rewrite this formula in a more explicit recursive form
-  \begin{align*}
-    G_{k+1}
-    &=
-    \sum_{\ell=0}^{k} q_{\ell} d_{\ell} \prod_{j=\ell+1}^k c_j
-    +
-    \sum_{\ell=0}^{k-1} q_{\ell} b_{\ell} \sum_{t=\ell+1}^k e_t \prod_{v=t+1}^k c_v  \prod_{v=\ell+1}^{t-1} a_v
-    \\
-    &=
-    \sum_{\ell=0}^{k} q_{\ell} d_{\ell} \prod_{j=\ell+1}^k c_j
-    +
-    \sum_{t=1}^k e_t \prod_{v=t+1}^k c_v \left( \sum_{\ell=0}^{t-1} q_{\ell} b_{\ell} \prod_{v=\ell+1}^{t-1} a_v \right)
-    .
-  \end{align*}
-  The part in-between the braces equals $F_t$ and the proof now follows by induction on~$k$.
-  \qed
-\end{proof}
-
-\begin{proposition}\label{prop:optvLTc}
- The column vector $Q_{\bullet k}$ that solves the optimization problem~\eqref{eq:optLT} for a call option under the Heston model is given by $Q_{\bullet k} = \pm \bsv / \|\bsv\|$ where
-\begin{align*}
-  v_{2\ell+1} &= \hat{S}_m f^2_{\ell} \rho + \hat{S}_m f^4_{\ell} \sum_{t=\ell+1}^{m-1}f^1_t\prod_{v=\ell+1}^{t-1}f^3_v
-  ,
-  \\
-   v_{2\ell+2} &= \hat{S}_m f^2_{\ell} \sqrt{1-\rho^2},
-\end{align*}
-for $\ell=0,\ldots,m-1$.
-\end{proposition}
-\begin{proof}
-  By \cite[Theorem 1]{IT2006} the solution to the optimization problem~\eqref{eq:optLT} is given by
-  \begin{align*}
-   Q_{\bullet k}
-   &=
-   \pm \frac{\bsv}{\| \bsv \|}
-   ,
-  \end{align*}
-  where $\bsv$ is determined from
-  \begin{align*}
-    Q_{\bullet k}' \bsv
-    &=
-    \frac{\partial \hat{S}_m}{\partial z_k}
-    =
-    \hat{S}_m \frac{\partial \log \hat{S}_m}{\partial z_k}
-    .
-  \end{align*}
-  With the help of Lemma~\ref{lem:RecAid} we find from~\eqref{eq:recLT1} and~\eqref{eq:recLT2}
-  \begin{align*}
-    \frac{\partial \log \hat{S}_m}{\partial z_k}
-    &=
-    \sum_{\ell=0}^{m-1} q_{2\ell+1,k} \left( \rho f^2_{\ell} + f^4_{\ell} \sum_{t=\ell+1}^{m-1} f^1_t \prod_{v=\ell+1}^{t-1} f^3_v \right)
-    +
-    \sum_{\ell=0}^{m-1} q_{2\ell+2,k} \sqrt{1-\rho^2} f^2_{\ell}
-    ,
-  \end{align*}
-  from which the result now follows.
-  \qed
-\end{proof}
-
-\begin{remark}
-    This is a remark.
-\end{remark}
-
-\section{Section Heading}
-\label{sec:2}
-
-This section could be similar to Section~\ref{sec:1} but we decided to include a table here.
-Please see Table~\ref{tab:1}.
-
-
-%
-% For tables use
-%
-\begin{table}
-\caption{Please write your table caption here}\label{tab:1}
-%
-% Follow this input for your own table layout
-%
-\begin{tabular}{p{2cm}p{2.4cm}p{2cm}p{4.9cm}}
-\hline\noalign{\smallskip}
-Classes & Subclass & Length & Action Mechanism  \\
-\noalign{\smallskip}\svhline\noalign{\smallskip}
-Translation & mRNA$^a$  & 22 (19--25) & Translation repression, mRNA cleavage\\
-Translation & mRNA cleavage & 21 & mRNA cleavage\\
-Translation & mRNA  & 21--22 & mRNA cleavage\\
-Translation & mRNA  & 24--26 & Histone and DNA Modification\\
-\noalign{\smallskip}\hline\noalign{\smallskip}
-\end{tabular}
-$^a$ Table foot note (with superscript)
-\end{table}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% The acknowledgements
-\begin{acknowledgement}
-To include acknowledgements use the \verb|acknowledgement| environment.
-\end{acknowledgement}
-
+%%
+%% For tables use
+%%
+%\begin{table}
+%\caption{Please write your table caption here}\label{tab:1}
+%%
+%% Follow this input for your own table layout
+%%
+%\begin{tabular}{p{2cm}p{2.4cm}p{2cm}p{4.9cm}}
+%\hline\noalign{\smallskip}
+%Classes & Subclass & Length & Action Mechanism  \\
+%\noalign{\smallskip}\svhline\noalign{\smallskip}
+%Translation & mRNA$^a$  & 22 (19--25) & Translation repression, mRNA cleavage\\
+%Translation & mRNA cleavage & 21 & mRNA cleavage\\
+%Translation & mRNA  & 21--22 & mRNA cleavage\\
+%Translation & mRNA  & 24--26 & Histone and DNA Modification\\
+%\noalign{\smallskip}\hline\noalign{\smallskip}
+%\end{tabular}
+%$^a$ Table foot note (with superscript)
+%\end{table}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% The bibliography

@@ -1,0 +1,102 @@
+% !TEX TS-program = PDFLatexBibtex
+%&LaTeX
+\documentclass[]{elsarticle}
+\setlength{\marginparwidth}{0.5in}
+\usepackage{amsmath,amssymb,amsthm,natbib,mathtools,bbm,extraipa,mathabx,graphicx}
+%accents,
+\input FJHDef.tex
+
+
+\newcommand{\fudge}{\fC}
+\newcommand{\dtf}{\textit{\doubletilde{f}}}
+\newtheorem{lem}{Lemma}
+\theoremstyle{definition}
+\newtheorem{defin}{Definition}
+\newtheorem{algo}{Algorithm}
+\newcommand{\cube}{[0,1)^d}
+%\renewcommand{\bbK}{\natzero^d}
+\DeclareMathOperator{\trail}{trail}
+\newcommand{\rf}{\mathring{f}}
+\newcommand{\rnu}{\mathring{\nu}}
+\newcommand{\natm}{\naturals_{0,m}}
+\newcommand{\wcS}{\widecheck{S}}
+\newcommand{\wcomega}{\widecheck{\omega}}
+\newcommand{\tol}{\text{tol}}
+
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{Relative error}
+\author{Fred J. Hickernell}
+\address{Room E1-208, Department of Applied Mathematics, Illinois Institute of Technology,\\ 10 W.\ 32$^{\text{nd}}$ St., Chicago, IL 60616}
+\author{Llu\'{i}s Antoni Jim\'{e}nez Rugama}
+\address{Room E1-120, Department of Applied Mathematics, Illinois Institute of Technology,\\ 10 W.\ 32$^{\text{nd}}$ St., Chicago, IL 60616}
+\begin{abstract}
+\end{abstract}
+
+\end{frontmatter}
+
+\section{Relative Error}
+We consider $I:=\int_{\cube}f(\vx)\dif \vx$ and $\widehat{I}_n:=\frac 1 n \sum_{i=0}^{n-1}f(\vx_i)$. Let also $\tol(a,b)$ be defined Lipschitz in $b$. This implies is also non-decreasing?. Ideally, we will use $\tol(\varepsilon_a,\varepsilon_r\abs{I})$.
+
+Define
+\[
+\Delta_{n,\pm}:=\frac 1 2 \left[ \tol(\varepsilon_a,\varepsilon_r\abs{\widehat{I}_n-\widehat{\varepsilon}_n}) \pm \tol\left(\varepsilon_a,\varepsilon_r\abs{\widehat{I}_n+\widehat{\varepsilon}_n}\right) \right]
+\]
+
+\begin{lem}
+Let $\widetilde{I}_n:=\widehat{I}_n+\Delta_{n,-}$. We claim that if $\widehat{\varepsilon}_n\leq \Delta_{n,+}$, then
+\[
+\abs{I-\widetilde{I}_n}\leq \tol(\varepsilon_a,\varepsilon_r\abs{I})
+\]
+The algorithm is then doubling $n$ until $\widehat{\varepsilon}_n\leq \Delta_{n,+}$.
+\end{lem}
+\begin{proof}
+It is clear that
+\begin{align*}
+0=\pm&\left(\widetilde{I}_n-\widehat{I}_n-\Delta_{n,-}\right)\leq \Delta_{n,+}-\widehat{\varepsilon}_n \\
+&\Longleftrightarrow \widehat{I}_n+\Delta_{n,-} - \Delta_{n,+}+\widehat{\varepsilon}_n\leq \widetilde{I}_n \leq \widehat{I}_n+\Delta_{n,-}+ \Delta_{n,+}-\widehat{\varepsilon}_n\\
+&\Longleftrightarrow \widehat{I}_n-\tol\left(\varepsilon_a,\varepsilon_r\abs{\widehat{I}_n+\widehat{\varepsilon}_n}\right)+\widehat{\varepsilon}_n\leq \widetilde{I}_n \leq \widehat{I}_n+\tol\left(\varepsilon_a,\varepsilon_r\abs{\widehat{I}_n-\widehat{\varepsilon}_n}\right)-\widehat{\varepsilon}_n
+\end{align*}
+Since $b\rightarrow b\pm \tol(\varepsilon_a,\varepsilon_r\abs{b})$ is non-decreasing because of the Lipschitz property in addition to $\varepsilon_r<1$,
+\begin{align*}
+&I-\tol\left(\varepsilon_a,\varepsilon_r\abs{I}\right)\leq \widetilde{I}_n  \leq I+\tol\left(\varepsilon_a,\varepsilon_r\abs{I}\right)\\
+&\Longleftrightarrow \abs{I-\widetilde{I}_n}\leq\tol\left(\varepsilon_a,\varepsilon_r\abs{I}\right)
+\end{align*}
+\end{proof}
+
+\begin{lem}
+If
+\[
+(1+\varepsilon_r)\widehat{\varepsilon}_n \leq \frac 1 2 \left[ \tol(\varepsilon_a,\varepsilon_r\abs{I-\widehat{\varepsilon}_n}) + \tol\left(\varepsilon_a,\varepsilon_r\abs{I+\widehat{\varepsilon}_n}\right)\right]
+\]
+then,
+\begin{enumerate}
+\item \[ \widehat{\varepsilon}_n\leq \Delta_{n,+} \]
+\item \[ \widehat{\varepsilon}_n\leq \frac{\tol(\varepsilon_a,\varepsilon_r\abs{I})}{1+2\varepsilon_r} \]
+\end{enumerate}
+\end{lem}
+\begin{proof}
+Consider,
+\begin{align*}
+\tol\left(\varepsilon_a,\varepsilon_r\abs{\widehat{I}_n\pm\widehat{\varepsilon}_n}\right)&=\tol\left(\varepsilon_a,\varepsilon_r\abs{I\pm\widehat{\varepsilon}_n+\widehat{I}_n-I}\right)\\
+& \geq \tol\left(\varepsilon_a,\varepsilon_r\abs{I\pm\widehat{\varepsilon}_n}-\varepsilon_r \abs{I-\widehat{I}_n}\right)\\
+& \geq \tol\left(\varepsilon_a,\varepsilon_r\abs{I\pm\widehat{\varepsilon}_n}\right)-\varepsilon_r \widehat{\varepsilon}_n
+\end{align*}
+Therefore, 
+\begin{align*}
+\Delta_{n,+}-\widehat{\varepsilon}_n\geq \frac 1 2 \left[ \tol(\varepsilon_a,\varepsilon_r\abs{I-\widehat{\varepsilon}_n}) + \tol\left(\varepsilon_a,\varepsilon_r\abs{I+\widehat{\varepsilon}_n}\right)\right]-(1+\varepsilon_r)\widehat{\varepsilon}_n\geq 0
+\end{align*}
+For the second proof,
+\begin{align*}
+\tol\left(\varepsilon_a,\varepsilon_r\abs{\widehat{I}_n\pm\widehat{\varepsilon}_n}\right)&=\tol\left(\varepsilon_a,\varepsilon_r\abs{I-I+\widehat{I}_n\pm\widehat{\varepsilon}_n}\right)\\
+& \geq \tol\left(\varepsilon_a,\varepsilon_r\abs{I}\right)-\varepsilon_r\abs{-I+\widehat{I}_n\pm\widehat{\varepsilon}_n} \\
+& \geq \tol\left(\varepsilon_a,\varepsilon_r\abs{I}\right)-2\varepsilon_r\widehat{\varepsilon}_n
+\end{align*}
+Since $\Delta_{n,+}\geq\widehat{\varepsilon}_n$,
+
+\end{proof}
+
+\end{document}
