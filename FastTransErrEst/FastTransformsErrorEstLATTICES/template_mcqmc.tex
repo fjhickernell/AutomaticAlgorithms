@@ -1,0 +1,288 @@
+%%%%%%%%%%%%%%%%%%%% author.tex %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% sample root file for your "contribution" to a contributed volume
+%
+% Use this file as a template for your own input.
+%
+%%%%%%%%%%%%%%%% Springer %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[graybox,footinfo]{svmult}
+
+\smartqed
+\usepackage{mathptmx}       % selects Times Roman as basic font
+\usepackage{helvet}         % selects Helvetica as sans-serif font
+\usepackage{courier}        % selects Courier as typewriter font
+\usepackage{type1cm}        % activate if the above 3 fonts are
+                            % not available on your system
+\usepackage{graphicx}       % standard LaTeX graphics tool
+                            % when including figure files
+
+\usepackage{array,colortbl}
+\usepackage{amsmath,amsfonts,amssymb,bm} % no amsthm, Springer defines Theorem, Lemma, etc themselves
+
+% Note that Springer defines the following already:
+%
+% \D upright d for differential d
+% \I upright i for imaginary unit
+% \E upright e for exponential function
+% \tens depicts tensors as sans serif upright
+% \vec depicts vectors as boldface characters instead of the arrow accent
+%
+% Additionally we throw in the following common used macro's:
+\newcommand{\Z}{\mathbb{Z}} % integers
+\newcommand{\C}{\mathbb{C}} % complex numbers
+\newcommand{\R}{\mathbb{R}} % reals
+\newcommand{\N}{\mathbb{N}} % natural numbers {1, 2, ...}
+\newcommand{\Q}{\mathbb{Q}} % rationals
+\newcommand{\F}{\mathbb{F}} % field, finite field
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor} % floor
+\newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}    % ceil
+\newcommand{\rd}{\,\mathrm{d}} % differential symbol for use in integrals
+% vectors as boldsymbols:
+\newcommand{\bszero}{\boldsymbol{0}} % vector of zeros
+\newcommand{\bsone}{\boldsymbol{1}}  % vector of ones
+\newcommand{\bst}{\boldsymbol{t}}    % vector t
+\newcommand{\bsu}{\boldsymbol{u}}    % vector u
+\newcommand{\bsv}{\boldsymbol{v}}    % vector v
+\newcommand{\bsw}{\boldsymbol{w}}    % vector w
+\newcommand{\bsx}{\boldsymbol{x}}    % vector x
+\newcommand{\bsy}{\boldsymbol{y}}    % vector y
+\newcommand{\bsz}{\boldsymbol{z}}    % vector z
+\newcommand{\bsDelta}{\boldsymbol{\Delta}}    % vector \Delta
+% sets as Euler fraks:
+\newcommand{\setu}{\mathfrak{u}}
+\newcommand{\setv}{\mathfrak{v}}
+% indicator boldface 1:
+\newcommand{\ind}{\mathbbold{1}}
+
+
+\usepackage{microtype} % good font tricks
+
+\usepackage[colorlinks=true,linkcolor=black,citecolor=black,urlcolor=black]{hyperref}
+\urlstyle{same}
+\usepackage{bookmark}
+\pdfstringdefDisableCommands{\def\and{, }}
+\makeatletter % to avoid hyperref warnings:
+  \providecommand*{\toclevel@author}{999}
+  \providecommand*{\toclevel@title}{0}
+\makeatother
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+\title*{Contribution Titles are With Capitals}
+% Use \titlerunning{Short Title} for an abbreviated version of
+% your contribution title if the original one is too long
+\author{Tim Arnolds \and Annie G.\ Beatson \and Elmo Watson}
+% Use \authorrunning{Short Title} for an abbreviated version of
+% your contribution title if the original one is too long
+\institute{
+Tim Arnolds \and Elmo Watson 
+\at Disney University, 22A Sesame Street, New York, USA 
+\email{tim.arnolds@disney.com}, \email{ewatson@disney.com}
+%
+\and 
+%
+Annie G.\ Beatson 
+\at Beatson University, PO Box 45, Dunedin, New Zealand
+\email{annie@beatson.nz}
+}
+\maketitle
+
+\abstract{Each contribution should be preceded by an abstract (10--15 lines long) that summarizes the content. The abstract will appear \textit{online} at \url{www.SpringerLink.com} and be available with unrestricted access. This allows unregistered users to read the abstract as a teaser for the complete contribution. 
+Please use the `starred' version of the new Springer \texttt{abstract} command for typesetting the text of the online abstracts (cf. source file of this chapter template \texttt{abstract}) and include them with the source files of your manuscript. Use the plain \texttt{abstract} command if the abstract is also to appear in the printed version of the book.}
+
+\section{Section Headings are With Capitals}\label{sec:1}
+
+We give some sample text for illustrative purposes.
+Note that you have to write \verb+\qed+ at the end of a proof explicitly.
+Furthermore there is no \verb+\qedhere+ command so it is best to end your proofs with a sentence.
+The sample text comes from \cite{ACN2013}.
+
+Blah blah blah\ldots\ The optimization problem becomes
+\begin{align}
+ \underset{Q_{\bullet k}\in\mathbb{R}^{2m}}{\text{maximize}} \qquad& \left( \left.\frac{\partial f}{\partial z_k}\right|_{\bsz=\hat{\bsz}_k}\right)^2 \label{eq:optLT}\\
+  \text{subject to} \qquad& \lVert Q_{\bullet k} \rVert=1, \nonumber\\
+                    \qquad& \langle Q^*_{\bullet j},Q_{\bullet k} \rangle=0, \quad j=1,\ldots,k-1.\nonumber
+\end{align}
+
+Similar to \cite{IT2006},
+to find the partial derivatives $\partial \hat{S}_m/\partial z_i$ needed for the optimization algorithm, we obtain the recursive relations (with initial conditions $\partial \log \hat{S}_0 /\partial z_i=0$ and $\partial \hat{V}_0/\partial z_i=0$)
+\begin{align}
+  \frac{\partial \log\hat{S}_{k+1}}{\partial z_i}
+  &=
+  \frac{\partial\log\hat{S}_{k}}{\partial z_i} + \frac{\partial\hat{V}_k}{\partial z_i}f^1_{k} + \left(\rho q_{2k+1,i}+\sqrt{1-\rho^2}q_{2k+2,i}\right
+) f^2_{k}
+  , \label{eq:recLT1} \\
+  \frac{\partial \hat{V}_{k+1}}{\partial z_i}
+ &=
+ \frac{\partial \hat{V}_k}{\partial z_i} f^3_k + q_{2k+1,i} f^4_k
+  \label{eq:recLT2}
+  ,
+\end{align}
+where $k$ goes from $0$ to $m-1$.
+The chain rule is used to obtain
+\begin{align*}
+ \frac{\partial \hat{S}_m}{\partial z_i}
+ &=
+ \hat{S}_m \frac{\partial \log \hat{S}_m}{\partial z_i}
+ .
+\end{align*}
+We will use the following lemma to calculate the transformation matrix.
+\begin{lemma}\label{lem:RecAid}
+  The recursion
+  \begin{align*}
+    F_{k+1} &= a_k F_k + b_k q_k ,
+    \\
+    G_{k+1} &= c_k G_k + d_k q_k + e_k F_k,
+  \end{align*}
+  with initial values $F_0 = G_0 = 0$ can be written at index $k+1$ as a linear combination of the $q_{\ell}$, $\ell=0,\ldots,k$, as follows
+  \begin{align*}
+    F_{k+1} &= \sum_{\ell=0}^k q_{\ell} \, b_{\ell} \prod_{j=\ell+1}^k a_j ,
+    \\
+    G_{k+1} &= \sum_{\ell=0}^k q_{\ell}
+      \left(
+        d_{\ell} \prod_{j=\ell+1}^k c_j
+        +
+        b_{\ell} \sum_{t=\ell+1}^k e_t \prod_{v=t+1}^k c_v \prod_{v=\ell+1}^{t-1} a_v\right)
+    .
+  \end{align*}
+\end{lemma}
+\begin{proof}
+  The formula for $F_{k+1}$ follows immediately by induction.
+  For the expansion of $G_{k+1}$ we first rewrite this formula in a more explicit recursive form
+  \begin{align*}
+    G_{k+1}
+    &=
+    \sum_{\ell=0}^{k} q_{\ell} d_{\ell} \prod_{j=\ell+1}^k c_j
+    +
+    \sum_{\ell=0}^{k-1} q_{\ell} b_{\ell} \sum_{t=\ell+1}^k e_t \prod_{v=t+1}^k c_v  \prod_{v=\ell+1}^{t-1} a_v
+    \\
+    &=
+    \sum_{\ell=0}^{k} q_{\ell} d_{\ell} \prod_{j=\ell+1}^k c_j
+    +
+    \sum_{t=1}^k e_t \prod_{v=t+1}^k c_v \left( \sum_{\ell=0}^{t-1} q_{\ell} b_{\ell} \prod_{v=\ell+1}^{t-1} a_v \right)
+    .
+  \end{align*}
+  The part in-between the braces equals $F_t$ and the proof now follows by induction on~$k$.
+  \qed
+\end{proof}
+
+\begin{proposition}\label{prop:optvLTc}
+ The column vector $Q_{\bullet k}$ that solves the optimization problem~\eqref{eq:optLT} for a call option under the Heston model is given by $Q_{\bullet k} = \pm \bsv / \|\bsv\|$ where
+\begin{align*}
+  v_{2\ell+1} &= \hat{S}_m f^2_{\ell} \rho + \hat{S}_m f^4_{\ell} \sum_{t=\ell+1}^{m-1}f^1_t\prod_{v=\ell+1}^{t-1}f^3_v
+  ,
+  \\
+   v_{2\ell+2} &= \hat{S}_m f^2_{\ell} \sqrt{1-\rho^2},
+\end{align*}
+for $\ell=0,\ldots,m-1$.
+\end{proposition}
+\begin{proof}
+  By \cite[Theorem 1]{IT2006} the solution to the optimization problem~\eqref{eq:optLT} is given by
+  \begin{align*}
+   Q_{\bullet k}
+   &=
+   \pm \frac{\bsv}{\| \bsv \|}
+   ,
+  \end{align*}
+  where $\bsv$ is determined from
+  \begin{align*}
+    Q_{\bullet k}' \bsv
+    &=
+    \frac{\partial \hat{S}_m}{\partial z_k}
+    =
+    \hat{S}_m \frac{\partial \log \hat{S}_m}{\partial z_k}
+    .
+  \end{align*}
+  With the help of Lemma~\ref{lem:RecAid} we find from~\eqref{eq:recLT1} and~\eqref{eq:recLT2}
+  \begin{align*}
+    \frac{\partial \log \hat{S}_m}{\partial z_k}
+    &=
+    \sum_{\ell=0}^{m-1} q_{2\ell+1,k} \left( \rho f^2_{\ell} + f^4_{\ell} \sum_{t=\ell+1}^{m-1} f^1_t \prod_{v=\ell+1}^{t-1} f^3_v \right)
+    +
+    \sum_{\ell=0}^{m-1} q_{2\ell+2,k} \sqrt{1-\rho^2} f^2_{\ell}
+    ,
+  \end{align*}
+  from which the result now follows. 
+  \qed
+\end{proof}
+
+\begin{remark}
+    This is a remark.
+\end{remark}
+
+\section{Section Heading}
+\label{sec:2}
+
+This section could be similar to Section~\ref{sec:1} but we decided to include a table here.
+Please see Table~\ref{tab:1}.
+
+
+%
+% For tables use
+%
+\begin{table}
+\caption{Please write your table caption here}\label{tab:1}
+%
+% Follow this input for your own table layout
+%
+\begin{tabular}{p{2cm}p{2.4cm}p{2cm}p{4.9cm}}
+\hline\noalign{\smallskip}
+Classes & Subclass & Length & Action Mechanism  \\
+\noalign{\smallskip}\svhline\noalign{\smallskip}
+Translation & mRNA$^a$  & 22 (19--25) & Translation repression, mRNA cleavage\\
+Translation & mRNA cleavage & 21 & mRNA cleavage\\
+Translation & mRNA  & 21--22 & mRNA cleavage\\
+Translation & mRNA  & 24--26 & Histone and DNA Modification\\
+\noalign{\smallskip}\hline\noalign{\smallskip}
+\end{tabular}
+$^a$ Table foot note (with superscript)
+\end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% The acknowledgements
+\begin{acknowledgement}
+To include acknowledgements use the \verb|acknowledgement| environment.
+\end{acknowledgement}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% The bibliography
+%
+% BibTeX users please use
+\bibliographystyle{spmpsci}
+\bibliography{mybibfile}
+% and then copy paste the contents of the .bbl file here for the final version.
+%
+% E.g.:
+\begin{thebibliography}{99.}%
+
+\bibitem{ACN2013}
+N.~Achtsis, R.~Cools and D.~Nuyens.
+\newblock Conditional sampling for barrier option pricing under the Heston model.
+\newblock In J.~Dick, F.~Y.\ Kuo, G.~W.\ Peters and I.~H.\ Sloan, editors, {\em {M}onte {C}arlo
+  and Quasi-{M}onte {C}arlo Methods 2012}, pages 253--269. Springer-Verlag, 2013.
+
+\bibitem{CKN2006}
+R.~Cools, F.~Y. Kuo, and D.~Nuyens.
+\newblock Constructing embedded lattice rules for multivariate integration.
+\newblock {\em SIAM Journal on Scientific Computing}, 28(6):2162--2188, 2006.
+
+\bibitem{DP2010}
+J.~Dick and F.~Pillichshammer.
+\newblock {\em Digital Nets and Sequences: Discrepancy Theory and Quasi-Monte
+  Carlo Integration}.
+\newblock Cambridge University Press, 2010.
+
+\bibitem{IT2006}
+J.~{Imai} and K.~S.\ {Tan}.
+\newblock A general dimension reduction technique for derivative pricing.
+\newblock {\em Journal of Computational Finance}, 10(2):129--155, 2006.
+        
+\bibitem{LEC2009}
+ P.~L'{\'E}cuyer.
+\newblock Quasi-Monte Carlo methods with applications in finance.
+\newblock {\em Finance and Stochastics}, 13(3):307--349, 2009.
+
+\end{thebibliography}
+\end{document}
