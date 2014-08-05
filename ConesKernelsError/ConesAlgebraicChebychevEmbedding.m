@@ -19,7 +19,7 @@ bp8 = @(x) x.^8-4*x.^7+14*x.^6/3-7*x.^4/3+2*x.^2/3-1/30;
 kernel=@(x,t) 1-a+a*(-1)^(b+1)*(2*pi)^(2*b)/(2*factorial(2*b)*zeta(2*b))*(bp4(abs(bsxfun(@plus,acos(x),acos(t')))/(2*pi))+bp4(abs(bsxfun(@minus,acos(x),acos(t')))/(2*pi)));
 
 %% Data and spline approximation
-n=80
+n=40
 %xnode=linspace(-1,1,n)';
 xnode = cos(linspace(pi/(2*n),(2*n-1)/(2*n)*pi,n)');
 Kmat=kernel(xnode,xnode);
