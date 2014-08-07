@@ -48,6 +48,20 @@ Define
 \Delta_{n,\pm}:=\frac 1 2 \left[ \tol\left(\varepsilon_a,\varepsilon_r\abs{\widehat{I}_n-\widehat{\varepsilon}_n}\right) \pm \tol\left(\varepsilon_a,\varepsilon_r\abs{\widehat{I}_n+\widehat{\varepsilon}_n}\right) \right]
 \]
 
+An important remark is that $\Delta_{n,-}$ is always shrinking $\widehat{I}_n$ into $\widetilde{I}_n:=\widehat{I}_n+\Delta_{n,-}$ because $\widehat{I}_n>0\Longleftrightarrow\Delta_{n,-}<0$. $\widetilde{I}_n$ is biased but always closer to 0 than $\widehat{I}_n$. This is helpful for the relative error since $\varepsilon_r=\abs{\frac{I-\widehat{I}_n}{I}}$ is bigger when $I$ is closer to 0 than $\widehat{I}_n$. Thus, in order to make $\varepsilon_r$ smaller, we take the biased estimator $\widetilde{I}_n$.
+
+\begin{remark}
+Since $\tol$ is Lipschitz 1, $b\rightarrow b\pm \tol(\varepsilon_a,\varepsilon_r\abs{b})$ is non-decreasing.
+\begin{proof}
+We just need to prove that if $b'\geq b$, then $b'\pm \tol(\varepsilon_a,\varepsilon_r\abs{b'})\geq b\pm \tol(\varepsilon_a,\varepsilon_r\abs{b})$. However,
+\begin{align*}
+b'-b \pm \tol(\varepsilon_a,\varepsilon_r\abs{b'}) &\mp \tol(\varepsilon_a,\varepsilon_r\abs{b})\\
+&\geq b'-b - \abs{ \tol(\varepsilon_a,\varepsilon_r\abs{b'}) - \tol(\varepsilon_a,\varepsilon_r\abs{b})}\\
+&\stackrel{Lip-1}{\geq} b'-b - \abs{b'-b} =0.
+\end{align*}
+\end{proof}
+\end{remark}
+
 \begin{lem}\label{first}
 Let $\widetilde{I}_n:=\widehat{I}_n+\Delta_{n,-}$. We claim that if $\widehat{\varepsilon}_n\leq \Delta_{n,+}$, then
 \[
@@ -62,7 +76,7 @@ It is clear that
 &\Longleftrightarrow \widehat{I}_n+\Delta_{n,-} - \Delta_{n,+}+\widehat{\varepsilon}_n\leq \widetilde{I}_n \leq \widehat{I}_n+\Delta_{n,-}+ \Delta_{n,+}-\widehat{\varepsilon}_n\\
 &\Longleftrightarrow \widehat{I}_n-\tol\left(\varepsilon_a,\varepsilon_r\abs{\widehat{I}_n+\widehat{\varepsilon}_n}\right)+\widehat{\varepsilon}_n\leq \widetilde{I}_n \leq \widehat{I}_n+\tol\left(\varepsilon_a,\varepsilon_r\abs{\widehat{I}_n-\widehat{\varepsilon}_n}\right)-\widehat{\varepsilon}_n
 \end{align*}
-Since $b\rightarrow b\pm \tol(\varepsilon_a,\varepsilon_r\abs{b})$ is non-decreasing because of the Lipschitz property in addition to $\varepsilon_r<1$,
+Since $b\rightarrow b\pm \tol(\varepsilon_a,\varepsilon_r\abs{b})$ is non-decreasing and considering $b=I$ and $b'=\widehat{I}_n+\widehat{\varepsilon}_n$ on the left and $b=\widehat{I}_n-\widehat{\varepsilon}_n$ and $b'=I$ on the right,
 \begin{align*}
 &I-\tol\left(\varepsilon_a,\varepsilon_r\abs{I}\right)\leq \widetilde{I}_n  \leq I+\tol\left(\varepsilon_a,\varepsilon_r\abs{I}\right)\\
 &\Longleftrightarrow \abs{I-\widetilde{I}_n}\leq\tol\left(\varepsilon_a,\varepsilon_r\abs{I}\right)
