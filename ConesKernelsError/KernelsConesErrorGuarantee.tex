@@ -258,9 +258,35 @@ given that $1-\tau\tildeh(n)>0$. This implies that
 \end{description}
 \end{algo}
 
+\section{Error Estimation for Gaussian Kernels Via Cones}
+In this section we consider the scattered data interpolation problem in a cube
+\begin{equation*}
+\cx=W(\vx_0,R):=\{\vx\in\reals^d:\norm[\infty]{\vx-\vx_0}\le R\}
+\end{equation*}
+with the Gaussian kernel
+\begin{equation*}
+K(\vx,\vt)=\exp(-\g\norm[2]{\vx-\vt}^2).
+\end{equation*}
+In this case we can apply \cite[Theorem 11.22]{Wen05a} to obtain
+\begin{equation}\label{spectral}
+\norm[\cl_\infty(\cx)]{f-A_nf}\le e^{c\ln h/h}\norm[\ch]f,
+\end{equation}
+for $h\le h_0=c_0/\ell_0$, where the fill distance
+\begin{equation*}
+h=h_{X,\cx}:=\sup_{\vx\in\cx}\min_{1\le i\le n}\norm[2]{\vx-\vx_j},
+\end{equation*}
+and the constant $c_0:=R/(3\alpha_d)$, where $\alpha_d$ is defined by
+\begin{equation*}
+\alpha_1=2,\ \ \ \mbox{and}\ \ \ \alpha_j=2j(1+\alpha_{j-1}),\ \ \ \mbox{for}\ \ \ j=2,3,\ldots.
+\end{equation*}
+The constant $c$ in \eqref{spectral} is given by $c:=\min\{c_0/2,1/(eC_3)\}/2$, where $C_3:=C_1e^{C_2}$, $C_1:=576\g d\alpha_d^2$, and $C_2:=\ln4+8d\alpha_d$.
+
+
+
+
 \section{Example}
 \subsection{Example 1}
-Consider the univariate case and let 
+Consider the univariate case and let
 $$\ch=\left\{f|f(0)=0,\ f\mbox{ is absolutely continuous and }f'\in\cl_2((0,1))\right\}.$$
 Define the inner product $\ip[\ch]{\cdot}{\cdot}$ as
 $$\ip[\ch]fg=\frac1\g\int_0^1f'(x)g'(x)\dif x.$$
