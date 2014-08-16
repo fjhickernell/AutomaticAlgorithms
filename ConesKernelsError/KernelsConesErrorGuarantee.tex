@@ -191,7 +191,7 @@ Let $L_{\vx}$ be the evaluation functional, i.e, $L_{\vx}(f)=f(\vx)$.  For this 
 \nonumber
 &=: h^2(n)
 \end{align}
-where $\tmK=\int_{\cx} \vk(\vx) \vk^T(\vx) \rho(\vx) \, \dif x$.
+where $\tmK=\int_{\cx} \vk(\vx) \vk^T(\vx) \rho(\vx) \, \dif \vx$.
 Note that the left hand side is no smaller than
 \[
 \sup_{0 \ne f \in \ch} \frac{\norm[\cl_2]{f-A_n(f)}}{\norm[\ch]{f}}.
@@ -273,14 +273,38 @@ In this case we can apply \cite[Theorem 11.22]{Wen05a} to obtain
 \end{equation}
 for $h\le h_0=c_0/\ell_0$, where the fill distance
 \begin{equation*}
-h=h_{X,\cx}:=\sup_{\vx\in\cx}\min_{1\le i\le n}\norm[2]{\vx-\vx_j},
+h=h_{X,\cx}:=\sup_{\vx\in\cx}\min_{1\le i\le n}\norm[2]{\vx-\vx_i},
 \end{equation*}
-and the constant $c_0:=R/(3\alpha_d)$, where $\alpha_d$ is defined by
+and the constant $c_0:=R/(3\lambda_d)$, where $\lambda_d$ is defined by
 \begin{equation*}
-\alpha_1=2,\ \ \ \mbox{and}\ \ \ \alpha_j=2j(1+\alpha_{j-1}),\ \ \ \mbox{for}\ \ \ j=2,3,\ldots.
+\lambda_1=2,\ \ \ \mbox{and}\ \ \ \lambda_j=2j(1+\lambda_{j-1}),\ \ \ \mbox{for}\ \ \ j=2,3,\ldots.
 \end{equation*}
-The constant $c$ in \eqref{spectral} is given by $c:=\min\{c_0/2,1/(eC_3)\}/2$, where $C_3:=C_1e^{C_2}$, $C_1:=576\g d\alpha_d^2$, and $C_2:=\ln4+8d\alpha_d$.
+The constant $c$ in \eqref{spectral} is given by $c:=\min\{c_0/2,1/(eC_3)\}/2$, where $C_3:=C_1e^{C_2}$, $C_1:=576\g d\lambda_d^2$, and $C_2:=\ln4+8d\lambda_d$.
+In fact we can obtain the same upper bound for $\cl_p$-norm of the error for any $p\ge1$ by
+\begin{equation*}
+\norm[\cl_p(\cx)]{f-A_nf}:=\left(\int_\cx|f(\vx)-(A_nf)(\vx)|^p\rho(\vx)\dif\vx\right)^{1/p}\le e^{c\ln h/h}\norm[\ch]f.
+\end{equation*}
 
+Next we assume that $f\in\cc_\tau:=\left\{g:g\in\ch,D^\alpha g\in\cl_\infty(\cx),\norm[\ch]g\le\tau\norm[\cl_\infty(\cx)]{D^\alpha g}\right\}$ and use this cone condition obtain an upper bound for $\norm[\ch]f$.
+Note that $\cx$ is bounded and satisfies an interior cone condition with the angle $\theta=\arcsin\left(1/\sqrt d\right)$ and the radius $R$. Hence we can apply \cite[Theorem 11.14]{Wen05a} to obtain
+\begin{equation}\label{DPoly}
+\norm[\cl_\infty(\cx)]{D^\alpha f-D^\alpha (A_nf)}\le c^{(\alpha)}h\norm[\ch]f,
+\end{equation}
+when $h$ is sufficiently small. It is not easy yet doable to compute the constact $c^{(\alpha)}$ when $d\ge2$ following the proof of \cite[Theorem 11.14]{Wen05a}. 
+Nevertheless in the case $\alpha=d=1$, \eqref{DPoly} holds for $h\le\min\left\{R,\sqrt{3/(2\g)}\right\}/C_4$, where $C_4:=64(\sqrt d+1)^2/3$.
+The constant $c^{(1)}$ is given by
+\begin{equation*}
+c^{(1)}:=2\g^2C_5C_4^3(6+C_5C_4),
+\end{equation*}
+where $C_5:=\sqrt d/(\sqrt d+1)$.
+It follows that
+\begin{equation*}
+\left|\norm[\cl_\infty(\cx)]{Df}-\norm[\cl_\infty(\cx)]{D(A_nf)}\right|\le\norm[\cl_\infty(\cx)]{Df-D(A_nf)}\le c^{(1)}h\norm[\ch]f\le c^{(1)}h\tau\norm[\cl_\infty(\cx)]{Df},
+\end{equation*}
+which implies
+\begin{equation*}
+\norm[\ch]f\le\tau\norm[\cl_\infty(\cx)]{Df}\le\frac\tau{1-\tau c^{(1)}h}\norm[\cl_\infty(\cx)]{D(A_nf)}.
+\end{equation*}
 
 
 
@@ -294,7 +318,7 @@ It can be easily verified that $\ch$ is a reproducing kernel Hilbert space with 
 $$K(x,y)=\g\min(x,y).$$
 Suppose we take $T$ to be the embedding operator, i.e., $T:\ch\to\cl_2((0,1))$ is defined by $T(f)=f$. Then $\tmH=\tmK$, $\tildeh=h$, and hence the error bound in the previous section becomes
 \begin{equation}\label{ErrBoundEmd}
-\left[\int_0^1|f(x)-A_n(f)(x)|^2\dif x\right]^{1/2}\le\frac{\tau h(n)\tH(f)}{1-\tau h(n)}.
+\left[\int_0^1|f(x)-(A_nf)(x)|^2\dif x\right]^{1/2}\le\frac{\tau h(n)\tH(f)}{1-\tau h(n)}.
 \end{equation}
 As a side note,
 \begin{align*}
