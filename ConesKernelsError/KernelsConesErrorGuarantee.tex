@@ -271,7 +271,7 @@ In this case we can apply \cite[Theorem 11.22]{Wen05a} to obtain
 \begin{equation}\label{spectral}
 \norm[\cl_\infty(\cx)]{f-A_nf}\le e^{c\ln h/h}\norm[\ch]f,
 \end{equation}
-for $h\le h_0=c_0/\ell_0$, where the fill distance
+for $h\le c_0$, where the fill distance
 \begin{equation*}
 h=h_{X,\cx}:=\sup_{\vx\in\cx}\min_{1\le i\le n}\norm[2]{\vx-\vx_i},
 \end{equation*}
@@ -307,7 +307,11 @@ It follows that
 \end{equation*}
 which implies
 \begin{equation*}
-\norm[\ch]f\le\tau\norm[\cl_p(\cx)]{Df}\le\frac\tau{1-\tau c^{(1)}h}\norm[\cl_p(\cx)]{D(A_nf)}.
+\norm[\ch]f\le\tau\norm[\cl_p(\cx)]{Df}\le\frac\tau{1-\tau c^{(1)}h}\norm[\cl_p(\cx)]{D(A_nf)},
+\end{equation*}
+provided that
+\begin{equation*}
+h<\frac1{\tau c^{(1)}}\ \ \ \mbox{and}\ \ \ h\le\min\left\{c_0,\frac R{C_4},\frac{\sqrt3}{C_4\sqrt{2\g}}\right\}.
 \end{equation*}
 Plugging this result into \eqref{NativeBound} gives
 \begin{equation*}
