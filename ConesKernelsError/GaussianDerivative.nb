@@ -1,0 +1,138 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 9.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[      3281,        128]
+NotebookOptionsPosition[      2717,        103]
+NotebookOutlinePosition[      3060,        118]
+CellTagsIndexPosition[      3017,        115]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"f", "[", "x_", "]"}], ":=", 
+  RowBox[{"Exp", "[", 
+   RowBox[{
+    RowBox[{"-", "r"}], "*", 
+    RowBox[{"x", "^", "2"}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.616933021731229*^9, 3.616933053821064*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"D", "[", 
+  RowBox[{
+   RowBox[{"f", "[", "x", "]"}], ",", "x"}], "]"}]], "Input",
+ CellChangeTimes->{{3.616933060730459*^9, 3.616933070234003*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"-", "2"}], " ", 
+  SuperscriptBox["\[ExponentialE]", 
+   RowBox[{
+    RowBox[{"-", "r"}], " ", 
+    SuperscriptBox["x", "2"]}]], " ", "r", " ", "x"}]], "Output",
+ CellChangeTimes->{3.61693307088704*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"D", "[", 
+  RowBox[{
+   RowBox[{"f", "[", "x", "]"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"x", ",", "2"}], "}"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.6169331216879463`*^9, 3.61693313749885*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"-", "2"}], " ", 
+   SuperscriptBox["\[ExponentialE]", 
+    RowBox[{
+     RowBox[{"-", "r"}], " ", 
+     SuperscriptBox["x", "2"]}]], " ", "r"}], "+", 
+  RowBox[{"4", " ", 
+   SuperscriptBox["\[ExponentialE]", 
+    RowBox[{
+     RowBox[{"-", "r"}], " ", 
+     SuperscriptBox["x", "2"]}]], " ", 
+   SuperscriptBox["r", "2"], " ", 
+   SuperscriptBox["x", "2"]}]}]], "Output",
+ CellChangeTimes->{3.61693313801788*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"D", "[", 
+  RowBox[{
+   RowBox[{"f", "[", "x", "]"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"x", ",", "3"}], "}"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.616933143510194*^9, 3.6169331483794727`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"12", " ", 
+   SuperscriptBox["\[ExponentialE]", 
+    RowBox[{
+     RowBox[{"-", "r"}], " ", 
+     SuperscriptBox["x", "2"]}]], " ", 
+   SuperscriptBox["r", "2"], " ", "x"}], "-", 
+  RowBox[{"8", " ", 
+   SuperscriptBox["\[ExponentialE]", 
+    RowBox[{
+     RowBox[{"-", "r"}], " ", 
+     SuperscriptBox["x", "2"]}]], " ", 
+   SuperscriptBox["r", "3"], " ", 
+   SuperscriptBox["x", "3"]}]}]], "Output",
+ CellChangeTimes->{3.616933148831498*^9}]
+}, Open  ]]
+},
+WindowSize->{707, 817},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+FrontEndVersion->"9.0 for Microsoft Windows (64-bit) (November 20, 2012)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[557, 20, 244, 7, 31, "Input"],
+Cell[CellGroupData[{
+Cell[826, 31, 172, 4, 31, "Input"],
+Cell[1001, 37, 237, 7, 36, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[1275, 49, 222, 6, 31, "Input"],
+Cell[1500, 57, 460, 15, 36, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[1997, 77, 223, 6, 31, "Input"],
+Cell[2223, 85, 478, 15, 68, "Output"]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
+
