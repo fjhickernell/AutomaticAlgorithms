@@ -281,9 +281,9 @@ and the constant $c_0:=R/(3\lambda_d)$, where $\lambda_d$ is defined by
 \end{equation*}
 The constant $c$ in \eqref{spectral} is given by $c:=\min\{c_0/2,1/(eC_3)\}/2$, where $C_3:=C_1e^{C_2}$, $C_1:=576\g d\lambda_d^2$, and $C_2:=\ln4+8d\lambda_d$.
 In fact we can obtain the same upper bound for $\cl_p$-norm of the error for any $1\le p<\infty$ by
-\begin{equation*}
+\begin{equation}\label{NativeBound}
 \norm[\cl_p(\cx)]{f-A_nf}:=\left(\int_\cx|f(\vx)-(A_nf)(\vx)|^p\rho(\vx)\dif\vx\right)^{1/p}\le e^{c\ln h/h}\norm[\ch]f.
-\end{equation*}
+\end{equation}
 
 Now let $1\le p\le\infty$. Next we assume that $f\in\cc_\tau:=\left\{g:g\in\ch,D^\alpha g\in\cl_p(\cx),\norm[\ch]g\le\tau\norm[\cl_p(\cx)]{D^\alpha g}\right\}$ and use this cone condition obtain an upper bound for $\norm[\ch]f$.
 Note that $\cx$ is bounded and satisfies an interior cone condition with the angle $\theta=\arcsin\left(1/\sqrt d\right)$ and the radius $R$. Hence we can apply \cite[Theorem 11.14]{Wen05a} to obtain
@@ -308,6 +308,10 @@ It follows that
 which implies
 \begin{equation*}
 \norm[\ch]f\le\tau\norm[\cl_p(\cx)]{Df}\le\frac\tau{1-\tau c^{(1)}h}\norm[\cl_p(\cx)]{D(A_nf)}.
+\end{equation*}
+Plugging this result into \eqref{NativeBound} gives
+\begin{equation*}
+\norm[\cl_p(\cx)]{f-A_nf}\le\frac{\tau e^{c\ln h/h}}{1-\tau c^{(1)}h}\norm[\cl_p(\cx)]{D(A_nf)}.
 \end{equation*}
 We remark that $\norm[\cl_p(\cx)]{D(A_nf)}$ can be computed from the given data $(\vx_i,y_i)$.
 
