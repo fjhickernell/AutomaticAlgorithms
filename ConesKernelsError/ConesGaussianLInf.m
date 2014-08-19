@@ -4,18 +4,27 @@ clear all
 close all
 format compact
 set(0,'defaultaxesfontsize',20,'defaulttextfontsize',20)
-testfun=@(x) sin(3*pi*x);
-tau=1000;
-epsilon = 1e-2;
-
-%% Kernel
-a=2;
-kernel=@(x,t) exp(-(a.^2)*(bsxfun(@minus,x,t')).^2);
+n = 500
+a = 0; b = 1;
+xnode=linspace(a,b,n)';
+h = (b-a)/(2*n); R = (b-a)/2;
+testfun=@(x) sin(.1*x);
+gamma = 1;
+kernel=@(x,t) exp(-gamma*(bsxfun(@minus,x,t')).^2);
+tau = 2;
+c0 = R/6; C1 = 2304*gamma; C2 = log(4)+16; C3 = C1*exp(C2);
+%C = min(c0/2,1/(exp(1)*C3))/2;
+C = min(c0/2,1/sqrt(exp(1)*C3))/2;
+%C4 = 256/3; C5 = 1/2; c1 = 2*gamma^2*C5*C4^3*(6+C5*C4);
+%h0 = min([1/(tau*c1) c0 R/C4 sqrt(3)/C4/sqrt(2*gamma)]);
+if tau<=1
+    h0 = c0
+else
+    h0 = min([c0 C/(2*log(tau))])
+end
+%epsilon = 1e-2;
 
 %% Data and spline approximation
-n = 5
-h = 1/n;
-xnode=linspace(0,1,n)';
 Kmat=kernel(xnode,xnode);
 condK=cond(Kmat)
 y=testfun(xnode);
@@ -24,7 +33,7 @@ splinef=@(x) kernel(x,xnode)*c;
 
 %% Plot of test function and spline
 ntest=5000;
-xtest=linspace(0,1,ntest)';
+xtest=linspace(a,b,ntest)';
 ytest = interp1q(xnode,y,xtest);
 plot(xtest,ytest,'b-',...
     xtest,splinef(xtest),'r--',...
@@ -34,7 +43,7 @@ plot(xtest,ytest,'b-',...
 %% Root mean square error
 error2=sqrt(mean((testfun(xtest)-splinef(xtest)).^2))
 error_sup=max(abs(testfun(xtest)-splinef(xtest)))
-% normHsplinef=sqrt(c'*y)
+normHsplinef=sqrt(c'*y)
 % xpxt=bsxfun(@plus,xnode,xnode');
 % xmxt=bsxfun(@minus,xnode,xnode');
 % Ktildemat=(sqrt(pi/2)/(2*a)) ...
@@ -45,18 +54,11 @@ error_sup=max(abs(testfun(xtest)-splinef(xtest)))
 % guesserrest=Herrbd*normHsplinef
 
 %% Algorithm 1 Stage 1
-Ktestmat = kernel(xtest,xnode);
-normDsplinef = norm(Ktestmat*c,Inf);
-GaussConst = 1;
-eBoundEst = tau*sqrt(exp(-GaussConst/h))/.9*normDsplinef
+%[~,fval] = fminbnd(@(x) -FcnToMax(x,xnode,c,gamma,1),a,b);
+%eBoundEst = -tau*exp(C*log(h)/h)/(1-tau*c1*h)*fval
+%[~,fval] = fminbnd(@(x) -abs(splinef(x)),a,b);
+%eBoundEst = -tau*exp(C*log(h)/h)/(1-tau*exp(C*log(h)/h))*fval
+[~,fval] = fminbnd(@(x) -abs(splinef(x)),a,b)
+eBoundEst = -tau*exp(-C/(2*h))/(1-tau*exp(-C/(2*h)))*fval
 
-% xtxt=bsxfun(@times,xnode,xnode');
-% xpxtsq=bsxfun(@plus,xnode.^2,xnode'.^2);
-% Htildemat=1/4*a*(exp(-a^2*(2+xpxtsq+xtxt-2*xpxt)) ...
-%     .*(2*a*exp(a^2*xtxt).*(-2+xpxt)+exp(1/2*a^2*(bsxfun(@plus,xnode.^2-4*xnode,(xnode'-2).^2)+4*xtxt)) ...
-%     *sqrt(2*pi).*(-1+a^2*xmxt.^2)*erf(a*(-2+xpxt)/sqrt(2))) ...
-%     -exp(-a^2*(xpxtsq+xtxt)).*(2*a*exp(a^2*xtxt).*xpxt+exp(1/2*a^2*(xpxtsq+4*xtxt)) ...
-%     *sqrt(2*pi)*(-1+a^2*xmxt.^2).*erf(a*xpxt/sqrt(2))));
-% condHtilde=cond(Htildemat)
-% normDsplinef=sqrt(c'*Htildemat*c);
-% htilde=sqrt(2*a^2-trace(Htildemat/Kmat))
+
