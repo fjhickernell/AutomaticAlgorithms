@@ -1,0 +1,162 @@
+%MCQMC, April 6-11, 2014
+%Requires graphics files
+%  sob256pts.eps, scrsob256pts.eps, PlotFWTCoefUse256.eps KeistercubSobolErrTime.eps
+
+%%%%%%%%%%%%%%%% Springer %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[graybox,footinfo]{svmult}
+
+\smartqed
+\usepackage{mathptmx}       % selects Times Roman as basic font
+\usepackage{helvet}         % selects Helvetica as sans-serif font
+\usepackage{courier}        % selects Courier as typewriter font
+\usepackage{type1cm}        % activate if the above 3 fonts are
+                            % not available on your system
+\usepackage{graphicx}       % standard LaTeX graphics tool
+                            % when including figure files
+
+\usepackage{array,colortbl}
+\usepackage{amsmath,amsfonts,amssymb,bm} % no amsthm, Springer defines Theorem, Lemma, etc themselves
+%\usepackage[mathx]{mathabx}
+\DeclareFontFamily{U}{mathx}{\hyphenchar\font45}
+\DeclareFontShape{U}{mathx}{m}{n}{
+      <5> <6> <7> <8> <9> <10>
+      <10.95> <12> <14.4> <17.28> <20.74> <24.88>
+      mathx10
+      }{}
+\DeclareSymbolFont{mathx}{U}{mathx}{m}{n}
+\DeclareFontSubstitution{U}{mathx}{m}{n}
+\DeclareMathAccent{\widecheck}      {0}{mathx}{"71}
+
+% Note that Springer defines the following already:
+%
+% \D upright d for differential d
+% \I upright i for imaginary unit
+% \E upright e for exponential function
+% \tens depicts tensors as sans serif upright
+% \vec depicts vectors as boldface characters instead of the arrow accent
+%
+% Additionally we throw in the following common used macro's:
+\newcommand{\Z}{\mathbb{Z}} % integers
+\newcommand{\C}{\mathbb{C}} % complex numbers
+\newcommand{\R}{\mathbb{R}} % reals
+\newcommand{\N}{\mathbb{N}} % natural numbers {1, 2, ...}
+\newcommand{\Q}{\mathbb{Q}} % rationals
+\newcommand{\F}{\mathbb{F}} % field, finite field
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor} % floor
+\newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}    % ceil
+\newcommand{\rd}{\,\mathrm{d}} % differential symbol for use in integrals
+% vectors as boldsymbols:
+\newcommand{\bszero}{\boldsymbol{0}} % vector of zeros
+\newcommand{\bsone}{\boldsymbol{1}}  % vector of ones
+\newcommand{\bst}{\boldsymbol{t}}    % vector t
+\newcommand{\bsu}{\boldsymbol{u}}    % vector u
+\newcommand{\bsv}{\boldsymbol{v}}    % vector v
+\newcommand{\bsw}{\boldsymbol{w}}    % vector w
+\newcommand{\bsx}{\boldsymbol{x}}    % vector x
+\newcommand{\bsy}{\boldsymbol{y}}    % vector y
+\newcommand{\bsz}{\boldsymbol{z}}    % vector z
+\newcommand{\bsDelta}{\boldsymbol{\Delta}}    % vector \Delta
+% sets as Euler fraks:
+\newcommand{\setu}{\mathfrak{u}}
+\newcommand{\setv}{\mathfrak{v}}
+% indicator boldface 1:
+\DeclareSymbolFont{bbold}{U}{bbold}{m}{n}
+\DeclareSymbolFontAlphabet{\mathbbold}{bbold}
+\newcommand{\ind}{\mathbbold{1}}
+
+
+\usepackage{microtype} % good font tricks
+
+\usepackage[colorlinks=true,linkcolor=black,citecolor=black,urlcolor=black]{hyperref}
+\urlstyle{same}
+\usepackage{bookmark}
+\pdfstringdefDisableCommands{\def\and{, }}
+\makeatletter % to avoid hyperref warnings:
+  \providecommand*{\toclevel@author}{999}
+  \providecommand*{\toclevel@title}{0}
+\makeatother
+
+%Fred's additions
+%\usepackage{amsmath,datetime,xmpmulti,mathtools,bbm,array,booktabs,alltt,xspace,mathabx,tikz,pifont,graphicx}
+\usepackage{mathtools,array,booktabs}
+\DeclareMathOperator{\ok}{ok}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\spnewtheorem{algo}{Algorithm}{\bf}{\rm}
+\newcommand{\bsi}{\boldsymbol{i}}    % vector i
+\newcommand{\bsk}{\boldsymbol{k}}    % vector k
+\newcommand{\bsl}{\boldsymbol{l}}    % vector l
+\newcommand{\bsr}{\boldsymbol{r}}    % vector r
+\newcommand{\bsnu}{\boldsymbol{\nu}}    % vector l
+\newcommand{\cc}{\mathcal{C}}
+\newcommand{\cl}{\mathcal{L}}
+\newcommand{\cn}{\mathcal{N}}
+\newcommand{\Order}{\mathcal{O}}
+\newcommand{\cp}{\mathcal{P}}
+\newcommand{\cx}{\mathcal{X}}
+\newcommand{\natm}{\N_{0,m}}
+\newcommand{\cube}{[0,1)^d}
+\newcommand{\hf}{\hat{f}}
+\newcommand{\rf}{\mathring{f}}
+\newcommand{\tf}{\tilde{f}}
+\newcommand{\hg}{\hat{g}}
+\newcommand{\hI}{\hat{I}}
+\newcommand{\tvk}{\tilde{\bsk}}
+\newcommand{\hS}{\widehat{S}}
+\newcommand{\tS}{\widetilde{S}}
+\newcommand{\wcS}{\widecheck{S}}
+\newcommand{\rnu}{\mathring{\nu}}
+\newcommand{\tnu}{\widetilde{\nu}}
+\newcommand{\hnu}{\widehat{\nu}}
+\newcommand{\homega}{\widehat{\omega}}
+\newcommand{\wcomega}{\mathring{\omega}}
+\newcommand{\fC}{\mathfrak{C}}
+\newcommand{\nodes}{\{\bsz_i\}_{i=0}^{\infty}}
+\newcommand{\nodesn}{\{\bsz_i\}_{i=0}^{n-1}}
+\newcommand{\norm}[1]{\ensuremath{\left \lVert #1 \right \rVert}} \newcommand{\bigabs}[1]{\ensuremath{\bigl \lvert #1 \bigr \rvert}}
+\newcommand{\Bigabs}[1]{\ensuremath{\Bigl \lvert #1 \Bigr \rvert}}
+\newcommand{\biggabs}[1]{\ensuremath{\biggl \lvert #1 \biggr \rvert}}
+\newcommand{\Biggabs}[1]{\ensuremath{\Biggl \lvert #1 \Biggr \rvert}}
+\newcommand{\ip}[3][{}]{\ensuremath{\left \langle #2, #3 \right \rangle_{#1}}}
+
+
+
+\title*{Error Estimation for Multidimensional Integration Based on Rank-1 Lattices}
+\author{Fred J. Hickernell \and Llu\'is Antoni Jim\'enez Rugama}
+\institute{Fred J. Hickernell \and Llu\'is Antoni
+\at Department of Applied Mathematics,  Illinois Institute of Technology, 10 W. 32$^{\text{nd}}$ Street, E1-208, Chicago, IL 60616, USA
+\email{hickernell@iit.edu}, \email{ljimene1@hawk.iit.edu}}
+\maketitle
+
+\abstract{}
+
+\section{Introduction}
+Quasi-Monte Carlo methods are used to approximate multidimensional integration in $\cube$. This 
+\section{Digital Sequences}
+
+\section{Walsh Series} \label{WaveWalshsec}
+
+\section{Error Estimation and an Adaptive Cubature Algorithm} \label{ErrEstsec}
+
+\subsection{Wavenumber Map} \label{wavenummapsec}
+
+\subsection{An Adaptive Cubature Algorithm and Its Cost}
+
+\section{Numerical Experiments} \label{numexpsec}
+
+
+\section{Discussion}
+
+
+\begin{acknowledgement}
+\end{acknowledgement}
+
+\bibliographystyle{spmpsci}
+\bibliography{FJH22,FJHown22}
+
+\section*{Appendix:  Fast Computation of the Discrete Walsh Transform}
+
+
+
+\end{document}
