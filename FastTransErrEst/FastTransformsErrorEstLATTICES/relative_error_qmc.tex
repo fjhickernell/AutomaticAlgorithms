@@ -1,0 +1,177 @@
+% !TEX TS-program = PDFLatexBibtex
+%&LaTeX
+\documentclass[]{elsarticle}
+\setlength{\marginparwidth}{0.5in}
+\usepackage{amsmath,amssymb,amsthm,natbib,mathtools,bbm,extraipa,mathabx,graphicx}
+%accents,
+\input FJHDef.tex
+
+
+\newcommand{\fudge}{\fC}
+\newcommand{\dtf}{\textit{\doubletilde{f}}}
+\newtheorem{lem}{Lemma}
+\newtheorem{remark}{Remark}
+\theoremstyle{definition}
+\newtheorem{defin}{Definition}
+\newtheorem{algo}{Algorithm}
+\newcommand{\cube}{[0,1)^d}
+%\renewcommand{\bbK}{\natzero^d}
+\DeclareMathOperator{\trail}{trail}
+\newcommand{\rf}{\mathring{f}}
+\newcommand{\rnu}{\mathring{\nu}}
+\newcommand{\natm}{\naturals_{0,m}}
+\newcommand{\wcS}{\widecheck{S}}
+\newcommand{\wcomega}{\widecheck{\omega}}
+\newcommand{\tol}{\text{tol}}
+\newcommand{\e}{\text{e}}
+
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{Relative error}
+\author{Fred J. Hickernell}
+\address{Room E1-208, Department of Applied Mathematics, Illinois Institute of Technology,\\ 10 W.\ 32$^{\text{nd}}$ St., Chicago, IL 60616}
+\author{Llu\'{i}s Antoni Jim\'{e}nez Rugama}
+\address{Room E1-120, Department of Applied Mathematics, Illinois Institute of Technology,\\ 10 W.\ 32$^{\text{nd}}$ St., Chicago, IL 60616}
+\begin{abstract}
+\end{abstract}
+
+\end{frontmatter}
+
+\section{Relative Error}
+We consider $I:=\int_{\cube}f(\vx)\dif \vx$ and $\widehat{I}_n:=\frac 1 n \sum_{i=0}^{n-1}f(\vx_i)$. Let also $\tol(a,b)$ be defined Lipschitz $L=1$ in $b$ and non-decreasing in both arguments, i.e. $\tol(a,b)\leq \tol(a',b')$ for $a\leq a'$ and $b\leq b'$. Ideally, we will use $\tol(\varepsilon_a,\varepsilon_r\abs{I})$.
+
+Define
+\[
+\Delta_{n,\pm}:=\frac 1 2 \left[ \tol\left(\varepsilon_a,\varepsilon_r\abs{\widehat{I}_n-\widehat{\varepsilon}_n}\right) \pm \tol\left(\varepsilon_a,\varepsilon_r\abs{\widehat{I}_n+\widehat{\varepsilon}_n}\right) \right]
+\]
+
+An important remark is that $\Delta_{n,-}$ is always shrinking $\widehat{I}_n$ into $\widetilde{I}_n:=\widehat{I}_n+\Delta_{n,-}$ because $\widehat{I}_n>0\Longleftrightarrow\Delta_{n,-}<0$. $\widetilde{I}_n$ is biased but always closer to 0 than $\widehat{I}_n$. This is helpful for the relative error since $\varepsilon_r=\abs{\frac{I-\widehat{I}_n}{I}}$ is bigger when $I$ is closer to 0 than $\widehat{I}_n$. Thus, in order to make $\varepsilon_r$ smaller, we take the biased estimator $\widetilde{I}_n$.
+
+\begin{remark}
+Since $\tol$ is Lipschitz 1, $b\rightarrow b\pm \tol(\varepsilon_a,\varepsilon_r\abs{b})$ is non-decreasing.
+\begin{proof}
+We just need to prove that if $b'\geq b$, then $b'\pm \tol(\varepsilon_a,\varepsilon_r\abs{b'})\geq b\pm \tol(\varepsilon_a,\varepsilon_r\abs{b})$. However,
+\begin{align*}
+b'-b \pm \tol(\varepsilon_a,\varepsilon_r\abs{b'}) &\mp \tol(\varepsilon_a,\varepsilon_r\abs{b})\\
+&\geq b'-b - \abs{ \tol(\varepsilon_a,\varepsilon_r\abs{b'}) - \tol(\varepsilon_a,\varepsilon_r\abs{b})}\\
+&\stackrel{Lip-1}{\geq} b'-b - \abs{b'-b} =0.
+\end{align*}
+\end{proof}
+\end{remark}
+
+\begin{lem}\label{first}
+Let $\widetilde{I}_n:=\widehat{I}_n+\Delta_{n,-}$. We claim that if $\widehat{\varepsilon}_n\leq \Delta_{n,+}$, then
+\[
+\abs{I-\widetilde{I}_n}\leq \tol(\varepsilon_a,\varepsilon_r\abs{I})
+\]
+The algorithm is then doubling $n$ until $\widehat{\varepsilon}_n\leq \Delta_{n,+}$.
+\end{lem}
+\begin{proof}
+It is clear that
+\begin{align*}
+0=\pm&\left(\widetilde{I}_n-\widehat{I}_n-\Delta_{n,-}\right)\leq \Delta_{n,+}-\widehat{\varepsilon}_n \\
+&\Longleftrightarrow \widehat{I}_n+\Delta_{n,-} - \Delta_{n,+}+\widehat{\varepsilon}_n\leq \widetilde{I}_n \leq \widehat{I}_n+\Delta_{n,-}+ \Delta_{n,+}-\widehat{\varepsilon}_n\\
+&\Longleftrightarrow \widehat{I}_n-\tol\left(\varepsilon_a,\varepsilon_r\abs{\widehat{I}_n+\widehat{\varepsilon}_n}\right)+\widehat{\varepsilon}_n\leq \widetilde{I}_n \leq \widehat{I}_n+\tol\left(\varepsilon_a,\varepsilon_r\abs{\widehat{I}_n-\widehat{\varepsilon}_n}\right)-\widehat{\varepsilon}_n
+\end{align*}
+Since $b\rightarrow b\pm \tol(\varepsilon_a,\varepsilon_r\abs{b})$ is non-decreasing and considering $b=I$ and $b'=\widehat{I}_n+\widehat{\varepsilon}_n$ on the left and $b=\widehat{I}_n-\widehat{\varepsilon}_n$ and $b'=I$ on the right,
+\begin{align*}
+&I-\tol\left(\varepsilon_a,\varepsilon_r\abs{I}\right)\leq \widetilde{I}_n  \leq I+\tol\left(\varepsilon_a,\varepsilon_r\abs{I}\right)\\
+&\Longleftrightarrow \abs{I-\widetilde{I}_n}\leq\tol\left(\varepsilon_a,\varepsilon_r\abs{I}\right)
+\end{align*}
+\end{proof}
+
+\begin{remark}
+Note that
+\[
+\tol\left(\varepsilon_a,\varepsilon_r\abs{I-I+\widehat{I}_n\pm\widehat{\varepsilon}_n}\right)
+\geq \tol\left(\varepsilon_a,\varepsilon_r\abs{I}\right)-\varepsilon_r\abs{-I+\widehat{I}_n\pm\widehat{\varepsilon}_n}
+\]
+\end{remark}
+\begin{proof}
+By the Lipschitz condition $\abs{\tol(a,b)-\tol(a,b')}\leq \abs{b-b'}\Rightarrow \tol(a,b)-\tol(a,b')\leq \abs{b-b'}$. Therefore
+\begin{align*}
+\tol(a,b')\geq\tol(a,b)-\abs{b-b'}
+\end{align*}
+If we choose $b'=\varepsilon_r\abs{\widehat{I}_n\pm\widehat{\varepsilon}_n}$ and $b=\varepsilon_r\abs{I}$,
+\begin{align*}
+\tol\left(\varepsilon_a,\varepsilon_r\abs{I-I+\widehat{I}_n\pm\widehat{\varepsilon}_n}\right)\\
+&\geq \tol\left(\varepsilon_a,\varepsilon_r\abs{I}\right)-\varepsilon_r\abs{\abs{I}-\abs{\widehat{I}_n\pm\widehat{\varepsilon}_n}}\\
+&\geq \tol\left(\varepsilon_a,\varepsilon_r\abs{I}\right)-\varepsilon_r\abs{-I+\widehat{I}_n\pm\widehat{\varepsilon}_n}
+\end{align*}
+\end{proof}
+
+\begin{lem}\label{second}
+If
+\[
+\widehat{\varepsilon}_n\leq \frac{\tol(\varepsilon_a,\varepsilon_r\abs{I})}{1+\varepsilon_r}
+\]
+then,
+\[
+\widehat{\varepsilon}_n\leq \Delta_{n,+}
+\]
+\end{lem}
+\begin{proof}
+Note that
+\begin{align*}
+&\widehat{I}_n>0\Rightarrow\abs{I}\leq \abs{\widehat{I}_n+\widehat{\varepsilon}_n}\\
+&\widehat{I}_n<0\Rightarrow\abs{I}\leq \abs{\widehat{I}_n-\widehat{\varepsilon}_n}
+\end{align*}
+Therefore,
+\[
+\abs{I}\leq \abs{\widehat{I}_n+\sign\left(\widehat{I}_n\right)\widehat{\varepsilon}_n}
+\]
+This means that,
+\begin{equation}\label{ineq}
+\tol\left(\varepsilon_a,\varepsilon_r\abs{\widehat{I}_n+\sign\left(\widehat{I}_n\right)\widehat{\varepsilon}_n}\right)\geq \tol\left(\varepsilon_a,\varepsilon_r\abs{I}\right)
+\end{equation}
+In addition,
+\begin{align}
+\tol\left(\varepsilon_a,\varepsilon_r\abs{\widehat{I}_n-\sign\left(\widehat{I}_n\right)\widehat{\varepsilon}_n}\right)
+& =\tol\left(\varepsilon_a,\varepsilon_r\abs{I-I+\widehat{I}_n-\sign\left(\widehat{I}_n\right)\widehat{\varepsilon}_n}\right)\\
+& \geq \tol\left(\varepsilon_a,\varepsilon_r\abs{I}\right)-\varepsilon_r\abs{-I+\widehat{I}_n-\sign\left(\widehat{I}_n\right)\widehat{\varepsilon}_n} \\
+& \geq \tol\left(\varepsilon_a,\varepsilon_r\abs{I}\right)-2\varepsilon_r\widehat{\varepsilon}_n \label{average}
+\end{align}
+Noticing that
+\[
+\Delta_{n,+}=\frac 1 2 \left[ \tol\left(\varepsilon_a,\varepsilon_r\abs{\widehat{I}_n-\sign\left(\widehat{I}_n\right)\widehat{\varepsilon}_n}\right) + \tol\left(\varepsilon_a,\varepsilon_r\abs{\widehat{I}_n+\sign\left(\widehat{I}_n\right)\widehat{\varepsilon}_n}\right) \right]
+\]
+and taking the average of equations \eqref{ineq} and \eqref{average},
+\[
+\Delta_{n,+}\geq \tol\left(\varepsilon_a,\varepsilon_r\abs{I}\right)-\varepsilon_r\widehat{\varepsilon}_n
+\]
+which means by the assumption
+\[
+\Delta_{n,+} - \widehat{\varepsilon}_n \geq \tol\left(\varepsilon_a,\varepsilon_r\abs{I}\right)-(1+\varepsilon_r)\widehat{\varepsilon}_n\geq 0
+\]
+\end{proof}
+
+\section{Upper Bound on the Computational Complexity}
+Lets define $M(\varepsilon,S)$ such that, $m\geq M(\varepsilon,S)\Rightarrow {\varepsilon}_m\leq \varepsilon$. Here, $S$ is our cone condition definition.
+
+In our algorithm, we compute ${\varepsilon}_m$ such that $\abs{I-\widehat{I}_{2^m}}\leq {\varepsilon}_m$. Given our lemma \eqref{first}, we know that if ${\varepsilon}_m\leq \Delta_{2^m,+}$, then $\abs{I-\widetilde{I}_{2^m}}\leq \tol(\varepsilon_a,\varepsilon_r\abs{I})$. Using lemma \eqref{second}, we can easily check that $M^*=M\left(\frac{\tol\left(\varepsilon_a,\varepsilon_r\abs{I}\right)}{1+\varepsilon_r},S\right)$ is an upper bound on the computational complexity since,
+\begin{align*}
+m\geq M^*&\stackrel{M def}{\Longrightarrow} {\varepsilon}_m\leq\frac{\tol\left(\varepsilon_a,\varepsilon_r\abs{I}\right)}{1+\varepsilon_r}\\
+&\stackrel{lem \eqref{second}}{\Longrightarrow}\widehat{\varepsilon}_m\leq \Delta_{2^m,+}\\
+&\stackrel{lem \eqref{first}}{\Longrightarrow} \abs{I-\widetilde{I}_{2^m}}\leq \tol(\varepsilon_a,\varepsilon_r\abs{I})
+\end{align*}
+Hence
+\[
+\cost \leq cM^*2^{M^*}+\$(f)2^{M^*}
+\]
+
+\section{Lower Bound on the Complexity}
+We want $\hf(\vzero)$. We need to choose the oracle and we have two options,
+\begin{align*}
+&\Lambda:=\left\{L:\; L(f)=f(x)\text{ for some }x\in\cube\right\}\\
+&\Lambda:=\left\{L:\; L(f)=\hf(\vk),\;\vk\neq\vzero\text{ or }L(f)=f(\vz)\text{ for a fixed }\vz\in\cube\right\}\\
+\end{align*}
+This last condition of fixing $\vz$ is because this gives us information of the complete Fourier series coefficients
+\[
+f(\vz)=\sum_{\vk\in\integers^d}\hf(\vk)\e^{2\pi\sqrt{-1}\ip[]{\vk}{\vz}}
+\]
+To finish....
+
+\end{document}
