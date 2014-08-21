@@ -41,7 +41,7 @@ plot(xtest,ytest,'b-',...
     'linewidth',3)
 
 %% Root mean square error
-error2=sqrt(mean((testfun(xtest)-splinef(xtest)).^2))
+%error2=sqrt(mean((testfun(xtest)-splinef(xtest)).^2))
 error_sup=max(abs(testfun(xtest)-splinef(xtest)))
 normHsplinef=sqrt(c'*y)
 % xpxt=bsxfun(@plus,xnode,xnode');
