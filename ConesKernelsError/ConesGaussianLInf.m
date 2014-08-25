@@ -18,7 +18,8 @@ tau = 4;
 C4 = 64/3; %C5 = 1/2; c1 = sqrt(2*gamma^2*C5*C4^3*(6+C5*C4));
 C = 4*gamma*C4^2;
 CC = sqrt(8)*gamma^(3/2)*C4^3;
-h0 = min([1/sqrt(tau*C) R/C4 sqrt(3)/C4/sqrt(2*gamma)]);
+hc = min([1/sqrt(tau*C) R/C4 sqrt(3)/C4/sqrt(2*gamma)]);
+hcc = min([1/sqrt(tau*CC) R/C4 2/(gamma*C4)]);
 %epsilon = 1e-2;
 
 %% Data and spline approximation
