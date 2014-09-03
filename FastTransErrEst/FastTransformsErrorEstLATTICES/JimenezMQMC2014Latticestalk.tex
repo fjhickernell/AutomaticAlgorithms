@@ -294,7 +294,7 @@ Therefore, for all $m\in \N_0$ and all $(\nu_0,\dots,\nu_m) \in \F_b^{m+1}$ ther
 
 \section{Fourier Series}
 
-The integrands are assumed to be periodic and belong to some subset of $\cl_2(\cube)$, the space of square integrable functions. For non periodic integrands we suggest some transforms in \eqref{periodizing}. The $\cl_2$ inner product is defined as
+The integrands are assumed to be periodic and belong to some subset of $\cl_2(\cube)$, the space of square integrable functions. For non periodic integrands we suggest some transforms in Appendix A. The $\cl_2$ inner product is defined as
 \[
 \ip[2]{f}{g} = \int_{\cube} f(\bsx) \overline{g(\bsx)} \, \dif \bsx.
 \]
@@ -369,21 +369,7 @@ One does not have to assume the knowledge of the Fourier coefficients since they
 & = \sum_{\bsl \in \cp^{\perp}_m} \hf(\bsk+\bsl) \me^{2 \pi \sqrt{-1} \ip{\bsl}{\bsDelta}} \\
 &= \hf(\bsk) + \sum_{\bsl \in \cp^{\perp}_m\setminus \bszero} \hf(\bsk+\bsl) \me^{2 \pi \sqrt{-1} \ip{\bsl}{\bsDelta}}, \qquad \forall \bsk \in \Z^d. \label{tfassum}
 \end{align}
-It is seen here that the discrete transform $\tf_m(\bsk)$ is equal to the integral transform $\hf(\bsk)$, defined in \eqref{Fourierdef}, plus the \emph{aliasing} terms corresponding to $\hf(\bsl)$ where $\bsl-\bsk \in \cp_{m}^{\perp}\setminus \bszero$.
-
-\subsection{Periodizing Transformations}\label{periodizing}
-For non periodic integrands $f$ we can use transformations $\phi$ such that:
-\begin{equation}\label{transeq}
-\int_{\cube} f(\bsx)  \, \dif \bsx=\int_{\cube} g(\bst)  \, \dif \bst
-\end{equation}
-where
-\begin{equation}\label{gdef}
-g(t_1,\dots,t_d)=f(\phi(t_1),\dots,\phi(t_d))\phi'(t_1)\cdots\phi'(t_d)
-\end{equation}
-
-One example is the Baker's transform $\phi(t)=1-2\abs{t-0.5}$. A simple calculation in one dimension proves the equality \eqref{transeq} and by the Fubini theorem it can be extended to any dimension. Remark that this transform may generate a periodically extended $g$ not differentiable. Therefore, for smoother integrands $f$ we may loose differentiability after applying the transformation. However, really smooth transformations may introduce waviness. In any of both cases, it implies slower Fourier coefficients decay. See section \eqref{sumscoeff} for further implications on this paper.
-
-Another option is described in \cite{SloJoe94}. Here, $\phi$ must be an increasing function which maps $[0,1]$ onto $[0,1]$. If $\phi'(0)=\phi'(1)=0$, by \eqref{gdef} function $g$ becomes periodic. The simplest polynomial fulfilling this conditions is $\phi(t)=3t^2-2t^3$. Again, as for the Baker's transform, this may produce a non differentiable $g$. One solution, if $f\in\cc^n$, is finding the polynomial requiring $\phi^{(i)}(0)=\phi^{(i)}(1)=0$  where $i=1,\dots,n+1$ for $f\in\cc^n$, implying $g\in\cc^n$. A part from polynomials, one could also consider the transform proposed by Sidi in \cite{sidi1993new}: $\phi(t)=t-\sin(2\pi t)/(2\pi)$.
+It is seen here that the discrete transform $\tf_m(\bsk)$ is equal to the integral transform $\hf(\bsk)$, defined in \eqref{Fourierdef}, plus the \emph{aliasing} terms corresponding to $\hf(\bsk+\bsl)$ scaled by the shift, where $\bsl \in \cp_{m}^{\perp}\setminus \bszero$.
 
 \subsection{Computation of the Discrete Transform}
 The discrete transform defined in \eqref{tfdef} may also be expressed as
@@ -424,19 +410,30 @@ In light of this development we define $\mathring{f}_m(\nu)=Y_{m,m}(\nu_0, \ldot
 \tf(\bsk) = \me^{-2 \pi \sqrt{-1} \ip{\bsk}{\bsDelta}} \mathring{f}_m(\tnu(\bsk)).
 \]
 
-\section{Error Estimation and an Automatic Algorithm}
+\section{Error Estimation and an Adaptive Algorithm}
 
 \subsection{Wavenumber Map}
 
-Now we are going to map the non-negative numbers into the space of all wavenumbers using the dual sets.  For every $\kappa \in \N_0$, we assign a wavenumber $\tvk(\kappa) \in \Z^d$ iteratively according to the following constraints:
-\begin{enumerate}
-\renewcommand{\labelenumi}{\roman{enumi})}
+As seen in equation \eqref{err1}, the absolute error is directly a sum of the Fourier coefficients in the dual Lattice scaled by the shift. Note that increasing the number of points in our Lattice, i.e. $m$, the number of summands decrease and in the limit, this sum should vanish. However, one can not capture how fast is this error decreasing with respect to $m$ unless we order these wavenumbers. For this purpose, we define the mapping $\tvk: \N_0 \to \Z^d$ iteratively in the following algorithm:
 
-\item $\tvk(0)= \bszero$;
+\begin{algo} \label{wavenummapalgo} Given a Lattice sequence, $\cp_{\infty} = \{\bsz_i\}_{i=0}^{\infty}$ define $\tvk: \N_0 \to \Z^d$ as follows:
+\begin{description}
+\item[\textbf{Step 1.}] Define $\tvk(0)=\bszero$.
 
-\item For any $\lambda, m \in \N_0$ and $\kappa=0, \ldots, b^m-1$, it follows that  $\tnu_m(\tvk(\kappa))=\tnu_m(\tvk(\kappa+\lambda b^m))$.
+\item[\textbf{Step 2.}] For $m=0, 1, \ldots$ \\
+\hspace*{1.3cm} For $\kappa = 1, \ldots, b^{m} -1 $ \\
+\hspace*{1.6cm} Choose the values of $\tvk(\kappa+b^{m}), \ldots, \tvk(\kappa+(b-1)b^{m})$ from the sets
+\[
+\{\bsk : \bsk \ominus \tvk(\kappa) \in \cp_{m}^{\perp}, \ip{\bsk \ominus \tvk(\kappa)}{\bsz_{b^m}}=a \}, \quad a=1, \ldots, b-1,
+\]
+\hspace*{1.6cm} but not necessarily in that order.
+\end{description}
+\end{algo}
 
-\end{enumerate}
+
+
+
+
 This last condition implies that $\tvk(\kappa) - \tvk(\kappa+\lambda b^m) \in \cp_m^{\perp}$.
 
 This wavenumber map allows us to introduce a shorthand notation that facilitates the later analysis for $\kappa \in \N_0$ and $m \in \N$:
@@ -523,8 +520,19 @@ Given $\homega$, $\wcomega$, and $r$, one can compute $\fC$.  Alternatively, giv
 \bibliographystyle{spmpsci.bst}
 \bibliography{FJH22,FJHown22}
 
-\section*{Appendix:  Fast Computation of the Discrete Walsh Transform}
+\section*{Appendix A: Periodizing the Integrands}\label{periodizing}
+For non periodic integrands $f$, we can use transformations $\phi$ to obtain periodic functions $g$ such that:
+\begin{equation}\label{transeq}
+\int_{\cube} f(\bsx)  \, \dif \bsx=\int_{\cube} g(\bst)  \, \dif \bst
+\end{equation}
+where
+\begin{equation}\label{gdef}
+g(t_1,\dots,t_d)=f(\phi(t_1),\dots,\phi(t_d))\phi'(t_1)\cdots\phi'(t_d)
+\end{equation}
 
+One example is the Baker's transform $\phi(t)=1-2\abs{t-0.5}$. A simple calculation in one dimension proves the equality \eqref{transeq} and by the Fubini theorem it can be extended to any dimension. Remark that this transform may generate a periodically extended $g$ not differentiable. Therefore, for smoother integrands $f$ we may loose differentiability after applying the transformation. However, really smooth transformations may introduce waviness. In any of both cases, it implies slower Fourier coefficients decay. See section \eqref{sumscoeff} for further implications on this paper.
+
+Another option is described in \cite{SloJoe94}. Here, $\phi$ must be an increasing function which maps $[0,1]$ onto $[0,1]$. If $\phi'(0)=\phi'(1)=0$, by \eqref{gdef} function $g$ becomes periodic. The simplest polynomial fulfilling this conditions is $\phi(t)=3t^2-2t^3$. Again, as for the Baker's transform, this may produce a non differentiable $g$. One solution, if $f\in\cc^n$, is finding the polynomial requiring $\phi^{(i)}(0)=\phi^{(i)}(1)=0$  where $i=1,\dots,n+1$ for $f\in\cc^n$, implying $g\in\cc^n$. A part from polynomials, one could also consider the transform proposed by Sidi in \cite{sidi1993new}: $\phi(t)=t-\sin(2\pi t)/(2\pi)$.
 
 
 \end{document}
