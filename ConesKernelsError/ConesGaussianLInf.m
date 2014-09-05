@@ -4,12 +4,20 @@ clear all
 close all
 format compact
 set(0,'defaultaxesfontsize',20,'defaulttextfontsize',20)
-n = 300
+n = 100
 a = 0; b = 1;
-xnode=linspace(a,b,n)';
+%xnode=linspace(a,b,n)';
+%xnode=(a+b)/2+((b-a)/2)*cos(pi*(1:(-1/(n-1)):0)');
+xdata=linspace(a,b,n)';
+alpha=a-(b-a);
+beta=b+(b-a);
+%xnode=linspace(alpha,beta,3*n)';
+xnode=(alpha+beta)/2+((beta-alpha)/2)*cos(pi*(1:(-1/(n-1)):0)');
 h = (b-a)/(2*n); R = (b-a)/2;
-testfun=@(x) sin(pi*x);
-gamma = 1;
+%testfun=@(x) sin(pi*x);
+testfun=@(x) exp(-2*x).*sin(3*pi*x);
+%testfun=@(x) exp(-5*x).*sin(8*pi*x);
+gamma = 10;
 kernel=@(x,t) exp(-gamma*(bsxfun(@minus,x,t')).^2);
 tau = 4;
 %c0 = R/6; C1 = 2304*gamma; C2 = log(4)+16; C3 = C1*exp(C2);
@@ -23,24 +31,35 @@ hcc = min([1/sqrt(tau*CC) R/C4 2/(gamma*C4)]);
 %epsilon = 1e-2;
 
 %% Data and spline approximation
-Kmat=kernel(xnode,xnode);
+% Kmat=kernel(xnode,xnode);
+% condK=cond(Kmat)
+% y=testfun(xnode);
+% %c=Kmat\y;
+% c=pinv(Kmat)*y;
+% splinef=@(x) kernel(x,xnode)*c;
+Kmat=kernel(xdata,xnode);
+rankK=rank(Kmat)
 condK=cond(Kmat)
-y=testfun(xnode);
-c=Kmat\y;
+y=testfun(xdata);
+%c=Kmat\y;
+c=pinv(Kmat)*y;
 splinef=@(x) kernel(x,xnode)*c;
+
 
 %% Plot of test function and spline
 ntest=5000;
 xtest=linspace(a,b,ntest)';
-ytest = interp1q(xnode,y,xtest);
+%ytest = interp1q(xnode,y,xtest);
+ytest = testfun(xtest);
 plot(xtest,ytest,'b-',...
     xtest,splinef(xtest),'r--',...
-    xnode,y,'k.','markersize',20,...
+    xdata,y,'k.','markersize',20,...
     'linewidth',3)
 
 %% Root mean square error
 %error2=sqrt(mean((testfun(xtest)-splinef(xtest)).^2))
 error_sup=max(abs(testfun(xtest)-splinef(xtest)))
+break
 normHsplinef=sqrt(c'*y)
 
 
