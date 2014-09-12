@@ -47,8 +47,15 @@ Define
 \[
 \Delta_{n,\pm}:=\frac 1 2 \left[ \tol\left(\varepsilon_a,\varepsilon_r\abs{\widehat{I}_n-\widehat{\varepsilon}_n}\right) \pm \tol\left(\varepsilon_a,\varepsilon_r\abs{\widehat{I}_n+\widehat{\varepsilon}_n}\right) \right]
 \]
+\[
+\widetilde{I}_n:=\widehat{I}_n+\Delta_{n,-}
+\]
 
-An important remark is that $\Delta_{n,-}$ is always shrinking $\widehat{I}_n$ into $\widetilde{I}_n:=\widehat{I}_n+\Delta_{n,-}$ because $\widehat{I}_n>0\Longleftrightarrow\Delta_{n,-}<0$. $\widetilde{I}_n$ is biased but always closer to 0 than $\widehat{I}_n$. This is helpful for the relative error since $\varepsilon_r=\abs{\frac{I-\widehat{I}_n}{I}}$ is bigger when $I$ is closer to 0 than $\widehat{I}_n$. Thus, in order to make $\varepsilon_r$ smaller, we take the biased estimator $\widetilde{I}_n$.
+An important remark is that $\Delta_{n,-}$ is always shrinking $\widehat{I}_n$ into $\widetilde{I}_n$ because
+
+\[ \widehat{I}_n>0\Longleftrightarrow\Delta_{n,-}<0.\]
+
+This means that $\widetilde{I}_n$ is biased, always closer to 0 than $\widehat{I}_n$. This is helpful for the relative error because given $\widehat{I}_n$, if $I$ is above $\widehat{I}_n$, then $\abs{\frac{I-\widehat{I}_n}{I}}$ can be smaller. Therefore, in order to minimize $\abs{\frac{I-\widehat{I}_n}{I}}$, we enlarge $I$ with respect to $\widehat{I}_n$ by shrinking $\widehat{I}_n$. We then build the biased estimator $\widetilde{I}_n$ as desired. Thus, for the new algorithm it will be easier to satisfy the condition $\varepsilon_r\geq\abs{\frac{I-\widetilde{I}_n}{I}}$. 
 
 \begin{remark}
 Since $\tol$ is Lipschitz 1, $b\rightarrow b\pm \tol(\varepsilon_a,\varepsilon_r\abs{b})$ is non-decreasing.
