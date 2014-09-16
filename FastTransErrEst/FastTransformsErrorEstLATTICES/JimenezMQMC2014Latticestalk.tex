@@ -201,7 +201,7 @@ Note that from \eqref{bilinear} together with \eqref{latpropb} it follows,
 \end{equation}
 This property is relevant for defining the discrete Fourier Transform adapted to our Rank-1 Lattices in section \ref{FFT}.
 
-One example is the extensible Rank-1 Lattices whose existence is proved in \cite{HicNie03a}. In this case, the generating vector $\bsh$ can be thought in each coordinate as an infinite digit integer. Furthermore, for every $\cp_m$ we can choose a generator of the subgroup. If we want $\bsz_{b^{m-1}}=\bsh\frac{j_m}{b^m}$ to the the generator of $\cp_m$, it only suffices to verify that $\gcd(j_m,b^m)=1$ with $j_m\in\F_{b^m}$. This sequence $j_0,j_1,\dots$ defines $\cp_\infty$. In addition, to satisfy equation \eqref{latpropb},  $j_m$'s: $ b^{m-1} \mid j_m-j_{m-1}\Rightarrow j_m=j_{m-1}+b^{m-1},\;\forall m\in\N$. A part from that, \eqref{latpropc} implies that the order of the elements in $\cp_\infty$ given the generators must follow the Sobol' order.
+One example is the extensible Rank-1 Lattices whose existence is proved in \cite{HicNie03a}. In this case, the generating vector $\bsh$ can be thought in each coordinate as an infinite digit integer. Furthermore, for every $\cp_m$ we can choose a generator of the subgroup. If we want $\bsz_{b^{m-1}}=\bsh\frac{j_m}{b^m}$ to the the generator of $\cp_m$, it only suffices to verify that $\gcd(j_m,b^m)=1$ with $j_m\in\F_{b^m}$. This sequence $j_0,j_1,\dots$ defines $\cp_\infty$. Moreover, to satisfy equation \eqref{latpropb},  $j_m$'s: $ b^{m-1} \mid j_m-j_{m-1}\Rightarrow j_m=j_{m-1}+b^{m-1},\;\forall m\in\N$. A part from that, \eqref{latpropc} implies that the order of the elements in $\cp_\infty$ given the generators must follow the Sobol' order.
 
 The bilinear operation previously mentioned in \eqref{bilinear} let us also define the \emph{dual} Lattice corresponding to $\cp_m$ as
 \begin{align}
@@ -567,10 +567,10 @@ a) & b)
 \section{Future work}
 The definition of function cone sets is a challenging new viewpoint. The non convexity of the cone leads to non linear algorithms whose complexity bounds may be hard to find. Although this article provides an upper bound on the complexity, there is still need of finding a lower bound. A part from that, fitting this set into more familiar spaces, for instance the Korobov spaces, would link this work to other results already provided in the literature. Finally, the next step would also be generalizing the absolute error into a tolerance taking into account the relative error.
 
-It is also worth saying that the algorithm described in the article introduces a new error handling for high dimensional integration with cost $\Order(n\log(n))$ and adaptive.
+It is also worth mentioning that the algorithm described in the article introduces a new error handling for high dimensional integration with cost $\Order(n\log(n))$ and adaptive.
 
 \begin{acknowledgement}
-The authors thank Ronald Cools and Dirk Nuyens for organizing MCQMC 2014 and greatly appreciate the suggestions made by Sou-Cheng Choi, Frances Kuo, Lan Jiang, Dirk Nuyens and Yizhi Zhang to improve this manuscript. In addition, also thank Art Owen for the traveling expenses funding.
+The authors thank Ronald Cools and Dirk Nuyens for organizing MCQMC 2014 and greatly appreciate the suggestions made by Sou-Cheng Choi, Frances Kuo, Lan Jiang and Yizhi Zhang to improve this manuscript. Moreover, also thank Art Owen for the traveling expenses funding and the lattice generators code from Dirk Nuyens and Pierre l'Ecuyer.
 This work was partially supported by US National Science Foundation grants DMS-1115392 and DMS-1357690. 
 \end{acknowledgement}
 
