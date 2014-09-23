@@ -1,0 +1,202 @@
+\documentclass[xcolor=dvipsnames]{beamer}
+%\usecolortheme[RGB={195,0,0}]{structure}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amsfonts}   % if you want the fonts
+\usepackage{amssymb,verbatim}    % if you want extra symbols
+\usepackage{epstopdf}
+
+%\newcommand{\R}{{\mathbb R}}
+%\newcommand{\N}{{\mathbb N}}
+%\newcommand{\Z}{{\mathbb Z}}
+%\newcommand{\TT}{{\mathbb T}}
+%\newcommand{\Oh}{{\mathcal O}}
+\newcommand{\cl}{{\mathcal L}}
+%\newcommand{\I}{{\mathcal I}}
+%\newcommand{\bi}{{\boldsymbol{i}}}
+\newcommand{\bc}{{\boldsymbol{c}}}
+\newcommand{\bx}{{\boldsymbol{x}}}
+\newcommand{\bX}{{\boldsymbol{X}}}
+\newcommand{\by}{{\boldsymbol{y}}}
+\newcommand{\bH}{{\boldsymbol{H}}}
+\newcommand{\bI}{{\boldsymbol{I}}}
+\newcommand{\bk}{{\boldsymbol{k}}}
+\newcommand{\bxi}{{\boldsymbol{\xi}}}
+%\newcommand{\bz}{{\boldsymbol{z}}}
+\newcommand{\bw}{{\boldsymbol{\omega}}}
+\newcommand{\balpha}{{\boldsymbol{\alpha}}}
+\newcommand{\bgamma}{{\boldsymbol{\gamma}}}
+%\newcommand\expect{\mathbb{E}}
+%\newcommand\uset{{\mathfrak{u}}}
+%\newcommand\vset{{\mathfrak{v}}}
+%\newcommand\wset{{\mathfrak{w}}}
+%%\theoremstyle{plain}
+%%\newtheorem{theorem}{Theorem}
+%%\newtheorem{corollary}{Corollary}
+%%\newtheorem{lemma}{Lemma}
+%
+%%\theoremstyle{definition}
+%%\newtheorem{remark}{Remark}
+%%\newtheorem{definition}{Definition}
+%
+\def\il{\left<}
+\def\ir{\right>}
+%\def\d{\delta }
+\def\a{\alpha }
+\def\b{\beta }
+\def\e{\varepsilon }
+%\def\phi{\varphi }
+%\def\epsilon{\varepsilon }
+\def\g{\gamma }
+%\def\gmin{\gamma_1^*}
+%\def\rho{\varrho }
+%\def\cost{{\rm cost}}
+%\def\Z{{\bf Z}}
+%\def\comp{{\rm comp\, }}
+%\def\no{\noindent}
+%\def\lin{{\rm lin}}
+%\def\sgn{{\rm sgn\,  }}
+%\def\l{{\ell }}
+%\def\disc{{\rm disc\, }}
+%\def\wtavp{{ \widetilde {\rm av}^{*}_p (n) }}
+%\def\uu{\overline{u}}
+%\def\lstd{{\Lambda^{\rm std}}}
+%\def\lall{{\Lambda^{\rm all}}}
+%\newcount\refnum
+%\refnum = 0
+%\def\refx{\global\advance\refnum by 1 {\the\refnum . \ }}
+%
+%\def\({\biggl( }
+%\def\){\biggr) }
+%\def\ma{{\rm max}}
+%\def\abs{{\rm abs}}
+%\def\rel{{\rm rel}}
+%\def\Z{{\bf Z}}
+%\def\Q{{\bf Q}}
+%\def\C{{\bf C}}
+%\def\non{{\rm non}}
+%\def\wt{\widetilde }
+%\def\lo{{\rm log}}
+%\def\c{{\bf c}}
+%\def\cost{{\rm cost\, }}
+%\def\ari{{\rm ari}}
+%\def\info{{\rm info}}
+%\def\half{{\textstyle \frac12}}
+%
+%\newcommand{\tlambda}{\tilde{\lambda}}
+%\newcommand{\cg}{\mathcal{H}}
+\newcommand{\cC}{\mathcal{C}}
+\newcommand{\cH}{\mathcal{H}}
+\newcommand{\cP}{\mathcal{P}}
+\newcommand{\cX}{\mathcal{X}}
+\newcommand{\cY}{\mathcal{Y}}
+\newcommand{\indi}{\boldsymbol 1}
+\newcommand{\mH}{\mathsf{H}}
+%\newcommand{\ba}{\boldsymbol{a}}
+%\newcommand{\bc}{\boldsymbol{c}}
+%\newcommand{\bk}{\boldsymbol{k}}
+\newcommand{\mK}{\mathsf{K}}
+\newcommand{\bj}{\boldsymbol{j}}
+%\newcommand{\bn}{\boldsymbol{n}}
+\newcommand{\bt}{\boldsymbol{t}}
+%\newcommand{\by}{\boldsymbol{y}}
+%\newcommand{\bzero}{\boldsymbol{0}}
+%\newcommand{\tK}{\widetilde{K}}
+%\newcommand{\hK}{\widehat{K}}
+%\newcommand{\te}{\tilde{e}}
+%\newcommand{\tf}{\tilde{f}}
+%\newcommand{\tbeta}{\tilde{\beta}}
+%\newcommand{\tgamma}{\tilde{\gamma}}
+%\newcommand{\natzero}{\mathbb{N}_{0}}
+\newcommand{\naturals}{\mathbb{N}}
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\dif}{\rm d}
+\newcommand{\tr}{\rm{tr}}
+%\newcommand{\texta}{\text{a}}
+%\newcommand{\textw}{\text{w}}
+%\newcommand{\textx}{\text{x}}
+%\newcommand{\textstr}{\text{str}}
+%\newcommand{\textstrd}{\text{str-}}
+%\newcommand{\ip}[3][{}]{\ensuremath{\left \langle #2, #3 \right \rangle_{#1}}}
+%\DeclareMathOperator{\wcerr}{error^w}
+%\DeclareMathOperator{\acerr}{error^a}
+%\DeclareMathOperator{\xcerr}{error^x}
+%\DeclareMathOperator{\optdes}{optdes}
+%\DeclareMathOperator{\cov}{cov}
+%\def\e{\varepsilon}
+%\newcommand{\dif}{\textup{d}}
+%\newcommand{\me}{\textup{e}}
+%\newcommand{\mi}{\textup{i}}
+%\newcommand{\stdall}{\vartheta}
+%\newcommand{\absnorm}{\psi}
+%\newcommand{\tC}{\tilde{C}}
+
+\usetheme{CambridgeUS}
+\title[Guaranteed Kernel Interpolation]{Interpolation Using Kernel Methods With Guaranteed Error Bounds} 
+\author{Xuan Zhou}
+\institute[IIT]{{Department of Applied Mathematics, Illinois Institute of Technology}\\
+[3ex]
+{Joint Work with Fred J. Hickernell}}
+
+\begin{document}
+\begin{center}
+\titlepage
+\end{center}
+
+
+
+\begin{frame}{Scattered Data Interpolation}
+\begin{itemize}
+\item We want to approximate a real-valued function $f\in\cH_d\subset L^2(\reals^d,\rho_d)$, where $\cH_d$ is a reproducing kernel Hilbert space with some symmetric positive definite kernel $K_d(\bx,\bt)$, $\bx,\bt\in\reals^d$.
+and $\rho_d$ is some probability density function.
+\item Given the data $(\bx_i,y_i)$, $i=1, \ldots, n$, where $y_i=f(\bx_i)$, The spline algorithm constructs the approximation as
+$$(A_nf)(\bx) = \sum_{i=1}^n c_i K(\bx,\bx_i) = \bk^T(\bx) \bc,$$
+where $\bc = \left( c_i \right)_{i=1}^n$, $\bk(\bx) = \left( K(\bx,\bx_i) \right)_{i=1}^n$. A good choice of $\bc$ is
+\[
+\bc = \mK^{-1} \by, \qquad \text{where } \mK = \left( K(\bx_i,\bx_j) \right)_{i,j=1}^n, \quad \by = \left( y_i \right)_{i=1}^n.
+\]
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Error Estimation via Power Functions}
+Following the power function approach, we have
+\begin{align*}
+\sup_{0\ne f\in\cH}\frac{\|f-A_nf\|_{\cl_2}}{\|f\|_\cH^2}&\le\int_\cX\sup_{0\ne f\in\cH}\frac{|f(\bx)-(A_nf)(\bx)|^2}{\|f\|_\cH^2}\rho(\bx)\dif\bx\\
+&\le\int_\cX \left(K(\bx,\bx)-\bk^T(\bx)\mK^{-1}\bk(\bx)\right)\rho(\bx)\dif\bx\\
+&=\int_\cX K(\bx,\bx)\rho(\bx)\dif\bx-\tr\left(\mK^{-1}\widetilde\mK\right)\\
+&=:h^2(n),
+\end{align*}
+where
+$$\widetilde\mK=\int_\cX\bk(\bx)\bk^T(\bx)\rho(\bx)\dif\bx.$$
+\end{frame}
+
+\begin{frame}{Weaker Norm}
+Let $\|\cdot\|_{\widetilde\cH}$ be a weaker norm defined by $\|f\|_{\widetilde\cH}=\|Tf\|_{\cl_2}$, where $T:\cH\to\cl_2(\cX,\rho)$ is a bounded linear operator and the linear functional $T_\bx:f\mapsto (Tf)(\bx)$ is also bounded. Then we can estimate the weaker norm by
+\begin{align*}
+\widetilde H_n^2(f)&:=\|T(A_nf)\|_{\cl_2}^2=\|\bc^T\bxi\|_{\cl_2}^2=\bc^T\widetilde\mH\bc,
+\end{align*}
+where
+$$\bxi=(\xi(\cdot,\bx_i))_{i=1}^n=(TK(\cdot,\bx_i))_{i=1}^n,$$
+and
+$$\widetilde\mH=\int_\cX\bxi(\bx)\bxi^T(\bx)\rho(\bx)\dif\bx.$$
+\end{frame}
+
+\begin{frame}{Functions in a Cone}
+Let $\cC_\tau=\left\{f\in\cH\left|\|f\|_\cH\le\tau\|f\|_{\widetilde\cH}\right.\right\}$. Then for all $f\in\cC_\tau$,
+$$\left|\|f\|_{\widetilde\cH}-\widetilde H_n(f)\right|\le\tilde h(n)\|f\|_\cH\le\tau\tilde h(n)\|f\|_{\widetilde\cH},$$
+where
+$$\tilde h^2(n)=\int_\cX T_\bx^\cdot T_\bx^{\cdot\cdot}K(\cdot,\cdot\cdot)\rho(\bx)\dif\bx-\tr\left(\mK^{-1}\widetilde\mH\right).$$
+If $1-\tau\tilde h(n)>0$, this in turn gives an upper bound
+$$\|f\|_\cH\le\frac{\tau\widetilde H_n(f)}{1-\tau\tilde h(n)}.$$
+\end{frame}
+
+\begin{frame}
+  \frametitle{Problems With Power Function Estimation}
+  \begin{itemize}
+  \item The matrices involved in the estimation of the error bound are often ill-conditioned.
+  \item The estimated error bound is conservative in the sense that it does not converge as fast as the actual error.  
+  \end{itemize}
+  It would be nice if we could find alternative error bounds that circumvent such limitations.\end{frame}
+
+
+\end{document}

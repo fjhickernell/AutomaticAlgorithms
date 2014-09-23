@@ -53,5 +53,5 @@ Htildemat=1/4*a*(exp(-a^2*(2+xpxtsq+xtxt-2*xpxt)) ...
     -exp(-a^2*(xpxtsq+xtxt)).*(2*a*exp(a^2*xtxt).*xpxt+exp(1/2*a^2*(xpxtsq+4*xtxt)) ...
     *sqrt(2*pi)*(-1+a^2*xmxt.^2).*erf(a*xpxt/sqrt(2))));
 condHtilde=cond(Htildemat)
-normDsplinef=sqrt(c'*Htildemat*c);
+normDsplinef=sqrt(c'*Htildemat*c)
 htilde=sqrt(2*a^2-trace(Htildemat/Kmat))
