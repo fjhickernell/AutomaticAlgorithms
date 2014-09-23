@@ -11,7 +11,7 @@
 %\newcommand{\Z}{{\mathbb Z}}
 %\newcommand{\TT}{{\mathbb T}}
 %\newcommand{\Oh}{{\mathcal O}}
-\newcommand{\cl}{{\mathcal L}}
+\newcommand{\cL}{{\mathcal L}}
 %\newcommand{\I}{{\mathcal I}}
 %\newcommand{\bi}{{\boldsymbol{i}}}
 \newcommand{\bc}{{\boldsymbol{c}}}
@@ -137,6 +137,7 @@
 \institute[IIT]{{Department of Applied Mathematics, Illinois Institute of Technology}\\
 [3ex]
 {Joint Work with Fred J. Hickernell}}
+\date{Sep. 25th, 2014}
 
 \begin{document}
 \begin{center}
@@ -147,7 +148,7 @@
 
 \begin{frame}{Scattered Data Interpolation}
 \begin{itemize}
-\item We want to approximate a real-valued function $f\in\cH_d\subset L^2(\reals^d,\rho_d)$, where $\cH_d$ is a reproducing kernel Hilbert space with some symmetric positive definite kernel $K_d(\bx,\bt)$, $\bx,\bt\in\reals^d$.
+\item We want to approximate a real-valued function $f\in\cH_d\subset \cL^2(\reals^d,\rho_d)$, where $\cH_d$ is a reproducing kernel Hilbert space with some symmetric positive definite kernel $K_d(\bx,\bt)$, $\bx,\bt\in\reals^d$.
 and $\rho_d$ is some probability density function.
 \item Given the data $(\bx_i,y_i)$, $i=1, \ldots, n$, where $y_i=f(\bx_i)$, The spline algorithm constructs the approximation as
 $$(A_nf)(\bx) = \sum_{i=1}^n c_i K(\bx,\bx_i) = \bk^T(\bx) \bc,$$
@@ -161,7 +162,7 @@ where $\bc = \left( c_i \right)_{i=1}^n$, $\bk(\bx) = \left( K(\bx,\bx_i) \right
 \begin{frame}{Error Estimation via Power Functions}
 Following the power function approach, we have
 \begin{align*}
-\sup_{0\ne f\in\cH}\frac{\|f-A_nf\|_{\cl_2}}{\|f\|_\cH^2}&\le\int_\cX\sup_{0\ne f\in\cH}\frac{|f(\bx)-(A_nf)(\bx)|^2}{\|f\|_\cH^2}\rho(\bx)\dif\bx\\
+\sup_{0\ne f\in\cH}\frac{\|f-A_nf\|_{\cL_2}^2}{\|f\|_\cH^2}&\le\int_\cX\sup_{0\ne f\in\cH}\frac{|f(\bx)-(A_nf)(\bx)|^2}{\|f\|_\cH^2}\rho(\bx)\dif\bx\\
 &\le\int_\cX \left(K(\bx,\bx)-\bk^T(\bx)\mK^{-1}\bk(\bx)\right)\rho(\bx)\dif\bx\\
 &=\int_\cX K(\bx,\bx)\rho(\bx)\dif\bx-\tr\left(\mK^{-1}\widetilde\mK\right)\\
 &=:h^2(n),
@@ -171,9 +172,9 @@ $$\widetilde\mK=\int_\cX\bk(\bx)\bk^T(\bx)\rho(\bx)\dif\bx.$$
 \end{frame}
 
 \begin{frame}{Weaker Norm}
-Let $\|\cdot\|_{\widetilde\cH}$ be a weaker norm defined by $\|f\|_{\widetilde\cH}=\|Tf\|_{\cl_2}$, where $T:\cH\to\cl_2(\cX,\rho)$ is a bounded linear operator and the linear functional $T_\bx:f\mapsto (Tf)(\bx)$ is also bounded. Then we can estimate the weaker norm by
+Let $\|\cdot\|_{\widetilde\cH}$ be a weaker norm defined by $\|f\|_{\widetilde\cH}=\|Tf\|_{\cL_2}$, where $T:\cH\to\cL_2(\cX,\rho)$ is a bounded linear operator and the linear functional $T_\bx:f\mapsto (Tf)(\bx)$ is also bounded. Then we can estimate the weaker norm by
 \begin{align*}
-\widetilde H_n^2(f)&:=\|T(A_nf)\|_{\cl_2}^2=\|\bc^T\bxi\|_{\cl_2}^2=\bc^T\widetilde\mH\bc,
+\widetilde H_n^2(f)&:=\|T(A_nf)\|_{\cL_2}^2=\|\bc^T\bxi\|_{\cL_2}^2=\bc^T\widetilde\mH\bc,
 \end{align*}
 where
 $$\bxi=(\xi(\cdot,\bx_i))_{i=1}^n=(TK(\cdot,\bx_i))_{i=1}^n,$$
@@ -192,11 +193,60 @@ $$\|f\|_\cH\le\frac{\tau\widetilde H_n(f)}{1-\tau\tilde h(n)}.$$
 
 \begin{frame}
   \frametitle{Problems With Power Function Estimation}
+  Recall that the power function estimation is
+  $$|f(x)-(A_nf)(x)|\le\sqrt{K(\bx,\bx)-\bk^T(\bx)\mK^{-1}\bk(\bx)}\|f\|_\cH.$$
   \begin{itemize}
-  \item The matrices involved in the estimation of the error bound are often ill-conditioned.
-  \item The estimated error bound is conservative in the sense that it does not converge as fast as the actual error.  
+    \item The matrices involved in the estimation of the error bound are often ill-conditioned.
+    \item The estimated error bound is conservative in the sense that it does not converge as fast as the actual error.  
+    \item This approach only works for $\cL_2$ error estimation.
   \end{itemize}
-  It would be nice if we could find alternative error bounds that circumvent such limitations.\end{frame}
+  It would be nice if we could find alternative error bounds that circumvent such limitations.
+\end{frame}
 
+\begin{frame}
+  \frametitle{Error Estimates in Terms of the Fill Distance}
+  \begin{theorem}[Wendland, 2005]
+    Suppose that $\Phi\in C_\nu^k(\reals^d)$ is positive definite and that $\Omega\subseteq\reals^d$ is bounded and satisfies an interior cone condition. For $\alpha\in\naturals_0^d$ with $|\alpha|\le k/2$ and $\bX=\{\bx_1,\ldots,\bx_n\}\subseteq\Omega$ satisfying $h_{\bX,\Omega}\le h_0$ we have the error bound
+    $$\|D^\alpha f-D^\alpha(A_nf)\|_{\cL_\infty(\Omega)}\le Ch_{\bX,\Omega}^{(k+v)/2-|\alpha|}\|f\|_\cH.$$
+  \end{theorem}
+  \begin{theorem}[Wendland, 2005]
+    Let $\Phi$ be one of the Gaussians. Suppose that $\Omega\subseteq\reals^d$ is bounded and satisfies an interior cone condition. For every $\ell\in\naturals$ with $\ell\ge|\alpha|$ there exist constants $h_0(\ell)$, $C_\ell>0$ such that
+  $$\|D^\alpha f-D^\alpha(A_nf)\|_{\cL_\infty(\Omega)}\le C_{\alpha,\ell} h_{\bX,\Omega}^{\ell-|\alpha|}\|f\|_\cH.$$
+    provided that $h_{\bX,\Omega}\le h_0(\ell)$.
+  \end{theorem}
+\end{frame}
 
+\begin{frame}
+  \frametitle{Spectral Convergence for Gaussians and (Inverse)
+    Multiquadrics}
+  Let $W(\bx_0,R):=\{\bx\in\reals^d:\|\bx-\bx_0\|_\infty\le R\}$.
+  \begin{theorem}[Wendland, 2005]
+    Let $\Omega=W(\bx_0,R)$ and let $\Phi$ be one of the Gaussians. There exists a constant $c$ such that
+    $$\|f-A_nf\|_{\cL_\infty(\Omega)}\le e^{c\ln h_{\bX,\Omega}/h_{\bX,\Omega}}\|f\|_\cH$$
+    for all data sites $\bX$ with sufficiently small $h_{\bX,\Omega}$.
+  \end{theorem}
+Question: What interior cone condition does $W(\bx_0,R)$ satisfy?
+\end{frame}
+
+\begin{frame}
+  \frametitle{Guaranteed Error Bounds for Gaussians}
+  For Gaussians we obtain the same error bounds for any $1\le p<\infty$
+  $$\|f-A_nf\|_{\cL_p(\cX)}=\left(\int_\cX|f(\bx)-(A_nf)(\bx)|^p\rho(\bx)\dif\bx\right)^{1/p}\le F(h_{\bX,\Omega})\|f\|_\cH.$$
+  Note that this result also holds for $p=\infty$. Similarly we obtain the bounds with the differential operator
+  $$\|Df-D(A_nf)\|_{\cL_p(\cX)}\le C_{1,\ell}h_{\bX,\Omega}^{\ell-1}\|f\|_\cH.$$
+  For $f\in\cC:=\left\{g\in\cH:Dg\in\cL_p(\cX),\|g\|_\cH\le\tau\|Dg\|_{\cL_p(\cX)}\right\}$, we have the guaranteed error bounds
+  $$\|f-A_nf\|_{\cL_p(\cX)}\le\frac{\tau F(h_{\bX,\Omega})}{1-\tau C_{1,\ell}h_{\bX,\Omega}^{\ell-1}}\|D(A_nf)\|_{\cL_p(\cX)}.$$
+\end{frame}
+
+\begin{frame}
+  \frametitle{Discussion}
+  \begin{itemize}
+    \item There is a trade-off between the order of the convergence rates and the constants in front of them.
+    \item For Gaussians the matrix $\mK$ often has a low rank when $n$ is large.
+  \end{itemize}
+  \begin{center}
+    \huge{Thank you!}
+
+  \end{center}
+\end{frame}
 \end{document}
