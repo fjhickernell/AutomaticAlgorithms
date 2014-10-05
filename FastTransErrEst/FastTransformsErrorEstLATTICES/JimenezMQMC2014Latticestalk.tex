@@ -137,14 +137,14 @@
 \email{ljimene1@hawk.iit.edu},\email{hickernell@iit.edu}}
 \maketitle
 
-\abstract{Quasi-Monte Carlo methods are useful for numerical integration of multivariate functions. However, the results obtained by these methods lack guaranties based on function values. In this article, we propose an error bound based on the decay of discrete Fourier coefficients of the integrand. If this decay is fast, the integrand is flatter and accuracy is higher. We focused on Rank-1 Lattices, because their algebraic structure facilitates an error analysis based on a Fourier decomposition of the integrand. Moreover, the error bound can be computed via a one-dimensional Fast Fourier transform . This leads to a guaranteed adaptive automatic cubature algorithm with cost $\Order(mb^m)$, where $b^m$ is the number of data points.}
+\abstract{Quasi-Monte Carlo methods are useful for numerical integration of multivariate functions. However, the results obtained by these methods lack guarantees based on function values. In this article, we propose an error bound based on the decay rate of discrete Fourier coefficients of the integrand. If this decay is fast, the integrand is flatter and accuracy is higher. We focused on Rank-1 Lattices, because their algebraic structure facilitates an error analysis based on a Fourier decomposition of the integrand. Moreover, the error bound can be computed via a one-dimensional Fast Fourier transform . This leads to a guaranteed adaptive automatic cubature algorithm with cost $\Order(mb^m)$, where $b$ is the base under which our points are built and $b^m$ is the number of data points.}
 
 \section{Introduction}
 Quasi-Monte Carlo methods are used to approximate multidimensional integrals over $\cube$, although this can be generalized in any other domain. These methods are widely used because they do not suffer from the \textit{curse of dimensionality}. For example, if the dimension $d$ is greater than $4$, Quasi-Monte Carlo methods, with error $\Order(n^{-(1-\varepsilon)})$, have faster convergence than the dimension-dependent tensor product composite Simpson's rule with error $\Order(n^{-4/d})$.
 
 The convergence rate $\Order(n^{-(1-\varepsilon)})$, although fast, does not give enough information about the absolute error. The objective of this research is to develop a guaranteed Quasi-Monte Carlo algorithm by calculating a bound on the absolute error of the integrands. The Koksma-Hlawka inequality, traditionally used to compute an error bound, is impractical because it requires the variation of the function. Thus, we focused our methodologies on building a new bound by expressing the error in terms of the integrand's Fourier coefficients. 
 
-In sections \ref{secrank1lat} and \ref{secfourierseries}, this article describes the group structure of Rank-1 Lattices and how the Fourier functions are the appropriate basis for these points. For computation purposes, there is also a description on how to obtain the discrete Fourier transform, i.e. the Fast Fourier Transform, with Rank-1 Lattices points in $\Order(mb^m)$ cost. New contributions are described in section \ref{secalgo}. Initially, a mapping from the wavenumbers space to $\N$ is defined according to constraints given by the structure of our points. With this mapping, we address a space of functions for which the algorithm's output will have guaranteed error tolerance. This set of functions have a minimum Fourier coefficients decay rate and this implies fewer data points needed for the same accuracy. Finally, there is an example of option pricing using the function \texttt{cubLattice\_g} that will appear in the next release of the Guaranteed Automatic Integration Library \cite{ChoEtal14a}.
+In sections \ref{secrank1lat} and \ref{secfourierseries}, this article describes the group structure of Rank-1 Lattices and how the Fourier functions are the appropriate basis for these points. For computational purposes, there is also a description on how to obtain the discrete Fourier transform, i.e. the Fast Fourier Transform, with Rank-1 Lattices points in $\Order(mb^m)$ cost. New contributions are described in section \ref{secalgo}. Initially, a mapping from the wavenumbers space to $\N$ is defined according to constraints given by the structure of our points. With this mapping, we address a space of functions for which the algorithm's output will have a guaranteed solution with an error less than the input tolerance. This set of functions have a minimum Fourier coefficients decay rate and this implies fewer data points needed for the same accuracy. Finally, there is an example of option pricing using the function \texttt{cubLattice\_g} that will appear in the next release of the Guaranteed Automatic Integration Library \cite{ChoEtal14a}.
 
 This article has been written in parallel with the Sobol' cubature algorithm given in \cite{HicJim16a}.
 
@@ -297,7 +297,7 @@ Adaptive Algorithm \ref{adapalgo} that we construct in section \ref{algorithmsec
 & = \sum_{\bsl \in \Z^d} \hf(\bsl) \E^{2 \pi \sqrt{-1} \ip{\bsl - \bsk}{\bsDelta}} \ind_{\cp_m^{\perp}}(\bsl - \bsk) \\
 \nonumber
 & = \sum_{\bsl \in \cp^{\perp}_m} \hf(\bsk+\bsl) \varphi(\bsDelta,\bsl) \\
-&= \hf(\bsk) + \sum_{\bsl \in \cp^{\perp}_m\setminus \bszero} \hf(\bsk+\bsl) \varphi(\bsDelta,\bsl), \qquad \forall \bsk \in \Z^d. \label{tfassum}
+&= \hf(\bsk) + \sum_{\bsl \in \cp^{\perp}_m\setminus \{\bszero\}} \hf(\bsk+\bsl) \varphi(\bsDelta,\bsl), \qquad \forall \bsk \in \Z^d. \label{tfassum}
 \end{align}
 It is seen here that the discrete transform $\tf_m(\bsk)$ is equal to the integral transform $\hf(\bsk)$, defined in \eqref{Fourierdef}, plus the \emph{aliasing} terms corresponding to $\hf(\bsk+\bsl)$ scaled by the shift, where $\bsl \in \cp_{m}^{\perp}\setminus \left\{\bszero\right\}$.
 
@@ -523,6 +523,7 @@ Thus, the number of function data points needed are $b^m$. Defining $m^* = \min 
 \[
 \mathrm{cost}\left(\widehat{I}_m,f,\varepsilon\right)\leq \$(f)b^{m^*}+cm^*b^{m^*}
 \]
+where $\$(f)$ is the cost of evaluating $f(x)$ at one data point.
 \end{theorem}
 
 \begin{proof}
