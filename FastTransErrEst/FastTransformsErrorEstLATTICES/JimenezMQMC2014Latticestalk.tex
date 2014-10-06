@@ -169,11 +169,11 @@ Let $b$ be some integer greater than one, and let $\F_{n}:=\{0, \ldots, n-1\}$ f
 \[
 \{0\}=\cp_0\subset \cp_1 \dots\subset\cp_m=\{\bsz_i\}_{i=0}^{b^m-1} \subset\dots\subset\cp_\infty=\{\bsz_i\}_{i=0}^{\infty}.
 \]
-To do this, one chooses $\bsz_1, \bsz_b, \bsz_{b^2},  \ldots$ such that 
+The theoretical properties of embedded rank-1 lattices are discussed in \cite{HicNie03a}.  To do this, one chooses $\bsz_1, \bsz_b, \bsz_{b^2},  \ldots \in \cube$ such that 
 \begin{subequations} \label{cpinfvector}
 \begin{gather}
-i \bsz_{b^{m-1}} \pmod {b^{m}} \ne \bszero \qquad \text{for } i\in \F_{b^m},\ m \in \N \\
-b\bsz_1 = \bszero, \qquad b\bsz_{b^m}=\bsz_{b^{m-1}} \quad \text{for } m \in \N ,\label{latpropb}\\
+i \bsz_{b^{m-1}} \bmod {1} \ne \bszero \qquad \forall i\in \F_{b^m},\ m \in \N \\
+b\bsz_{b^m} \bmod {1} =\bsz_{b^{m-1}}, \quad b^{m}\bsz_{b^{m-1}} \bmod {1} = \bszero \qquad \forall m \in \N ,\label{latpropb}\\
 \ip{\bsk}{\bsz_{b^m}} =  0 \ \forall m \in \N_0   \ \implies \ \bsk=\bszero. \label{latpropd}
 \end{gather}
 Next, for any $i \in \N$ with proper $b$-ary expansion $i=i_0+i_1 b + i_2 b^2 + \cdots$, and $m=\lfloor \log_b(i) \rfloor+1$ define 
@@ -188,9 +188,9 @@ where \eqref{latpropb} was used.  This means that node set $\cp_m$ defined above
 \]
 The sufficiency of a single generating vector is the reason that this is called the node set of a rank-1 lattice.
 
-Consider $\cube$ with the additive operation $\oplus:\cube \times \cube \to \cube$, $\bsx\oplus\bsy=\bsx+\bsy\pmod 1$. Indeed, $(\cube,\oplus)$ is an Abelian group. Note that $\bszero$ is the additive identity and that the unique additive inverse of $\bsx$ is $\ominus \bsx:=\bsone-\bsx$, where $\bsx \ominus \bst$ means $\bsx \oplus (\ominus \bst)$. Moreover, such a set $\cube$ is also a field over $\R$ where scalar multiplication means when the multiplication modulo $\bsone$.
+Consider $\cube$ with the additive operation $\oplus:\cube \times \cube \to \cube$, $\bsx\oplus\bsy=\bsx+\bsy\pmod 1$. Indeed, $(\cube,\oplus)$ is an Abelian group. Note that $\bszero$ is the additive identity and that the unique additive inverse of $\bsx$ is $\ominus \bsx:=\bsone-\bsx$, where $\bsx \ominus \bst$ means $\bsx \oplus (\ominus \bst)$. Moreover, such a set $\cube$ is also a field over $\R$ where scalar multiplication means when the multiplication modulo $1$.
  
-The set $\Z^d$ is used to index Fourier series expressions for the integrands, and $\Z^d$ is also known as the wavenumber space. We define the bilinear operation $\ip{\cdot}{\cdot}: \Z^d \times \cube \to [0,1)$ as the dot product modulo $1$: 
+The set of $d$-dimensional integer vectors, $\Z^d$, is used to index Fourier series expressions for the integrands, and $\Z^d$ is also known as the wavenumber space. We define the bilinear operation $\ip{\cdot}{\cdot}: \Z^d \times \cube \to [0,1)$ as the dot product modulo $1$: 
 \begin{equation}\label{bilinear}
 \ip{\bsk}{\bsx}=\bsk^T\bsx\pmod 1.
 \end{equation}
@@ -204,13 +204,14 @@ This bilinear operation has the following properties: for all $\bst, \bsx \in \c
 \end{gather}
 \end{subequations}
 
+
+
+
+
 \begin{equation}\label{assumgenip}
 \ip{\bsk}{\bsz_{b^{m-1}}}=\ip{b\bsk}{\bsz_{b^m}}
 \end{equation}
 
-
-One example is the extensible rank-1 Lattices whose existence is proved in \cite{HicNie03a}.
-%In this case, the generating vector $\bsh$ can be thought in each coordinate as an infinite digit integer. Furthermore, for every $\cp_m$ we can choose a generator of the subgroup. If we want $\bsz_{b^{m-1}}=\bsh\frac{j_m}{b^m}$ to the the generator of $\cp_m$, it only suffices to verify that $\gcd(j_m,b^m)=1$ with $j_m\in\F_{b^m}$. This sequence $j_0,j_1,\dots$ defines $\cp_\infty$. In addition, to satisfy equation \eqref{latpropb},  $j_m$'s: $ b^{m-1} \mid j_m-j_{m-1}\Rightarrow j_m=j_{m-1}+b^{m-1},\;\forall m\in\N$. A part from that, \eqref{latpropc} implies that the order of the elements in $\cp_\infty$ given the generators must follow the Sobol' order.
 
 The bilinear operation previously mentioned in \eqref{bilinear} let us also define the \emph{dual} Lattice corresponding to $\cp_m$ as
 \begin{align}
