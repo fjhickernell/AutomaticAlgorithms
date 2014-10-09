@@ -1024,9 +1024,9 @@ to\hsize{\if@nfeven\else\hfil\fi\box\@tempboxa\if@nfeven\hfil\fi}
 \def\@evenfoot{\tiny\@runningfoot\hfill\hbox{}}
 \def\sectionmark##1{}\def\subsectionmark##1{}}
 \def\@runningfoot{}
-\def\runningfoot{\def\@runningfoot{NORC at UofC/IIT Technical Report.}}
+\def\runningfoot{\def\@runningfoot{NORC at UofC/IIT report.}}
 \def\@firstfoot{}
-\def\firstfoot{\def\@firstfoot{NORC at UofC/IIT Technical Report.}}
+\def\firstfoot{\def\@firstfoot{NORC at UofC/IIT report.}}
 \def\ps@titlepage{\let\@mkboth\@gobbletwo
 \def\@oddhead{}\def\@oddfoot{\hbox{}\hfill
 \tiny\@firstfoot}\def\@evenhead{}\def\@evenfoot{\tiny\@firstfoot\hfill\hbox{}}}
@@ -1280,20 +1280,7 @@ to\hsize{\if@nfeven\else\hfil\fi\box\@tempboxa\if@nfeven\hfil\fi}
 \def\@evenhead{}\def\@evenfoot{\firstfootsize\@firstfoot\hfill\hbox{}}}
 
 % new permission statement
-\long\def\permission{\par
-% linebreaks added to conform to the current style
-Permission to make digital/hard copy of all or part of this material without
-fee 
-for personal or classroom use
-provided that the copies are not made or distributed for profit
-or commercial advantage, the ACM copyright/server notice, the title of the
-publication, and its date appear, and notice is given that copying is by
-permission of the ACM, Inc.  To copy
-otherwise, to republish, to post on servers, or to redistribute to lists
-requires prior specific 
-permission and/or a fee.\par
-\copyright\ 20\@acmYear\ 
-ACM \@permissionCodeOne/20\@acmYear/\@permissionCodeTwo-\@pageCode\$5.00 % aiellom
+\long\def\permission{ 
 }
 
 % make sure \permission doesn't get trashed

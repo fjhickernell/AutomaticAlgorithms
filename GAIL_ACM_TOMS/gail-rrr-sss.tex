@@ -1,4 +1,4 @@
-\documentclass[acmtoms]{doc_acmtrans2m}
+\documentclass[acmtoms]{doc_acmtrans2m}%{acmtrans2m}
 
 \acmVolume{xx}
 \acmNumber{x}
@@ -14,14 +14,13 @@
 \usepackage{wrapfig}
 \usepackage{verbatim}
 \usepackage{color}
-
-\newcommand{\note}[1]{ {\textcolor{red}    { #1 }}}
-
+ 
 %\input{rrr-sss-macros.tex}
-
 
 \newcommand{\BibTeX}{{\rm B\kern-.05em{\sc i\kern-.025em b}
 \kern-.08emT\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\newcommand{\note}[1]{ {\textcolor{red}    { #1 }}}
 
 \usepackage[vlined,ruled,nofillcomment,linesnumbered]{algorithm2e}
 \SetAlgoSkip{}\SetAlgoInsideSkip{smallskip}
@@ -48,7 +47,8 @@
 
 
 \title{ALGORITHM xxx:
-      \\GAIL---Guaranteed Automatic Integration Library}
+       GAIL---Guaranteed Automatic Integration Library in MATLAB\\     
+\note{\small{ALL: Please review title, names, institution, abstract, categories, keywords}}}
 \author{SOU-CHENG T.~CHOI
      \\NORC at the University of Chicago/Illinois Institute of Technology
      \\YUHAN DING
@@ -56,33 +56,23 @@
      \\LAN JIANG
      \\LLU\'{I}S ANTONI JIM\'{E}NEZ RUGAMA
      \\YIZHI ZHANG
-     \and XUAN ZHOU
-     \\Illinois Institute of  Technology }
+     \\XUAN ZHOU
+     \\Illinois Institute of  Technology 
+     \\and 
+     \\XIN TONG  
+     \\University of Illinois at Chicago}
 
-\markboth{S.-C. Choi, Y. Ding,  F. Hickernell, L. Jiang, L. Jim\'{e}nez Rugama, Y.~Zhang, and X.~Zhou}
+
+\markboth{\hspace{-4.5ex}\footnotesize{S.-C.~Choi, Y.~Ding,  F.~Hickernell, L.~Jiang, L.A. Jim\'{e}nez Rugama, X.~Tong, Y.~Zhang, and  X.~Zhou}}
          {ALGORITHM xxx: GAIL}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{abstract}  s
+\begin{abstract}  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\note{LEAD: Choi}
+Automatic and adaptive approximation, optimization, or integration of functions in a cone with guarantee of accuracy is a relatively new paradigm. Our purpose is to create a reliable, open-source MATLAB package, Guaranteed Automatic Integration Library (GAIL), following the philosophy of reproducible research championed by Jon Claerbout and David Donoho, and sustainable practices of robust scientific software development. In this paper, we review the key ideas and features in the ongoing theoretical and computational developments of our guaranteed algorithms in GAIL, which includes one-dimensional function approximation and minimization using linear splines, one-dimensional numerical integration using trapezoidal and Simpson's rules, and last but not least, mean estimation and multidimensional integration by Monte Carlo methods or Quasi Monte Carlo methods.
 
-ALGORITHM xxx: GAIL---Guaranteed Automatic Integration Library
-
-
-Automatic and adaptive numerical approximation and integration of
-functions in a cone with guarantee of accuracy is a relatively new
-paradigm. Our purpose is to create a reliable, open-source MATLAB
-package, Guaranteed Automatic Integration Library (GAIL), following
-the philosophy of reproducible research championed by Jon Claerbout
-and David Donoho, and sustainable practices of robust scientific
-software development. In this paper, we review the key ideas and
-features in the ongoing theoretical and computational developments of
-our guaranteed algorithms in GAIL, which includes one-dimensional
-function approximation and minimization using linear splines,
-one-dimensional numerical integration using trapezoidal and Simpson's
-rules, and last but not least, multidimensional numerical integration
-by (Quasi) Monte Carlo methods.
 
 \end{abstract}
 
@@ -90,14 +80,12 @@ by (Quasi) Monte Carlo methods.
 % References:
 % (1) http://toms.acm.org/Authors.html
 % (2) http://www.computer.org/portal/web/publications/acmmath#G1
-\category{G.1.3}{Numerical Analysis}{Numerical Linear Algebra}
-                [linear systems (direct and iterative methods)]
-
 \category{G.3}{Mathematics of Computing}{Probability and Statistics}
               [statistical computing; statistical software]
-
-\category{G.m}{Mathematics of Computing}{Miscellaneous}
-              [FORTRAN program units]
+\category{G.1.4}{Quadrature and Numerical Differentiation}{Adaptive and iterative quadrature}
+\category{G.1.6}{Optimization}{Global optimization}
+\category{G.4}{Mathematical Software}{Reliability and robustness}
+           
 
 \terms{Algorithms}
 
@@ -116,7 +104,7 @@ numberstyle=\tiny, numbersep=8pt}
 {numbers=none}
 
 \lstset{
-language=[90]Fortran, % for Fortran code listing
+language=Matlab,      % for MATLAB code listing
 basicstyle=\small,    % font size
 style=numbers,        % line number. To toggle, use: style=numbers
                       % or style=nonumbers
@@ -140,7 +128,8 @@ the National Science Foundation under grant NSF-DMS-1115392, and
 the Office of Advanced Scientific Computing Research, Office of Science,
 U.S. Department of Energy, under contract DE-AC02-06CH11357.
 
-Authors' addresses:
+
+Authors' addresses:\note{ALL: Please provide your email}
 %
    S.-C.~T.~Choi, NORC at the University of Chicago,
    Chicago, IL 60603; email: sctchoi@uchicago.edu;
@@ -152,11 +141,13 @@ Authors' addresses:
 %
    L.~Jiang, IIT; email: xxx@iit.edu;
 %
-   L.~A.~J.~Rugama, IIT; email: xxx@iit.edu;
+   L.~A.~Jim\'{e}nez Rugama, IIT; email: xxx@iit.edu;
+%
+   X.~Tong, UIC; email: xxx@uic.edu;
 %
    Y.~Zhang, IIT; email: xxx@iit.edu;
 %
-   X.~Zhou, IIT; email: xxx@iit.edu;
+   X.~Zhou, IIT; email: xxx@iit.edu.
 \end{bottomstuff}
 
 \maketitle
@@ -168,18 +159,15 @@ Authors' addresses:
 \section{Introduction} \label{sec:intro}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
 \subsection{Reliable Reproducible Research}
 
 \subsection{Mathematical Problems and Solutions} \label{sec:prob}
-
 
 Function recovery, Global minimization (?), Numerical integration (one dimension)
 
 Numerical integration (higher dimensions)
 
 \subsection{Review} \label{sec:lit}
-
 
 Existing work, strengths, and limitations
 
