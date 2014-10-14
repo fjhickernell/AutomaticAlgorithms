@@ -154,7 +154,7 @@ to approximate multidimensional integrals over the unit cube,
 \[
 \int_{\cube} f(\bsx) \, \dif \bsx.
 \]
-Integrals over more general domains may often be accommodated by a transformation of the integration variable. QMC methods are widely used because they do not suffer from a \textit{curse of dimensionality}. For example, if $d>4$, QMC methods with an error of $\Order(n^{-(1-\delta)})$ have a faster convergence rate than the tensor product composite Simpson's rule, which has error of $\Order(n^{-4/d})$.
+Integrals over more general domains may often be accommodated by a transformation of the integration variable. QMC methods are widely used because they do not suffer from a \textit{curse of dimensionality}. For example, if $d \ge 5$, QMC methods with an error of $\Order(n^{-(1-\delta)})$ have a faster convergence rate than the tensor product composite Simpson's rule, which has error of $\Order(n^{-4/d})$.
 
 The convergence rate $\Order(n^{-(1-\delta)})$, although relatively fast, does not give enough information about the absolute error to determine how large $n$ must be to satisfy a given error tolerance, $\varepsilon$. The objective of this research is to develop a guaranteed, QMC algorithm based on rank-1 lattices that determines $n$ adaptively by calculating a data-driven bound on the absolute error. The Koksma-Hlawka inequality is impractical for this purpose because it requires the total variation of the integrand. We focus on constructing a data-driven bound expressed in terms of the integrand's discrete Fourier coefficients. 
 
@@ -363,7 +363,7 @@ For each $p$ one must perform $\Order(2^m)$ operations, so the total computation
 
 As seen in equation \eqref{err1}, the absolute error is bounded by a sum of the absolute value of the Fourier coefficients in the dual lattice. Note that increasing the number of points in our lattice, i.e. increasing $m$, decreases the number of summands, and thus the sum. However, one can not capture how fast is this error decreasing with respect to $m$.  Rather than deal with a sum over the vector wavenumbers, it is more convenient to sum over scalar non-negative integers.  Thus, we define another mapping $\tvk: \N_0 \to \Z^d$.
 
-\begin{definition} \label{wavenummapdef} Given a sequence of points in embedded lattices, $\cp_{\infty} = \{\bsz_i\}_{i=0}^{\infty}$ define $\tvk: \N_0 \to \Z^d$ recursively as follows:
+\begin{definition} \label{wavenummapdef} Given a sequence of points in embedded lattices, $\cp_{\infty} = \{\bsz_i\}_{i=0}^{\infty}$ define $\tvk: \N_0 \to \Z^d$ \emph{onto} recursively as follows:
 \begin{description}
 \item[\textbf{Step 1.}] $\tvk(0)=\bszero$.
 
@@ -378,13 +378,27 @@ As seen in equation \eqref{err1}, the absolute error is bounded by a sum of the 
 
 This mapping is not uniquely defined and one has the flexibility to choose part of it. For example, defining a norm such as in \cite[Chap. 4]{SloJoe94} one can assign larger values of $\kappa$ to higher frequencies $\bsk$. In the end, our goal is to define this mapping such that $\hf(\tvk(\kappa))\rightarrow 0$ as $\kappa \to \infty$.
 
+\begin{lemma} \label{tvklemma}
+The following properties hold for the maps defined in Definitions \ref{numapdef} and \ref{wavenummapdef}:
+\begin{enumerate}
+\renewcommand{\labelenumi}{\alph{enumi})}
+\item $\tnu_m(\bsk)=\tnu_m(\bsl)$ iff $\bsk-\bsl \in \cp_m^{\perp}$, 
+\item 
+\item $\bsk$
+\end{enumerate}
+\end{lemma}
+
+The map $\tvk$ must be onto because one wants to 
+
 {\bf working here}
 
-Applying this mapping to \eqref{tfassum} and using the notation $\hf_{\kappa} :=\hf(\tvk(\kappa))$, $\tf_{m,\kappa} := \tf_m(\tvk(\kappa))$, we have
-\begin{equation}
-\tf_{m,\kappa} = \hf_{\kappa} + \sum_{\lambda=1}^{\infty} \hf_{\kappa+\lambda b^{m}} \E^{2 \pi \sqrt{-1} \ip{\tvk(\kappa+\lambda b^{m}) - \tvk(\kappa)}{\bsDelta}}.
-\label{tfassumc}
-\end{equation}
+For convenience we adopt the notation $\hf_{\kappa} :=\hf(\tvk(\kappa))$ and $\tf_{m,\kappa} := \tf_m(\tvk(\kappa))$. Then by \eqref{tfassum} we have
+\begin{align}
+\nonumber
+\tf_{m,\kappa} &:= \tf_m(\tvk(\kappa)) 
+= \hf(\tvk(\kappa)) + \sum_{\bsl \in \cp^{\perp}_m\setminus \{\bszero\}} \hf(\tvk(\kappa)+\bsl) \E^{2 \pi \sqrt{-1} \ip{\bsl }{\bsDelta}}, \qquad \forall \bsk \in \Z^d \\
+&=\hf_{\kappa} + \sum_{\lambda=1}^{\infty} \hf_{\kappa+\lambda b^{m}} \E^{2 \pi \sqrt{-1} \ip{\tvk(\kappa+\lambda b^{m}) - \tvk(\kappa)}{\bsDelta}}.
+\end{align}
 and thus, the error in \eqref{err1} can be bounded as
 \begin{equation}
 \biggabs{ \int_{\cube} f(\bsx) \, \D \bsx - \hI_m(f)} 
