@@ -142,7 +142,7 @@
 \email{ljimene1@hawk.iit.edu},\email{hickernell@iit.edu}}
 \maketitle
 
-\abstract{Quasi-Monte Carlo methods are used for numerical integration of multivariate functions. However, the error bounds for these methods typically rely on a priori knowledge of some semi-norm of the integrand, not on the sampled function values. In this article, we propose an error bound based on the discrete Fourier coefficients of the integrand. If these Fourier coefficients decay more quickly, the integrand has less fine scale structure, and the accuracy is higher. We focus on rank-1 lattices because they are a commonly used quasi-Monte Carlo design and because their algebraic structure facilitates an error analysis based on a Fourier decomposition of the integrand. This leads to a guaranteed adaptive automatic cubature algorithm with cost $\Order(mb^m)$, where $b^m$ is the number of data points.}
+\abstract{Quasi-Monte Carlo methods are used for numerically integrating multivariate functions. However, the error bounds for these methods typically rely on a priori knowledge of some semi-norm of the integrand, not on the sampled function values. In this article, we propose an error bound based on the discrete Fourier coefficients of the integrand. If these Fourier coefficients decay more quickly, the integrand has less fine scale structure, and the accuracy is higher. We focus on rank-1 lattices because they are a commonly used quasi-Monte Carlo design and because their algebraic structure facilitates an error analysis based on a Fourier decomposition of the integrand. This leads to a guaranteed adaptive cubature algorithm with computational cost $\Order(mb^m)$, where $b$ is some prime number and $b^m$ is the number of data points.}
 
 \section{Introduction}
 
@@ -156,30 +156,27 @@ to approximate multidimensional integrals over the unit cube,
 \]
 Integrals over more general domains may often be accommodated by a transformation of the integration variable. QMC methods are widely used because they do not suffer from a \textit{curse of dimensionality}. For example, if $d \ge 5$, QMC methods with an error of $\Order(n^{-(1-\delta)})$ have a faster convergence rate than the tensor product composite Simpson's rule, which has error of $\Order(n^{-4/d})$.
 
-The convergence rate $\Order(n^{-(1-\delta)})$, although relatively fast, does not give enough information about the absolute error to determine how large $n$ must be to satisfy a given error tolerance, $\varepsilon$. The objective of this research is to develop a guaranteed, QMC algorithm based on rank-1 lattices that determines $n$ adaptively by calculating a data-driven bound on the absolute error. The Koksma-Hlawka inequality is impractical for this purpose because it requires the total variation of the integrand. We focus on constructing a data-driven bound expressed in terms of the integrand's discrete Fourier coefficients. 
+The convergence rate $\Order(n^{-(1-\delta)})$ does not give enough information about the absolute error to determine how large $n$ must be to satisfy a given error tolerance, $\varepsilon$. The objective of this research is to develop a guaranteed, QMC algorithm based on rank-1 lattices that determines $n$ adaptively by calculating a data-driven upper bound on the absolute error. The Koksma-Hlawka inequality is impractical for this purpose because it requires the total variation of the integrand. Our data-driven bound is expressed in terms of the integrand's discrete Fourier coefficients. 
 
 Sections \ref{secrank1lat} and \ref{secfourierseries}, describe the group structure of rank-1 lattices and how the complex exponential functions are an appropriate basis for these nodes. For computation purposes, there is also an explanation of how to obatain the discrete Fourier transform $f$ via a Fast Fourier Transform, with an $\Order(n \log(n))$ computational cost.  The new contributions are described in section \ref{secalgo}. Initially, a mapping from $\N$ to the space of wavenumbers, $\Z^d$, is defined according to constraints given by the structure of our nodes. With this mapping, we define a set of integrands for which our new adaptive algorithm is designed.  This set is defined in terms of cone conditions satisfied by the Fourier coefficients of the integrands. These conditions make it possible to derive an upper bound on the rank-1 lattice rule error in terms of the discrete Fourier coefficients, which can be used to construct an adaptive algorithm.  An upper bound on the computational cost of this algorithm is derived. Finally, there is an example of option pricing using the MATLAB implementation of our algorithm, \texttt{cublattice\_g}, which will appear in the next release of the Guaranteed Automatic Integration Library \cite{ChoEtal14a}.  A parallel development for Sobol' cubature is given in \cite{HicJim16a}.
 
 \section{Rank-1 Integration Lattices}\label{secrank1lat}
 
-Let $b$ be prime number, and let $\F_{n}:=\{0, \ldots, n-1\}$ denote the set of the first $n$ non-negative integers for any $n \in \N$. The aim is to construct a sequence of embedded node sets with $b^m$ points:
+Let $b$ be prime number, and let $\F_{n}:=\{0, \ldots, n-1\}$ denote the set of the first $n$ non-negative integers for any $n \in \N$. The aim is to construct a sequence of embedded node sets with $b^m$ points for $m \in \N_0$:
 \[
-\{0\}=\cp_0\subset \cp_1 \dots\subset\cp_m=\{\bsz_i\}_{i=0}^{b^m-1} \subset\dots\subset\cp_\infty=\{\bsz_i\}_{i=0}^{\infty}.
+\{\bszero\}=:\cp_0\subset \cp_1 \dots\subset\cp_m:=\{\bsz_i\}_{i=0}^{b^m-1} \subset\dots\subset\cp_\infty:=\{\bsz_i\}_{i=0}^{\infty}.
 \]
-Moreover, the sequence $\bsz_1, \bsz_b, \bsz_{b^2},  \ldots \in \cube$ is chosen such that 
+Specifically, the sequence $\bsz_1, \bsz_b, \bsz_{b^2},  \ldots \in \cube$ is chosen such that 
 \begin{subequations} \label{zbmdef}
 \begin{gather} 
 \bsz_1 = b^{-1} \bsa_1, \qquad \bsa_1 \in \{1, \ldots, b-1\}^{d}, \\
-\bsz_{b^m} = b^{-1}(\bsz_{b^{m-1}}+\bsa_m)= b^{-1}\bsa_m + \cdots + b^{-m} \bsa_1, \qquad \bsa_m \in \F_b^{d}, \quad m \in \N
+\bsz_{b^m} = b^{-1}(\bsz_{b^{m-1}}+\bsa_m)= b^{-1}\bsa_m + \cdots + b^{-m} \bsa_1, \qquad \bsa_m \in \F_b^{d}, \quad m \in \N.
 \end{gather}
 \end{subequations}
-From these definitions it follows that
-\begin{subequations} \label{cpinfvector}
-\begin{gather}
-i \bsz_{b^{m-1}} \bmod {1} \ne \bszero \qquad \forall i\in \F_{b^m},\ m \in \N \\
+From this definition it follows that
+\begin{equation} 
 b\bsz_{b^m} \bmod {1} =\bsz_{b^{m-1}}, \quad b^{m}\bsz_{b^{m-1}} \bmod {1} = \bszero \qquad \forall m \in \N ,\label{latpropb}
-\end{gather}
-\end{subequations}
+\end{equation}
 Next, for any $i \in \N$ with proper $b$-ary expansion $i=i_0+i_1 b + i_2 b^2 + \cdots$, and $m=\lfloor \log_b(i) \rfloor+1$ define 
 \begin{multline} \label{zidef}
 \bsz_i : = \sum_{\ell=0}^{\infty} i_\ell \bsz_{b^\ell} \bmod 1 = \sum_{\ell=0}^{m-1} i_\ell \bsz_{b^\ell} \bmod 1 = \sum_{\ell=0}^{m-1} i_\ell b^{m-1-\ell}  \bsz_{b^{m-1}} \bmod 1 \\ 
@@ -199,7 +196,7 @@ The set of $d$-dimensional integer vectors, $\Z^d$, is used to index Fourier ser
 \begin{equation}\label{bilinear}
 \ip{\bsk}{\bsx}:=\bsk^T\bsx\pmod 1 \qquad \forall \bsk \in \Z^d, \ \bsx \in \cube.
 \end{equation}
-This bilinear operation has the following properties: for all $\bst, \bsx \in \cube$, $\bsk, \bsl \in \Z^d$, and $a \in \R$, it follows that
+This bilinear operation has the following properties: for all $\bst, \bsx \in \cube$, $\bsk, \bsl \in \Z^d$, and $a \in \Z$, it follows that
 \begin{subequations}
 \begin{gather}
 \ip{\bsk}{\bszero} = \ip{\bszero}{\bsx} = 0,\\
@@ -213,20 +210,15 @@ An additional constraint placed on the embedded lattices is that
 \ip{\bsk}{\bsz_{b^m}} =  0 \ \forall m \in \N_0   \ \implies \ \bsk=\bszero. \label{latpropd}
 \end{equation}
 
-%\begin{equation}\label{assumgenip}
-%\ip{\bsk}{\bsz_{b^{m-1}}}=\ip{b\bsk}{\bsz_{b^m}}
-%\end{equation}
-
-
 The bilinear operation dedined in \eqref{bilinear} is also used to define the \emph{dual} lattice corresponding to $\cp_m$:
 \begin{align}
 \nonumber
 \cp^{\perp}_m & := \{\bsk \in \Z^d : \ip{\bsk}{\bsz_i} = 0, \ i=0, \ldots, b^m-1\} \\
-&= \{\bsk \in \Z^d : \ip{\bsk}{\bsz_{b^{m-1}}} = 0 \}.\label{dualdef}
+&= \{\bsk \in \Z^d : \ip{\bsk}{\bsz_{b^{m-1}}} = 0 \} \qquad \text{by \eqref{zidef}} .\label{dualdef}
 \end{align}
-By this definition $\cp^{\perp}_{0}=\Z^d$ and the properties \eqref{cpinfvector}, \eqref{bilinear}, and \eqref{latpropd}, imply also that the $\cp^{\perp}_m$ are nested subgroups with
+By this definition $\cp^{\perp}_{0}=\Z^d$, and the properties \eqref{latpropb}, \eqref{bilinear}, and \eqref{latpropd}, imply also that the $\cp^{\perp}_m$ are nested subgroups with
 \begin{equation}\label{dualemb}
-\Z^d=\cp^{\perp}_{0}\supseteq\dots\supseteq\cp^{\perp}_{m}\supseteq\dots\supseteq\cp^{\perp}_{\infty}=\{0\}.
+\Z^d=\cp^{\perp}_{0}\supseteq\dots\supseteq\cp^{\perp}_{m}\supseteq\dots\supseteq\cp^{\perp}_{\infty}=\{\bszero\}.
 \end{equation}
 
 For finite node $m$ the dual lattice $\cp^{\perp}_{m}$ contains infinitely many points. Figure \ref{Latticefig} shows an example of a rank-1 lattice node set with $64$ points in dimension $3$ and its dual lattice. The parameters defining this node set are is $b=2$, $m=6$, and $\bsz_{32}=(1,3,7)/64$.
@@ -248,7 +240,7 @@ The $\Lebesgue_2$ inner product is defined as
 \[
 \ip[2]{f}{g} = \int_{\cube} f(\bsx) \overline{g(\bsx)} \, \dif \bsx.
 \]
-The complex expontential functions, $\E^{2 \pi \sqrt{-1} \ip{\bsk}{\cdot}}$,  $\bsk \in \Z^d$ form a  the complete orthonormal \emph{basis} for $\Lebesgue_2(\cube)$.  Any function in $\Lebesgue_2$ may be written in series form as
+The complex exponential functions, $\{\E^{2 \pi \sqrt{-1} \ip{\bsk}{\cdot}}\}_{\bsk \in \Z^d}$ form a  the complete orthonormal \emph{basis} for $\Lebesgue_2(\cube)$.  Any function in $\Lebesgue_2$ may be written in series form as
 \begin{equation} \label{Fourierdef}
 f(\bsx) = \sum_{\bsk \in \Z^d} \hf(\bsk) \E^{2 \pi \sqrt{-1} \ip{\bsk}{\bsx}}, \quad \text{where } \hf(\bsk) = \ip[2]{f}{\E^{2 \pi \sqrt{-1} \ip{\bsk}{\cdot}}},
 \end{equation}
@@ -274,9 +266,9 @@ Thus, the average of a Fourier basis function sampled over the points in a latti
  \end{cases}
 \end{equation}
 
-This property of the dual lattice is used below to describe the absolute error of a shifted rank-1 lattice cubature rule in terms of the Fourier coefficients for wavenumbers in the dual lattice. The  cubature rule is defined as
+This property of the dual lattice is used below to describe the absolute error of a shifted rank-1 lattice cubature rule in terms of the Fourier coefficients for wavenumbers in the dual lattice. For fixed $\bsDelta \in \cube$, the cubature rule is defined as
 \begin{equation} \label{cubaturedef}
-\hI_m(f) := \frac{1}{b^m} \sum_{i=0}^{b^m-1} f(\bsz_i \oplus\bsDelta),  \qquad \bsDelta \in \cube, \quad m \in \N_0.
+\hI_m(f) := \frac{1}{b^m} \sum_{i=0}^{b^m-1} f(\bsz_i \oplus\bsDelta),  \qquad  m \in \N_0.
 \end{equation}
 Note from this definition that $\hI_m\left(\E^{2 \pi \sqrt{-1} \ip{\bsk}{\cdot}}\right)= \E^{2 \pi \sqrt{-1} \ip{\bsk}{\bsDelta}}\ind_{\cp_m^{\perp}}(\bsk)$. Using the series decomposition defined in \eqref{Fourierdef} and equation \eqref{avrFourier}, it follows that
 \begin{align}
@@ -285,12 +277,12 @@ Note from this definition that $\hI_m\left(\E^{2 \pi \sqrt{-1} \ip{\bsk}{\cdot}}
 & = \Biggabs {\hf(\bszero) - \sum_{\bsk \in \Z^d} \hf(\bsk) \hI_m\left(\E^{2 \pi \sqrt{-1} \ip{\bsk}{\cdot}}\right)} \\
 \nonumber
 & = \Biggabs {\hf(\bszero) - \sum_{\bsk \in \Z^d} \hf(\bsk) \E^{2 \pi \sqrt{-1} \ip{\bsk}{\bsDelta}} \ind_{\cp_m^{\perp}}(\bsk)  } \\ 
-\nonumber
-& = \Biggabs {\sum_{\bsk \in \cp_m^{\perp}\setminus \{\bszero\} } \hf(\bsk)  \E^{2 \pi \sqrt{-1} \ip{\bsk}{\bsDelta}} } \\
-& \le \sum_{\bsk \in \cp_m^{\perp}\setminus \{\bszero\} } \abs{\hf(\bsk)}. \label{err1}
+& = \Biggabs {\sum_{\bsk \in \cp_m^{\perp}\setminus \{\bszero\} } \hf(\bsk)  \E^{2 \pi \sqrt{-1} \ip{\bsk}{\bsDelta}} } \le \sum_{\bsk \in \cp_m^{\perp}\setminus \{\bszero\} } \abs{\hf(\bsk)}. \label{err1}
 \end{align}
 
-Adaptive Algorithm \ref{adapalgo} that we construct in section \ref{algorithmsection} is based on this expression.  However, since the true Fourier coefficients are unknown, they must be approximated by the discrete Fourier coefficients, which are defined as follows:
+\section{The Fast Fourier Transform for Function Values at Rank-1 Lattice Node Sets}\label{FFT}
+
+Adaptive Algorithm \ref{adapalgo} that is constructed in section \ref{algorithmsection} has an error analysis based on the above expression.  However, since the true Fourier coefficients are unknown, they must be approximated by the discrete Fourier coefficients, which are defined as follows:
 \begin{subequations} \label{tfdefalias}
 \begin{align}
 \tf_m(\bsk)
@@ -308,34 +300,34 @@ Adaptive Algorithm \ref{adapalgo} that we construct in section \ref{algorithmsec
 \end{subequations}
 It is seen here that the discrete transform $\tf_m(\bsk)$ equals the integral transform $\hf(\bsk)$, defined in \eqref{Fourierdef}, plus \emph{aliasing} terms corresponding to $\hf(\bsk+\bsl)$ scaled by the shift, where $\bsl \in \cp_{m}^{\perp}\setminus \left\{\bszero\right\}$.
 
-\section{Fast Fourier Transform Adapted to Rank-1 Lattices}\label{FFT}
 
-The next task is to define the map $\tnu_m : \Z^d \to \F_{b^m}$ that facilitates the calculation of the discrete Fourier transform introduced above by a fast algorithm explained below.  This map depends on the choice of the embedded rank-1 lattice node sets defined in \eqref{zbmdef} and \eqref{zidef}.
+To facilitate the calculation of $\tf_m(\bsk)$, we define the map $\tnu_m : \Z^d \to \F_{b^m}$.  This map depends on the choice of the embedded rank-1 lattice node sets defined in \eqref{zbmdef} and \eqref{zidef}.
 \begin{definition} \label{numapdef} For every $\bsk \in \Z^d$, let
 \begin{subequations} \label{numapdefeq}
 \begin{gather}
-\hnu_0(\bsk) = b\ip{\bsk}{\bsz_{1}}=\bsk^T\bsa_1 \bmod b, \\ 
-\hnu_m(\bsk)=b\ip{\bsk}{\bsz_{b^m}}-\ip{\bsk}{\bsz_{b^{m-1}}}=\bsk^T\bsa_m \bmod b, \qquad m \in \N, \\
+\hnu_0(\bsk) = b\ip{\bsk}{\bsz_{1}}, \qquad 
+\hnu_m(\bsk)=b\ip{\bsk}{\bsz_{b^m}}-\ip{\bsk}{\bsz_{b^{m-1}}}, \quad m \in \N, \\
 \tnu_m(\bsk) = \sum_{\ell=0}^{m-1} \hnu_{\ell}(\bsk) b^{\ell}, \quad m \in \N.
 \end{gather}
 \end{subequations}
 \end{definition}
 From this definition it follows that
-\begin{multline*}
+\begin{multline} \label{kdotzbm}
 \ip{\bsk}{\bsz_{b^m}} = b^{-1} \hnu_m(\bsk) + b^{-1}  \ip{\bsk}{\bsz_{b^{m-1}}} = b^{-1} \hnu_m(\bsk) + b^{-2} \hnu_{m-1}(\bsk) + b^{-2} \ip{\bsk}{\bsz_{b^{m-2}}} \\
-=  b^{-1} \hnu_m(\bsk) + b^{-2} \hnu_{m-1}(\bsk) + \cdots + b^{-m-1} \hnu_{0}(\bsk) = \sum_{\ell=0}^m \hnu_{\ell}(\bsk) b^{\ell-m-1} ,
-\end{multline*}
+=  b^{-1} \hnu_m(\bsk) + b^{-2} \hnu_{m-1}(\bsk) + \cdots + b^{-m-1} \hnu_{0}(\bsk) = \sum_{\ell=0}^m \hnu_{\ell}(\bsk) b^{\ell-m-1} \\
+= b^{-m-1} \tnu_{m+1}(\bsk) ,
+\end{multline}
 and so
-\begin{align*}
-\ip{\bsk}{\bsz_i} &= \ip{\bsk}{\sum_{\ell=0}^{m-1} i_\ell \bsz_{b^{\ell}}} = \sum_{\ell=0}^{m-1} i_\ell \ip{\bsk}{\bsz_{b^{\ell}}} \pmod 1 \\
-& = \sum_{\ell=0}^{m-1} i_\ell \sum_{j=0}^{\ell} \hnu_j(\bsk) b^{j-\ell-1} \pmod 1=\sum_{\ell=0}^{m-1} i_\ell \tnu_{\ell+1}(\bsk)  b^{-\ell-1} \pmod 1.
-\end{align*}
+\begin{equation*}
+\ip{\bsk}{\bsz_i} = \ip{\bsk}{\sum_{\ell=0}^{m-1} i_\ell \bsz_{b^{\ell}}} = \sum_{\ell=0}^{m-1} i_\ell \ip{\bsk}{\bsz_{b^{\ell}}} \bmod 1 =\sum_{\ell=0}^{m-1} i_\ell \tnu_{\ell+1}(\bsk)  b^{-\ell-1} \bmod 1.
+\end{equation*}
 
 Letting $y_i:=f(\bsz_{i}\oplus \bsDelta)$ for $i\in \N_0$, the discrete Fourier transform defined in \eqref{tfdef} can now be written as follows:
 \begin{align}
 \nonumber
 \tf_m(\bsk)
-&:= \hI_m\left( \E^{-2 \pi \sqrt{-1} \ip{\bsk}{\cdot}} f(\cdot) \right) = \frac{1}{b^m}\sum_{i=1}^{b^m-1} \E^{-2 \pi \sqrt{-1} \ip{\bsk}{\bsz_{i}\oplus \bsDelta}} y_i = \E^{-2 \pi \sqrt{-1} \ip{\bsk}{\bsDelta}} Y_{\tnu(\bsk)}
+&:= \hI_m\left( \E^{-2 \pi \sqrt{-1} \ip{\bsk}{\cdot}} f(\cdot) \right) = \frac{1}{b^m}\sum_{i=1}^{b^m-1} \E^{-2 \pi \sqrt{-1} \ip{\bsk}{\bsz_{i}\oplus \bsDelta}} y_i \\
+&= \E^{-2 \pi \sqrt{-1} \ip{\bsk}{\bsDelta}} Y_{m}(\tnu(\bsk)),
 \intertext{where for all $\nu\in \N_0$ with proper $b$-ary explansion $\nu= \nu_0 + \nu_1 b + \cdots \in \N_0$}
 \nonumber
 Y_m (\nu) & := \frac{1}{b^m} \sum_{i_m-1=0}^{b-1} \cdots \sum_{i_{0}=0}^{b-1} y_{i_0 + \cdots +i_{m-1} b^{m-1}} \exp\left(-2 \pi \sqrt{-1}\sum_{\ell=0}^{m-1} i_\ell \onu_{\ell+1}  b^{-\ell-1} \right),  \\
@@ -359,8 +351,6 @@ For each $p$ one must perform $\Order(2^m)$ operations, so the total computation
 
 \section{Error Estimation and an Adaptive Algorithm}\label{secalgo}
 
-\subsection{Wavenumber Map}
-
 As seen in equation \eqref{err1}, the absolute error is bounded by a sum of the absolute value of the Fourier coefficients in the dual lattice. Note that increasing the number of points in our lattice, i.e. increasing $m$, decreases the number of summands, and thus the sum. However, one can not capture how fast is this error decreasing with respect to $m$.  Rather than deal with a sum over the vector wavenumbers, it is more convenient to sum over scalar non-negative integers.  Thus, we define another mapping $\tvk: \N_0 \to \Z^d$.
 
 \begin{definition} \label{wavenummapdef} Given a sequence of points in embedded lattices, $\cp_{\infty} = \{\bsz_i\}_{i=0}^{\infty}$ define $\tvk: \N_0 \to \Z^d$ \emph{onto} recursively as follows:
@@ -378,16 +368,26 @@ As seen in equation \eqref{err1}, the absolute error is bounded by a sum of the 
 
 This mapping is not uniquely defined and one has the flexibility to choose part of it. For example, defining a norm such as in \cite[Chap. 4]{SloJoe94} one can assign larger values of $\kappa$ to higher frequencies $\bsk$. In the end, our goal is to define this mapping such that $\hf(\tvk(\kappa))\rightarrow 0$ as $\kappa \to \infty$.
 
+{\bf need to show that this can work, i.e, the set is not empty} 
+
 \begin{lemma} \label{tvklemma}
 The following properties hold for the maps defined in Definitions \ref{numapdef} and \ref{wavenummapdef}:
 \begin{enumerate}
 \renewcommand{\labelenumi}{\alph{enumi})}
-\item $\tnu_m(\bsk)=\tnu_m(\bsl)$ iff $\bsk-\bsl \in \cp_m^{\perp}$, 
-\item 
-\item $\bsk$
+\item $\bsk-\bsl \in \cp_m^{\perp}$ iff $\tnu_m(\bsk)=\tnu_m(\bsl)$, and 
+\item for $m \in \N_0$ and $\kappa \in \F_{b^m}$, $\{\tvk(\kappa + \lambda b^m)\}_{\lambda=0}^{\infty} =\{\bsl \in \Z^d : \tvk(\kappa) - \bsl \in \cp_m^{\perp} \}$.
 \end{enumerate}
 \end{lemma}
+\begin{proof} To prove a) note that 
+\begin{align*}
+\bsk-\bsl \in \cp_m^{\perp} & \iff \ip{\bsk-\bsl}{\bsz_{b^{m-1}}}=0 \qquad \text{by \eqref{dualdef}} \\
+& \iff \ip{\bsk}{\bsz_{b^{m-1}}}=\ip{\bsl}{\bsz_{b^{m-1}}} \qquad \text{by \eqref{bilinearlinkprop}}\\
+& \iff b^{-m}\tnu_m(\bsk) =b^{-m}\tnu_m(\bsl) \qquad \text{by \eqref{kdotzbm}} \\
+& \iff \tnu_m(\bsk) =\tnu_m(\bsl).
+\end{align*}
+To prove b), consider any fixed $\lambda \in \N_0$,  and let $m'$ be the non-negative integer no smaller than $m$ such that $b^{m'-1} \le \kappa + \lambda b^m \le b^{m'}-1$. By Definition  \ref{wavenummapdef} it follows that $\tnu_{m'}(\tvk(\kappa + \lambda b^m))=\kappa + \lambda b^m$.  Thus $\tnu_{m}(\tvk(\kappa + \lambda b^m))=\kappa=\tnu_{m}(\tvk(\kappa))$, which by part a) implies that $\tvk(\kappa)-\tvk(\kappa + \lambda b^m) \in \cp_m^{\perp}$.  Going the other direction
 
+\end{proof}
 The map $\tvk$ must be onto because one wants to 
 
 {\bf working here}
