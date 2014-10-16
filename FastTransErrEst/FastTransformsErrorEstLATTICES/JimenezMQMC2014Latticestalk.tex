@@ -338,7 +338,7 @@ Letting $y_i:=f(\bsz_{i}\oplus \bsDelta)$ for $i\in \N_0$, the discrete Fourier 
 \nonumber
 \tf_m(\bsk)
 &:= \hI_m\left( \E^{-2 \pi \sqrt{-1} \ip{\bsk}{\cdot}} f(\cdot) \right) = \frac{1}{b^m}\sum_{i=1}^{b^m-1} \E^{-2 \pi \sqrt{-1} \ip{\bsk}{\bsz_{i}\oplus \bsDelta}} y_i \\
-&= \E^{-2 \pi \sqrt{-1} \ip{\bsk}{\bsDelta}} Y_{m}(\tnu_m(\bsk)),
+&= \E^{-2 \pi \sqrt{-1} \ip{\bsk}{\bsDelta}} Y_{m}(\tnu_m(\bsk)), \label{tfmYdef}
 \intertext{where for all $\nu\in \N_0$}
 \nonumber
 Y_m (\nu) & := \frac{1}{b^m} \sum_{i_m-1=0}^{b-1} \cdots \sum_{i_{0}=0}^{b-1} y_{i_0 + \cdots +i_{m-1} b^{m-1}} \exp\left(-2 \pi \sqrt{-1}\sum_{\ell=0}^{m-1} i_\ell \onu_{\ell+1}  b^{-\ell-1} \right)\\
@@ -363,18 +363,20 @@ For each $p$ one must perform $\Order(2^m)$ operations, so the total computation
 
 As seen in equation \eqref{err1}, the absolute error is bounded by a sum of the absolute value of the Fourier coefficients in the dual lattice. Note that increasing the number of points in our lattice, i.e. increasing $m$, decreases the number of summands, and thus the sum. However, one can not capture how fast is this error decreasing with respect to $m$.  Rather than deal with a sum over the vector wavenumbers, it is more convenient to sum over scalar non-negative integers.  Thus, we define another mapping $\tvk: \N_0 \to \Z^d$.
 
-\begin{definition} \label{wavenummapdef} Given a sequence of points in embedded lattices, $\cp_{\infty} = \{\bsz_i\}_{i=0}^{\infty}$ define $\tvk: \N_0 \to \Z^d$ \emph{onto} recursively as follows:
+\begin{definition} \label{wavenummapdef} Given a sequence of points in embedded lattices, $\cp_{\infty} = \{\bsz_i\}_{i=0}^{\infty}$ define $\tvk: \N_0 \to \Z^d$ \emph{one-to-one} and \emph{onto} recursively as follows:
 \begin{tabbing}
 \hspace{0.5cm} \= Set $\tvk(0)=\bszero$ \+ \\
 For $m\in \N_0$ \\
 \hspace{0.3cm} \= For $\kappa \in \F_{b^m}$,  \+ \\
-\hspace{0.3cm} \= Let $a\in \F_b$ be such that $\tnu_{m+1}(\tvk(\kappa))= ab^m + \tnu_{m}(\tvk(\kappa))$. \+ \\
-Choose $\tvk(\kappa+a b^m) \in \{\bsk \in  \Z^d : \tnu_{m+1}(\bsk)=\tnu_{m}(\tvk(\kappa))\}$ if $a\ne 0$. \\
+\hspace{0.3cm} \= Let $a\in \F_b$ be such that $\tnu_{m+1}(\tvk(\kappa))= \tnu_{m}(\tvk(\kappa)) + ab^m$. \+ \\
+If $a\ne 0$, choose $\tvk(\kappa+a b^m) \in \{\bsk \in  \Z^d : \tnu_{m+1}(\bsk)=\tnu_{m}(\tvk(\kappa))\}$. \\
 Choose $\tvk(\kappa+a' b^m) \in \{\bsk \in  \Z^d : \tnu_{m+1}(\bsk)=\tnu_{m}(\tvk(\kappa))+a' b^m \}$, \\ \` for  $a'\in {1, \ldots, b-1}\setminus \{a\}$.
 \end{tabbing}
 \end{definition}
 
 This mapping is not uniquely defined and one has the flexibility to choose part of it. For example, defining a norm such as in \cite[Chap. 4]{SloJoe94} one can assign larger values of $\kappa$ to higher frequencies $\bsk$. In the end, our goal is to define this mapping such that $\hf(\tvk(\kappa))\rightarrow 0$ as $\kappa \to \infty$.
+
+This mapping is one-to-one since at each step the new values $\tvk(\kappa+a b^m)$ or $\tvk(\kappa+a' b^m)$ are chosen from sets of wavenumbers that exclude those wavenumbers already assigned to $\tvk(\kappa)$.  The mapping can be made onto by choosing the choosing the ``smallest'' wavenumber in some sense.
 
 {\bf need to show that this can work, i.e, the set is not empty} 
 
@@ -413,56 +415,21 @@ By Definition \ref{wavenummapdef} it follows that for $m \in \N$ and $\kappa \in
 \{\tvk(\kappa +\lambda b^m)\}_{\lambda=0}^{\infty}& \subseteq \{\bsk \in  \Z^d : \tnu_{m}(\bsk)=\tnu_m(\tvk(\kappa)) \}. \label{oneway}
 \end{align}
 
-Now suppose that $\bsl$ is any element of $\{\bsk \in  \Z^d : \tnu_{m}(\bsk)=\tnu_m(\tvk(\kappa)) \}$.  Since the map $\tvk$ is onto, there exists some $\kappa' \in \N_0$ such that $\bsl=\tvk(\kappa')$. Choose $\lambda'$ such that $\kappa'=\overline{\kappa'}_m +\lambda b^m$.  According to \eqref{oneway} it follows that 
-
-
-
-To prove b), consider any fixed $\lambda \in \N_0$,  and let $m'$ be the non-negative integer no smaller than $m$ such that $b^{m'-1} \le \kappa + \lambda b^m \le b^{m'}-1$. By Definition  \ref{wavenummapdef} it follows that $\tnu_{m'}(\tvk(\kappa + \lambda b^m))=\kappa + \lambda b^m$.  Thus $\tnu_{m}(\tvk(\kappa + \lambda b^m))=\kappa=\tnu_{m}(\tvk(\kappa))$, which by part a) implies that $\tvk(\kappa)-\tvk(\kappa + \lambda b^m) \in \cp_m^{\perp}$.  Going the other direction
-
+Now suppose that $\bsl$ is any element of $\{\bsk \in  \Z^d : \tnu_{m}(\bsk)=\tnu_m(\tvk(\kappa)) \}$.  Since the map $\tvk$ is onto, there exists some $\kappa' \in \N_0$ such that $\bsl=\tvk(\kappa')$. Choose $\lambda'$ such that $\kappa'=\overline{\kappa'}_m +\lambda b^m$, where the overbar notation was defined in \eqref{onudef}.  According to \eqref{oneway} it follows that $\tnu_m(\tvk(\overline{\kappa'}_m))=\tnu_m(\tvk(\overline{\kappa'}_m +\lambda b^m)) = \tnu_m(\bsl)=\tnu_m(\tvk(\kappa))$.  Since $\overline{\kappa'}_m$ and $\kappa$ are both in $\F_{b^m}$, this implies that $overline{\kappa'}_m=\kappa$, and so $\bsl \in \{\tvk(\kappa +\lambda b^m)\}_{\lambda=0}^{\infty}$.  Thus, $\{\tvk(\kappa +\lambda b^m)\}_{\lambda=0}^{\infty} \supseteq \{\bsk \in  \Z^d : \tnu_{m}(\bsk)=\tnu_m(\tvk(\kappa)) \}$, and the lemma is proved. \qed.
 \end{proof}
 
-
-
-\begin{lemma} \label{tvklemma}
-For the map defined in Definitions \ref{numapdef} and \ref{wavenummapdef}:
-\begin{enumerate}
-\renewcommand{\labelenumi}{\alph{enumi})}
-\item $\bsk-\bsl \in \cp_m^{\perp}$ iff $\tnu_m(\bsk)=\tnu_m(\bsl)$, and 
-\item for $m \in \N_0$ and $\kappa \in \F_{b^m}$, $\{\tvk(\kappa + \lambda b^m)\}_{\lambda=0}^{\infty} =\{\bsl \in \Z^d : \tvk(\kappa) - \bsl \in \cp_m^{\perp} \}$.
-\end{enumerate}
-\end{lemma}
-\begin{proof} To prove a) note that 
-\begin{align*}
-\bsk-\bsl \in \cp_m^{\perp} & \iff \ip{\bsk-\bsl}{\bsz_{b^{m-1}}}=0 \qquad \text{by \eqref{dualdef}} \\
-& \iff \ip{\bsk}{\bsz_{b^{m-1}}}=\ip{\bsl}{\bsz_{b^{m-1}}} \qquad \text{by \eqref{bilinearlinkprop}}\\
-& \iff b^{-m}\tnu_m(\bsk) =b^{-m}\tnu_m(\bsl) \qquad \text{by \eqref{kdotzbm}} \\
-& \iff \tnu_m(\bsk) =\tnu_m(\bsl).
-\end{align*}
-To prove b), consider any fixed $\lambda \in \N_0$,  and let $m'$ be the non-negative integer no smaller than $m$ such that $b^{m'-1} \le \kappa + \lambda b^m \le b^{m'}-1$. By Definition  \ref{wavenummapdef} it follows that $\tnu_{m'}(\tvk(\kappa + \lambda b^m))=\kappa + \lambda b^m$.  Thus $\tnu_{m}(\tvk(\kappa + \lambda b^m))=\kappa=\tnu_{m}(\tvk(\kappa))$, which by part a) implies that $\tvk(\kappa)-\tvk(\kappa + \lambda b^m) \in \cp_m^{\perp}$.  Going the other direction
-
-\end{proof}
-The map $\tvk$ must be onto because one wants to 
-
-{\bf working here}
-
-For convenience we adopt the notation $\hf_{\kappa} :=\hf(\tvk(\kappa))$ and $\tf_{m,\kappa} := \tf_m(\tvk(\kappa))$. Then by \eqref{tfassum} we have
-\begin{align}
-\nonumber
-\tf_{m,\kappa} &:= \tf_m(\tvk(\kappa)) 
-= \hf(\tvk(\kappa)) + \sum_{\bsl \in \cp^{\perp}_m\setminus \{\bszero\}} \hf(\tvk(\kappa)+\bsl) \E^{2 \pi \sqrt{-1} \ip{\bsl }{\bsDelta}}, \qquad \forall \bsk \in \Z^d \\
-&=\hf_{\kappa} + \sum_{\lambda=1}^{\infty} \hf_{\kappa+\lambda b^{m}} \E^{2 \pi \sqrt{-1} \ip{\tvk(\kappa+\lambda b^{m}) - \tvk(\kappa)}{\bsDelta}}.
-\end{align}
-and thus, the error in \eqref{err1} can be bounded as
+For convenience we adopt the notation $\hf_{\kappa} :=\hf(\tvk(\kappa))$ and $\tf_{m,\kappa} := \tf_m(\tvk(\kappa))$. Then the error bound in \eqref{err1} may be written as
 \begin{equation}
 \biggabs{ \int_{\cube} f(\bsx) \, \D \bsx - \hI_m(f)} 
-= \Biggabs {\sum_{\lambda=1}^{\infty} \hf_{\lambda b^m} \E^{2 \pi \sqrt{-1} \ip{\tvk(\lambda b^m)}{\bsDelta}}}
 \le \sum_{\lambda=1}^{\infty} \left \lvert \hf_{\lambda b^m}\right \rvert. \label{err2}
 \end{equation}
+By Lemma  \ref{tvklemma} the aliasing relationship in \eqref{tfassum} may be written as
+\begin{align}
+\tf_{m,\kappa} =\hf_{\kappa} + \sum_{\lambda=1}^{\infty} \hf_{\kappa+\lambda b^{m}} \E^{2 \pi \sqrt{-1} \ip{\tvk(\kappa+\lambda b^{m}) - \tvk(\kappa)}{\bsDelta}}. \label{tfassumc}
+\end{align}
 
-In the section below, we disclose how to use the discrete transform coefficients $\tf_{m,\kappa}$ instead of the true Fourier coefficients $\hf_{\kappa}$, to construct a new error bound based on \eqref{tfassumc} and \eqref{err2}.
-
-\subsection{Cone Condition: Decay of the Fourier Coefficients}\label{sumscoeff}
-Given a function $f\in\Lebesgue^2(\cube)$, consider the following sums of its series coefficients defined for $\ell,m \in \N_0$, $\ell \le m$:
+%\subsection{Cone Condition: Decay of the Fourier Coefficients}\label{sumscoeff}
+Given an integrand with absolutely summable Fourier coefficients, consider the following sums defined for $\ell,m \in \N_0$, $\ell \le m$:
 \begin{gather*}
 S_m(f) =  \sum_{\kappa=\left \lfloor b^{m-1} \right \rfloor}^{b^{m}-1} \bigabs{\hf_{\kappa}}, \qquad 
 \hS_{\ell,m}(f)  = \sum_{\kappa=\left \lfloor b^{\ell-1} \right \rfloor}^{b^{\ell}-1} \sum_{\lambda=1}^{\infty} \bigabs{ \hf_{\kappa+\lambda b^{m}}}, \\
@@ -470,29 +437,30 @@ S_m(f) =  \sum_{\kappa=\left \lfloor b^{m-1} \right \rfloor}^{b^{m}-1} \bigabs{\
 \sum_{\kappa=b^{m}}^{\infty} \bigabs{\hf_{\kappa}}, \qquad
 \tS_{\ell,m}(f) = \sum_{\kappa=\left \lfloor b^{\ell-1}\right \rfloor}^{b^{\ell}-1} \bigabs{\tf_{m,\kappa}}.
 \end{gather*}
-From these sums, remark that $\tS_{\ell,m}(f)$ is the only one involving the discrete transform coefficients. Indeed, our adaptive algorithm will be based on this sum bounding the other three, $S_m(f),\hS_{\ell,m}(f),\wcS_m(f)$ that can not be easily observed. Furthermore, these fast Fourier coefficients converge to the true Fourier coefficients for $m$ big enough.
+Note that $\tS_{\ell,m}(f)$ is the only one that can be observed from data because it involves the discrete transform coefficients. In fact, from \eqref{tfmYdef} one can identify $\bigabs{\tf_{m,\kappa}} = \bigabs{Y_m(\tnu_m(\tvk(\kappa)))}$.  Indeed, our adaptive algorithm will be based on this sum bounding the other three, $S_m(f),\hS_{\ell,m}(f),\wcS_m(f)$ that can not be readily observed. 
 
-Define $\cc$ the set of functions characterized by critical assumptions about how certain sums provide upper bounds on others.  Let $\ell_* \in \N$ be some fixed integer and $\homega$ and $\wcomega$ be some bounded non-negative valued functions such that,
+Define $\cc$ the set of integrands characterized by critical assumptions about how the Fourier coefficients decay.  Let $\ell_* \in \N$ be some fixed integer and $\homega$ and $\wcomega$ be some bounded non-negative valued functions such that,
 \begin{multline} \label{conecond}
-\cc:=\{f \in \Lebesgue_2(\cube) : \hS_{\ell,m}(f) \le \homega(m-\ell) \wcS_m(f),\ \ \ell \le m, \\
+\cc:=\{f \in \Lebesgue_\infty(\cube) : \hS_{\ell,m}(f) \le \homega(m-\ell) \wcS_m(f),\ \ \ell \le m, \\
 \wcS_m(f) \le \wcomega(m-\ell) S_{\ell}(f),\ \  \ell_* \le \ell \le m\}.
 \end{multline}
-We also require the existence of $r$ such that $\homega(r) \wcomega(r)<1$, for instance if $\lim_{r\rightarrow\infty}\wcomega(r)=0$. Note that although this set is a cone, i.e. $f \in \cc \implies af \in \cc\;\forall a\in\R$, it is not convex. A wider discussion on the advantages and disadvantages of considering cones of functions can be found in \cite{Clancy201421}.
+We also require the existence of $r$ such that $\homega(r) \wcomega(r)<1$, which happens, for instance, if $\lim_{r\rightarrow\infty}\wcomega(r)=0$. This set is a cone, i.e. $f \in \cc \implies af \in \cc\;\forall a\in\R$, but it is not convex. A wider discussion on the advantages and disadvantages of considering cones of functions can be found in \cite{Clancy201421}.
 
-Functions in $\cc$ have a smooth decay on their Fourier coefficients since by definition, sums $S_m(f)$ can not bounce with respect to $\hS_{\ell,m}(f)$ or $\wcS_m(f)$. Thus, under these assumptions the size of these sums can be a good indicator of the absolute error since once the sums are small, they can not bounce back again.
+Functions in $\cc$ have Fourier coefficients that do not oscillate wildly.  This property allows us to estimate the cubature error reliably. 
 
-The first inequality parameterizes how fast the coefficients must decay. There, an infinite sum of larger indexed Fourier coefficients bound an infinite partial sum of itself. In Figure \ref{Walshcoeffig} for example, it is shown how $\wcS_{12}(f)$ is bounding $\hS_{0,12}$. Remark that the last sum is directly the bound obtained in \eqref{err2}.
+The first inequality controls how an infinite sum of some of the larger wavenumber coefficients are bounded above by a sum of all the surrounding coefficients.  In Figure \ref{Walshcoeffig} for example, the sum of the large black dots corresponds to $\hS_{0,12}(f)$ and the sum of the small dark gray dots corresponds to $\wcS_{12}(f)$. The former also corresponds to the error bound in \eqref{err2}.
 
-The second inequality also controls the previous sums' decay by a finite sum on smaller indexed Fourier coefficients. Again, in Figure \ref{Walshcoeffig} we can see how $S_8(f)$ is proportionally bounding $\wcS_{12}(f)$. In addition, below we explain how this inequality is also crucial for introducing $\tS_{\ell,m}(f)$ in the error bound.
+The second inequality controls how the sum of some  larger wavenumber coefficients are bounded above by a \emph{finite} sum of some small wavenumber Fourier coefficients. Again, in Figure \ref{Walshcoeffig} we can see how $S_8(f)$ can be used to bound $\wcS_{12}(f)$. This second inequality essentially says that the fine scale of the integrand cannot be too large compared to the coarser scale of the integrand.
 
-Finally, for small $\ell$ the sum $S_\ell(f)$ includes only a few summands. Therefore, it could accidentally happen that $S_\ell(f)$ is too small compared to $\wcS_m(f)$. To avoid it, the cone is defined for $\ell$ greater than a minimum $\ell_*$.
+For small $\ell$ the sum $S_\ell(f)$ includes only a few summands. Therefore, it could accidentally happen that $S_\ell(f)$ is too small compared to $\wcS_m(f)$. To avoid this possibility, the cone defintion includes the constraint that $\ell$ is greater than some minimum $\ell_*$.
+
 \begin{figure}
 \centering
 \includegraphics[width=9cm]{Images/PlotFFTCoefUse256.eps}
 \caption{The magnitudes of true Walsh coefficients for some integrand. \label{Walshcoeffig}}
 \end{figure}
 
-Because we do not assume the knowledge of the true coefficients, for functions in $\cc$ we introduce $\tS_{\ell,m}(f)$ in the error bound using \eqref{tfassumc},
+Because we do not assume the knowledge of the true  Fourier  coefficients, for functions in $\cc$ we need bounds on $S_{\ell}(f)$ in terms of the sum of the discrete coefficients $\tS_{\ell,m}(f)$.  This is done by applying \eqref{tfassumc},  and the definition of the cone in \eqref{conecond}:
 \begin{align}
 \nonumber
 S_\ell(f) &= \sum_{\kappa=b^{\ell-1}}^{b^{\ell}-1} \bigl \lvert \hf_{\kappa}\bigr\rvert= \sum_{\kappa=b^{\ell-1}}^{b^{\ell}-1} \abs{\tf_{m,\kappa} - \sum_{\lambda=1}^{\infty} \hf_{\kappa+\lambda b^{m}} \E^{2 \pi \sqrt{-1} \ip{\tvk(\kappa+\lambda b^{m}) \ominus \tvk(\kappa)}{\bsDelta}}}\\
@@ -505,7 +473,7 @@ and provided that $\homega(m-\ell) \wcomega(m-\ell)<1$,
 \begin{equation}\label{boundSumsApproxb}
 S_\ell(f) \le \frac{\tS_{\ell,m}(f)}{1 - \homega(m-\ell) \wcomega(m-\ell)}.
 \end{equation}
-The above inequality leads to, by \eqref{err2} and the cone conditions,
+By \eqref{err2} and the cone conditions, the above inequality implies a data-based error bound:
 \begin{align}
 \nonumber
 \biggabs{\int_{\cube} f(\bsx) \, \D \bsx - \hI_m(f) }
@@ -516,9 +484,9 @@ The above inequality leads to, by \eqref{err2} and the cone conditions,
 & \le  \frac{\homega(m) \wcomega(m-\ell)}{1 - \homega(m-\ell) \wcomega(m-\ell)}\tS_{\ell,m}(f)
 \label{SSbd2}
 \end{align}
-With this result, Algorithm \ref{adapalgo} can be defined in terms of this conservative bound. This bound is taking into account the discrete Fourier coefficients of $f$, making it adaptive. 
+Based on this conservative bound an adaptive algorithm is constructed in the next section. 
 
-\subsection{Adaptive Algorithm Based on $\cc$}\label{algorithmsection}
+\section{An Adaptive Algorithm Based for Cones of Integrads}\label{algorithmsection}
 
 Inequality \eqref{SSbd2} suggests the following algorithm. First, choose $\ell_*$ and fix $r:=m-l \in \N$ such that $\homega(r)\wcomega(r)<1$ for $\ell\geq\ell_*$. Then, define
 \[
@@ -527,32 +495,29 @@ Inequality \eqref{SSbd2} suggests the following algorithm. First, choose $\ell_*
 
 The choice of the parameter $r$ is important. Larger $r$ means a bigger $\fC(m)$ although makes the error more dependent on smaller indexed Fourier coefficients.
 
-\begin{algo}[Adaptive Rank-1 Lattices Integration, \texttt{cubLattice\_g}] \label{adapalgo} Fix $r$, $\ell_*$ as described above and $\homega$ and $\wcomega$ describing $\cc$ in \eqref{conecond}. Given a tolerance, $\varepsilon$, do the following:
+\begin{algo}[Adaptive Rank-1 Lattice Cubature, \texttt{cubLattice\_g}] \label{adapalgo} Fix $r$, $\ell_*$ as described above and $\homega$ and $\wcomega$ describing $\cc$ in \eqref{conecond}. Given a tolerance, $\varepsilon$, do the following:
 
 \begin{description}
-\item[\textbf{Step 1.}] According to section \ref{FFT}, compute $\tS_{m-r,m}(f)$.
-\item[\textbf{Step 2.}] Verify if $\fC(m)  \tS_{m-r,m}(f) \le \varepsilon$: If true, return $\hI_m(f)$ defined in \eqref{cubaturedef}. If not, increment $m$ by one, and go to Step 1.
+\item[\textbf{Step 1.}] According to Section \ref{FFT}, compute $\tS_{m-r,m}(f)$.
+\item[\textbf{Step 2.}] Check whether $\fC(m)  \tS_{m-r,m}(f) \le \varepsilon$. If true, return $\hI_m(f)$ defined in \eqref{cubaturedef}. If not, increment $m$ by one, and go to Step 1.
 \end{description}
 \end{algo}
-
-The algorithm described has been coded in MATLAB as \texttt{cubLattice\_g} in base 2, and is intended to appear in the next release for the Guaranteed Automatic Integration Library, \cite{ChoEtal14a}.
-The computational cost is $\Order(m b^m)$ considering the operations of the discrete Fourier transform in addition to the function data points evaluation.
 
 \begin{theorem} \label{adapalgothm} For $m = \min \{m' \ge \ell_*+r : \fC(m')  \tS_{m'-r,m'}(f) \le \varepsilon \}$, Algorithm \ref{adapalgo} is successful whenever $f\in\cc$,
 \[
 \biggabs{\int_{\cube} f(\bsx) \D \bsx - \hI_m(f)} \le \varepsilon.
 \]
-Thus, the number of function data points needed are $b^m$. Defining $m^* = \min \{m' \ge \ell_*+r : \fC(m') [1+ \homega(r) \wcomega(r)] S_{m'-r}(f) \le \varepsilon \}$, we also have $b^m\leq b^{m^*}$. This means that the computational cost can be bounded,
+Thus, the number of function data needed is $b^m$. Defining $m^* = \min \{m' \ge \ell_*+r : \fC(m') [1+ \homega(r) \wcomega(r)] S_{m'-r}(f) \le \varepsilon \}$, we also have $b^m\leq b^{m^*}$. This means that the computational cost can be bounded,
 \[
 \mathrm{cost}\left(\widehat{I}_m,f,\varepsilon\right)\leq \$(f)b^{m^*}+cm^*b^{m^*}
 \]
-where $\$(f)$ is the cost of evaluating $f(x)$ at one data point.
+where $\$(f)$ is the cost of evaluating $f$ at one data point.
 \end{theorem}
 
 \begin{proof}
 By construction, the algorithm must be successful. Recall that the inequality used for building the algorithm is \eqref{SSbd2}.
 
-In order to find the upper bound on the complexity one can obtain, analogously to the result in \eqref{boundSumbsApproxa},
+In order to find the upper bound on the computational cost one can obtain, analogously to the result in \eqref{boundSumbsApproxa},
 \begin{align}
 \nonumber
 \tS_{\ell,m}(f) &= \sum_{\kappa=b^{\ell-1}}^{b^{\ell}-1} \bigabs{ \tf_{m,\kappa}} = \sum_{\kappa=b^{\ell-1}}^{b^{\ell}-1} \biggabs{\hf_{\kappa} + \sum_{\lambda=1}^{\infty} \hf_{\kappa+\lambda b^{m}} \E^{2 \pi \sqrt{-1} \ip{\tvk(\kappa+\lambda b^{m}) \ominus \tvk(\kappa)}{\bsDelta}}}\\
@@ -562,10 +527,9 @@ In order to find the upper bound on the complexity one can obtain, analogously t
 \nonumber
 &\le [1  + \homega(m-\ell) \wcomega(m-\ell)] S_\ell(f). \label{SSbd3}
 \end{align}
-Hence, the bound in \eqref{SSbd2} leads to a new more conservative bound $\fC(m) [1  + \homega(r) \wcomega(r)] S_{m-r}(f)$ implying $
-m \le {\min \{m' \ge \ell_*+r : \fC(m') [1+ \homega(r) \wcomega(r)] S_{m'-r}(f) \le \varepsilon \}}$.
+Replacing $\tS_{\ell,m}(f)$ in the error bound in \eqref{SSbd2} by the right hand side above proves that the choice of $m$ needed to satisfy the tolerance is no greater than  $m^*$ defined above.
 
-In section \ref{FFT}, the computation of $\tS_{m-r,m}(f)$ is described in terms of $\Order(mb^m)$ operations. Thus, the total cost of Algorithm \ref{adapalgo} is,
+In Section \ref{FFT}, the computation of $\tS_{m-r,m}(f)$ is described in terms of $\Order(mb^m)$ operations. Thus, the total cost of Algorithm \ref{adapalgo} is,
 \[
 \mathrm{cost}\left(\widehat{I}_m,f,\varepsilon\right)\leq \$(f)b^{m^*}+cm^*b^{m^*}
 \]
@@ -574,7 +538,7 @@ In section \ref{FFT}, the computation of $\tS_{m-r,m}(f)$ is described in terms 
 
 \section{Numerical Example} \label{secnumexpsec}
 
-With $\texttt{cubLattice\_g}$ implemented, we tested the pricing of a basket European option. Assumptions were: 5 decorrelated stocks with $S_0=100$, $K=100$, $r=1\%$, $\sigma=5\%$ and $T=1$. The algorithm parametrization according to the cone chosen by default was: $\ell_*=6$, $r=4$ and $\fC(m)=3 \times 2^{-m}$.
+Algorithm \ref{adapalgo} has been coded in MATLAB as \texttt{cubLattice\_g} in base 2, and is scheduled to appear in the next release for the Guaranteed Automatic Integration Library, \cite{ChoEtal14a}. We tested $\texttt{cubLattice\_g}$ for the pricing of a basket European option. Assumptions were: 5 decorrelated stocks with $S_0=100$, $K=100$, $r=1\%$, $\sigma=5\%$ and $T=1$. The algorithm parametrization according to the cone chosen by default was: $\ell_*=6$, $r=4$ and $\fC(m)=3 \times 2^{-m}$.
 
 Results are shown in Figure \ref{BasketOption}. On the left, one can compare the predicted error bound in continuous line, with the input error tolerance represented in discontinuous. By definition, the tolerance should be above the prediction, except for budget restrictions. However, the continuous line flattens because we do not allow to use more than $2^{17}$ points. This number comes from the Korobov construction using $17797$ as suggested in \cite{HicEtal00}. Another important remark is that the predicted error might increase with the number of points. Nonetheless, this is only due to the varying random shift taken each time.
 
@@ -590,11 +554,11 @@ a) & b)
 \end{figure}
 
 \section{Discussion and Future Work}
-Quasi-Monte Carlo methods rarely provide guaranteed and adaptive algorithms. Developing a new methodology to bound the absolute error allowed us building an adaptive automatic guaranteed algorithm based on cones of functions. The definition of function cone sets is a challenging new viewpoint. The non convexity of the cone leads to non linear algorithms whose complexity bounds may be hard to find. In this article we also provide an upper bound on the complexity, yet the lower bound remains to be specified. In the future, we also want to link this work to other results provided in the literature by fitting this cone set into more common spaces, like the Korobov spaces. Finally, we are also interested in considering the relative error in our algorithm.
+Quasi-Monte Carlo methods rarely provide guaranteed and adaptive algorithms. Developing a new methodology to bound the absolute error via the discrete Fourier coefficients has allowed us to build an adaptive automatic algorithm guaranteed for cones of integrands. The definition of cone is a challenging new viewpoint. The non-convexity of the cone leads to a nonlinear algorithm and the complexity of the integration problem over this set may be hard to analyze. Our algorithm provides an upper bound on the complexity, but we have not yet obtained a  lower bound. In the future, we also hope to link this work to other results provided in the literature by drawing a correspondence between our cone of integrands and more common spaces of integrands, like the Korobov spaces. Finally, we are also interested in extending our algorithm to accoomodate  a relative error tolerance.
 
 
 \begin{acknowledgement}
-The authors thank Ronald Cools and Dirk Nuyens for organizing MCQMC 2014 and greatly appreciate the suggestions made by Sou-Cheng Choi, Frances Kuo, Lan Jiang, Dirk Nuyens and Yizhi Zhang to improve this manuscript. In addition, also thank Art Owen for the traveling expenses funding.
+The authors thank Ronald Cools and Dirk Nuyens for organizing MCQMC 2014 and greatly appreciate the suggestions made by Sou-Cheng Choi, Frances Kuo, Lan Jiang, Dirk Nuyens and Yizhi Zhang to improve this manuscript. In addition, the first author also thanks Art Owen for partially funding traveling expenses to MCQMC 2014.
 This work was partially supported by US National Science Foundation grants DMS-1115392 and DMS-1357690. 
 \end{acknowledgement}
 
