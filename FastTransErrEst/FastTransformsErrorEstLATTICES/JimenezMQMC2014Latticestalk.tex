@@ -200,7 +200,7 @@ This bilinear operation has the following properties: for all $\bst, \bsx \in \c
 \begin{subequations}
 \begin{gather}
 \ip{\bsk}{\bszero} = \ip{\bszero}{\bsx} = 0,\\
-\ip{\bsk}{a \bsx \oplus \bst} = a\ip{\bsk}{\bsx} + \ip{\bsk}{\bst} \pmod 1 \label{bilinearlinxprop} \\
+\ip{\bsk}{a \bsx \bmod 1 \oplus \bst} = a\ip{\bsk}{\bsx} + \ip{\bsk}{\bst} \pmod 1 \label{bilinearlinxprop} \\
 \ip{a \bsk + \bsl}{\bsx} = a\ip{\bsk}{\bsx} + \ip{\bsl}{\bsx} \pmod 1, \label{bilinearlinkprop}\\
 \ip{\bsk}{\bsx} = 0 \ \forall \bsk \in \Z^d \ \implies \ \bsx=\bszero.\label{bilinearlinzeroprop}
 \end{gather}
@@ -214,7 +214,7 @@ The bilinear operation dedined in \eqref{bilinear} is also used to define the \e
 \begin{align}
 \nonumber
 \cp^{\perp}_m & := \{\bsk \in \Z^d : \ip{\bsk}{\bsz_i} = 0, \ i=0, \ldots, b^m-1\} \\
-&= \{\bsk \in \Z^d : \ip{\bsk}{\bsz_{b^{m-1}}} = 0 \} \qquad \text{by \eqref{zidef}} .\label{dualdef}
+&= \{\bsk \in \Z^d : \ip{\bsk}{\bsz_{b^{m-1}}} = 0 \} \qquad \text{by \eqref{zidef} and \eqref{bilinearlinxprop}} .\label{dualdef}
 \end{align}
 By this definition $\cp^{\perp}_{0}=\Z^d$, and the properties \eqref{latpropb}, \eqref{bilinear}, and \eqref{latpropd}, imply also that the $\cp^{\perp}_m$ are nested subgroups with
 \begin{equation}\label{dualemb}
@@ -301,46 +301,56 @@ Adaptive Algorithm \ref{adapalgo} that is constructed in section \ref{algorithms
 It is seen here that the discrete transform $\tf_m(\bsk)$ equals the integral transform $\hf(\bsk)$, defined in \eqref{Fourierdef}, plus \emph{aliasing} terms corresponding to $\hf(\bsk+\bsl)$ scaled by the shift, where $\bsl \in \cp_{m}^{\perp}\setminus \left\{\bszero\right\}$.
 
 
-To facilitate the calculation of $\tf_m(\bsk)$, we define the map $\tnu_m : \Z^d \to \F_{b^m}$.  This map depends on the choice of the embedded rank-1 lattice node sets defined in \eqref{zbmdef} and \eqref{zidef}.
-\begin{definition} \label{numapdef} For every $\bsk \in \Z^d$, let
-\begin{subequations} \label{numapdefeq}
-\begin{gather}
-\hnu_0(\bsk) = b\ip{\bsk}{\bsz_{1}}, \qquad 
-\hnu_m(\bsk)=b\ip{\bsk}{\bsz_{b^m}}-\ip{\bsk}{\bsz_{b^{m-1}}}, \quad m \in \N, \\
-\tnu_m(\bsk) = \sum_{\ell=0}^{m-1} \hnu_{\ell}(\bsk) b^{\ell}, \quad m \in \N.
-\end{gather}
-\end{subequations}
-\end{definition}
-From this definition it follows that
-\begin{multline} \label{kdotzbm}
-\ip{\bsk}{\bsz_{b^m}} = b^{-1} \hnu_m(\bsk) + b^{-1}  \ip{\bsk}{\bsz_{b^{m-1}}} = b^{-1} \hnu_m(\bsk) + b^{-2} \hnu_{m-1}(\bsk) + b^{-2} \ip{\bsk}{\bsz_{b^{m-2}}} \\
-=  b^{-1} \hnu_m(\bsk) + b^{-2} \hnu_{m-1}(\bsk) + \cdots + b^{-m-1} \hnu_{0}(\bsk) = \sum_{\ell=0}^m \hnu_{\ell}(\bsk) b^{\ell-m-1} \\
-= b^{-m-1} \tnu_{m+1}(\bsk) ,
+To facilitate the calculation of $\tf_m(\bsk)$, we define the map $\tnu_m : \Z^d \to \F_{b^m}$ as follows:
+\begin{equation} \label{kdotzbm}
+\tnu_{m}(\bsk) := b^{m} \ip{\bsk}{\bsz_{b^{m-1}}}, \qquad m \in \N.
+\end{equation}
+This implies that $\ip{\bsk}{\bsz_i}$, which appears in the cubature formula used to compute $\tf_m(\bsk)$, may be written as
+\begin{multline} \label{kdotzi}
+\ip{\bsk}{\bsz_i} = \ip{\bsk}{\sum_{\ell=0}^{m-1} i_\ell \bsz_{b^{\ell}}} = \sum_{\ell=0}^{m-1} i_\ell \ip{\bsk}{\bsz_{b^{\ell}}} \bmod 1 \\
+=\sum_{\ell=0}^{m-1} i_\ell \tnu_{\ell+1}(\bsk)  b^{-\ell-1} \bmod 1.
 \end{multline}
-and so
-\begin{equation*}
-\ip{\bsk}{\bsz_i} = \ip{\bsk}{\sum_{\ell=0}^{m-1} i_\ell \bsz_{b^{\ell}}} = \sum_{\ell=0}^{m-1} i_\ell \ip{\bsk}{\bsz_{b^{\ell}}} \bmod 1 =\sum_{\ell=0}^{m-1} i_\ell \tnu_{\ell+1}(\bsk)  b^{-\ell-1} \bmod 1.
-\end{equation*}
+
+The map $\tnu_m$ depends on the choice of the embedded rank-1 lattice node sets defined in \eqref{zbmdef} and \eqref{zidef}.  We can confirm that the right hand side of this definition lies in $\F_{b^m}$ by appealing to  \eqref{zbmdef} and recalling that the $\bsa_\ell$ are integer vectors:
+\[
+b^{m} \ip{\bsk}{\bsz_{b^{m-1}}} = b^m[b^{-1} \bsk^T\bsa_{m-1} + \cdots + b^{-m+1}\bsk^T \bsa_{1} \bmod 1] \in \F_{b^m}.
+\]
+Moreover, note that for all $m\in \N$
+\begin{align*}
+\tnu_{m+1}(\bsk) - \tnu_{m}(\bsk) & = b^{m+1} \ip{\bsk}{\bsz_{b^{m}}} - b^{m} \ip{\bsk}{\bsz_{b^{m-1}}} \\
+&=b^{m}[ b\ip{\bsk}{\bsz_{b^{m}}} - \ip{\bsk}{\bsz_{b^{m-1}}}]\\
+&=b^{m}[ a + \ip{\bsk}{b\bsz_{b^{m}} \bmod 1}  - \ip{\bsk}{\bsz_{b^{m-1}}}], \quad \text{for some }a \in \F_b \\
+&=b^{m}[ a + \ip{\bsk}{\bsz_{b^{m-1}}}  - \ip{\bsk}{\bsz_{b^{m-1}}}], \quad  \text{by \eqref{latpropb}} \\
+&=a b^{m} \quad \text{for some }a \in \F_b.
+\end{align*}
+For all $\nu\in \N_0$ with proper $b$-ary expansion $\nu= \nu_0 + \nu_1 b + \cdots \in \N_0$, let $\onu_{m}$ denote the integer obtained by keeping only the first $m$ terms of its $b$-ary expansion, i.e., 
+\begin{equation}
+\label{onudef}
+\onu_{m} := \nu_0 + \cdots + \nu_{m-1}b^{m-1} = [(b^{-m} \nu) \bmod 1] b^{m} \in \F_{b^{m}}
+\end{equation}
+The derivation above means that if $\tnu_{m}(\bsk) = \nu \in \F_{b^m}$, then
+\[
+\tnu_\ell(\bsk)=\onu_{\ell}, \qquad \ell=1, \ldots, m.
+\] 
 
 Letting $y_i:=f(\bsz_{i}\oplus \bsDelta)$ for $i\in \N_0$, the discrete Fourier transform defined in \eqref{tfdef} can now be written as follows:
 \begin{align}
 \nonumber
 \tf_m(\bsk)
 &:= \hI_m\left( \E^{-2 \pi \sqrt{-1} \ip{\bsk}{\cdot}} f(\cdot) \right) = \frac{1}{b^m}\sum_{i=1}^{b^m-1} \E^{-2 \pi \sqrt{-1} \ip{\bsk}{\bsz_{i}\oplus \bsDelta}} y_i \\
-&= \E^{-2 \pi \sqrt{-1} \ip{\bsk}{\bsDelta}} Y_{m}(\tnu(\bsk)),
-\intertext{where for all $\nu\in \N_0$ with proper $b$-ary explansion $\nu= \nu_0 + \nu_1 b + \cdots \in \N_0$}
+&= \E^{-2 \pi \sqrt{-1} \ip{\bsk}{\bsDelta}} Y_{m}(\tnu_m(\bsk)),
+\intertext{where for all $\nu\in \N_0$}
 \nonumber
-Y_m (\nu) & := \frac{1}{b^m} \sum_{i_m-1=0}^{b-1} \cdots \sum_{i_{0}=0}^{b-1} y_{i_0 + \cdots +i_{m-1} b^{m-1}} \exp\left(-2 \pi \sqrt{-1}\sum_{\ell=0}^{m-1} i_\ell \onu_{\ell+1}  b^{-\ell-1} \right),  \\
-\label{onudef}
-\onu_{m}& := \nu_0 + \cdots + \nu_{m-1}b^{m-1} = [(b^{-m} \nu) \bmod 1] b^{m}.
+Y_m (\nu) & := \frac{1}{b^m} \sum_{i_m-1=0}^{b-1} \cdots \sum_{i_{0}=0}^{b-1} y_{i_0 + \cdots +i_{m-1} b^{m-1}} \exp\left(-2 \pi \sqrt{-1}\sum_{\ell=0}^{m-1} i_\ell \onu_{\ell+1}  b^{-\ell-1} \right)\\
+\nonumber
+&=Y_m(\onu_m).
 \end{align}
-
-The quantity $Y_m(\nu)$, $\nu \in \F_{b^m}$ can be computed more efficiently via some intermediate quantities. For $p \in \{0, \ldots, m\}$, $m,\nu \in \N_0$ let
+The quantity $Y_m(\nu)$, $\nu \in \F_{b^m}$, which is essentially the discrete Fourier transform, can be computed efficiently via some intermediate quantities. For $p \in \{0, \ldots, m\}$, $m,\nu \in \N_0$ let
 \begin{align*}
 \MoveEqLeft{Y_{m,m-p}(\nu,i_{m-p}, \ldots, i_{m-1})} \\
 & :=\frac{1}{b^{m-p}} \sum_{i_{m-p-1}=0}^{b-1} \cdots  \sum_{i_{0}=0}^{b-1} y_{i_0 + \cdots + i_{m-1} b^{m-1}} \exp\left( 2 \pi \sqrt{-1}\sum_{\ell=0}^{m-p-1} i_\ell \onu_{\ell+1}  b^{-\ell-1}  \right).
 \end{align*}
-Note that $Y_{m,m-p}(\nu,i_{m-p}, \ldots, i_{m-1})=Y_{m,m-p}(\onu_{m-p},i_{m-p}, \ldots, i_{m-1})$, and thus takes on only $b^m$ distinct values.  Also note that $Y_{m,m-p}(\nu)= Y_m(\nu)$. The following iterative procedure then allows $Y_m(\nu)$ to be computed efficiently.  For $p=m, m-1, \ldots, 0$, compute
+Note that $Y_{m,m-p}(\nu,i_{m-p}, \ldots, i_{m-1})=Y_{m,m-p}(\onu_{m-p},i_{m-p}, \ldots, i_{m-1})$, and thus takes on only $b^m$ distinct values.  Also note that $Y_{m,m}(\nu)= Y_m(\nu)$. For $p=m, m-1, \ldots, 0$, compute
 \begin{align*}
 \MoveEqLeft{Y_{m,m-p+1}(\nu,i_{m-p+1}, \ldots, i_{m-1})} \\
 & =\frac{1}{b^{m-p+1}} \sum_{i_{m-p}=0}^{b-1} \cdots  \sum_{i_{0}=0}^{b-1} y_{i_0 + \cdots + i_{m-1} b^{m-1}} \exp\left( 2 \pi \sqrt{-1} \sum_{\ell=0}^{m-p} i_\ell \onu_{\ell+1}  b^{-\ell-1}   \right)\\
@@ -354,16 +364,14 @@ For each $p$ one must perform $\Order(2^m)$ operations, so the total computation
 As seen in equation \eqref{err1}, the absolute error is bounded by a sum of the absolute value of the Fourier coefficients in the dual lattice. Note that increasing the number of points in our lattice, i.e. increasing $m$, decreases the number of summands, and thus the sum. However, one can not capture how fast is this error decreasing with respect to $m$.  Rather than deal with a sum over the vector wavenumbers, it is more convenient to sum over scalar non-negative integers.  Thus, we define another mapping $\tvk: \N_0 \to \Z^d$.
 
 \begin{definition} \label{wavenummapdef} Given a sequence of points in embedded lattices, $\cp_{\infty} = \{\bsz_i\}_{i=0}^{\infty}$ define $\tvk: \N_0 \to \Z^d$ \emph{onto} recursively as follows:
-\begin{description}
-\item[\textbf{Step 1.}] $\tvk(0)=\bszero$.
-
-\item[\textbf{Step 2.}] For $m=1, 2, \ldots$ \\
-\hspace*{1.3cm} For $\kappa = b^{m-1}, \ldots, b^{m} -1 $, choose $\tvk(\kappa)$ to be an element of
-\[
-\{\bsk \in  \Z^d : \tnu_{m}(\bsk)=\kappa \} \setminus \{\tvk(\okappa_1), \ldots, \tvk(\okappa_{m-1})\},
-\]
-\hspace*{1.3cm} where $\okappa_{m}$ is defined analogously to $\onu_{m}$ in \eqref{onudef}.
-\end{description}
+\begin{tabbing}
+\hspace{0.5cm} \= Set $\tvk(0)=\bszero$ \+ \\
+For $m\in \N_0$ \\
+\hspace{0.3cm} \= For $\kappa \in \F_{b^m}$,  \+ \\
+\hspace{0.3cm} \= Let $a\in \F_b$ be such that $\tnu_{m+1}(\tvk(\kappa))= ab^m + \tnu_{m}(\tvk(\kappa))$. \+ \\
+Choose $\tvk(\kappa+a b^m) \in \{\bsk \in  \Z^d : \tnu_{m+1}(\bsk)=\tnu_{m}(\tvk(\kappa))\}$ if $a\ne 0$. \\
+Choose $\tvk(\kappa+a' b^m) \in \{\bsk \in  \Z^d : \tnu_{m+1}(\bsk)=\tnu_{m}(\tvk(\kappa))+a' b^m \}$, \\ \` for  $a'\in {1, \ldots, b-1}\setminus \{a\}$.
+\end{tabbing}
 \end{definition}
 
 This mapping is not uniquely defined and one has the flexibility to choose part of it. For example, defining a norm such as in \cite[Chap. 4]{SloJoe94} one can assign larger values of $\kappa$ to higher frequencies $\bsk$. In the end, our goal is to define this mapping such that $\hf(\tvk(\kappa))\rightarrow 0$ as $\kappa \to \infty$.
@@ -371,7 +379,52 @@ This mapping is not uniquely defined and one has the flexibility to choose part 
 {\bf need to show that this can work, i.e, the set is not empty} 
 
 \begin{lemma} \label{tvklemma}
-The following properties hold for the maps defined in Definitions \ref{numapdef} and \ref{wavenummapdef}:
+The map in Definition  \ref{wavenummapdef} has the property that for $m \in \N_0$ and $\kappa \in \F_{b^m}$,
+\[
+\{\tvk(\kappa + \lambda b^m)\}_{\lambda=0}^{\infty} =\{\bsl \in \Z^d : \tvk(\kappa) - \bsl \in \cp_m^{\perp} \}.
+\]
+\end{lemma}
+\begin{proof} This statement holds trivially for $m=0$ and $\kappa=0$.  For $m \in \N$ it is noted that
+\begin{align}
+\nonumber
+\bsk-\bsl \in \cp_m^{\perp} & \iff \ip{\bsk-\bsl}{\bsz_{b^{m-1}}}=0 \qquad \text{by \eqref{dualdef}} \\
+\nonumber
+& \iff \ip{\bsk}{\bsz_{b^{m-1}}}=\ip{\bsl}{\bsz_{b^{m-1}}} \qquad \text{by \eqref{bilinearlinkprop}}\\
+\nonumber
+& \iff b^{-m}\tnu_m(\bsk) =b^{-m}\tnu_m(\bsl) \qquad \text{by \eqref{kdotzbm}} \\
+& \iff \tnu_m(\bsk) =\tnu_m(\bsl). \label{kminlinPperp}
+\end{align}
+This implies that for all $m \in \N$ and $\kappa \in \F_{b^m}$,
+\begin{equation}
+\{\bsl \in \Z^d : \tnu_m(\bsl) =  \tnu_m(\tvk_m(\kappa))\} = \{\bsl \in \Z^d : \tvk(\kappa) - \bsl \in \cp_m^{\perp} \}.
+\end{equation}
+
+By Definition \ref{wavenummapdef} it follows that for $m \in \N$ and $\kappa \in \F_{b^m}$,
+\begin{align}
+\nonumber
+\{\tvk(\kappa +\lambda b^m)\}_{\lambda=0}^{b-1} 
+& \subset \{\bsk \in  \Z^d : \tnu_{m+1}(\bsk)=\kappa+a b^m, \ a \in \F_b \} \\
+\nonumber
+& = \{\bsk \in  \Z^d : \tnu_{m}(\bsk)=\tnu_m(\tvk(\kappa)) \}. 
+\intertext{Recursion on the right side implies}
+\nonumber
+\{\tvk(\kappa +\lambda b^m)\}_{\lambda=0}^{b-1}& \subseteq \{\bsk \in  \Z^d : \tnu_{\ell}(\bsk)=\tnu_\ell(\tvk(\okappa_\ell)) \}, \qquad \forall \ell=1, \ldots, m,
+\intertext{Recursion on the left side implies} 
+\{\tvk(\kappa +\lambda b^m)\}_{\lambda=0}^{\infty}& \subseteq \{\bsk \in  \Z^d : \tnu_{m}(\bsk)=\tnu_m(\tvk(\kappa)) \}. \label{oneway}
+\end{align}
+
+Now suppose that $\bsl$ is any element of $\{\bsk \in  \Z^d : \tnu_{m}(\bsk)=\tnu_m(\tvk(\kappa)) \}$.  Since the map $\tvk$ is onto, there exists some $\kappa' \in \N_0$ such that $\bsl=\tvk(\kappa')$. Choose $\lambda'$ such that $\kappa'=\overline{\kappa'}_m +\lambda b^m$.  According to \eqref{oneway} it follows that 
+
+
+
+To prove b), consider any fixed $\lambda \in \N_0$,  and let $m'$ be the non-negative integer no smaller than $m$ such that $b^{m'-1} \le \kappa + \lambda b^m \le b^{m'}-1$. By Definition  \ref{wavenummapdef} it follows that $\tnu_{m'}(\tvk(\kappa + \lambda b^m))=\kappa + \lambda b^m$.  Thus $\tnu_{m}(\tvk(\kappa + \lambda b^m))=\kappa=\tnu_{m}(\tvk(\kappa))$, which by part a) implies that $\tvk(\kappa)-\tvk(\kappa + \lambda b^m) \in \cp_m^{\perp}$.  Going the other direction
+
+\end{proof}
+
+
+
+\begin{lemma} \label{tvklemma}
+For the map defined in Definitions \ref{numapdef} and \ref{wavenummapdef}:
 \begin{enumerate}
 \renewcommand{\labelenumi}{\alph{enumi})}
 \item $\bsk-\bsl \in \cp_m^{\perp}$ iff $\tnu_m(\bsk)=\tnu_m(\bsl)$, and 
