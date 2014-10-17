@@ -221,7 +221,7 @@ By this definition $\cp^{\perp}_{0}=\Z^d$, and the properties \eqref{latpropb}, 
 \Z^d=\cp^{\perp}_{0}\supseteq\dots\supseteq\cp^{\perp}_{m}\supseteq\dots\supseteq\cp^{\perp}_{\infty}=\{\bszero\}.
 \end{equation}
 
-For finite node $m$ the dual lattice $\cp^{\perp}_{m}$ contains infinitely many points. Figure \ref{Latticefig} shows an example of a rank-1 lattice node set with $64$ points in dimension $3$ and its dual lattice. The parameters defining this node set are is $b=2$, $m=6$, and $\bsz_{32}=(1,3,7)/64$.
+For finite node $m$ the dual lattice $\cp^{\perp}_{m}$ contains infinitely many points. Figure \ref{Latticefig} shows an example of a rank-1 lattice node set with $64$ points in dimension $3$ and its dual lattice. The parameters defining this node set are is $b=2$, $m=6$, and $\bsz_{32}=(1,27,15)/64$.
 \begin{figure}[h!]
 \centering
 \begin{tabular}{>{\centering}p{5cm}>{\centering}p{5cm}}
@@ -229,7 +229,7 @@ For finite node $m$ the dual lattice $\cp^{\perp}_{m}$ contains infinitely many 
 \includegraphics[width=5cm]{Images/DualLattice64.eps}\tabularnewline
 a) & b)
 \end{tabular}
-\caption{Plots of a) the node set $\cp_6$, and b) some of the dual lattice, $\cp_6^{perp} \cup [-10,10]^3$.}\label{Latticefig}
+\caption{Plots of a) the node set $\cp_6$, and b) some of the dual lattice, $\cp_6^{\perp} \cap [-10,10]^3$.}\label{Latticefig}
 \end{figure}
 
 \section{Fourier Series}\label{secfourierseries}
@@ -521,20 +521,38 @@ In section \ref{FFT}, the computation of $\tS_{m-r,m}(f)$ is described in terms 
 
 \section{Numerical Example} \label{secnumexpsec}
 
-With $\texttt{cubLattice\_g}$ implemented, we tested the pricing of a basket European option. Assumptions were: 5 decorrelated stocks with $S_0=100$, $K=100$, $r=1\%$, $\sigma=5\%$ and $T=1$. The algorithm parametrization according to the cone chosen by default was: $\ell_*=6$, $r=4$ and $\fC(m)=3 \times 2^{-m}$.
+We implemented $\texttt{cubLattice\_g}$ and tested the pricing of the Asian call for the geometric Brownian motion in dimensions 1, 2,4,8,16,32 and 64. Each dimension was chosen 
+ of a basket European option. The algorithm parametrization according to the cone chosen by default was: $\ell_*=6$, $r=4$ and $\fC(m)=5 \times 2^{-m}$.
 
-Results are shown in Figure \ref{BasketOption}. On the left, one can compare the predicted error bound in continuous line, with the input error tolerance represented in discontinuous. By definition, the tolerance should be above the prediction, except for budget restrictions. However, the continuous line flattens because we do not allow to use more than $2^{17}$ points. This number comes from the Korobov construction using $17797$ as suggested in \cite{HicEtal00}. Another important remark is that the predicted error might increase with the number of points. Nonetheless, this is only due to the varying random shift taken each time.
+We have tried \texttt{cubSobol\_g} on an example from \cite{Kei96}:
+\begin{equation} \label{KeisterEx}
+I=\int_{\R^d} \E^{-\norm{\bst}^2} \cos(\norm{\bst}) \, \D \bst 
+= \pi^{d/2}\int_{\cube} \cos\left(\sqrt{\frac 12 \sum_{j=1}^d [\Phi^{-1}(x_j)]^2} \right) \, \D \bsx,
+\end{equation}
+where $\Phi$ is the standard Gaussian distribution function.  We generated $1000$ IID random values of the dimension $d=\lfloor \E^D \rfloor$ with $D$ being uniformly distributed between $0$ and $\log(20)$.  Each time \texttt{cubSobol\_g} was run, a different randomized Sobol' sequence was used.  The tolerance was met about $97\%$ of the time.  Failures were more likely among the higher dimensions.
 
-On the right plot one can appreciate the price obtained together with the tolerance bounds. This bounds on the error are only guaranteed if the function lies in the cone parametrized. Although we did not know the coefficients true decay, the error intervals in the graph seem to be consistent, i.e. the intersection of all the tolerance intervals is not empty.
+Results are shown in Figure \ref{geoAsianmean}. On the left, one can compare the predicted error bound in continuous line, with the input error tolerance represented in discontinuous. By definition, the tolerance should be above the prediction, except for budget restrictions. However, the continuous line flattens because we do not allow to use more than $2^{17}$ points. This number comes from the Korobov construction using $17797$ as suggested in \cite{HicEtal00}. Another important remark is that the predicted error might increase with the number of points. Nonetheless, this is only due to the varying random shift taken each time.
+
 \begin{figure}[h!]
 \centering
-\begin{tabular}{>{\centering}p{5cm}>{\centering}p{5cm}}
-\includegraphics[width=5cm]{Images/Multicall_conv.eps} &
-\includegraphics[width=5cm]{Images/Multicall_error.eps}\tabularnewline
-a) & b)
-\end{tabular}
-\caption{a) Tolerance against predicted error, b) Price obtained with its tolerance bounds. \label{BasketOption}}
+\includegraphics[width=7cm]{Images/geomeancubLatticeErrTime_d_64.eps} 
+\caption{Tolerance against predicted error, b) Price obtained with its tolerance bounds. \label{geoAsianmean}}
 \end{figure}
+
+%With $\texttt{cubLattice\_g}$ implemented, we tested the pricing of a basket European option. Assumptions were: 5 decorrelated stocks with $S_0=100$, $K=100$, $r=1\%$, $\sigma=5\%$ and $T=1$. The algorithm parametrization according to the cone chosen by default was: $\ell_*=6$, $r=4$ and $\fC(m)=3 \times 2^{-m}$.
+%
+%Results are shown in Figure \ref{BasketOption}. On the left, one can compare the predicted error bound in continuous line, with the input error tolerance represented in discontinuous. By definition, the tolerance should be above the prediction, except for budget restrictions. However, the continuous line flattens because we do not allow to use more than $2^{17}$ points. This number comes from the Korobov construction using $17797$ as suggested in \cite{HicEtal00}. Another important remark is that the predicted error might increase with the number of points. Nonetheless, this is only due to the varying random shift taken each time.
+%
+%On the right plot one can appreciate the price obtained together with the tolerance bounds. This bounds on the error are only guaranteed if the function lies in the cone parametrized. Although we did not know the coefficients true decay, the error intervals in the graph seem to be consistent, i.e. the intersection of all the tolerance intervals is not empty.
+%\begin{figure}[h!]
+%\centering
+%\begin{tabular}{>{\centering}p{5cm}>{\centering}p{5cm}}
+%\includegraphics[width=5cm]{Images/Multicall_conv.eps} &
+%\includegraphics[width=5cm]{Images/Multicall_error.eps}\tabularnewline
+%a) & b)
+%\end{tabular}
+%\caption{a) Tolerance against predicted error, b) Price obtained with its tolerance bounds. \label{BasketOption}}
+%\end{figure}
 
 \section{Discussion and Future Work}
 Quasi-Monte Carlo methods rarely provide guaranteed and adaptive algorithms. Developing a new methodology to bound the absolute error allowed us building an adaptive automatic guaranteed algorithm based on cones of functions. The definition of function cone sets is a challenging new viewpoint. The non convexity of the cone leads to non linear algorithms whose complexity bounds may be hard to find. In this article we also provide an upper bound on the complexity, yet the lower bound remains to be specified. In the future, we also want to link this work to other results provided in the literature by fitting this cone set into more common spaces, like the Korobov spaces. Finally, we are also interested in considering the relative error in our algorithm.
