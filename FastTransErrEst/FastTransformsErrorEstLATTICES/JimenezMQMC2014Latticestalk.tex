@@ -154,11 +154,11 @@ to approximate multidimensional integrals over the unit cube,
 \[
 \int_{\cube} f(\bsx) \, \dif \bsx.
 \]
-Integrals over more general domains may often be accommodated by a transformation of the integration variable. QMC methods are widely used because they do not suffer from a \textit{curse of dimensionality}. For example, if $d \ge 5$, QMC methods with an error of $\Order(n^{-(1-\delta)})$ have a faster convergence rate than the tensor product composite Simpson's rule, which has error of $\Order(n^{-4/d})$.
+Integrals over more general domains may often be accommodated by a transformation of the integration variable. QMC methods are widely used because they do not suffer from a \textit{curse of dimensionality}. For example, if $d \ge 5$, QMC methods with an error of $\Order(n^{-(1-\delta)})$ have a faster convergence rate than the tensor product composite Simpson's rule, which has error of $\Order(n^{-4/d})$. Assumptions under which the strong tractability of QMC methods occur can be found in \cite{HicWoz99}.
 
 The convergence rate $\Order(n^{-(1-\delta)})$ does not give enough information about the absolute error to determine how large $n$ must be to satisfy a given error tolerance, $\varepsilon$. The objective of this research is to develop a guaranteed, QMC algorithm based on rank-1 lattices that determines $n$ adaptively by calculating a data-driven upper bound on the absolute error. The Koksma-Hlawka inequality is impractical for this purpose because it requires the total variation of the integrand. Our data-driven bound is expressed in terms of the integrand's discrete Fourier coefficients. 
 
-Sections \ref{secrank1lat} and \ref{secfourierseries}, describe the group structure of rank-1 lattices and how the complex exponential functions are an appropriate basis for these nodes. For computation purposes, there is also an explanation of how to obatain the discrete Fourier transform $f$ via a Fast Fourier Transform, with an $\Order(n \log(n))$ computational cost.  The new contributions are described in section \ref{secalgo}. Initially, a mapping from $\N$ to the space of wavenumbers, $\Z^d$, is defined according to constraints given by the structure of our nodes. With this mapping, we define a set of integrands for which our new adaptive algorithm is designed.  This set is defined in terms of cone conditions satisfied by the Fourier coefficients of the integrands. These conditions make it possible to derive an upper bound on the rank-1 lattice rule error in terms of the discrete Fourier coefficients, which can be used to construct an adaptive algorithm.  An upper bound on the computational cost of this algorithm is derived. Finally, there is an example of option pricing using the MATLAB implementation of our algorithm, \texttt{cublattice\_g}, which will appear in the next release of the Guaranteed Automatic Integration Library \cite{ChoEtal14a}.  A parallel development for Sobol' cubature is given in \cite{HicJim16a}.
+Sections \ref{secrank1lat} and \ref{secfourierseries}, describe the group structure of rank-1 lattices and how the complex exponential functions are an appropriate basis for these nodes. For computation purposes, there is also an explanation of how to obtain the discrete Fourier transform of $f$ via a Fast Fourier Transform, with an $\Order(n \log(n))$ computational cost.  The new contributions are described in Section \ref{secalgo}. Initially, a mapping from $\N$ to the space of wavenumbers, $\Z^d$, is defined according to constraints given by the structure of our nodes. With this mapping, we define a set of integrands for which our new adaptive algorithm is designed.  This set is defined in terms of cone conditions satisfied by the Fourier coefficients of the integrands. These conditions make it possible to derive an upper bound on the rank-1 lattice rule error in terms of the discrete Fourier coefficients, which can be used to construct an adaptive algorithm.  An upper bound on the computational cost of this algorithm is derived. Finally, there is an example of option pricing using the MATLAB implementation of our algorithm, \texttt{cublattice\_g}, which will appear in the next release of the Guaranteed Automatic Integration Library \cite{ChoEtal14a}.  A parallel development for Sobol' cubature is given in \cite{HicJim16a}.
 
 \section{Rank-1 Integration Lattices}\label{secrank1lat}
 
@@ -170,12 +170,12 @@ Specifically, the sequence $\bsz_1, \bsz_b, \bsz_{b^2},  \ldots \in \cube$ is ch
 \begin{subequations} \label{zbmdef}
 \begin{gather} 
 \bsz_1 = b^{-1} \bsa_1, \qquad \bsa_1 \in \{1, \ldots, b-1\}^{d}, \\
-\bsz_{b^m} = b^{-1}(\bsz_{b^{m-1}}+\bsa_m)= b^{-1}\bsa_m + \cdots + b^{-m} \bsa_1, \qquad \bsa_m \in \F_b^{d}, \quad m \in \N.
+\bsz_{b^m} = b^{-1}(\bsz_{b^{m-1}}+\bsa_m)= b^{-1}\bsa_m + \cdots + b^{-m} \bsa_1, \qquad \bsa_m \in \F_b^{d}, \quad m \in \N\setminus\{1\}.
 \end{gather}
 \end{subequations}
 From this definition it follows that
 \begin{equation} 
-b\bsz_{b^m} \bmod {1} =\bsz_{b^{m-1}}, \quad b^{m}\bsz_{b^{m-1}} \bmod {1} = \bszero \qquad \forall m \in \N ,\label{latpropb}
+b\bsz_{b^m} \bmod {1} =\bsz_{b^{m-1}}, \quad b^{m}\bsz_{b^{m}} \bmod {1} = \bszero \qquad \forall m \in \N ,\label{latpropb}
 \end{equation}
 Next, for any $i \in \N$ with proper $b$-ary expansion $i=i_0+i_1 b + i_2 b^2 + \cdots$, and $m=\lfloor \log_b(i) \rfloor+1$ define 
 \begin{multline} \label{zidef}
@@ -187,21 +187,21 @@ where \eqref{latpropb} was used.  This means that node set $\cp_m$ defined above
 \cp_m:= \{\bsz_i\}_{i=0}^{b^m-1} = \bigg \{ \bsz_{b^{m-1}} \sum_{\ell=0}^{m-1} i_\ell b^{m-1-\ell} : i_0, \ldots , i_{m-1} \in \F_b \bigg \} = \left\{ j \bsz_{b^{m-1}} : j \in \F_{b^m} \right \}.
 \]
 
-Integration lattices, $\lattice$, are defined as discrete groups in $\R^d$ containing $\Z^d$ and closed under normal addition \cite[Sec. 2.7-2.8]{SloJoe94}.  The node set of an integration lattice is its intersection with the half-open unit cube, $\cp:=\lattice \cap \Z^d$.  The node set is also a group, but this time under addition modulo 1, i.e., the addition operator $\oplus:\cube \times \cube \to \cube$ defined by $\bsx\oplus\bsy:=\bsx+\bsy\pmod 1$, and where $\ominus \bsx:=\bsone-\bsx$.
+Integration lattices, $\lattice$, are defined as discrete groups in $\R^d$ containing $\Z^d$ and closed under normal addition \cite[Sec. 2.7-2.8]{SloJoe94}.  The node set of an integration lattice is its intersection with the half-open unit cube, $\cp:=\lattice \cap \cube$. In this case, $\cp$ is also a group, but this time under addition modulo 1, i.e., the addition operator $\oplus:\cube \times \cube \to \cube$ defined by $\bsx\oplus\bsy:=\bsx+\bsy\bmod 1$, and where $\ominus \bsx:=\bsone-\bsx$.
 
 The sets $\cp_m$ defined above are embedded node sets of integration lattices. The sufficiency of a single generating vector for each $\cp_m$ is the reason that $\cp_m$ is called the node set of a rank-1 lattice. 
 The theoretical properties of good embedded rank-1 lattices for cubature are discussed in \cite{HicNie03a}.  
  
 The set of $d$-dimensional integer vectors, $\Z^d$, is used to index Fourier series expressions for the integrands, and $\Z^d$ is also known as the wavenumber space. We define the bilinear operation $\ip{\cdot}{\cdot}: \Z^d \times \cube \to [0,1)$ as the dot product modulo $1$: 
 \begin{equation}\label{bilinear}
-\ip{\bsk}{\bsx}:=\bsk^T\bsx\pmod 1 \qquad \forall \bsk \in \Z^d, \ \bsx \in \cube.
+\ip{\bsk}{\bsx}:=\bsk^T\bsx\bmod 1 \qquad \forall \bsk \in \Z^d, \ \bsx \in \cube.
 \end{equation}
 This bilinear operation has the following properties: for all $\bst, \bsx \in \cube$, $\bsk, \bsl \in \Z^d$, and $a \in \Z$, it follows that
 \begin{subequations}
 \begin{gather}
 \ip{\bsk}{\bszero} = \ip{\bszero}{\bsx} = 0,\\
-\ip{\bsk}{a \bsx \bmod 1 \oplus \bst} = a\ip{\bsk}{\bsx} + \ip{\bsk}{\bst} \pmod 1 \label{bilinearlinxprop} \\
-\ip{a \bsk + \bsl}{\bsx} = a\ip{\bsk}{\bsx} + \ip{\bsl}{\bsx} \pmod 1, \label{bilinearlinkprop}\\
+\ip{\bsk}{a \bsx \bmod 1 \oplus \bst} = a\ip{\bsk}{\bsx} + \ip{\bsk}{\bst} \bmod 1 \label{bilinearlinxprop} \\
+\ip{a \bsk + \bsl}{\bsx} = a\ip{\bsk}{\bsx} + \ip{\bsl}{\bsx} \bmod 1, \label{bilinearlinkprop}\\
 \ip{\bsk}{\bsx} = 0 \ \forall \bsk \in \Z^d \ \implies \ \bsx=\bszero.\label{bilinearlinzeroprop}
 \end{gather}
 \end{subequations}
@@ -240,7 +240,7 @@ The $\Lebesgue_2$ inner product is defined as
 \[
 \ip[2]{f}{g} = \int_{\cube} f(\bsx) \overline{g(\bsx)} \, \dif \bsx.
 \]
-The complex exponential functions, $\{\E^{2 \pi \sqrt{-1} \ip{\bsk}{\cdot}}\}_{\bsk \in \Z^d}$ form a  the complete orthonormal \emph{basis} for $\Lebesgue_2(\cube)$.  Any function in $\Lebesgue_2$ may be written in series form as
+The complex exponential functions, $\{\E^{2 \pi \sqrt{-1} \ip{\bsk}{\cdot}}\}_{\bsk \in \Z^d}$ form a complete orthonormal \emph{basis} for $\Lebesgue_2(\cube)$. Then, any function in $\Lebesgue_2$ may be written in series form as
 \begin{equation} \label{Fourierdef}
 f(\bsx) = \sum_{\bsk \in \Z^d} \hf(\bsk) \E^{2 \pi \sqrt{-1} \ip{\bsk}{\bsx}}, \quad \text{where } \hf(\bsk) = \ip[2]{f}{\E^{2 \pi \sqrt{-1} \ip{\bsk}{\cdot}}},
 \end{equation}
@@ -282,7 +282,7 @@ Note from this definition that $\hI_m\left(\E^{2 \pi \sqrt{-1} \ip{\bsk}{\cdot}}
 
 \section{The Fast Fourier Transform for Function Values at Rank-1 Lattice Node Sets}\label{FFT}
 
-Adaptive Algorithm \ref{adapalgo} that is constructed in section \ref{algorithmsection} has an error analysis based on the above expression.  However, since the true Fourier coefficients are unknown, they must be approximated by the discrete Fourier coefficients, which are defined as follows:
+Adaptive Algorithm \ref{adapalgo} that is constructed in Section \ref{algorithmsection} has an error analysis based on the above expression.  However, since the true Fourier coefficients are unknown, they must be approximated by the discrete Fourier coefficients, which are defined as follows:
 \begin{subequations} \label{tfdefalias}
 \begin{align}
 \tf_m(\bsk)
@@ -302,9 +302,11 @@ It is seen here that the discrete transform $\tf_m(\bsk)$ equals the integral tr
 
 
 To facilitate the calculation of $\tf_m(\bsk)$, we define the map $\tnu_m : \Z^d \to \F_{b^m}$ as follows:
-\begin{equation} \label{kdotzbm}
-\tnu_{m}(\bsk) := b^{m} \ip{\bsk}{\bsz_{b^{m-1}}}, \qquad m \in \N.
-\end{equation}
+\begin{align} \label{kdotzbm}
+\nonumber
+\tnu_{0}(\bsk) &:= 0, \\
+\tnu_{m}(\bsk) &:= b^{m} \ip{\bsk}{\bsz_{b^{m-1}}}, \qquad m \in \N.
+\end{align}
 This implies that $\ip{\bsk}{\bsz_i}$, which appears in the cubature formula used to compute $\tf_m(\bsk)$, may be written as
 \begin{multline} \label{kdotzi}
 \ip{\bsk}{\bsz_i} = \ip{\bsk}{\sum_{\ell=0}^{m-1} i_\ell \bsz_{b^{\ell}}} = \sum_{\ell=0}^{m-1} i_\ell \ip{\bsk}{\bsz_{b^{\ell}}} \bmod 1 \\
@@ -316,24 +318,29 @@ The map $\tnu_m$ depends on the choice of the embedded rank-1 lattice node sets 
 b^{m} \ip{\bsk}{\bsz_{b^{m-1}}} = b^m[b^{-1} \bsk^T\bsa_{m-1} + \cdots + b^{-m+1}\bsk^T \bsa_{1} \bmod 1] \in \F_{b^m}.
 \]
 Moreover, note that for all $m\in \N$
-\begin{align*}
+\begin{align}
+\label{tnuprop}
+\nonumber
 \tnu_{m+1}(\bsk) - \tnu_{m}(\bsk) & = b^{m+1} \ip{\bsk}{\bsz_{b^{m}}} - b^{m} \ip{\bsk}{\bsz_{b^{m-1}}} \\
+\nonumber
 &=b^{m}[ b\ip{\bsk}{\bsz_{b^{m}}} - \ip{\bsk}{\bsz_{b^{m-1}}}]\\
+\nonumber
 &=b^{m}[ a + \ip{\bsk}{b\bsz_{b^{m}} \bmod 1}  - \ip{\bsk}{\bsz_{b^{m-1}}}], \quad \text{for some }a \in \F_b \\
+\nonumber
 &=b^{m}[ a + \ip{\bsk}{\bsz_{b^{m-1}}}  - \ip{\bsk}{\bsz_{b^{m-1}}}], \quad  \text{by \eqref{latpropb}} \\
 &=a b^{m} \quad \text{for some }a \in \F_b.
-\end{align*}
+\end{align}
 For all $\nu\in \N_0$ with proper $b$-ary expansion $\nu= \nu_0 + \nu_1 b + \cdots \in \N_0$, let $\onu_{m}$ denote the integer obtained by keeping only the first $m$ terms of its $b$-ary expansion, i.e., 
 \begin{equation}
 \label{onudef}
 \onu_{m} := \nu_0 + \cdots + \nu_{m-1}b^{m-1} = [(b^{-m} \nu) \bmod 1] b^{m} \in \F_{b^{m}}
 \end{equation}
-The derivation above means that if $\tnu_{m}(\bsk) = \nu \in \F_{b^m}$, then
+The derivation in \eqref{tnuprop} means that if $\tnu_{m}(\bsk) = \nu \in \F_{b^m}$, then
 \[
 \tnu_\ell(\bsk)=\onu_{\ell}, \qquad \ell=1, \ldots, m.
 \] 
 
-Letting $y_i:=f(\bsz_{i}\oplus \bsDelta)$ for $i\in \N_0$, the discrete Fourier transform defined in \eqref{tfdef} can now be written as follows:
+Letting $y_i:=f(\bsz_{i}\oplus \bsDelta)$ for $i\in \N_0$ and considering \eqref{kdotzi}, the discrete Fourier transform defined in \eqref{tfdef} can now be written as follows:
 \begin{align}
 \nonumber
 \tf_m(\bsk)
@@ -345,18 +352,18 @@ Y_m (\nu) & := \frac{1}{b^m} \sum_{i_m-1=0}^{b-1} \cdots \sum_{i_{0}=0}^{b-1} y_
 \nonumber
 &=Y_m(\onu_m).
 \end{align}
-The quantity $Y_m(\nu)$, $\nu \in \F_{b^m}$, which is essentially the discrete Fourier transform, can be computed efficiently via some intermediate quantities. For $p \in \{0, \ldots, m\}$, $m,\nu \in \N_0$ let
+The quantity $Y_m(\nu)$, $\nu \in \F_{b^m}$, which is essentially the discrete Fourier transform, can be computed efficiently via some intermediate quantities. For $p \in \{0, \ldots, m-1\}$, $m,\nu \in \N_0$ define $Y_{m,0}(i_{0}, \ldots, i_{m-1}) := y_{i_0 + \cdots +i_{m-1} b^{m-1}}$ and let
 \begin{align*}
 \MoveEqLeft{Y_{m,m-p}(\nu,i_{m-p}, \ldots, i_{m-1})} \\
 & :=\frac{1}{b^{m-p}} \sum_{i_{m-p-1}=0}^{b-1} \cdots  \sum_{i_{0}=0}^{b-1} y_{i_0 + \cdots + i_{m-1} b^{m-1}} \exp\left( 2 \pi \sqrt{-1}\sum_{\ell=0}^{m-p-1} i_\ell \onu_{\ell+1}  b^{-\ell-1}  \right).
 \end{align*}
-Note that $Y_{m,m-p}(\nu,i_{m-p}, \ldots, i_{m-1})=Y_{m,m-p}(\onu_{m-p},i_{m-p}, \ldots, i_{m-1})$, and thus takes on only $b^m$ distinct values.  Also note that $Y_{m,m}(\nu)= Y_m(\nu)$. For $p=m, m-1, \ldots, 0$, compute
+Note that $Y_{m,m-p}(\nu,i_{m-p}, \ldots, i_{m-1})=Y_{m,m-p}(\onu_{m-p},i_{m-p}, \ldots, i_{m-1})$, and thus takes on only $b^m$ distinct values.  Also note that $Y_{m,m}(\nu)= Y_m(\nu)$. For $p=m-1, \ldots, 0$, compute
 \begin{align*}
-\MoveEqLeft{Y_{m,m-p+1}(\nu,i_{m-p+1}, \ldots, i_{m-1})} \\
-& =\frac{1}{b^{m-p+1}} \sum_{i_{m-p}=0}^{b-1} \cdots  \sum_{i_{0}=0}^{b-1} y_{i_0 + \cdots + i_{m-1} b^{m-1}} \exp\left( 2 \pi \sqrt{-1} \sum_{\ell=0}^{m-p} i_\ell \onu_{\ell+1}  b^{-\ell-1}   \right)\\
-& =\frac{1}{b} \sum_{i_{m-p}=0}^{b-1} Y_{m,m-p}(\nu,i_{m-p}, \ldots, i_{m-1})\exp\left( 2 \pi \sqrt{-1}  i_{m-p} \onu_{m-p+1} b^{-m+p-1}  \right).
+\MoveEqLeft{Y_{m,m-p}(\nu,i_{m-p}, \ldots, i_{m-1})} \\
+& =\frac{1}{b^{m-p}} \sum_{i_{m-p-1}=0}^{b-1} \cdots  \sum_{i_{0}=0}^{b-1} y_{i_0 + \cdots + i_{m-1} b^{m-1}} \exp\left( 2 \pi \sqrt{-1} \sum_{\ell=0}^{m-p-1} i_\ell \onu_{\ell+1}  b^{-\ell-1}   \right)\\
+& =\frac{1}{b} \sum_{i_{m-p-1}=0}^{b-1} Y_{m,m-p-1}(\nu,i_{m-p}, \ldots, i_{m-1})\exp\left( 2 \pi \sqrt{-1}  i_{m-p-1} \onu_{m-p} b^{-m+p}  \right).
 \end{align*}
-For each $p$ one must perform $\Order(2^m)$ operations, so the total computational cost to obtain  $Y_m(\nu)$ for all $\nu \in \F_{b^m}$ is $\Order(m2^m)$.
+For each $p$ one must perform $\Order(b^m)$ operations, so the total computational cost to obtain  $Y_m(\nu)$ for all $\nu \in \F_{b^m}$ is $\Order(mb^m)$.
 
 
 \section{Error Estimation and an Adaptive Algorithm}\label{secalgo}
@@ -379,6 +386,28 @@ This mapping is not uniquely defined and one has the flexibility to choose part 
 This mapping is one-to-one since at each step the new values $\tvk(\kappa+a b^m)$ or $\tvk(\kappa+a' b^m)$ are chosen from sets of wavenumbers that exclude those wavenumbers already assigned to $\tvk(\kappa)$.  The mapping can be made onto by choosing the choosing the ``smallest'' wavenumber in some sense.
 
 {\bf need to show that this can work, i.e, the set is not empty} 
+
+In order to exemplify the beginning of a possible mapping, consider the first two dimensions of the lattice in Figure \ref{Latticefig} and the values provided below in Table \ref{table}. For $m=0$, $\kappa\in\{0\}$ and $a=0$. This implies $\tvk(1)\in\{\tnu_{1}(\bsk)=1\}$, for instance $\tvk(1):=(-1,0)$. Next step is $m=1$ where $\kappa\in\{0,1\}$. Starting with $\kappa=0$, we need $\tvk(2)\in\{\tnu_{2}(\bsk)=2\}$ and thus, we can take $\tvk(2):=(-1,1)$. When $\kappa=1$, it requires $\tvk(3)\in\{\tnu_{2}(\bsk)=1\}$ where we choose $\tvk(3):=(1,0)$. Analogously,  $\tvk(4):=(-1,-1)$, $\tvk(5):=(0,1)$, $\tvk(6):=(1,-1)$ and $\tvk(7):=(0,-1)$.
+
+\begin{table}[h]\label{table}
+\begin{center}
+\begin{tabular}{{c|}*{3}{|c|}{|c}}
+$\bsk$ & $\kappa$ & $\tnu_{1}(\bsk)=2\ip{\bsk}{(1,27)/2}$ & $\tnu_{2}(\bsk)=4\ip{\bsk}{(1,27)/4}$ & $\tnu_{3}(\bsk)=8\ip{\bsk}{(1,27)/8}$ \\
+\hline
+$(0,0)$ & 0 & 0 & 0 & 0   \\
+$(-1,-1)$ & 4 & 0 & 0 & 4   \\
+$(-1,1)$ & 2 & 0 & 2 & 2   \\
+$(1,-1)$ & 6 & 0 & 2 & 6   \\
+$(-1,0)$ & 1 & 1 & 3 & 7   \\
+$(1,0)$ & 3 & 1 & 1 & 1   \\
+$(0,-1)$ & 7 & 1 & 1 & 5   \\
+$(0,1)$ & 5 & 1 & 3 & 3   \\
+$(1,1)$ & $\cdots$ & 0 & 0 & 4   \\
+\hline
+\end{tabular}
+\caption{Table of values $\tnu_{m}$ that helps with the choice of the mapping $\tvk(\kappa)$.}
+\end{center}
+\end{table}
 
 \begin{lemma} \label{tvklemma}
 The map in Definition  \ref{wavenummapdef} has the property that for $m \in \N_0$ and $\kappa \in \F_{b^m}$,
@@ -415,15 +444,15 @@ By Definition \ref{wavenummapdef} it follows that for $m \in \N$ and $\kappa \in
 \{\tvk(\kappa +\lambda b^m)\}_{\lambda=0}^{\infty}& \subseteq \{\bsk \in  \Z^d : \tnu_{m}(\bsk)=\tnu_m(\tvk(\kappa)) \}. \label{oneway}
 \end{align}
 
-Now suppose that $\bsl$ is any element of $\{\bsk \in  \Z^d : \tnu_{m}(\bsk)=\tnu_m(\tvk(\kappa)) \}$.  Since the map $\tvk$ is onto, there exists some $\kappa' \in \N_0$ such that $\bsl=\tvk(\kappa')$. Choose $\lambda'$ such that $\kappa'=\overline{\kappa'}_m +\lambda b^m$, where the overbar notation was defined in \eqref{onudef}.  According to \eqref{oneway} it follows that $\tnu_m(\tvk(\overline{\kappa'}_m))=\tnu_m(\tvk(\overline{\kappa'}_m +\lambda b^m)) = \tnu_m(\bsl)=\tnu_m(\tvk(\kappa))$.  Since $\overline{\kappa'}_m$ and $\kappa$ are both in $\F_{b^m}$, this implies that $overline{\kappa'}_m=\kappa$, and so $\bsl \in \{\tvk(\kappa +\lambda b^m)\}_{\lambda=0}^{\infty}$.  Thus, $\{\tvk(\kappa +\lambda b^m)\}_{\lambda=0}^{\infty} \supseteq \{\bsk \in  \Z^d : \tnu_{m}(\bsk)=\tnu_m(\tvk(\kappa)) \}$, and the lemma is proved. \qed.
+Now suppose that $\bsl$ is any element of $\{\bsk \in  \Z^d : \tnu_{m}(\bsk)=\tnu_m(\tvk(\kappa)) \}$.  Since the map $\tvk$ is onto, there exists some $\kappa' \in \N_0$ such that $\bsl=\tvk(\kappa')$. Choose $\lambda'$ such that $\kappa'=\overline{\kappa'}_m +\lambda b^m$, where the overbar notation was defined in \eqref{onudef}.  According to \eqref{oneway} it follows that $\tnu_m(\tvk(\overline{\kappa'}_m))=\tnu_m(\tvk(\overline{\kappa'}_m +\lambda b^m)) = \tnu_m(\bsl)=\tnu_m(\tvk(\kappa))$.  Since $\overline{\kappa'}_m$ and $\kappa$ are both in $\F_{b^m}$, this implies that $overline{\kappa'}_m=\kappa$, and so $\bsl \in \{\tvk(\kappa +\lambda b^m)\}_{\lambda=0}^{\infty}$.  Thus, $\{\tvk(\kappa +\lambda b^m)\}_{\lambda=0}^{\infty} \supseteq \{\bsk \in  \Z^d : \tnu_{m}(\bsk)=\tnu_m(\tvk(\kappa)) \}$, and the lemma is proved. \qed
 \end{proof}
 
-For convenience we adopt the notation $\hf_{\kappa} :=\hf(\tvk(\kappa))$ and $\tf_{m,\kappa} := \tf_m(\tvk(\kappa))$. Then the error bound in \eqref{err1} may be written as
+For convenience we adopt the notation $\hf_{\kappa} :=\hf(\tvk(\kappa))$ and $\tf_{m,\kappa} := \tf_m(\tvk(\kappa))$. Then, by Lemma  \ref{tvklemma} the error bound in \eqref{err1} may be written as
 \begin{equation}
 \biggabs{ \int_{\cube} f(\bsx) \, \D \bsx - \hI_m(f)} 
-\le \sum_{\lambda=1}^{\infty} \left \lvert \hf_{\lambda b^m}\right \rvert. \label{err2}
+\le \sum_{\lambda=1}^{\infty} \left \lvert \hf_{\lambda b^m}\right \rvert, \label{err2}
 \end{equation}
-By Lemma  \ref{tvklemma} the aliasing relationship in \eqref{tfassum} may be written as
+and the aliasing relationship in \eqref{tfassum} as
 \begin{align}
 \tf_{m,\kappa} =\hf_{\kappa} + \sum_{\lambda=1}^{\infty} \hf_{\kappa+\lambda b^{m}} \E^{2 \pi \sqrt{-1} \ip{\tvk(\kappa+\lambda b^{m}) - \tvk(\kappa)}{\bsDelta}}. \label{tfassumc}
 \end{align}
@@ -484,7 +513,7 @@ By \eqref{err2} and the cone conditions, the above inequality implies a data-bas
 & \le  \frac{\homega(m) \wcomega(m-\ell)}{1 - \homega(m-\ell) \wcomega(m-\ell)}\tS_{\ell,m}(f)
 \label{SSbd2}
 \end{align}
-Based on this conservative bound an adaptive algorithm is constructed in the next section. 
+Based on this conservative bound an adaptive algorithm is constructed in the next Section. 
 
 \section{An Adaptive Algorithm Based for Cones of Integrads}\label{algorithmsection}
 
@@ -597,7 +626,7 @@ where
 g(t_1,\dots,t_d)=f(\phi(t_1),\dots,\phi(t_d))\phi'(t_1)\cdots\phi'(t_d)
 \end{equation}
 
-One example is the Baker's transform $\phi(t)=1-2\abs{t-0.5}$. A simple calculation in one dimension proves the equality \eqref{transeq} and by the Fubini theorem it can be extended to any dimension. Remark that this transform may generate a periodically extended $g$ not differentiable. Therefore, for smoother integrands $f$ we may loose differentiability after applying the transformation. However, really smooth transformations may introduce waviness. In any of both cases, it implies slower Fourier coefficients decay. See section \ref{sumscoeff} for further implications on this article.
+One example is the Baker's transform $\phi(t)=1-2\abs{t-0.5}$. A simple calculation in one dimension proves the equality \eqref{transeq} and by the Fubini theorem it can be extended to any dimension. Remark that this transform may generate a periodically extended $g$ not differentiable. Therefore, for smoother integrands $f$ we may loose differentiability after applying the transformation. However, really smooth transformations may introduce waviness. In any of both cases, it implies slower Fourier coefficients decay. See Section \ref{sumscoeff} for further implications on this article.
 
 Another option is described in \cite[Sec. 2.12]{SloJoe94}. Here, $\phi$ must be an increasing function which maps $[0,1]$ onto $[0,1]$. If $\phi'(0)=\phi'(1)=0$, by \eqref{gdef} function $g$ becomes periodic. The simplest polynomial fulfilling this conditions is $\phi(t)=3t^2-2t^3$. Again, as for the Baker's transform, this may produce a non differentiable $g$. In this case, one solution if $f\in\cc^n$, is finding the polynomial requiring $\phi^{(i)}(0)=\phi^{(i)}(1)=0$ for $i=1,\dots,n+1$. This then implies $g\in\cc^n$.
 
@@ -618,7 +647,7 @@ This map has the desirable property of identifying those wavenumbers, $\bsk$, wi
 \item for any $m \in \N_0$, $i \in \{0, \ldots, b^m-1\}$,  $\tnu_m(\bsk)=\nu=(\nu_0, \nu_1, \ldots)$, and $\bsi=(i_0, i_1, \ldots)$, it follows that
 \begin{align} \label{nuwisum}
 \begin{split}
-\ip{\bsk}{\bsz_i} &= \sum_{\ell=0}^{m-1} i_\ell [\nu \pmod  {b^{(l+1)}}]  b^{-(l+1)} \pmod 1
+\ip{\bsk}{\bsz_i} &= \sum_{\ell=0}^{m-1} i_\ell [\nu \bmod  {b^{(l+1)}}]  b^{-(l+1)} \bmod 1
 \end{split}
 \end{align}
 
@@ -628,28 +657,28 @@ This map has the desirable property of identifying those wavenumbers, $\bsk$, wi
 \begin{proof}
 \begin{enumerate}
 \item Directly from definition.
-\item Using \eqref{latpropc} and by construction, $\hnu_0(\bsk)\in\{0,\dots,b-1\}$ and $\hnu_m(\bsk)\in (-1,b)$. Using the assumption \eqref{latpropb}, $\hnu_m(\bsk)\pmod 1=\bsk^Tb\bsz_{b^m}\pmod 1-\bsk^T\bsz_{b^{m-1}}\pmod 1=0$. Then, $\hnu_m(\bsk)\in (-1,b)\cap\Z=\{0,\dots,b-1\},\;\forall m\in\N_0$.
+\item Using \eqref{latpropc} and by construction, $\hnu_0(\bsk)\in\{0,\dots,b-1\}$ and $\hnu_m(\bsk)\in (-1,b)$. Using the assumption \eqref{latpropb}, $\hnu_m(\bsk)\bmod 1=\bsk^Tb\bsz_{b^m}\bmod 1-\bsk^T\bsz_{b^{m-1}}\bmod 1=0$. Then, $\hnu_m(\bsk)\in (-1,b)\cap\Z=\{0,\dots,b-1\},\;\forall m\in\N_0$.
 
 \item For injection, we are proving that $\hbsnu(\bsk)=\hbsnu(\bsl) \Rightarrow \bsk = \bsl$. If $\hbsnu(\bsk)=\hbsnu(\bsl)$, $\hnu_m(\bsk)=\hnu_m(\bsl),\;\forall m\in\N_0$. In particular for $m=0$, this implies $\ip{\bsk}{\bsz_1}-\ip{\bsl}{\bsz_1}=0$. Recursively, one obtains that $\ip{\bsk}{\bsz_{b^m}}-\ip{\bsl}{\bsz_{b^m}}=0$. Therefore, $\ip{\bsk}{\bsz_{b^{m}}}-\ip{\bsl}{\bsz_{b^{m}}}=\ip{\bsk-\bsl}{\bsz_{b^{m}}}=0$ for all $m\in\N_0$ and by \eqref{latpropd}, $\bsk=\bsl$.
 
-For surjection, by \eqref{bilinearlinzeroprop} there exists $\bsk$ such that $\hnu_0(\bsk)=\nu\neq 0$. Furthermore due to the property \eqref{bilinearlinkprop}, $\hnu_0(a\bsk)=a\nu \pmod b$ and recalling the Lagrange's Theorem, any element $\nu$ different than the identity generates the group $\F_b$. Therefore, for $a=1,\dots,b-1$ we can obtain all elements in $\F_b$. Now, for any $\ell\leq m\in\N$ and using \eqref{assumgenip},
+For surjection, by \eqref{bilinearlinzeroprop} there exists $\bsk$ such that $\hnu_0(\bsk)=\nu\neq 0$. Furthermore due to the property \eqref{bilinearlinkprop}, $\hnu_0(a\bsk)=a\nu \bmod b$ and recalling the Lagrange's Theorem, any element $\nu$ different than the identity generates the group $\F_b$. Therefore, for $a=1,\dots,b-1$ we can obtain all elements in $\F_b$. Now, for any $\ell\leq m\in\N$ and using \eqref{assumgenip},
 \begin{align*}
 \hnu_\ell(\bsk+b^m\bsa)&=
 \begin{cases}
-b\ip{\bsk}{\bsz_{b^\ell}}-\ip{\bsk}{\bsz_{b^{\ell-1}}}+b\ip{\bsa}{\bsz_{1}} \pmod b  &\mbox{if } \ell=m, \\
+b\ip{\bsk}{\bsz_{b^\ell}}-\ip{\bsk}{\bsz_{b^{\ell-1}}}+b\ip{\bsa}{\bsz_{1}} \bmod b  &\mbox{if } \ell=m, \\
 b\ip{\bsk}{\bsz_{b^\ell}}-\ip{\bsk}{\bsz_{b^{\ell-1}}} &\mbox{if } \ell<m   \end{cases}\\
 &=
 \begin{cases}
-\hnu_\ell(\bsk)+\hnu_0(\bsa) \pmod b  &\mbox{if } \ell=m, \\
+\hnu_\ell(\bsk)+\hnu_0(\bsa) \bmod b  &\mbox{if } \ell=m, \\
 \hnu_\ell(\bsk) &\mbox{if } \ell<m   \end{cases}\\
-\end{align*}%Remark that for the first equality we use the fact that $\ip{\bsk}{\bsz_{b^{m-1}}}=\ip{\bsk}{\bsz_{b^{m-1}}}\pmod b$. 
+\end{align*}%Remark that for the first equality we use the fact that $\ip{\bsk}{\bsz_{b^{m-1}}}=\ip{\bsk}{\bsz_{b^{m-1}}}\bmod b$. 
 Therefore, for all $m\in \N_0$ and all $(\nu_0,\dots,\nu_m) \in \F_b^{m+1}$ one can build recursively $\bsk \in \Z^d$ such that  $\hnu_\ell(\bsk)=\nu_\ell$, $\ell=0,\dots,m$.
 
 \item Directly by applying \eqref{bilinearlinxprop} and Definition \ref{numapdef}:
 \begin{align*}
-\ip{\bsk}{\bsz_i} &= \ip{\bsk}{\sum_{\ell=0}^{m-1} i_\ell \bsz_{b^{\ell}}} = \sum_{\ell=0}^{m-1} i_\ell \ip{\bsk}{\bsz_{b^{\ell}}} \pmod 1 \\
-& = \sum_{\ell=0}^{m-1} i_\ell \sum_{j=0}^{\ell} \nu_jb^{j-(\ell+1)} \pmod 1\\
-&=\sum_{\ell=0}^{m-1} i_\ell [\nu \pmod  {b^{(\ell+1)}}]  b^{-(\ell+1)} \pmod 1.
+\ip{\bsk}{\bsz_i} &= \ip{\bsk}{\sum_{\ell=0}^{m-1} i_\ell \bsz_{b^{\ell}}} = \sum_{\ell=0}^{m-1} i_\ell \ip{\bsk}{\bsz_{b^{\ell}}} \bmod 1 \\
+& = \sum_{\ell=0}^{m-1} i_\ell \sum_{j=0}^{\ell} \nu_jb^{j-(\ell+1)} \bmod 1\\
+&=\sum_{\ell=0}^{m-1} i_\ell [\nu \bmod  {b^{(\ell+1)}}]  b^{-(\ell+1)} \bmod 1.
 \end{align*}
 \end{enumerate}
 \hfill\qed
