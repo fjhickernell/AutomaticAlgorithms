@@ -234,7 +234,7 @@ a) & b)
 
 \section{Fourier Series}\label{secfourierseries}
 
-The integrands considered here are absolutely continuous periodic functions. If the integrand is not initially periodic, it may be periodized as discussed in the Appendix. More general box domains may be considered, also by using variable transformations, see e.g.,  \cite{HicSloWas03a,HicSloWas03e}.
+The integrands considered here are absolutely continuous periodic functions. If the integrand is not initially periodic, it may be periodized as discussed in \cite{Hic01a}, \cite[Sec. 2.12]{SloJoe94} or \cite{Sid93}. More general box domains may be considered, also by using variable transformations, see e.g.,  \cite{HicSloWas03a,HicSloWas03e}.
 
 The $\Lebesgue_2$ inner product is defined as
 \[
@@ -403,7 +403,7 @@ $(0,1)$ & 5 & 1 & 3 & 3   \\
 $(1,1)$ & $\cdots$ & 0 & 0 & 4   \\
 \hline
 \end{tabular}
-\caption{Table of values $\tnu_{m}$ for some wavenumbers.}\label{tablemap}
+\caption{Table of values $\tnu_{1}$, $\tnu_{2}$ and $\tnu_{3}$ for some wavenumbers.}\label{tablemap}
 \end{center}
 \end{table}
 
@@ -464,7 +464,7 @@ S_m(f) =  \sum_{\kappa=\left \lfloor b^{m-1} \right \rfloor}^{b^{m}-1} \bigabs{\
 \sum_{\kappa=b^{m}}^{\infty} \bigabs{\hf_{\kappa}}, \qquad
 \tS_{\ell,m}(f) = \sum_{\kappa=\left \lfloor b^{\ell-1}\right \rfloor}^{b^{\ell}-1} \bigabs{\tf_{m,\kappa}}.
 \end{gather*}
-Note that $\tS_{\ell,m}(f)$ is the only one that can be observed from data because it involves the discrete transform coefficients. In fact, from \eqref{tfmYdef} one can identify $\bigabs{\tf_{m,\kappa}} = \bigabs{Y_m(\tnu_m(\tvk(\kappa)))}$.  Indeed, our adaptive algorithm will be based on this sum bounding the other three, $S_m(f),\hS_{\ell,m}(f),\wcS_m(f)$ that can not be readily observed. 
+Note that $\tS_{\ell,m}(f)$ is the only one that can be observed from data because it involves the discrete transform coefficients. In fact, from \eqref{tfmYdef} one can identify $\bigabs{\tf_{m,\kappa}} = \bigabs{Y_m(\tnu_m(\tvk(\kappa)))}$ and our adaptive algorithm will be based on this sum bounding the other three, $S_m(f),\hS_{\ell,m}(f),\wcS_m(f)$ that can not be readily observed. 
 
 Define $\cc$ the set of integrands characterized by critical assumptions about how the Fourier coefficients decay.  Let $\ell_* \in \N$ be some fixed integer and $\homega$ and $\wcomega$ be some bounded non-negative valued functions such that,
 \begin{multline} \label{conecond}
@@ -484,7 +484,7 @@ For small $\ell$ the sum $S_\ell(f)$ includes only a few summands. Therefore, it
 \begin{figure}
 \centering
 \includegraphics[width=9cm]{Images/PlotFFTCoefUse256.eps}
-\caption{The magnitudes of true Walsh coefficients for some integrand. \label{Walshcoeffig}}
+\caption{The magnitudes of true Fourier coefficients for some integrand. \label{Walshcoeffig}}
 \end{figure}
 
 Because we do not assume the knowledge of the true  Fourier  coefficients, for functions in $\cc$ we need bounds on $S_{\ell}(f)$ in terms of the sum of the discrete coefficients $\tS_{\ell,m}(f)$.  This is done by applying \eqref{tfassumc},  and the definition of the cone in \eqref{conecond}:
@@ -522,7 +522,7 @@ Inequality \eqref{SSbd2} suggests the following algorithm. First, choose $\ell_*
 
 The choice of the parameter $r$ is important. Larger $r$ means a bigger $\fC(m)$ although makes the error more dependent on smaller indexed Fourier coefficients.
 
-\begin{algo}[Adaptive Rank-1 Lattice Cubature, \texttt{cubLattice\_g}] \label{adapalgo} Fix $r$, $\ell_*$ as described above and $\homega$ and $\wcomega$ describing $\cc$ in \eqref{conecond}. Given a tolerance, $\varepsilon$, do the following:
+\begin{algo}[Adaptive Rank-1 Lattice Cubature, \texttt{cubLattice\_g}] \label{adapalgo} Fix $r$, $\ell_*$ as described above and $\homega$ and $\wcomega$ describing $\cc$ in \eqref{conecond}. Given a tolerance, $\varepsilon$, initialize $m=\ell_*+r$ and do the following:
 
 \begin{description}
 \item[\textbf{Step 1.}] According to Section \ref{FFT}, compute $\tS_{m-r,m}(f)$.
@@ -565,46 +565,18 @@ In Section \ref{FFT}, the computation of $\tS_{m-r,m}(f)$ is described in terms 
 
 \section{Numerical Example} \label{secnumexpsec}
 
-<<<<<<< HEAD
-We implemented $\texttt{cubLattice\_g}$ and tested the pricing of the Asian call for the geometric Brownian motion in dimensions 1, 2,4,8,16,32 and 64. Each dimension was chosen 
- of a basket European option. The algorithm parametrization according to the cone chosen by default was: $\ell_*=6$, $r=4$ and $\fC(m)=5 \times 2^{-m}$.
-=======
-Algorithm \ref{adapalgo} has been coded in MATLAB as \texttt{cubLattice\_g} in base 2, and is scheduled to appear in the next release for the Guaranteed Automatic Integration Library, \cite{ChoEtal14a}. We tested $\texttt{cubLattice\_g}$ for the pricing of a basket European option. Assumptions were: 5 decorrelated stocks with $S_0=100$, $K=100$, $r=1\%$, $\sigma=5\%$ and $T=1$. The algorithm parametrization according to the cone chosen by default was: $\ell_*=6$, $r=4$ and $\fC(m)=3 \times 2^{-m}$.
->>>>>>> f5e9d7a8e79f4caff4de13631894dfe45a1a58d8
+Algorithm \ref{adapalgo} has been coded in MATLAB as \texttt{cubLattice\_g} in base 2, and is scheduled to appear in the next release for the Guaranteed Automatic Integration Library, \cite{ChoEtal14a}. For testing it, we priced an Asian call with geometric Brownian motion, $S_0=K=100$, $T=1$ and $r=3\%$. The test is performed on 500 samples whose dimensions are chosen IID uniformly among 1, 2,4,8,16,32 and 64, and the volatility also IID uniformly from $10\%$ to $70\%$. Results, in Figure \ref{geoAsianmean}, show $97\%$ of success meeting the error tolerance.
 
-We have tried \texttt{cubSobol\_g} on an example from \cite{Kei96}:
-\begin{equation} \label{KeisterEx}
-I=\int_{\R^d} \E^{-\norm{\bst}^2} \cos(\norm{\bst}) \, \D \bst 
-= \pi^{d/2}\int_{\cube} \cos\left(\sqrt{\frac 12 \sum_{j=1}^d [\Phi^{-1}(x_j)]^2} \right) \, \D \bsx,
-\end{equation}
-where $\Phi$ is the standard Gaussian distribution function.  We generated $1000$ IID random values of the dimension $d=\lfloor \E^D \rfloor$ with $D$ being uniformly distributed between $0$ and $\log(20)$.  Each time \texttt{cubSobol\_g} was run, a different randomized Sobol' sequence was used.  The tolerance was met about $97\%$ of the time.  Failures were more likely among the higher dimensions.
-
-Results are shown in Figure \ref{geoAsianmean}. On the left, one can compare the predicted error bound in continuous line, with the input error tolerance represented in discontinuous. By definition, the tolerance should be above the prediction, except for budget restrictions. However, the continuous line flattens because we do not allow to use more than $2^{17}$ points. This number comes from the Korobov construction using $17797$ as suggested in \cite{HicEtal00}. Another important remark is that the predicted error might increase with the number of points. Nonetheless, this is only due to the varying random shift taken each time.
+The algorithm parametrization according to the cone chosen by default was $\ell_*=6$, $r=4$ and $\fC(m)=5 \times 2^{-m}$. However, the results are strongly dependent on the generating vector that was used for creating the rank-1 lattice embedded node sets. The vector applied to this example was found with the \texttt{latbuilder} software from Pierre L'Ecuyer and David Munger \cite{????}, in the special case of $n=2^{26}$ points, $d=250$ and weights $\gamma_j=j^{-2}$. The best choice of generating vector for \texttt{cubLattice\_g} needs further research.
 
 \begin{figure}[h!]
 \centering
 \includegraphics[width=7cm]{Images/geomeancubLatticeErrTime_d_64.eps} 
-\caption{Tolerance against predicted error, b) Price obtained with its tolerance bounds. \label{geoAsianmean}}
+\caption{Empirical distribution functions obtained from 500 samples, for the error (continuous line) and time (slashed-doted line). The vertical slashed line represents the tolerance 0.02 in each sample. \label{geoAsianmean}}
 \end{figure}
 
-%With $\texttt{cubLattice\_g}$ implemented, we tested the pricing of a basket European option. Assumptions were: 5 decorrelated stocks with $S_0=100$, $K=100$, $r=1\%$, $\sigma=5\%$ and $T=1$. The algorithm parametrization according to the cone chosen by default was: $\ell_*=6$, $r=4$ and $\fC(m)=3 \times 2^{-m}$.
-%
-%Results are shown in Figure \ref{BasketOption}. On the left, one can compare the predicted error bound in continuous line, with the input error tolerance represented in discontinuous. By definition, the tolerance should be above the prediction, except for budget restrictions. However, the continuous line flattens because we do not allow to use more than $2^{17}$ points. This number comes from the Korobov construction using $17797$ as suggested in \cite{HicEtal00}. Another important remark is that the predicted error might increase with the number of points. Nonetheless, this is only due to the varying random shift taken each time.
-%
-%On the right plot one can appreciate the price obtained together with the tolerance bounds. This bounds on the error are only guaranteed if the function lies in the cone parametrized. Although we did not know the coefficients true decay, the error intervals in the graph seem to be consistent, i.e. the intersection of all the tolerance intervals is not empty.
-%\begin{figure}[h!]
-%\centering
-%\begin{tabular}{>{\centering}p{5cm}>{\centering}p{5cm}}
-%\includegraphics[width=5cm]{Images/Multicall_conv.eps} &
-%\includegraphics[width=5cm]{Images/Multicall_error.eps}\tabularnewline
-%a) & b)
-%\end{tabular}
-%\caption{a) Tolerance against predicted error, b) Price obtained with its tolerance bounds. \label{BasketOption}}
-%\end{figure}
-
 \section{Discussion and Future Work}
-Quasi-Monte Carlo methods rarely provide guaranteed and adaptive algorithms. Developing a new methodology to bound the absolute error via the discrete Fourier coefficients has allowed us to build an adaptive automatic algorithm guaranteed for cones of integrands. The definition of cone is a challenging new viewpoint. The non-convexity of the cone leads to a nonlinear algorithm and the complexity of the integration problem over this set may be hard to analyze. Our algorithm provides an upper bound on the complexity, but we have not yet obtained a  lower bound. In the future, we also hope to link this work to other results provided in the literature by drawing a correspondence between our cone of integrands and more common spaces of integrands, like the Korobov spaces. Finally, we are also interested in extending our algorithm to accoomodate  a relative error tolerance.
-
+Quasi-Monte Carlo methods rarely provide guaranteed and adaptive algorithms. Developing a new methodology to bound the absolute error via the discrete Fourier coefficients has allowed us to build an adaptive automatic algorithm guaranteed for cones of integrands. The definition of cone is a challenging new viewpoint whose non-convexity leads to a nonlinear algorithm, and the complexity of the integration problem over this set may be hard to analyze. Our algorithm provides an upper bound on the complexity, but we have not yet obtained a  lower bound. In the future, we also hope to link this work to other results provided in the literature by drawing a correspondence between our cone of integrands and more common spaces of integrands, like the Korobov spaces. Finally, we are also interested in extending our algorithm to accommodate  a relative error tolerance and study the impact of the dimension in it as well as establishing the best generating vector.
 
 \begin{acknowledgement}
 The authors thank Ronald Cools and Dirk Nuyens for organizing MCQMC 2014 and greatly appreciate the suggestions made by Sou-Cheng Choi, Frances Kuo, Lan Jiang, Dirk Nuyens and Yizhi Zhang to improve this manuscript. In addition, the first author also thanks Art Owen for partially funding traveling expenses to MCQMC 2014.
@@ -614,25 +586,8 @@ This work was partially supported by US National Science Foundation grants DMS-1
 \bibliographystyle{spmpsci.bst}
 \bibliography{FJH22,FJHown23,lluisantoni}
 
-\section*{Appendix: Periodizing the Integrands}\label{apendixperiodizing}
-For non periodic integrands $f$, one can use transformations $\phi$ to obtain periodic functions $g$ such that:
-\begin{equation}\label{transeq}
-\int_{\cube} f(\bsx)  \, \dif \bsx=\int_{\cube} g(\bst)  \, \dif \bst
-\end{equation}
-where
-\begin{equation}\label{gdef}
-g(t_1,\dots,t_d)=f(\phi(t_1),\dots,\phi(t_d))\phi'(t_1)\cdots\phi'(t_d)
-\end{equation}
-
-One example is the Baker's transform $\phi(t)=1-2\abs{t-0.5}$. A simple calculation in one dimension proves the equality \eqref{transeq} and by the Fubini theorem it can be extended to any dimension. Remark that this transform may generate a periodically extended $g$ not differentiable. Therefore, for smoother integrands $f$ we may loose differentiability after applying the transformation. However, really smooth transformations may introduce waviness. In any of both cases, it implies slower Fourier coefficients decay. See Section \ref{sumscoeff} for further implications on this article.
-
-Another option is described in \cite[Sec. 2.12]{SloJoe94}. Here, $\phi$ must be an increasing function which maps $[0,1]$ onto $[0,1]$. If $\phi'(0)=\phi'(1)=0$, by \eqref{gdef} function $g$ becomes periodic. The simplest polynomial fulfilling this conditions is $\phi(t)=3t^2-2t^3$. Again, as for the Baker's transform, this may produce a non differentiable $g$. In this case, one solution if $f\in\cc^n$, is finding the polynomial requiring $\phi^{(i)}(0)=\phi^{(i)}(1)=0$ for $i=1,\dots,n+1$. This then implies $g\in\cc^n$.
-
-A part from polynomials, one could also consider the transform proposed by Sidi in \cite{Sid93}: $\phi(t)=t-\sin(2\pi t)/(2\pi)$.
-
 \end{document}
 
- v
 
 
 This map has the desirable property of identifying those wavenumbers, $\bsk$, with the corresponding index in the fast Fourier transform.  This next lemma provides some properties of this map.
