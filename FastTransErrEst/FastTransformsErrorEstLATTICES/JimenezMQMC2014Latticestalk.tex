@@ -385,9 +385,9 @@ This mapping is not uniquely defined and one has the flexibility to choose part 
 
 This mapping is one-to-one since at each step the new values $\tvk(\kappa+a b^m)$ or $\tvk(\kappa+a' b^m)$ are chosen from sets of wavenumbers that exclude those wavenumbers already assigned to $\tvk(\kappa)$.  The mapping can be made onto by choosing the ``smallest'' wavenumber in some sense. Furthermore $\tvk(\kappa)$ is well defined: $\{\bsk \in  \Z^d : \tnu_{m+1}(\bsk)=\tnu_{m}(\tvk(\kappa))\}\neq\emptyset$ and $\{\bsk \in  \Z^d : \tnu_{m+1}(\bsk)=\tnu_{m}(\tvk(\kappa))+a' b^m \}\neq\emptyset$. By \eqref{bilinearlinkprop}, for any linear combination in $\Z$ of previously defined $\tvk(i),\tvk(j)$, remark that $\tnu_{m+1}(c_1\tvk(i)+c_2\tvk(j))=c_1\tnu_{m+1}(\tvk(i))+c_2\tnu_{m+1}(\tvk(j)) \bmod b^{m+1}$. This means that for these sets, there is always infinitely many choices and they cannot be empty.
 
-In order to exemplify the beginning of a possible mapping, consider the first two dimensions of the lattice in Figure \ref{Latticefig} and the values provided below in Table \ref{table}. For $m=0$, $\kappa\in\{0\}$ and $a=0$. This implies $\tvk(1)\in\{\tnu_{1}(\bsk)=1\}$, for instance $\tvk(1):=(-1,0)$. Next step is $m=1$ where $\kappa\in\{0,1\}$. Starting with $\kappa=0$, we need $\tvk(2)\in\{\tnu_{2}(\bsk)=2\}$ and thus, we can take $\tvk(2):=(-1,1)$. When $\kappa=1$, it requires $\tvk(3)\in\{\tnu_{2}(\bsk)=1\}$ where we choose $\tvk(3):=(1,0)$. Analogously,  $\tvk(4):=(-1,-1)$, $\tvk(5):=(0,1)$, $\tvk(6):=(1,-1)$ and $\tvk(7):=(0,-1)$.
+In order to exemplify the beginning of a possible mapping, consider the first two dimensions of the lattice in Figure \ref{Latticefig} and the values provided below in Table \ref{tablemap}. For $m=0$, $\kappa\in\{0\}$ and $a=0$. This implies $\tvk(1)\in\{\tnu_{1}(\bsk)=1\}$, for instance $\tvk(1):=(-1,0)$. Next step is $m=1$ where $\kappa\in\{0,1\}$. Starting with $\kappa=0$, we need $\tvk(2)\in\{\tnu_{2}(\bsk)=2\}$ and thus, we can take $\tvk(2):=(-1,1)$. When $\kappa=1$, it requires $\tvk(3)\in\{\tnu_{2}(\bsk)=1\}$ where we choose $\tvk(3):=(1,0)$. Analogously,  $\tvk(4):=(-1,-1)$, $\tvk(5):=(0,1)$, $\tvk(6):=(1,-1)$ and $\tvk(7):=(0,-1)$.
 
-\begin{table}[h]\label{table}
+\begin{table}[h]
 \begin{center}
 \begin{tabular}{{c|}*{3}{|c|}{|c}}
 $\bsk$ & $\kappa$ & $\tnu_{1}(\bsk)=2\ip{\bsk}{(1,27)/2}$ & $\tnu_{2}(\bsk)=4\ip{\bsk}{(1,27)/4}$ & $\tnu_{3}(\bsk)=8\ip{\bsk}{(1,27)/8}$ \\
@@ -403,7 +403,7 @@ $(0,1)$ & 5 & 1 & 3 & 3   \\
 $(1,1)$ & $\cdots$ & 0 & 0 & 4   \\
 \hline
 \end{tabular}
-\caption{Table of values $\tnu_{m}$ that helps with the choice of the mapping $\tvk(\kappa)$.}
+\caption{Table of values $\tnu_{m}$ for some wavenumbers.}\label{tablemap}
 \end{center}
 \end{table}
 
@@ -425,14 +425,14 @@ The map in Definition  \ref{wavenummapdef} has the property that for $m \in \N_0
 \end{align}
 This implies that for all $m \in \N$ and $\kappa \in \F_{b^m}$,
 \begin{equation}
-\{\bsl \in \Z^d : \tnu_m(\bsl) =  \tnu_m(\tvk_m(\kappa))\} = \{\bsl \in \Z^d : \tvk(\kappa) - \bsl \in \cp_m^{\perp} \}.
+\{\bsl \in \Z^d : \tnu_m(\bsl) =  \tnu_m(\tvk(\kappa))\} = \{\bsl \in \Z^d : \tvk(\kappa) - \bsl \in \cp_m^{\perp} \}.
 \end{equation}
 
 By Definition \ref{wavenummapdef} it follows that for $m \in \N$ and $\kappa \in \F_{b^m}$,
 \begin{align}
 \nonumber
 \{\tvk(\kappa +\lambda b^m)\}_{\lambda=0}^{b-1} 
-& \subset \{\bsk \in  \Z^d : \tnu_{m+1}(\bsk)=\kappa+a b^m, \ a \in \F_b \} \\
+& \subset \{\bsk \in  \Z^d : \tnu_{m+1}(\bsk)=\tnu_m(\tvk(\kappa))+a b^m, \ a \in \F_b \} \\
 \nonumber
 & = \{\bsk \in  \Z^d : \tnu_{m}(\bsk)=\tnu_m(\tvk(\kappa)) \}. 
 \intertext{Recursion on the right side implies}
@@ -442,7 +442,7 @@ By Definition \ref{wavenummapdef} it follows that for $m \in \N$ and $\kappa \in
 \{\tvk(\kappa +\lambda b^m)\}_{\lambda=0}^{\infty}& \subseteq \{\bsk \in  \Z^d : \tnu_{m}(\bsk)=\tnu_m(\tvk(\kappa)) \}. \label{oneway}
 \end{align}
 
-Now suppose that $\bsl$ is any element of $\{\bsk \in  \Z^d : \tnu_{m}(\bsk)=\tnu_m(\tvk(\kappa)) \}$.  Since the map $\tvk$ is onto, there exists some $\kappa' \in \N_0$ such that $\bsl=\tvk(\kappa')$. Choose $\lambda'$ such that $\kappa'=\overline{\kappa'}_m +\lambda b^m$, where the overbar notation was defined in \eqref{onudef}.  According to \eqref{oneway} it follows that $\tnu_m(\tvk(\overline{\kappa'}_m))=\tnu_m(\tvk(\overline{\kappa'}_m +\lambda b^m)) = \tnu_m(\bsl)=\tnu_m(\tvk(\kappa))$.  Since $\overline{\kappa'}_m$ and $\kappa$ are both in $\F_{b^m}$, this implies that $overline{\kappa'}_m=\kappa$, and so $\bsl \in \{\tvk(\kappa +\lambda b^m)\}_{\lambda=0}^{\infty}$.  Thus, $\{\tvk(\kappa +\lambda b^m)\}_{\lambda=0}^{\infty} \supseteq \{\bsk \in  \Z^d : \tnu_{m}(\bsk)=\tnu_m(\tvk(\kappa)) \}$, and the lemma is proved. \qed
+Now suppose that $\bsl$ is any element of $\{\bsk \in  \Z^d : \tnu_{m}(\bsk)=\tnu_m(\tvk(\kappa)) \}$.  Since the map $\tvk$ is onto, there exists some $\kappa' \in \N_0$ such that $\bsl=\tvk(\kappa')$. Choose $\lambda'$ such that $\kappa'=\overline{\kappa'}_m +\lambda' b^m$, where the overbar notation was defined in \eqref{onudef}.  According to \eqref{oneway} it follows that $\tnu_m(\tvk(\overline{\kappa'}_m))=\tnu_m(\tvk(\overline{\kappa'}_m +\lambda' b^m)) = \tnu_m(\bsl)=\tnu_m(\tvk(\kappa))$.  Since $\overline{\kappa'}_m$ and $\kappa$ are both in $\F_{b^m}$, this implies that $\overline{\kappa'}_m=\kappa$, and so $\bsl \in \{\tvk(\kappa +\lambda b^m)\}_{\lambda=0}^{\infty}$.  Thus, $\{\tvk(\kappa +\lambda b^m)\}_{\lambda=0}^{\infty} \supseteq \{\bsk \in  \Z^d : \tnu_{m}(\bsk)=\tnu_m(\tvk(\kappa)) \}$, and the lemma is proved. \qed
 \end{proof}
 
 For convenience we adopt the notation $\hf_{\kappa} :=\hf(\tvk(\kappa))$ and $\tf_{m,\kappa} := \tf_m(\tvk(\kappa))$. Then, by Lemma  \ref{tvklemma} the error bound in \eqref{err1} may be written as
