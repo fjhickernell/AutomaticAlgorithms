@@ -50,16 +50,16 @@ Clancy, N., Ding, Y., Hamilton, C., Hickernell, F.J., Zhang, Y.: The cost of
 \newblock In: H.~Niederreiter (ed.) {M}onte {C}arlo and Quasi-{M}onte {C}arlo
   Methods 2002, pp. 259--273. Springer-Verlag, Berlin (2004)
 
-\bibitem{HicWoz99}
-\HickernellFJ, F.J., Wo\'zniakowski, H.: Integration and approximation in
-  arbitrary dimensions.
-\newblock Adv.\ Comput.\ Math. \textbf{12}, 25--58 (2000).
-\newblock \doi{10.1023/A:1018948631251}
-
 \bibitem{LEcMun14a}
 L'Ecuyer, P., Munger, D.: {LatticeBuilder}: A general software tool for
   constructing rank-1 latice rules.
 \newblock Submitted for publication
+
+\bibitem{NovWoz10a}
+Novak, E., Wo{\'{z}}niakowski, H.: Tractability of Multivariate Problems
+  {V}olume II: {S}tandard Information for Functionals.
+\newblock No.~12 in EMS Tracts in Mathematics. European Mathematical Society,
+  Z\"urich (2010)
 
 \bibitem{Sid93}
 Sidi, A.: A new variable transformation for numerical integration.
