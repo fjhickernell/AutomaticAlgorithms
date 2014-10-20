@@ -169,13 +169,16 @@ Let $b$ be prime number, and let $\F_{n}:=\{0, \ldots, n-1\}$ denote the set of 
 Specifically, the sequence $\bsz_1, \bsz_b, \bsz_{b^2},  \ldots \in \cube$ is chosen such that 
 \begin{subequations} \label{zbmdef}
 \begin{gather} 
-\bsz_1 = b^{-1} \bsa_1, \qquad \bsa_1 \in \{1, \ldots, b-1\}^{d}, \\
-\bsz_{b^m} = b^{-1}(\bsz_{b^{m-1}}+\bsa_m)= b^{-1}\bsa_m + \cdots + b^{-m} \bsa_1, \quad \bsa_m \in \F_b^{d}, \ \ m \in \N\setminus\{1\}.
+\bsz_1 = b^{-1} \bsa_0, \qquad \bsa_0 \in \{1, \ldots, b-1\}^{d}, \\
+\bsz_{b^m} = b^{-1}(\bsz_{b^{m-1}}+\bsa_m)= b^{-1}\bsa_m + \cdots + b^{-m-1} \bsa_0, \qquad \bsa_m \in \F_b^{d}, \ \ m \in \N.
 \end{gather}
 \end{subequations}
-From this definition it follows that
+From this definition it follows that for all $m \in \N_0$,
 \begin{equation} 
-b\bsz_{b^m} \bmod {1} =\bsz_{b^{m-1}}, \quad b^{m}\bsz_{b^{m-1}} \bmod {1} = \bszero \qquad \forall m \in \N ,\label{latpropb}
+b^\ell\bsz_{b^m} \bmod {1} = \begin{cases} \bsz_{b^{m-\ell}}, & \ell=0, \ldots, m \\
+\bszero, & \ell=m+1, m+2, \ldots .
+\end{cases}
+\label{latpropb}
 \end{equation}
 Next, for any $i \in \N$ with proper $b$-ary expansion $i=i_0+i_1 b + i_2 b^2 + \cdots$, and $m=\lfloor \log_b(i) \rfloor+1$ define 
 \begin{multline} \label{zidef}
@@ -303,7 +306,6 @@ It is seen here that the discrete transform $\tf_m(\bsk)$ equals the integral tr
 
 To facilitate the calculation of $\tf_m(\bsk)$, we define the map $\tnu_m : \Z^d \to \F_{b^m}$ as follows:
 \begin{equation} \label{kdotzbm}
-\nonumber
 \tnu_{0}(\bsk) := 0, \qquad
 \tnu_{m}(\bsk) := b^{m} \ip{\bsk}{\bsz_{b^{m-1}}}, \quad m \in \N.
 \end{equation}
@@ -383,9 +385,21 @@ Choose $\tvk(\kappa+a' b^m) \in \{\bsk \in  \Z^d : \tnu_{m+1}(\bsk)=\tnu_{m}(\tv
 
 This mapping is not uniquely defined and one has the flexibility to choose part of it. For example, defining a norm such as in \cite[Chap. 4]{SloJoe94} one can assign larger values of $\kappa$ to larger wavenumbers $\bsk$. In the end, our goal is to define this mapping such that $\hf(\tvk(\kappa))\rightarrow 0$ as $\kappa \to \infty$.
 
-This mapping is one-to-one since at each step the new values $\tvk(\kappa+a b^m)$ or $\tvk(\kappa+a' b^m)$ are chosen from sets of wavenumbers that exclude those wavenumbers already assigned to $\tvk(\kappa)$.  The mapping can be made onto by choosing the ``smallest'' wavenumber in some sense. \marginpar{I do not follow this argument.}  Furthermore $\tvk(\kappa)$ is well defined: $\{\bsk \in  \Z^d : \tnu_{m+1}(\bsk)=\tnu_{m}(\tvk(\kappa))\}\neq\emptyset$ and $\{\bsk \in  \Z^d : \tnu_{m+1}(\bsk)=\tnu_{m}(\tvk(\kappa))+a' b^m \}\neq\emptyset$. By \eqref{bilinearlinkprop}, for any linear combination in $\Z$ of previously defined $\tvk(i)$ and $\tvk(j)$, remark that $\tnu_{m+1}(c_1\tvk(i)+c_2\tvk(j))=c_1\tnu_{m+1}(\tvk(i))+c_2\tnu_{m+1}(\tvk(j)) \bmod b^{m+1}$. This means that for these sets, there is always infinitely many choices and they cannot be empty.
 
-The tricky part is proving that there exists $\bsk$ such that $\tnu_{m+1}(\bsk)=\tnu_{m}(\tvk(\kappa))+a' b^m$ for $a'\neq 0$. Consider $\bsk=\tvk(\kappa)+\bsl$ with $\bsl\in\cp_m^\perp\setminus\cp_{m-1}^\perp$. Such $\bsl$ exists because if not, $\cp_m^\perp\equiv\cp_{m-1}^\perp$ and thus $\cp_m\equiv\cp_{m-1}$ contradicting \eqref{zbmdef} or \eqref{latpropb}. Therefore, $\tnu_{m+1}(\tvk(\kappa)+\bsl)=\tnu_{m}(\tvk(\kappa))+a'' b^m$. Take $(\tvk(\kappa)+a'(a'')^{-1}\bsl)$, $(a'')^{-1}$ an integer giving $a''(a'')^{-1} \bmod b^m=1$ existing because be is prime.
+
+This mapping is one-to-one since at each step the new values $\tvk(\kappa+a b^m)$ or $\tvk(\kappa+a' b^m)$ are chosen from sets of wavenumbers that exclude those wavenumbers already assigned to $\tvk(\kappa)$.  The mapping can be made onto by choosing the ``smallest'' wavenumber in some sense. 
+
+It still remains to be shown that  for any $\kappa \in \F_{b^{m}}$, $\{\bsk \in  \Z^d : \tnu_{m+1}(\bsk)=\tnu_{m}(\tvk(\kappa))+a' b^m\}$ is nonempty for all $a' \in \F_b$ with $a' \ne a$.  Given $m$, choose $\bsl$ such that $\ip{\bsl}{\bsz_1}=b^{-1}$. This is possible because $\bsz_1 \ne \bszero$.  For any  $a'' \in \F_b$ note that
+\begin{align*}
+\ip{\tvk(\kappa) + a'' b^{m} \bsl}{\bsz_{b^{m}}}& = \ip{\tvk(\kappa)}{\bsz_{b^{m}}} + a'' b^m \ip{\bsl}{\bsz_{b^{m}}} \bmod 1 \qquad \qquad \text{by \eqref{bilinearlinkprop}} \\
+&= [b^{-m-1}\tnu_{m+1}(\tvk(\kappa)) + a'' \ip{\bsl}{b^m  \bsz_{b^{m}}\bmod 1}] \bmod 1 \\
+& \qquad \qquad \qquad  \text{by \eqref{bilinearlinxprop} and \eqref{kdotzbm}}\\
+&= [b^{-m-1}\tnu_{m}(\tvk(\kappa)) + a b^{-1} + a'' \ip{\bsl}{\bsz_{1}}] \bmod 1 \qquad  \text{by \eqref{latpropb}}\\
+&= [b^{-m-1}\tnu_{m}(\tvk(\kappa)) + (a+a'') b^{-1}] \bmod 1,\\
+\tnu_{m+1}(\tvk(\kappa) + a'' b^{m} \bsl) & = 
+\tnu_{m}(\tvk(\kappa)) + (a+a'' \bmod b) b^{m} \qquad \text{by \eqref{kdotzbm}}.
+\end{align*}
+By choosing $a''$ such that $a'=(a+a'' \bmod b)$, we have shown that the set $\kappa \in \F_{b^{m}}$, $\{\bsk \in  \Z^d : \tnu_{m+1}(\bsk)=\tnu_{m}(\tvk(\kappa))+a' b^m\}$ is nonempty.
 
 In order to illustrate the initial steps of a possible mapping, consider the first two dimensions of the lattice in Figure \ref{Latticefig} and the $\bsk$ values provided below in Table \ref{tablemap}. For $m=0$, $\kappa\in\{0\}$ and $a=0$. This implies $\tvk(1)\in\{\tnu_{1}(\bsk)=1\}$, for instance $\tvk(1):=(-1,0)$. The next step is $m=1$ where $\kappa\in\{0,1\}$. Starting with $\kappa=0$, we need $\tvk(2)\in\{\tnu_{2}(\bsk)=2\}$ and thus, we can take $\tvk(2):=(-1,1)$. When $\kappa=1$, we note that $\tnu(\tvk(1))=3$, which implies that $\tvk(3)\in\{\tnu_{2}(\bsk)=1\}$ so we may choose $\tvk(3):=(1,0)$. Continuing, we may  $\tvk(4):=(-1,-1)$, $\tvk(5):=(0,1)$, $\tvk(6):=(1,-1)$ and $\tvk(7):=(0,-1)$.  This leaves $(1,1)$ to be assigned to a larger value of $\kappa$.
 
