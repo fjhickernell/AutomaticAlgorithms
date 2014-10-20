@@ -236,15 +236,15 @@ a) & b)
 
 The integrands considered here are absolutely continuous periodic functions. If the integrand is not initially periodic, it may be periodized as discussed in \cite{Hic01a}, \cite[Sec. 2.12]{SloJoe94} or \cite{Sid93}. More general box domains may be considered, also by using variable transformations, see e.g.,  \cite{HicSloWas03a,HicSloWas03e}.
 
-The $\Lebesgue_2$ inner product is defined as
+The $\Lebesgue^2$ inner product is defined as
 \[
 \ip[2]{f}{g} = \int_{\cube} f(\bsx) \overline{g(\bsx)} \, \dif \bsx.
 \]
-The complex exponential functions, $\{\E^{2 \pi \sqrt{-1} \ip{\bsk}{\cdot}}\}_{\bsk \in \Z^d}$ form a complete orthonormal \emph{basis} for $\Lebesgue_2(\cube)$. Then, any function in $\Lebesgue_2$ may be written in series form as
+The complex exponential functions, $\{\E^{2 \pi \sqrt{-1} \ip{\bsk}{\cdot}}\}_{\bsk \in \Z^d}$ form a complete orthonormal \emph{basis} for $\Lebesgue^2(\cube)$. Then, any function in $\Lebesgue^2(\cube)$ may be written in series form as
 \begin{equation} \label{Fourierdef}
 f(\bsx) = \sum_{\bsk \in \Z^d} \hf(\bsk) \E^{2 \pi \sqrt{-1} \ip{\bsk}{\bsx}}, \quad \text{where } \hf(\bsk) = \ip[2]{f}{\E^{2 \pi \sqrt{-1} \ip{\bsk}{\cdot}}},
 \end{equation}
-and the inner product of two functions in $\Lebesgue_2$ is the $\ell_2$ inner product of their series coefficients:
+and the inner product of two functions in $\Lebesgue^2(\cube)$ is the $\ell^2$ inner product of their series coefficients:
 \[
 \ip[2]{f}{g} = \sum_{\bsk \in \Z^d} \hf(\bsk)\overline{\hg(\bsk)} =: \ip[2]{\bigl(\hf(\bsk)\bigr)_{\bsk \in \Z^d}}{\bigl ( \hg(\bsk)\bigr )_{\bsk \in \Z^d}}.
 \]
@@ -466,9 +466,9 @@ S_m(f) =  \sum_{\kappa=\left \lfloor b^{m-1} \right \rfloor}^{b^{m}-1} \bigabs{\
 \end{gather*}
 Note that $\tS_{\ell,m}(f)$ is the only one that can be observed from data because it involves the discrete transform coefficients. In fact, from \eqref{tfmYdef} one can identify $\bigabs{\tf_{m,\kappa}} = \bigabs{Y_m(\tnu_m(\tvk(\kappa)))}$ and our adaptive algorithm will be based on this sum bounding the other three, $S_m(f),\hS_{\ell,m}(f),\wcS_m(f)$ that can not be readily observed. 
 
-Define $\cc$ the set of integrands characterized by critical assumptions about how the Fourier coefficients decay.  Let $\ell_* \in \N$ be some fixed integer and $\homega$ and $\wcomega$ be some bounded non-negative valued functions such that,
+Let  $\ell_* \in \N$ be some fixed integer and $\homega$ and $\wcomega$ be some bounded non-negative valued functions.  We define a cone, $\cc$, of absolutely continuous functions whose Fourier coefficients decay according to certain inequalities:
 \begin{multline} \label{conecond}
-\cc:=\{f \in \Lebesgue_\infty(\cube) : \hS_{\ell,m}(f) \le \homega(m-\ell) \wcS_m(f),\ \ \ell \le m, \\
+\cc:=\{f \in AC(\cube) : \hS_{\ell,m}(f) \le \homega(m-\ell) \wcS_m(f),\ \ \ell \le m, \\
 \wcS_m(f) \le \wcomega(m-\ell) S_{\ell}(f),\ \  \ell_* \le \ell \le m\}.
 \end{multline}
 We also require the existence of $r$ such that $\homega(r) \wcomega(r)<1$, which happens, for instance, if $\lim_{r\rightarrow\infty}\wcomega(r)=0$. This set is a cone, i.e. $f \in \cc \implies af \in \cc\;\forall a\in\R$, but it is not convex. A wider discussion on the advantages and disadvantages of considering cones of functions can be found in \cite{Clancy201421}.
