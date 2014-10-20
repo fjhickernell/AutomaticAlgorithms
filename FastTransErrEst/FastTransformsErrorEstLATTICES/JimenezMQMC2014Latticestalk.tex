@@ -66,7 +66,7 @@
 
 
 \usepackage{microtype} % good font tricks
-
+\usepackage{xspace}
 \usepackage[colorlinks=true,linkcolor=black,citecolor=black,urlcolor=black]{hyperref}
 \urlstyle{same}
 \usepackage{bookmark}
@@ -133,7 +133,7 @@
 
 \newcommand{\lattice}{\cl} %you can make your own here
 \newcommand{\Lebesgue}{L} %you can make your own here
-
+\newcommand{\cublat}{\texttt{cubLattice\_g}\xspace}
 \allowdisplaybreaks
 
 \title*{Adaptive Multidimensional Integration Based on Rank-1 Lattices}
@@ -142,7 +142,7 @@
 \email{ljimene1@hawk.iit.edu},\email{hickernell@iit.edu}}
 \maketitle
 
-\abstract{Quasi-Monte Carlo methods are used for numerically integrating multivariate functions. However, the error bounds for these methods typically rely on a priori knowledge of some semi-norm of the integrand, not on the sampled function values. In this article, we propose an error bound based on the discrete Fourier coefficients of the integrand. If these Fourier coefficients decay more quickly, the integrand has less fine scale structure, and the accuracy is higher. We focus on rank-1 lattices because they are a commonly used quasi-Monte Carlo design and because their algebraic structure facilitates an error analysis based on a Fourier decomposition of the integrand. This leads to a guaranteed adaptive cubature algorithm with computational cost $\Order(mb^m)$, where $b$ is some prime number and $b^m$ is the number of data points.}
+\abstract{Quasi-Monte Carlo methods are used for numerically integrating multivariate functions. However, the error bounds for these methods typically rely on a priori knowledge of some semi-norm of the integrand, not on the sampled function values. In this article, we propose an error bound based on the discrete Fourier coefficients of the integrand. If these Fourier coefficients decay more quickly, the integrand has less fine scale structure, and the accuracy is higher. We focus on rank-1 lattices because they are a commonly used quasi-Monte Carlo design and because their algebraic structure facilitates an error analysis based on a Fourier decomposition of the integrand. This leads to a guaranteed adaptive cubature algorithm with computational cost $\Order(mb^m)$, where $b$ is some fixed prime number and $b^m$ is the number of data points.}
 
 \section{Introduction}
 
@@ -154,11 +154,11 @@ to approximate multidimensional integrals over the unit cube,
 \[
 \int_{\cube} f(\bsx) \, \dif \bsx.
 \]
-Integrals over more general domains may often be accommodated by a transformation of the integration variable. QMC methods are widely used because they do not suffer from a \textit{curse of dimensionality}. For example, if $d \ge 5$, QMC methods with an error of $\Order(n^{-(1-\delta)})$ have a faster convergence rate than the tensor product composite Simpson's rule, which has error of $\Order(n^{-4/d})$. Assumptions under which the strong tractability of QMC methods occur can be found in \cite{HicWoz99}.
+Integrals over more general domains may often be accommodated by a transformation of the integration variable. QMC methods are widely used because they do not suffer from a \textit{curse of dimensionality}. For example, if $d \ge 5$, QMC methods with an error of $\Order(n^{-(1-\delta)})$ have a faster convergence rate than the tensor product composite Simpson's rule, which has error of $\Order(n^{-4/d})$. Assumptions under which the strong tractability of QMC methods occur can be found in \cite{HicWoz99}. \marginpar{FJH: Is \cite{HicWoz99} the best reference, or should we use the Novak \& Wo\'z. book?}
 
 The convergence rate $\Order(n^{-(1-\delta)})$ does not give enough information about the absolute error to determine how large $n$ must be to satisfy a given error tolerance, $\varepsilon$. The objective of this research is to develop a guaranteed, QMC algorithm based on rank-1 lattices that determines $n$ adaptively by calculating a data-driven upper bound on the absolute error. The Koksma-Hlawka inequality is impractical for this purpose because it requires the total variation of the integrand. Our data-driven bound is expressed in terms of the integrand's discrete Fourier coefficients. 
 
-Sections \ref{secrank1lat} and \ref{secfourierseries}, describe the group structure of rank-1 lattices and how the complex exponential functions are an appropriate basis for these nodes. For computation purposes, there is also an explanation of how to obtain the discrete Fourier transform of $f$ via a Fast Fourier Transform, with an $\Order(n \log(n))$ computational cost.  The new contributions are described in Section \ref{secalgo}. Initially, a mapping from $\N$ to the space of wavenumbers, $\Z^d$, is defined according to constraints given by the structure of our nodes. With this mapping, we define a set of integrands for which our new adaptive algorithm is designed.  This set is defined in terms of cone conditions satisfied by the Fourier coefficients of the integrands. These conditions make it possible to derive an upper bound on the rank-1 lattice rule error in terms of the discrete Fourier coefficients, which can be used to construct an adaptive algorithm.  An upper bound on the computational cost of this algorithm is derived. Finally, there is an example of option pricing using the MATLAB implementation of our algorithm, \texttt{cublattice\_g}, which will appear in the next release of the Guaranteed Automatic Integration Library \cite{ChoEtal14a}.  A parallel development for Sobol' cubature is given in \cite{HicJim16a}.
+Sections \ref{secrank1lat} and \ref{secfourierseries}, describe the group structure of rank-1 lattices and how the complex exponential functions are an appropriate basis for these nodes. For computation purposes, there is also an explanation of how to obtain the discrete Fourier transform of $f$ via a Fast Fourier Transform, with an $\Order(n \log(n))$ computational cost.  The new contributions are described in Section \ref{secalgo}. Initially, a mapping from $\N$ to the space of wavenumbers, $\Z^d$, is defined according to constraints given by the structure of our rank-1 lattice node set. With this mapping, we define a set of integrands for which our new adaptive algorithm is designed.  This set is defined in terms of cone conditions satisfied by the (true) Fourier coefficients of the integrands. These conditions make it possible to derive an upper bound on the rank-1 lattice rule error in terms of the discrete Fourier coefficients, which can be used to construct an adaptive algorithm.  An upper bound on the computational cost of this algorithm is derived. Finally, there is an example of option pricing using the MATLAB implementation of our algorithm, \cublat, which will appear in the next release of the Guaranteed Automatic Integration Library \cite{ChoEtal14a}.  A parallel development for Sobol' cubature is given in \cite{HicJim16a}.
 
 \section{Rank-1 Integration Lattices}\label{secrank1lat}
 
@@ -189,7 +189,7 @@ where \eqref{latpropb} was used.  This means that node set $\cp_m$ defined above
 
 Integration lattices, $\lattice$, are defined as discrete groups in $\R^d$ containing $\Z^d$ and closed under normal addition \cite[Sec. 2.7-2.8]{SloJoe94}.  The node set of an integration lattice is its intersection with the half-open unit cube, $\cp:=\lattice \cap \cube$. In this case, $\cp$ is also a group, but this time under addition modulo 1, i.e., the addition operator $\oplus:\cube \times \cube \to \cube$ defined by $\bsx\oplus\bsy:=\bsx+\bsy\bmod 1$, and where $\ominus \bsx:=\bsone-\bsx$.
 
-The sets $\cp_m$ defined above are embedded node sets of integration lattices. The sufficiency of a single generating vector for each $\cp_m$ is the reason that $\cp_m$ is called the node set of a rank-1 lattice. 
+The sets $\cp_m$ defined above are embedded node sets of integration lattices. The sufficiency of a single generating vector for each $\cp_m$ is the reason that $\cp_m$ is called the node set of a \emph{rank-1} lattice. 
 The theoretical properties of good embedded rank-1 lattices for cubature are discussed in \cite{HicNie03a}.  
  
 The set of $d$-dimensional integer vectors, $\Z^d$, is used to index Fourier series expressions for the integrands, and $\Z^d$ is also known as the wavenumber space. We define the bilinear operation $\ip{\cdot}{\cdot}: \Z^d \times \cube \to [0,1)$ as the dot product modulo $1$: 
@@ -213,7 +213,7 @@ An additional constraint placed on the embedded lattices is that
 The bilinear operation dedined in \eqref{bilinear} is also used to define the \emph{dual} lattice corresponding to $\cp_m$:
 \begin{align}
 \nonumber
-\cp^{\perp}_m & := \{\bsk \in \Z^d : \ip{\bsk}{\bsz_i} = 0, \ i=0, \ldots, b^m-1\} \\
+\cp^{\perp}_m & := \{\bsk \in \Z^d : \ip{\bsk}{\bsz_i} = 0, \ i\in \F_{b^m}\} \\
 &= \{\bsk \in \Z^d : \ip{\bsk}{\bsz_{b^{m-1}}} = 0 \} \qquad \text{by \eqref{zidef} and \eqref{bilinearlinxprop}} .\label{dualdef}
 \end{align}
 By this definition $\cp^{\perp}_{0}=\Z^d$, and the properties \eqref{latpropb}, \eqref{bilinear}, and \eqref{latpropd}, imply also that the $\cp^{\perp}_m$ are nested subgroups with
@@ -302,11 +302,11 @@ It is seen here that the discrete transform $\tf_m(\bsk)$ equals the integral tr
 
 
 To facilitate the calculation of $\tf_m(\bsk)$, we define the map $\tnu_m : \Z^d \to \F_{b^m}$ as follows:
-\begin{align} \label{kdotzbm}
+\begin{equation} \label{kdotzbm}
 \nonumber
-\tnu_{0}(\bsk) &:= 0, \\
-\tnu_{m}(\bsk) &:= b^{m} \ip{\bsk}{\bsz_{b^{m-1}}}, \qquad m \in \N.
-\end{align}
+\tnu_{0}(\bsk) := 0, \qquad
+\tnu_{m}(\bsk) := b^{m} \ip{\bsk}{\bsz_{b^{m-1}}}, \quad m \in \N.
+\end{equation}
 This implies that $\ip{\bsk}{\bsz_i}$, which appears in the cubature formula used to compute $\tf_m(\bsk)$, may be written as
 \begin{multline} \label{kdotzi}
 \ip{\bsk}{\bsz_i} = \ip{\bsk}{\sum_{\ell=0}^{m-1} i_\ell \bsz_{b^{\ell}}} = \sum_{\ell=0}^{m-1} i_\ell \ip{\bsk}{\bsz_{b^{\ell}}} \bmod 1 \\
@@ -315,7 +315,7 @@ This implies that $\ip{\bsk}{\bsz_i}$, which appears in the cubature formula use
 
 The map $\tnu_m$ depends on the choice of the embedded rank-1 lattice node sets defined in \eqref{zbmdef} and \eqref{zidef}.  We can confirm that the right hand side of this definition lies in $\F_{b^m}$ by appealing to  \eqref{zbmdef} and recalling that the $\bsa_\ell$ are integer vectors:
 \[
-b^{m} \ip{\bsk}{\bsz_{b^{m-1}}} = b^m[b^{-1} \bsk^T\bsa_{m-1} + \cdots + b^{-m+1}\bsk^T \bsa_{1} \bmod 1] \in \F_{b^m}.
+b^{m} \ip{\bsk}{\bsz_{b^{m-1}}} = b^m[b^{-1} \bsk^T\bsa_{m-1} + \cdots + b^{-m+1}\bsk^T \bsa_{1} \bmod 1] \in \F_{b^m}, \ m \in \N.
 \]
 Moreover, note that for all $m\in \N$
 \begin{align}
@@ -345,8 +345,8 @@ Letting $y_i:=f(\bsz_{i}\oplus \bsDelta)$ for $i\in \N_0$ and considering \eqref
 \nonumber
 \tf_m(\bsk)
 &:= \hI_m\left( \E^{-2 \pi \sqrt{-1} \ip{\bsk}{\cdot}} f(\cdot) \right) = \frac{1}{b^m}\sum_{i=1}^{b^m-1} \E^{-2 \pi \sqrt{-1} \ip{\bsk}{\bsz_{i}\oplus \bsDelta}} y_i \\
-&= \E^{-2 \pi \sqrt{-1} \ip{\bsk}{\bsDelta}} Y_{m}(\tnu_m(\bsk)), \label{tfmYdef}
-\intertext{where for all $\nu\in \N_0$}
+&= \E^{-2 \pi \sqrt{-1} \ip{\bsk}{\bsDelta}} Y_{m}(\tnu_m(\bsk)), \qquad m \in \N_0, \ \bsk \in \Z^d, \label{tfmYdef}
+\intertext{where for all $m, \nu \in \N_0$,}
 \nonumber
 Y_m (\nu) & := \frac{1}{b^m} \sum_{i_m-1=0}^{b-1} \cdots \sum_{i_{0}=0}^{b-1} y_{i_0 + \cdots +i_{m-1} b^{m-1}} \exp\left(-2 \pi \sqrt{-1}\sum_{\ell=0}^{m-1} i_\ell \onu_{\ell+1}  b^{-\ell-1} \right)\\
 \nonumber
@@ -381,16 +381,16 @@ Choose $\tvk(\kappa+a' b^m) \in \{\bsk \in  \Z^d : \tnu_{m+1}(\bsk)=\tnu_{m}(\tv
 \end{tabbing}
 \end{definition}
 
-This mapping is not uniquely defined and one has the flexibility to choose part of it. For example, defining a norm such as in \cite[Chap. 4]{SloJoe94} one can assign larger values of $\kappa$ to higher frequencies $\bsk$. In the end, our goal is to define this mapping such that $\hf(\tvk(\kappa))\rightarrow 0$ as $\kappa \to \infty$.
+This mapping is not uniquely defined and one has the flexibility to choose part of it. For example, defining a norm such as in \cite[Chap. 4]{SloJoe94} one can assign larger values of $\kappa$ to larger wavenumbers $\bsk$. In the end, our goal is to define this mapping such that $\hf(\tvk(\kappa))\rightarrow 0$ as $\kappa \to \infty$.
 
-This mapping is one-to-one since at each step the new values $\tvk(\kappa+a b^m)$ or $\tvk(\kappa+a' b^m)$ are chosen from sets of wavenumbers that exclude those wavenumbers already assigned to $\tvk(\kappa)$.  The mapping can be made onto by choosing the ``smallest'' wavenumber in some sense. Furthermore $\tvk(\kappa)$ is well defined: $\{\bsk \in  \Z^d : \tnu_{m+1}(\bsk)=\tnu_{m}(\tvk(\kappa))\}\neq\emptyset$ and $\{\bsk \in  \Z^d : \tnu_{m+1}(\bsk)=\tnu_{m}(\tvk(\kappa))+a' b^m \}\neq\emptyset$. By \eqref{bilinearlinkprop}, for any linear combination in $\Z$ of previously defined $\tvk(i),\tvk(j)$, remark that $\tnu_{m+1}(c_1\tvk(i)+c_2\tvk(j))=c_1\tnu_{m+1}(\tvk(i))+c_2\tnu_{m+1}(\tvk(j)) \bmod b^{m+1}$. This means that for these sets, there is always infinitely many choices and they cannot be empty.
+This mapping is one-to-one since at each step the new values $\tvk(\kappa+a b^m)$ or $\tvk(\kappa+a' b^m)$ are chosen from sets of wavenumbers that exclude those wavenumbers already assigned to $\tvk(\kappa)$.  The mapping can be made onto by choosing the ``smallest'' wavenumber in some sense. \marginpar{I do not follow this argument.}  Furthermore $\tvk(\kappa)$ is well defined: $\{\bsk \in  \Z^d : \tnu_{m+1}(\bsk)=\tnu_{m}(\tvk(\kappa))\}\neq\emptyset$ and $\{\bsk \in  \Z^d : \tnu_{m+1}(\bsk)=\tnu_{m}(\tvk(\kappa))+a' b^m \}\neq\emptyset$. By \eqref{bilinearlinkprop}, for any linear combination in $\Z$ of previously defined $\tvk(i)$ and $\tvk(j)$, remark that $\tnu_{m+1}(c_1\tvk(i)+c_2\tvk(j))=c_1\tnu_{m+1}(\tvk(i))+c_2\tnu_{m+1}(\tvk(j)) \bmod b^{m+1}$. This means that for these sets, there is always infinitely many choices and they cannot be empty.
 
-In order to exemplify the beginning of a possible mapping, consider the first two dimensions of the lattice in Figure \ref{Latticefig} and the values provided below in Table \ref{tablemap}. For $m=0$, $\kappa\in\{0\}$ and $a=0$. This implies $\tvk(1)\in\{\tnu_{1}(\bsk)=1\}$, for instance $\tvk(1):=(-1,0)$. Next step is $m=1$ where $\kappa\in\{0,1\}$. Starting with $\kappa=0$, we need $\tvk(2)\in\{\tnu_{2}(\bsk)=2\}$ and thus, we can take $\tvk(2):=(-1,1)$. When $\kappa=1$, it requires $\tvk(3)\in\{\tnu_{2}(\bsk)=1\}$ where we choose $\tvk(3):=(1,0)$. Analogously,  $\tvk(4):=(-1,-1)$, $\tvk(5):=(0,1)$, $\tvk(6):=(1,-1)$ and $\tvk(7):=(0,-1)$.
+In order to illustrate the initial steps of a possible mapping, consider the first two dimensions of the lattice in Figure \ref{Latticefig} and the $\bsk$ values provided below in Table \ref{tablemap}. For $m=0$, $\kappa\in\{0\}$ and $a=0$. This implies $\tvk(1)\in\{\tnu_{1}(\bsk)=1\}$, for instance $\tvk(1):=(-1,0)$. The next step is $m=1$ where $\kappa\in\{0,1\}$. Starting with $\kappa=0$, we need $\tvk(2)\in\{\tnu_{2}(\bsk)=2\}$ and thus, we can take $\tvk(2):=(-1,1)$. When $\kappa=1$, we note that $\tnu(\tvk(1))=3$, which implies that $\tvk(3)\in\{\tnu_{2}(\bsk)=1\}$ so we may choose $\tvk(3):=(1,0)$. Continuing, we may  $\tvk(4):=(-1,-1)$, $\tvk(5):=(0,1)$, $\tvk(6):=(1,-1)$ and $\tvk(7):=(0,-1)$.  This leaves $(1,1)$ to be assigned to a larger value of $\kappa$.
 
 \begin{table}[h]
 \begin{center}
 \begin{tabular}{{c|}*{3}{|c|}{|c}}
-$\bsk$ & $\kappa$ & $\tnu_{1}(\bsk)=2\ip{\bsk}{(1,27)/2}$ & $\tnu_{2}(\bsk)=4\ip{\bsk}{(1,27)/4}$ & $\tnu_{3}(\bsk)=8\ip{\bsk}{(1,27)/8}$ \\
+$\tvk(\kappa)$ & $\kappa$ & $\tnu_{1}(\bsk)=2\ip{\bsk}{(1,27)/2}$ & $\tnu_{2}(\bsk)=4\ip{\bsk}{(1,27)/4}$ & $\tnu_{3}(\bsk)=8\ip{\bsk}{(1,27)/8}$ \\
 \hline
 $(0,0)$ & 0 & 0 & 0 & 0   \\
 $(-1,-1)$ & 4 & 0 & 0 & 4   \\
@@ -403,7 +403,7 @@ $(0,1)$ & 5 & 1 & 3 & 3   \\
 $(1,1)$ & $\cdots$ & 0 & 0 & 4   \\
 \hline
 \end{tabular}
-\caption{Table of values $\tnu_{1}$, $\tnu_{2}$ and $\tnu_{3}$ for some wavenumbers.}\label{tablemap}
+\caption{The values $\tnu_{1}$, $\tnu_{2}$ and $\tnu_{3}$ for some wavenumbers and the assignment of $\tvk(\kappa)$.}\label{tablemap}
 \end{center}
 \end{table}
 
@@ -490,7 +490,7 @@ For small $\ell$ the sum $S_\ell(f)$ includes only a few summands. Therefore, it
 Because we do not assume the knowledge of the true  Fourier  coefficients, for functions in $\cc$ we need bounds on $S_{\ell}(f)$ in terms of the sum of the discrete coefficients $\tS_{\ell,m}(f)$.  This is done by applying \eqref{tfassumc},  and the definition of the cone in \eqref{conecond}:
 \begin{align}
 \nonumber
-S_\ell(f) &= \sum_{\kappa=b^{\ell-1}}^{b^{\ell}-1} \bigl \lvert \hf_{\kappa}\bigr\rvert= \sum_{\kappa=b^{\ell-1}}^{b^{\ell}-1} \abs{\tf_{m,\kappa} - \sum_{\lambda=1}^{\infty} \hf_{\kappa+\lambda b^{m}} \E^{2 \pi \sqrt{-1} \ip{\tvk(\kappa+\lambda b^{m}) \ominus \tvk(\kappa)}{\bsDelta}}}\\
+S_\ell(f) &= \sum_{\kappa=b^{\ell-1}}^{b^{\ell}-1} \bigl \lvert \hf_{\kappa}\bigr\rvert= \sum_{\kappa=b^{\ell-1}}^{b^{\ell}-1} \abs{\tf_{m,\kappa} - \sum_{\lambda=1}^{\infty} \hf_{\kappa+\lambda b^{m}} \E^{2 \pi \sqrt{-1} \ip{\tvk(\kappa+\lambda b^{m}) - \tvk(\kappa)}{\bsDelta}}}\\
 \nonumber
 &\le \sum_{\kappa=b^{\ell-1}}^{b^{\ell}-1} \bigl \lvert \tf_{m,\kappa} \bigr\rvert + \sum_{\kappa=b^{\ell-1}}^{b^{\ell}-1} \sum_{\lambda=1}^{\infty} \bigl \lvert \hf_{\kappa+\lambda b^{m}}\bigr\rvert = \tS_{\ell,m}(f) + \hS_{\ell,m}(f) \\
 \label{boundSumbsApproxa}
@@ -522,7 +522,7 @@ Inequality \eqref{SSbd2} suggests the following algorithm. First, choose $\ell_*
 
 The choice of the parameter $r$ is important. Larger $r$ means a bigger $\fC(m)$ although makes the error more dependent on smaller indexed Fourier coefficients.
 
-\begin{algo}[Adaptive Rank-1 Lattice Cubature, \texttt{cubLattice\_g}] \label{adapalgo} Fix $r$, $\ell_*$ as described above and $\homega$ and $\wcomega$ describing $\cc$ in \eqref{conecond}. Given a tolerance, $\varepsilon$, initialize $m=\ell_*+r$ and do the following:
+\begin{algo}[Adaptive Rank-1 Lattice Cubature, \cublat] \label{adapalgo} Fix $r$, $\ell_*$ as described above and $\homega$ and $\wcomega$ describing $\cc$ in \eqref{conecond}. Given a tolerance, $\varepsilon$, initialize $m=\ell_*+r$ and do the following:
 
 \begin{description}
 \item[\textbf{Step 1.}] According to Section \ref{FFT}, compute $\tS_{m-r,m}(f)$.
@@ -547,7 +547,7 @@ By construction, the algorithm must be successful. Recall that the inequality us
 In order to find the upper bound on the computational cost one can obtain, analogously to the result in \eqref{boundSumbsApproxa},
 \begin{align}
 \nonumber
-\tS_{\ell,m}(f) &= \sum_{\kappa=b^{\ell-1}}^{b^{\ell}-1} \bigabs{ \tf_{m,\kappa}} = \sum_{\kappa=b^{\ell-1}}^{b^{\ell}-1} \biggabs{\hf_{\kappa} + \sum_{\lambda=1}^{\infty} \hf_{\kappa+\lambda b^{m}} \E^{2 \pi \sqrt{-1} \ip{\tvk(\kappa+\lambda b^{m}) \ominus \tvk(\kappa)}{\bsDelta}}}\\
+\tS_{\ell,m}(f) &= \sum_{\kappa=b^{\ell-1}}^{b^{\ell}-1} \bigabs{ \tf_{m,\kappa}} = \sum_{\kappa=b^{\ell-1}}^{b^{\ell}-1} \biggabs{\hf_{\kappa} + \sum_{\lambda=1}^{\infty} \hf_{\kappa+\lambda b^{m}} \E^{2 \pi \sqrt{-1} \ip{\tvk(\kappa+\lambda b^{m}) - \tvk(\kappa)}{\bsDelta}}}\\
 \nonumber
 &\le \sum_{\kappa=b^{\ell-1}}^{b^{\ell}-1} \bigabs{\hf_{\kappa}} + \sum_{\kappa=b^{\ell-1}}^{b^{\ell}-1} \sum_{\lambda=1}^{\infty} \bigabs{\hf_{\kappa+\lambda b^{m}}} 
 = S_{\ell}(f) + \hS_{\ell,m}(f) \\
@@ -565,9 +565,9 @@ In Section \ref{FFT}, the computation of $\tS_{m-r,m}(f)$ is described in terms 
 
 \section{Numerical Example} \label{secnumexpsec}
 
-Algorithm \ref{adapalgo} has been coded in MATLAB as \texttt{cubLattice\_g} in base 2, and is scheduled to appear in the next release for the Guaranteed Automatic Integration Library, \cite{ChoEtal14a}. For testing it, we priced an Asian call with geometric Brownian motion, $S_0=K=100$, $T=1$ and $r=3\%$. The test is performed on 500 samples whose dimensions are chosen IID uniformly among 1, 2,4,8,16,32 and 64, and the volatility also IID uniformly from $10\%$ to $70\%$. Results, in Figure \ref{geoAsianmean}, show $97\%$ of success meeting the error tolerance.
+Algorithm \ref{adapalgo} has been coded in MATLAB as \cublat in base 2, and is scheduled to appear in the next release for the Guaranteed Automatic Integration Library, \cite{ChoEtal14a}. For testing it, we priced an Asian call with geometric Brownian motion, $S_0=K=100$, $T=1$ and $r=3\%$. The test is performed on 500 samples whose dimensions are chosen IID uniformly among $1, 2, 4, 8, 16, 32,$ and $64$, and the volatility also IID uniformly from $10\%$ to $70\%$. Results, in Figure \ref{geoAsianmean}, show $97\%$ of success meeting the error tolerance.
 
-The algorithm parametrization according to the cone chosen by default was $\ell_*=6$, $r=4$ and $\fC(m)=5 \times 2^{-m}$. However, the results are strongly dependent on the generating vector that was used for creating the rank-1 lattice embedded node sets. The vector applied to this example was found with the \texttt{latbuilder} software from Pierre L'Ecuyer and David Munger \cite{????}, in the special case of $n=2^{26}$ points, $d=250$ and weights $\gamma_j=j^{-2}$. The best choice of generating vector for \texttt{cubLattice\_g} needs further research.
+The algorithm parametrization according to the cone chosen by default was $\ell_*=6$, $r=4$ and $\fC(m)=5 \times 2^{-m}$. However, the results are strongly dependent on the generating vector that was used for creating the rank-1 lattice embedded node sets. The vector applied to this example was found with the \texttt{latbuilder} software from Pierre L'Ecuyer and David Munger \cite{LEcMun14a}, in the special case of $n=2^{26}$ points, $d=250$ and weights $\gamma_j=j^{-2}$. The best choice of generating vector for \cublat needs further research.
 
 \begin{figure}[h!]
 \centering
@@ -579,7 +579,7 @@ The algorithm parametrization according to the cone chosen by default was $\ell_
 Quasi-Monte Carlo methods rarely provide guaranteed and adaptive algorithms. Developing a new methodology to bound the absolute error via the discrete Fourier coefficients has allowed us to build an adaptive automatic algorithm guaranteed for cones of integrands. The definition of cone is a challenging new viewpoint whose non-convexity leads to a nonlinear algorithm, and the complexity of the integration problem over this set may be hard to analyze. Our algorithm provides an upper bound on the complexity, but we have not yet obtained a  lower bound. In the future, we also hope to link this work to other results provided in the literature by drawing a correspondence between our cone of integrands and more common spaces of integrands, like the Korobov spaces. Finally, we are also interested in extending our algorithm to accommodate  a relative error tolerance and study the impact of the dimension in it as well as establishing the best generating vector.
 
 \begin{acknowledgement}
-The authors thank Ronald Cools and Dirk Nuyens for organizing MCQMC 2014 and greatly appreciate the suggestions made by Sou-Cheng Choi, Frances Kuo, Lan Jiang, Dirk Nuyens and Yizhi Zhang to improve this manuscript. In addition, the first author also thanks Art Owen for partially funding traveling expenses to MCQMC 2014.
+The authors thank Ronald Cools and Dirk Nuyens for organizing MCQMC 2014 and greatly appreciate the suggestions made by Sou-Cheng Choi, Frances Kuo, Lan Jiang, Dirk Nuyens and Yizhi Zhang to improve this manuscript. In addition, the first author also thanks Art B. Owen for partially funding traveling expenses to MCQMC 2014 through the US NSF.
 This work was partially supported by US National Science Foundation grants DMS-1115392 and DMS-1357690. 
 \end{acknowledgement}
 

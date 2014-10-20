@@ -1,5 +1,5 @@
 \def\Ignore#1{}\def\notesupp#1{}\def\Ignore#1{}\def\notesupp#1{}\providecommand{\HickernellFJ}{Hickernell\xspace}
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 \providecommand{\url}[1]{{#1}}
 \providecommand{\urlprefix}{URL }
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -21,11 +21,12 @@ Clancy, N., Ding, Y., Hamilton, C., Hickernell, F.J., Zhang, Y.: The cost of
 \newblock
   \urlprefix\url{http://www.sciencedirect.com/science/article/pii/S0885064X13000769}
 
-\bibitem{HicEtal00}
-\HickernellFJ, F.J., Hong, H.S., L'{\'E}cuyer, P., Lemieux, C.: Extensible
-  lattice sequences for quasi-{M}onte {C}arlo quadrature.
-\newblock SIAM J. Sci.\ Comput. \textbf{22}, 1117--1138 (2000).
-\newblock \doi{10.1137/S1064827599356638}
+\bibitem{Hic01a}
+\HickernellFJ, F.J.: Obtaining {$O(N^{-2+\epsilon})$} convergence for lattice
+  quadrature rules.
+\newblock In: K.T. Fang, F.J. \HickernellFJ, H.~Niederreiter (eds.) {M}onte
+  {C}arlo and Quasi-{M}onte {C}arlo Methods 2000, pp. 274--289.
+  Springer-Verlag, Berlin (2002)
 
 \bibitem{HicJim16a}
 \HickernellFJ, F.J., {Jim\'enez Rugama}, {\relax Ll}.A.: Reliable adaptive
@@ -48,6 +49,17 @@ Clancy, N., Ding, Y., Hamilton, C., Hickernell, F.J., Zhang, Y.: The cost of
   multivariate integration using lattice rules.
 \newblock In: H.~Niederreiter (ed.) {M}onte {C}arlo and Quasi-{M}onte {C}arlo
   Methods 2002, pp. 259--273. Springer-Verlag, Berlin (2004)
+
+\bibitem{HicWoz99}
+\HickernellFJ, F.J., Wo\'zniakowski, H.: Integration and approximation in
+  arbitrary dimensions.
+\newblock Adv.\ Comput.\ Math. \textbf{12}, 25--58 (2000).
+\newblock \doi{10.1023/A:1018948631251}
+
+\bibitem{LEcMun14a}
+L'Ecuyer, P., Munger, D.: {LatticeBuilder}: A general software tool for
+  constructing rank-1 latice rules.
+\newblock Submitted for publication
 
 \bibitem{Sid93}
 Sidi, A.: A new variable transformation for numerical integration.
