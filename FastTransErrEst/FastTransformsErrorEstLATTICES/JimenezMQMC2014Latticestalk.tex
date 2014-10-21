@@ -286,7 +286,7 @@ Note from this definition that $\hI_m\left(\E^{2 \pi \sqrt{-1} \ip{\bsk}{\cdot}}
 
 \section{The Fast Fourier Transform for Function Values at Rank-1 Lattice Node Sets}\label{FFT}
 
-Adaptive Algorithm \ref{adapalgo} that is constructed in Section \ref{algorithmsection} has an error analysis based on the above expression.  However, since the true Fourier coefficients are unknown, they must be approximated by the discrete Fourier coefficients, which are defined as follows:
+Adaptive Algorithm \ref{adapalgo} (\cublat) that is constructed in Section \ref{algorithmsection} has an error analysis based on the above expression.  However, since the true Fourier coefficients are unknown, they must be approximated by the discrete Fourier coefficients, which are defined as follows:
 \begin{subequations} \label{tfdefalias}
 \begin{align}
 \tf_m(\bsk)
@@ -317,9 +317,11 @@ This implies that $\ip{\bsk}{\bsz_i}$, which appears in the cubature formula use
 \end{multline}
 
 The map $\tnu_m$ depends on the choice of the embedded rank-1 lattice node sets defined in \eqref{zbmdef} and \eqref{zidef}.  We can confirm that the right hand side of this definition lies in $\F_{b^m}$ by appealing to  \eqref{zbmdef} and recalling that the $\bsa_\ell$ are integer vectors:
-\[
-b^{m} \ip{\bsk}{\bsz_{b^{m-1}}} = b^m[b^{-1} \bsk^T\bsa_{m-1} + \cdots + b^{-m+1}\bsk^T \bsa_{1} \bmod 1] \in \F_{b^m}, \ m \in \N.
-\]
+\begin{align*}
+b^{m} \ip{\bsk}{\bsz_{b^{m-1}}} &= b^m[b^{-1} \bsk^T\bsa_{m-1} + \cdots + b^{-m}\bsk^T \bsa_{0} \bmod 1]\\
+&= b^{m-1} \bsk^T\bsa_{m-1} + \cdots + \bsk^T \bsa_{0} \bmod b^m \in \F_{b^m}, \ m \in \N.
+\end{align*}
+
 Moreover, note that for all $m\in \N$
 \begin{align}
 \label{tnuprop}
@@ -384,13 +386,11 @@ Choose $\tvk(\kappa+a' b^m) \in \{\bsk \in  \Z^d : \tnu_{m+1}(\bsk)=\tnu_{m}(\tv
 \end{tabbing}
 \end{definition}
 
-This mapping is not uniquely defined and one has the flexibility to choose part of it. For example, defining a norm such as in \cite[Chap. 4]{SloJoe94} one can assign larger values of $\kappa$ to larger wavenumbers $\bsk$. In the end, our goal is to define this mapping such that $\hf(\tvk(\kappa))\rightarrow 0$ as $\kappa \to \infty$.
-
-
+This mapping is not uniquely defined and one has the flexibility to choose part of it. For example, defining a norm such as in \cite[Chap. 4]{SloJoe94} one can assign smaller values of $\kappa$ to smaller wavenumbers $\bsk$. In the end, our goal is to define this mapping such that $\hf(\tvk(\kappa))\rightarrow 0$ as $\kappa \to \infty$.
 
 This mapping is one-to-one since at each step the new values $\tvk(\kappa+a b^m)$ or $\tvk(\kappa+a' b^m)$ are chosen from sets of wavenumbers that exclude those wavenumbers already assigned to $\tvk(\kappa)$.  The mapping can be made onto by choosing the ``smallest'' wavenumber in some sense. 
 
-It still remains to be shown that  for any $\kappa \in \F_{b^{m}}$, $\{\bsk \in  \Z^d : \tnu_{m+1}(\bsk)=\tnu_{m}(\tvk(\kappa))+a' b^m\}$ is nonempty for all $a' \in \F_b$ with $a' \ne a$.  Given $m$, choose $\bsl$ such that $\ip{\bsl}{\bsz_1}=b^{-1}$. This is possible because $\bsz_1 \ne \bszero$.  For any  $a'' \in \F_b$ note that
+It remains to be shown that for any $\kappa \in \F_{b^{m}}$, $\{\bsk \in  \Z^d : \tnu_{m+1}(\bsk)=\tnu_{m}(\tvk(\kappa))+a' b^m\}$ is nonempty for all $a' \in \F_b$ with $a' \ne a$.  Choose $\bsl$ such that $\ip{\bsl}{\bsz_1}=b^{-1}$. This is possible because $\bsz_1 = b^{-1} \bsa_1 \ne \bszero$.  For any $m \in \N_0$, $\kappa \in \F_{b^m}$, and  $a'' \in \F_b$, note that
 \begin{align*}
 \ip{\tvk(\kappa) + a'' b^{m} \bsl}{\bsz_{b^{m}}}& = \ip{\tvk(\kappa)}{\bsz_{b^{m}}} + a'' b^m \ip{\bsl}{\bsz_{b^{m}}} \bmod 1 \qquad \qquad \text{by \eqref{bilinearlinkprop}} \\
 &= [b^{-m-1}\tnu_{m+1}(\tvk(\kappa)) + a'' \ip{\bsl}{b^m  \bsz_{b^{m}}\bmod 1}] \bmod 1 \\
@@ -402,7 +402,7 @@ It still remains to be shown that  for any $\kappa \in \F_{b^{m}}$, $\{\bsk \in 
 \end{align*}
 By choosing $a''$ such that $a'=(a+a'' \bmod b)$, we have shown that the set $\kappa \in \F_{b^{m}}$, $\{\bsk \in  \Z^d : \tnu_{m+1}(\bsk)=\tnu_{m}(\tvk(\kappa))+a' b^m\}$ is nonempty.
 
-In order to illustrate the initial steps of a possible mapping, consider the first two dimensions of the lattice in Figure \ref{Latticefig} and the $\bsk$ values provided below in Table \ref{tablemap}. For $m=0$, $\kappa\in\{0\}$ and $a=0$. This implies $\tvk(1)\in\{\tnu_{1}(\bsk)=1\}$, for instance $\tvk(1):=(-1,0)$. The next step is $m=1$ where $\kappa\in\{0,1\}$. Starting with $\kappa=0$, we need $\tvk(2)\in\{\tnu_{2}(\bsk)=2\}$ and thus, we can take $\tvk(2):=(-1,1)$. When $\kappa=1$, we note that $\tnu(\tvk(1))=3$, which implies that $\tvk(3)\in\{\tnu_{2}(\bsk)=1\}$ so we may choose $\tvk(3):=(1,0)$. Continuing, we may  $\tvk(4):=(-1,-1)$, $\tvk(5):=(0,1)$, $\tvk(6):=(1,-1)$ and $\tvk(7):=(0,-1)$.  This leaves $(1,1)$ to be assigned to a larger value of $\kappa$.
+In order to illustrate the initial steps of a possible mapping, consider the first two dimensions of the lattice in Figure \ref{Latticefig} and the $\bsk$ values provided below in Table \ref{tablemap}. For $m=0$, $\kappa\in\{0\}$ and $a=0$. This implies $\tvk(1)\in\{\tnu_{1}(\bsk)=1\}$, so one may choose $\tvk(1):=(-1,0)$. The next step is $m=1$ where $\kappa\in\{0,1\}$. Starting with $\kappa=0$, we need $\tvk(2)\in\{\tnu_{2}(\bsk)=2\}$ and thus, we can take $\tvk(2):=(-1,1)$. When $\kappa=1$, we note that $\tnu(\tvk(1))=3$, which implies that $\tvk(3)\in\{\tnu_{2}(\bsk)=1\}$, so we may choose $\tvk(3):=(1,0)$. Continuing, we may  $\tvk(4):=(-1,-1)$, $\tvk(5):=(0,1)$, $\tvk(6):=(1,-1)$ and $\tvk(7):=(0,-1)$.  This leaves $(1,1)$ to be assigned to a larger value of $\kappa$.
 
 \begin{table}[h]
 \begin{center}
@@ -467,7 +467,7 @@ For convenience we adopt the notation $\hf_{\kappa} :=\hf(\tvk(\kappa))$ and $\t
 \biggabs{ \int_{\cube} f(\bsx) \, \D \bsx - \hI_m(f)} 
 \le \sum_{\lambda=1}^{\infty} \left \lvert \hf_{\lambda b^m}\right \rvert, \label{err2}
 \end{equation}
-and the aliasing relationship in \eqref{tfassum} as
+and the aliasing relationship in \eqref{tfassum} becomes
 \begin{align}
 \tf_{m,\kappa} =\hf_{\kappa} + \sum_{\lambda=1}^{\infty} \hf_{\kappa+\lambda b^{m}} \E^{2 \pi \sqrt{-1} \ip{\tvk(\kappa+\lambda b^{m}) - \tvk(\kappa)}{\bsDelta}}. \label{tfassumc}
 \end{align}
@@ -481,18 +481,18 @@ S_m(f) =  \sum_{\kappa=\left \lfloor b^{m-1} \right \rfloor}^{b^{m}-1} \bigabs{\
 \sum_{\kappa=b^{m}}^{\infty} \bigabs{\hf_{\kappa}}, \qquad
 \tS_{\ell,m}(f) = \sum_{\kappa=\left \lfloor b^{\ell-1}\right \rfloor}^{b^{\ell}-1} \bigabs{\tf_{m,\kappa}}.
 \end{gather*}
-Note that $\tS_{\ell,m}(f)$ is the only one that can be observed from data because it involves the discrete transform coefficients. In fact, from \eqref{tfmYdef} one can identify $\bigabs{\tf_{m,\kappa}} = \bigabs{Y_m(\tnu_m(\tvk(\kappa)))}$ and our adaptive algorithm will be based on this sum bounding the other three, $S_m(f),\hS_{\ell,m}(f),\wcS_m(f)$ that can not be readily observed. 
+Note that $\tS_{\ell,m}(f)$ is the only one that can be observed from data because it involves the discrete transform coefficients. In fact, from \eqref{tfmYdef} one can identify $\bigabs{\tf_{m,\kappa}} = \bigabs{Y_m(\tnu_m(\tvk(\kappa)))}$ and our adaptive algorithm will be based on this sum bounding the other three, $S_m(f),\hS_{\ell,m}(f)$, and $\wcS_m(f)$, which cannot be readily observed. 
 
-Let  $\ell_* \in \N$ be some fixed integer and $\homega$ and $\wcomega$ be some bounded non-negative valued functions.  We define a cone, $\cc$, of absolutely continuous functions whose Fourier coefficients decay according to certain inequalities:
+Let  $\ell_* \in \N$ be some fixed integer and $\homega$ and $\wcomega$ be some bounded non-negative valued functions.  We define a \emph{cone}, $\cc$, of absolutely continuous functions whose Fourier coefficients decay according to certain inequalities:
 \begin{multline} \label{conecond}
 \cc:=\{f \in AC(\cube) : \hS_{\ell,m}(f) \le \homega(m-\ell) \wcS_m(f),\ \ \ell \le m, \\
 \wcS_m(f) \le \wcomega(m-\ell) S_{\ell}(f),\ \  \ell_* \le \ell \le m\}.
 \end{multline}
-We also require the existence of $r$ such that $\homega(r) \wcomega(r)<1$, which happens, for instance, if $\lim_{r\rightarrow\infty}\wcomega(r)=0$. This set is a cone, i.e. $f \in \cc \implies af \in \cc\;\forall a\in\R$, but it is not convex. A wider discussion on the advantages and disadvantages of considering cones of functions can be found in \cite{Clancy201421}.
+We also require the existence of $r$ such that $\homega(r) \wcomega(r)<1$, which happens, for instance, if $\lim_{r\rightarrow\infty}\wcomega(r)=0$. This set is a cone, i.e. $f \in \cc \implies af \in \cc\;\forall a\in\R$, but it is not convex. A wider discussion on the advantages and disadvantages of designing numerical algorithms for cones of functions can be found in \cite{Clancy201421}.
 
 Functions in $\cc$ have Fourier coefficients that do not oscillate wildly.  This property allows us to estimate the cubature error reliably. 
 
-The first inequality controls how an infinite sum of some of the larger wavenumber coefficients are bounded above by a sum of all the surrounding coefficients.  In Figure \ref{Walshcoeffig} for example, the sum of the large black dots corresponds to $\hS_{0,12}(f)$ and the sum of the small dark gray dots corresponds to $\wcS_{12}(f)$. The former also corresponds to the error bound in \eqref{err2}.
+The first inequality controls how an infinite sum of \emph{some} of the larger wavenumber coefficients are bounded above by a sum of all the surrounding coefficients.  In Figure \ref{Walshcoeffig} for example, the sum of the large black dots corresponds to $\hS_{0,12}(f)$, and the sum of the small dark gray dots corresponds to $\wcS_{12}(f)$. The former sum also corresponds to the error bound in \eqref{err2}.
 
 The second inequality controls how the sum of some  larger wavenumber coefficients are bounded above by a \emph{finite} sum of some small wavenumber Fourier coefficients. Again, in Figure \ref{Walshcoeffig} we can see how $S_8(f)$ can be used to bound $\wcS_{12}(f)$. This second inequality essentially says that the fine scale of the integrand cannot be too large compared to the coarser scale of the integrand.
 
@@ -528,7 +528,7 @@ By \eqref{err2} and the cone conditions, the above inequality implies a data-bas
 & \le  \frac{\homega(m) \wcomega(m-\ell)}{1 - \homega(m-\ell) \wcomega(m-\ell)}\tS_{\ell,m}(f)
 \label{SSbd2}
 \end{align}
-Based on this conservative bound an adaptive algorithm is constructed in the next Section. 
+Based on this conservative bound an adaptive algorithm is constructed in the next section. 
 
 \section{An Adaptive Algorithm Based for Cones of Integrads}\label{algorithmsection}
 
@@ -537,7 +537,7 @@ Inequality \eqref{SSbd2} suggests the following algorithm. First, choose $\ell_*
 \fC(m):= \frac{\homega(m) \wcomega(r)}{1 - \homega(r) \wcomega(r)}.
 \]
 
-The choice of the parameter $r$ is important. Larger $r$ means a bigger $\fC(m)$ although makes the error more dependent on smaller indexed Fourier coefficients.
+The choice of the parameter $r$ is important. Larger $r$ means a smaller $\fC(m)$, but it also makes the error bound more dependent on smaller indexed Fourier coefficients.
 
 \begin{algo}[Adaptive Rank-1 Lattice Cubature, \cublat] \label{adapalgo} Fix $r$, $\ell_*$ as described above and $\homega$ and $\wcomega$ describing $\cc$ in \eqref{conecond}. Given a tolerance, $\varepsilon$, initialize $m=\ell_*+r$ and do the following:
 
@@ -584,12 +584,12 @@ In Section \ref{FFT}, the computation of $\tS_{m-r,m}(f)$ is described in terms 
 
 Algorithm \ref{adapalgo} has been coded in MATLAB as \cublat in base 2, and is scheduled to appear in the next release for the Guaranteed Automatic Integration Library, \cite{ChoEtal14a}. For testing it, we priced an Asian call with geometric Brownian motion, $S_0=K=100$, $T=1$ and $r=3\%$. The test is performed on 500 samples whose dimensions are chosen IID uniformly among $1, 2, 4, 8, 16, 32,$ and $64$, and the volatility also IID uniformly from $10\%$ to $70\%$. Results, in Figure \ref{geoAsianmean}, show $97\%$ of success meeting the error tolerance.
 
-The algorithm parametrization according to the cone chosen by default was $\ell_*=6$, $r=4$ and $\fC(m)=5 \times 2^{-m}$. However, the results are strongly dependent on the generating vector that was used for creating the rank-1 lattice embedded node sets. The vector applied to this example was found with the \texttt{latbuilder} software from Pierre L'Ecuyer and David Munger \cite{LEcMun14a}, in the special case of $n=2^{26}$ points, $d=250$ and weights $\gamma_j=j^{-2}$. The best choice of generating vector for \cublat needs further research.
+The algorithm parametrization according to the cone chosen by default was $\ell_*=6$, $r=4$ and $\fC(m)=5 \times 2^{-m}$. However, the results are strongly dependent on the generating vector that was used for creating the rank-1 lattice embedded node sets. The vector applied to this example was found with the \texttt{latbuilder} software from Pierre L'Ecuyer and David Munger \cite{LEcMun14a}, in the special case of a maximum of $2^{26}$ points, $d=250$ and weights $\gamma_j=j^{-2}$. The best choice of generating vector for \cublat needs further research.
 
 \begin{figure}[h!]
 \centering
 \includegraphics[width=7cm]{Images/geomeancubLatticeErrTime_d_64.eps} 
-\caption{Empirical distribution functions obtained from 500 samples, for the error (continuous line) and time (slashed-doted line). The vertical slashed line represents the tolerance 0.02 in each sample. \label{geoAsianmean}}
+\caption{Empirical distribution functions obtained from 500 samples, for the error (continuous line) and time (slashed-doted line). The vertical dashed line represents the tolerance 0.02 in each sample. \label{geoAsianmean}}
 \end{figure}
 
 \section{Discussion and Future Work}
