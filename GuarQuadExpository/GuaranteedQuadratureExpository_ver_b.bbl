@@ -1,0 +1,136 @@
+\def\Ignore#1{}\def\notesupp#1{}\def\Ignore#1{}\def\notesupp#1{}\providecommand{\HickernellFJ}{Hickernell\xspace}
+% \bib, bibdiv, biblist are defined by the amsrefs package.
+\begin{bibdiv}
+\begin{biblist}
+
+\bib{BraPet11a}{book}{
+      author={Brass, H.},
+      author={Petras, K.},
+       title={Quadrature theory: the theory of numerical integration on a
+  compact interval},
+     edition={First},
+   publisher={American Mathematical Society},
+     address={Rhode Island},
+        date={2011},
+}
+
+\bib{BurFai10}{book}{
+      author={Burden, R.~L.},
+      author={Faires, J.~D.},
+       title={Numerical analysis},
+     edition={Ninth Edition},
+   publisher={Cengage Brooks/Cole},
+     address={Belmont, CA},
+        date={2010},
+}
+
+\bib{CheKin12a}{book}{
+      author={Cheney, W.},
+      author={Kincaid, D.},
+       title={Numerical mathematics and computing},
+     edition={Seventh},
+   publisher={Brooks/Cole},
+     address={Boston},
+        date={2013},
+}
+
+\bib{HicEtal14b}{article}{
+      author={Clancy, N.},
+      author={Ding, Y.},
+      author={Hamilton, C.},
+      author={\HickernellFJ, F.~J.},
+      author={Zhang, Y.},
+       title={The cost of deterministic, adaptive, automatic algorithms: Cones,
+  not balls},
+        date={2014},
+     journal={J. Complexity},
+      volume={30},
+       pages={21\ndash 45},
+}
+
+\bib{TrefEtal14}{manual}{
+      author={Hale, N.},
+      author={Trefethen, L.~N.},
+      author={Driscoll, T.~A.},
+       title={Chebfun version 5},
+        date={2014},
+}
+
+\bib{Lyn83}{article}{
+      author={Lyness, J.~N.},
+       title={When not to use an automatic quadrature routine},
+        date={1983},
+     journal={SIAM Rev.},
+      volume={25},
+       pages={63\ndash 87},
+}
+
+\bib{MoKeCl09}{book}{
+      author={Moore, {R.~E.}},
+      author={Kearfott, {R.~B.}},
+      author={Cloud, {M.~J.}},
+       title={Introduction to interval analysis},
+   publisher={Cambridge Uni Press (CUP)},
+        date={2009},
+}
+
+\bib{R3.03_2013}{misc}{
+      author={{R Development Core Team}},
+       title={{The R Project for Statistical Computing}},
+         how={GNU Project},
+        date={2013},
+}
+
+\bib{Rum99a}{incollection}{
+      author={Rump, S.~M.},
+       title={{INTLAB - INTerval LABoratory}},
+        date={1999},
+   booktitle={{Developments~in~Reliable Computing}},
+      editor={Csendes, Tibor},
+   publisher={Kluwer Academic Publishers},
+     address={Dordrecht},
+       pages={77\ndash 104},
+        note={\url{http://www.ti3.tuhh.de/rump/}},
+}
+
+\bib{Rum10a}{article}{
+      author={Rump, S.~M.},
+       title={Verification methods: {R}igorous results using floating-point
+  arithmetic},
+        date={2010},
+     journal={Acta Numer.},
+      volume={19},
+       pages={287\ndash 449},
+}
+
+\bib{Sau12a}{book}{
+      author={Sauer, T.},
+       title={Numerical analysis},
+   publisher={Pearson},
+        date={2012},
+}
+
+\bib{MAT8.3}{manual}{
+      author={{The MathWorks, Inc.}},
+       title={{MATLAB} 8.3},
+     address={Natick, MA},
+        date={2014},
+}
+
+\bib{NAG23}{manual}{
+      author={{The Numerical Algorithms Group}},
+       title={The {NAG} library},
+     edition={{M}ark 23},
+     address={Oxford},
+        date={2012},
+}
+
+\bib{Mat9a}{manual}{
+      author={{Wolfram Research Inc.}},
+       title={Mathematica 9},
+     address={Champaign, IL},
+        date={2012},
+}
+
+\end{biblist}
+\end{bibdiv}
