@@ -11,7 +11,7 @@
 \DeclareMathOperator{\flawinteg}{\texttt{\textup{flawint}}}
 \DeclareMathOperator{\ballinteg}{\texttt{\textup{ballint}}}
 \DeclareMathOperator{\Var}{Var}
-\newcommand{\tVar}{\widetilde{\Var}}
+\newcommand{\hVar}{\widetilde{\Var}}
 \DeclareMathOperator{\err}{err}
 \DeclareMathOperator{\size}{size}
 \DeclareMathOperator{\maxcost}{maxcost}
@@ -28,6 +28,7 @@
 \newtheorem{algo}{Algorithm}
 \newtheorem*{ballalgo}{Algorithm $\ballinteg$}
 \newtheorem*{flawalgo}{Algorithm $\flawinteg$}
+\newtheorem*{guaralgo}{Algorithm $\integ$}
 \newtheorem{condit}{Condition}
 %\newtheorem{assump}{Assumption}
 \theoremstyle{remark}
@@ -39,6 +40,7 @@
 \DeclareMathOperator{\tri}{peak}
 \DeclareMathOperator{\twopk}{twopk}
 \newcommand{\datasites}{\{x_i\}_{i=0}^n}
+\newcommand{\hcut}{\fh}
 
 \begin{document}
 
@@ -339,168 +341,122 @@ a) & b)
 \caption{a) A spiky integrand designed to fool MATLAB's {\tt quad} and the data sampled by {\tt quad}; b) A fluky integrand designed to fool {\tt quad}. \label{fig:foolquad}}
 \end{figure}
 
-\section{A Guaranteed, Adaptive, Automatic Trapezoidal Algorithm $\integ$} \label{newalgosec}
+\section{A Guaranteed, Adaptive Trapezoidal Algorithm $\integ$} \label{newalgosec}
 
 Non-adaptive $\ballinteg$ uses no values of $f$ to determine how many trapezoids are needed to approximate the integral of $f$ because an upper bound on $\Var(f')$ is assumed.  Adaptive $\flawinteg$ uses values of $f$ to determine how how many trapezoids are needed, but in a way that might not detect a large $\Var(f')$, such as for fluky integrands.  In this section construct an adaptive algorithm that reliably estimates $\Var(f')$ for a certain cone of integrands, $\cc$.
 
 Given any partition, $\datasites$, define an approximation to $\Var(f')$ as follows:
-\begin{multline*}
-\tV(f',\datasites,\{\Delta_{i}\}_{i=1}^{n-1}) : = \sum_{i=2}^{n-1} \abs{\Delta_{i} - \Delta_{i-1}}, \\
+\begin{multline} \label{tVdef}
+\hV(f',\datasites,\{\Delta_{i}\}_{i=1}^{n-1}) : = \sum_{i=2}^{n-1} \abs{\Delta_{i} - \Delta_{i-1}}, \\
 \text{where } \Delta_{i} \text{ is between } f'(x_i) \text{ and } f'(x_i^-).
-\end{multline*}
-Here $f'(x^-):= \lim_{\delta \downarrow 0} [f(x) - f(x-\delta)]/\delta$.  Note that $\tV$ does not involve the values of $f'$ at $x_0=a$ or $x_n=b$.  Also note that by definition
-\[
-\tV(f',\datasites,\{\Delta_{i}\}_{i=1}^{n-1}) \le \Var(f') \qquad \forall f \in \cv, \ \datasites, \{\Delta_{i}\}_{i=1}^{n-1}, \ n \in \naturals.
-\]
-The cone of integrands that our algorithm will be guaranteed to work for is defined as those functions for which $\tV(f',\datasites,\{\Delta_{i}\}_{i=1}^{n-1})$ does not underestimate $\Var(f')$ by too much:
-\begin{multline} \label{conedef}
-\cc := \{ f \in \cv : \Var(f') \le \fC(h) \tV(f',\datasites,\{\Delta_{i}\}_{i=1}^{n-1}) \text{ for all choices of } \\
-n \in \naturals, \ \{\Delta_{i}\}_{i=1}^{n-1}, \text{ and }\datasites \text{ with } \size(\datasites) < \fh \}.
 \end{multline}
-Here $\fh \in (0, b-a]$ is a cut-off value, and the inflation factor $\fC:[0,\fh) \to [1,\infty)$ is a non-decreasing function.
+Here $f'(x^-):= \lim_{\delta \downarrow 0} [f(x) - f(x-\delta)]/\delta$.  Note that $\hV$ does not involve the values of $f'$ at $x_0=a$ or $x_n=b$.  Also note that by definition that the approve approximation is actually a lower bound:
+\begin{equation} \label{hVlowerbd}
+\hV(f',\datasites,\{\Delta_{i}\}_{i=1}^{n-1}) \le \Var(f') \qquad \forall f \in \cv, \ \datasites, \{\Delta_{i}\}_{i=1}^{n-1}, \ n \in \naturals.
+\end{equation}
+Our new algorithm will be guaranteed to work for the cone of integrands for which $\hV(f',\datasites,\{\Delta_{i}\}_{i=1}^{n-1})$ does not underestimate $\Var(f')$ by too much:
+\begin{multline} \label{conedef}
+\cc := \{ f \in \cv : \Var(f') \le \fC(\size(\datasites)) \hV(f',\datasites,\{\Delta_{i}\}_{i=1}^{n-1}) \text{ for all } \\
+\text{choices of }  n \in \naturals, \ \{\Delta_{i}\}_{i=1}^{n-1}, \text{ and }\datasites \text{ with } \size(\datasites) < \hcut \}.
+\end{multline}
+Here $\hcut \in (0, b-a]$ is a cut-off value, and the inflation factor $\fC:[0,\hcut) \to [1,\infty)$ is a non-decreasing function.
 
-The cone $\cc$ is defined to rule out sufficiently spiky functions because $f'$ may change much over a small distance if $f \in \cc$.  For example, if a function looks like a line on a sufficiently fine mesh, i.e., if $f'(x_i)=f'(x_i^-)=\beta$ for $i=1, \ldots, n-1$ for some real $\beta$ and some $\datasites$ with $\size(\datasites) \le \fh$, then $f$ must be the linear function $f(x)= f(a) + \beta(x-a)$.  While the triangular peak function $\tri(\cdot;t,h)$ lies inside $\cc$ for $h \ge \fh$, it lies outside $\cc$ for $h < \fh/2$.
+The cone $\cc$ is defined to rule out sufficiently spiky functions because $f'$ may change much over a small distance if $f \in \cc$.  For example, if a function looks like a line on a sufficiently fine mesh, i.e., if $f'(x_i)=f'(x_i^-)=\beta$ for $i=1, \ldots, n-1$ for some real $\beta$ and some partition $\datasites$ with $\size(\datasites) \le \hcut$, then $f$ must be the linear function $f(x)= f(a) + \beta(x-a)$.  While the triangular peak function $\tri(\cdot;t,h)$ lies inside $\cc$ for $h \ge \hcut$ and $t \in [a+\hcut,b-3\hcut]$, it lies outside $\cc$ for $h < \hcut/2$.
 
 The definition of $\cc$ does not rule out all functions with narrow spikes.  Consider the double peaked function defined as
 \begin{subequations} \label{twopkdef}
-\begin{gather}
-\twopk(x;t,h,\pm):= \tri(x,0,\fh) \pm b\tri(x,t,h) \\
-\end{gather}
-\end{subequations}
-
-Let $A$ denote the linear spline approximation using $n+1$ ordered points including the endpoints, i.e., 
 \begin{multline}
-\label{Andef}
-A(f,\datasites)(x) \\
-= \begin{cases}  \displaystyle f(x_0)\frac{x_1-x}{x_1-x_0} + f(x_1)\frac{x-x_0}{x_1-x_0}, & a=x_0 \le x < x_1, \\
-\displaystyle f(x_1)\frac{x_2-x}{x_2-x_1} + f(x_2)\frac{x-x_1}{x_2-x_1}, & x_1 \le x < x_2, \\
-\qquad \qquad \qquad \qquad \vdots & \qquad \quad \vdots \\
-\displaystyle f(x_{n-1})\frac{x_n-x}{x_n-x_{n-1}} + f(x_n)\frac{x-x_{n-1}}{x_n-x_{n-1}}, & x_{n-1} \le x \le x_n=b.
-\end{cases}
-\end{multline}   
-When the $x_i$ are equally spaced, i.e., $x_i=a+(b-a)i/n$, then we write $A_n(f):=A(f,\datasites)(x)$.  The composite trapezoidal rule is the integral of the linear spline based on using equally spaced data sites, i.e., $T_n(f,a,b) = \int_0^1 A_n(f)(x) \, \dif x$.  
-
-To estimate $\Var(f')$ appearing in the theoretical error bound for the trapezoidal rule, \eqref{???}, we replace $f'$ by the derivative of the linear spline, namely, 
-\begin{align*}
-F(f,\datasites) &: = \Var(A(f,\datasites)') \\
-& = \sum_{i=1}^{n-1} \abs{ \frac{f(x_{i+1})-f(x_{i})}{x_{i+1}-x_{i}} - \frac{f(x_i)-f(x_{i-1})}{x_i-x_{i-1}}}.
-\end{align*}
-When the $x_i$ are equally spaced, we use the notation $F_n(f)$.  These $F(f,\datasites)$ never overestimate $\Var(f')$.  To prove this, let $\Delta_i$ and $x_{i,\pm}$ for $i=1, \ldots, n$ satisfy
-\begin{equation*}
-\Delta_i:= \frac{f(x_i)-f(x_{i-1})}{x_i-x_{i-1}}, \qquad f'(x_{i,-}) \le \Delta_i \le f'(x_{i,+})/
-\end{equation*}
-If $f'$ is continuous, then one may take $x_{i,-}=x_{i,+}$.  Also for each $i$ let $\xi_{i,\pm}$ correspond to $x_{i,\pm}$ but with the ordering $\xi_{i,-} \le \xi_{i,+} $.  It then follows that
-\begin{align*}
-\Var(f') & \ge \abs{f'(\xi_{1,+}) - f'(\xi_{1,-})}  \\
-& \qquad \qquad  + \sum_{i=2}^n \bigl [ \abs{f'(\xi_{i,-}) - f'(\xi_{i-1,+})}+ \abs{f'(\xi_{i,+}) - f'(\xi_{i,-})} \bigr ] \\
-& = \abs{f'(\xi_{1,+}) - \Delta_1} + \abs{\Delta_1- f'(\xi_{1,-})}  \\
-& \quad  + \sum_{i=2}^n \bigl[ \abs{f'(\xi_{i,-}) - f'(\xi_{i-1,+})}+ \abs{f'(\xi_{i,+}) -\Delta_i} + \abs{\Delta_i- f'(\xi_{i,-})} \bigr] \\
-& =  \abs{\Delta_1- f'(\xi_{1,-})} + \abs{f'(\xi_{n,+}) - \Delta_n} \\
-& \quad  + \sum_{i=2}^n \bigl[\abs{f'(\xi_{i-1,+}) -\Delta_{i-1}} + \abs{f'(\xi_{i,-}) - f'(\xi_{i-1,+})}+  \abs{\Delta_i- f'(\xi_{i,-})} \bigr] \\
-& \ge \sum_{i=2}^n \abs{\Delta_i -\Delta_{i-1}} = F(f,\datasites).
-\end{align*}
-
-The cone of integrands that are not too spiky is defined to comprise those functions for which $F(f,\datasites)$ does not underestimate $\Var(f)$ by much provided that the data sites are not too far apart.  Define the mesh size of a set of data sites as the maximum width between adjacent  sites:
-\[
-h(\datasites):=\max_{1 \le i \le n} x_i-x_{i-1}.
-\]
-The cone of integrands for which our new adaptive algorithm $\integ$ will succeed is 
-\begin{multline}
-\cc:=\biggl \{f \in \cv : \Var(f') \le \fC(\size(\datasites)) F(f,\datasites)  \\
-\text{ for all partitions } \datasites \text{ of } [a,b] \text{ with } h(\datasites) < \fh \biggr \}.
+\twopk(x;t,h,\pm) := \tri(x,0,\hcut) \pm \frac{3[\fC(h)-1]}{4}\tri(x,t,h), \\\
+ \qquad \qquad a+3\hcut \le t \le b-3h, \ 0\le h < \hcut,
 \end{multline}
+\begin{gather}
+\int_a^b \twopk(x;t,h,\pm)  \, \dif x = \frac{\hcut^2}{2} \pm \frac{3[\fC(h)-1]h^2}{8}, \\
+\Var(\twopk'(x;t,h,\pm)) = 3 + 4 \frac{3[\fC(h)-1]}{4} = 3 \fC(h).
+\end{gather}
+From this definition it follows that
+\begin{align}
+\nonumber
+\MoveEqLeft{\fC(\size(\datasites)) \hV(\twopk'(x;t,h,\pm),\datasites,\{\Delta_{i}\}_{i=1}^{n-1})} \\
+\nonumber
+&\ge  \begin{cases} 3 \fC(h) =\Var(\twopk'(x;t,h,\pm)), & h \le \size(\datasites) < \hcut \\
+\fC(0) \Var(\twopk'(x;t,h,\pm)),  & 0 \le \size(\datasites) < h
+\end{cases} \\
+\label{twopkincone}
+&\ge \Var(\twopk'(x;t,h,\pm)).
+\end{align}
+\end{subequations}
+Although $\twopk(\cdot;t,h,\pm)$ may have a peak of arbitrarily small width half-width, $h$, but since the height, $\fC(h)$, of this peak is small enough,  $\twopk(\cdot;t,h,\pm)$ still lies in $\cc$ by \eqref{twopkincone}.
 
-There are two parameters defining this cone, an inflation factor $\fC \ge 1$ and positive key mesh size, $\fh$.  The inverse of the inflation factor, $\fC^{-1}$, represents the factor that $F(f,\datasites)$ is allowed to underestimate $\Var(f')$ by in the limit of vanishing $h(\datasites)$.  
+We cannot use $\hV(f',\datasites,\{\Delta_{i}\}_{i=1}^{n-1})$ to approximate $\Var(f')$ because it depends on values of $f'$, not values of $f$.  However, $\hV(f',\datasites,\{\Delta_{i}\}_{i=1}^{n-1})$ is closely related to the following approximation to $\Var(f')$, which is the total variation of the derivative of the linear spline approximation to $f$:
+\begin{multline*}
+\tV_n(f) : = \sum_{i=1}^{n-1} \abs{ \frac{f(t_{i+1})-f(t_{i})}{t_{i+1}-t_{i}} - \frac{f(t_i)-f(t_{i-1})}{t_i-t_{i-1}}} \\
+= \frac{n}{b-a}\sum_{i=1}^{n-1} \abs{ f(t_{i+1})-2f(t_{i})+f(t_{i-1})}, \\
+t_i= a + \frac{i(b-a)}{n},\ i=0, \ldots, n, \ n \in \naturals.
+\end{multline*}
+\begin{lem}  \label{tVlem}
+For all $f \in \cc$ it follows that $\tV_n(f) \le \Var(f') \le \fC(2(b-a)/n) \tV_n(f)$ for $n>2(b-a)/\hcut$.
+\end{lem}
+\begin{proof} For all $i=0, \ldots, n-1$ it follows that 
+\begin{equation} \label{MVT}
+f(t_{i+1})-f(t_{i}) = \int_{t_i}^{t_{i+1}} f'(x) \, \dif x = (t_{i+1}-t_{i}) \Delta_i
+\end{equation}
+for some $\Delta_{i}$ between $f'(x_i)$ and $f'(x_i^-)$ and for some $x_i \in [t_{i},t_{i+1}]$.  This follows from a mean value argument. Since it is impossible for $f'(x)$ to lie strictly below or strictly above $[f(t_{i+1})-f(t_{i})]/(t_{i+1}-t_{i})$, there must exist $\xi_{\pm} \in [t_{i},t_{i+1}]$ with $f'(\xi_-) \le [f(t_{i+1})-f(t_{i})]/(t_{i+1}-t_{i}) \le f'(\xi_+)$.  A bisection algorithm then converges to an $x_i$ with the desired property.
+Augmenting $\{x_{i}\}_{i=1}^n$ with $a$ and $b$ to become a partition, $\{x_i\}_{i=0}^{n+1}$, it follows from \eqref{MVT} that 
+\begin{multline*}
+\tV_n(f) = \sum_{i=1}^{n-1} \abs{ \Delta_i - \Delta_{i-1}} = \hV(f',\{x_i\}_{i=0}^{n+1},\{\Delta_{i}\}_{i=1}^{n}) \\
+ \begin{cases} \le \Var(f') & \text{by \eqref{hVlowerbd}}, \\
+\displaystyle  \ge \frac{\Var(f')}{\fC(\size(\{x_i\}_{i=0}^{n+1}))} \ge \frac{\Var(f')}{\fC(2(b-a)/n)} & \text{by \eqref{conedef}},
+\end{cases}
+\end{multline*}
+where $x_i - x_{i-1} \le t_{i+1} - t_{i-1} \le 2(b-a)/n$ for $i=1, \ldots, n$.
+\end{proof}
 
-Functions whose first derivative has zero total variation are lines.  Analogously, any function $f$ satisfying $F(f,\datasites)=0$ resembles a line when sampled at $\datasites$.  The role of $\fh$ can be understood by noting that if $f\in \cc_{\fC,\fh}$ resembles a line when sampled over data sites with mesh size less than $\fh$, then $f$ must indeed be a line because by the definition of $\cc_{\fC,\fh}$ we know that $\Var(f')=0$. Another way to understand $\fh$ is that $\cc_{\fC,\fh}$ contains no functions with significant spikes narrower than $\fh$ because the sampling scheme might not detect them.
+The data-based upper bound on $\Var(f')$ in this lemma can be combined with the error bound in \eqref{traperrbd} to provide the following data-based error bound:
+\begin{multline}\label{guarerr}
+\err(f,n) \le \oerr(f,n) = \frac{(b-a)^2 \Var(f')}{8 n^2} \\ \le  \frac{(b-a)^2 \fC(2(b-a)/n) \tV_n(f)}{8 n^2} =: \terr(f,n) \qquad \forall n>2(b-a)/\hcut.
+\end{multline}
+This is the crux of our guaranteed adaptive trapezoidal rule 
 
-Our composite trapezoidal 
-
-\begin{algo}\label{adaptintegalgo} [$\integ$, Adaptive, for Cones $\cc_{\fC,\fh}$] Given an interval, $[a,b]$, an inflation factor, $\fC>1$, a positive key mesh size, $\fh$, a positive error tolerance, $\varepsilon$, and a routine for generating values of the integrand, $f$, set $j=1$ and $n_1 = \left \lfloor (b-a)/\fh \right \rfloor +1$.
+\begin{guaralgo} [Adaptive, for Cones of Integrands, $\cc$] Given an interval, $[a,b]$, an inflation function, $\fC$, a positive key mesh size, $\hcut$, a positive error tolerance, $\varepsilon$, and a routine for generating values of the integrand, $f$, set $j=1$ and $n_1 = \left \lfloor 2(b-a)/\hcut \right \rfloor +1$.
 \begin{description}
 \item[Step 1] Compute the error estimate $\terr(f,n_j)$ according to \eqref{guarerr}.
 
 \item [Step 2] If $\terr(f,n_j) \le \varepsilon$, then return the trapezoidal rule approximation $T_{n_j}(f)$ as the answer.  
 
-\item [Step 3] Otherwise let $n_{j+1}=2 n_j$, increase $j$ by one, and go to Step 1.
-
-\end{description}
+\item [Step 3] Otherwise let $n_{j+1} = \max(2,m) n_j$, where
 \begin{equation}\label{algo1n}
-n = \Bigg \lceil (b-a)\sqrt{\frac{\sigma}{8\varepsilon}} \Bigg \rceil,
+m = \min\{ r \in \naturals : \fC(2(b-a)/(rn_j)) \tV_{n_j}(f) \le 8 (r n_j)^2 \varepsilon \},
 \end{equation}
-and return the trapezoidal rule $\ballinteg(f,a,b,\varepsilon)=T_n(f,a,b)$ as the answer.
-\end{algo}
-Using this definition of linear spline we focus on the semi-norm defined by $f \mapsto \Var(f-A_1(f))$.  Like $f \mapsto \Var(f')$ this weaker semi-norm also vanishes for functions that are linear in $x$.  If $\Var(f')$ is finite, then it follows that $\Var(f) = \norm[1]{f'}:=\int_0^1 \abs{f(x)} \, \dif x$, so the weaker semi-norm may be written as $f \mapsto \norm[1]{f'-f(1)+f(0)}$.  It is shown in \ocite{HicEtal14b}*{Section 5.1} that 
-\begin{equation} \label{weaknorm}
-2 \norm[1]{f'-f(1)+f(0)} \le \Var(f') \qquad \forall f \text{ with } \Var(f')<\infty.
-\end{equation}
-
-The data-driven quantity 
-\begin{equation} \label{weaknormalgo}
-\norm[1]{A_n(f)'-f(1)+f(0)}= \sum_{i=1}^n \abs{f\left(\frac in \right)-f\left(\frac{i-1}n \right) - \frac{f(1)-f(0)}{n}}
-\end{equation}
-always underestimates $\norm[1]{f'-f(1)+f(0)}$, but not by much provided that $\Var(f')$ is not too large. Again in \ocite{HicEtal14b}*{Section 5.1} it is shown that 
-\begin{equation} \label{errweaknorm}
-0 \le \norm[1]{f'-f(1)+f(0)} - \norm[1]{A_n(f)'-f(1)+f(0)} \le \frac{\Var(f')}{2n}.
-\end{equation}
-
-At this point it seems that we have reached a dead end because we have an error bound in terms of $\Var(f')$, just like the trapezoidal rule error bound \eqref{traperrbd}.  However, we make a further assumption that $f$ lies in the cone defined as 
-\begin{equation} \label{conedef}
-\cc_{\tau} := \{f : \Var(f') \le \tau \norm[1]{f'-f(1)+f(0)} \}.
-\end{equation}
-This cone consists of functions whose stronger semi-norms are not too much greater than their weaker semi-norms.  The set $\cc_{\tau}$ is called a cone because $f \in \cc_{\tau}$ implies that $cf \in \cc_{\tau}$ for all $c \in \reals$.  Substituting this upper bound on $\Var(f')$ into \eqref{errweaknorm} and re-arranging the terms implies a data-driven upper bound on  $\Var(f')$:
-\begin{multline} \label{varfprimeless}
-\Var(f') \le \tau \norm[1]{f'-f(1)+f(0)}  \\
-\le \frac{\tau \norm[1]{A_n(f)'-f(1)+f(0)}}{1-\tau/(2n)} \qquad \forall f \in \cc_{\tau},
-\end{multline}
-provided that $n>\tau/2$.  There is also a companion bound in the other direction based on \eqref{weaknorm} and \eqref{errweaknorm}:
-\begin{equation} \label{varfprimegreat}
-\norm[1]{A_n(f)'-f(1)+f(0)} \le \norm[1]{f'-f(1)+f(0)} \le \frac{\Var(f')}{2}.
-\end{equation}
-
-Plugging \eqref{varfprimeless} into \eqref{traperrbd} yields the following guaranteed error bound for the trapezoidal rule:
-\begin{equation} \label{guarerr}
-\err(f,n) \le \terr(f,n) := \frac{\tau \norm[1]{A_n(f)'-f(1)+f(0)}} {4n(2n-\tau)} \qquad \forall f \in \cc_{\tau}.
-\end{equation}
-This new error bound can then be used to construct the following adaptive, automatic quadrature algorithm, which is a simplification of \ocite{HicEtal14b}*{Algorithm 4}:
-
-\begin{algo}[Adaptive, Automatic, for Cones] \label{conealgo} Given $\tau>0$, and an error tolerance, $\varepsilon$, let $j=1$ and $n_1=\lceil (\tau+1)/2 \rceil$.
-
-\begin{description} 
-
-\item[Step 1] Compute the error estimate $\terr(f,n_j)$ according to \eqref{guarerr}.
-
-\item [Step 2] If $\terr(f,n_j) \le \varepsilon$, then return the trapezoidal rule approximation $T_{n_j}(f)$ as the answer.  
-
-\item [Step 3] Otherwise let $n_{j+1}=2 n_j$, increase $j$ by one, and go to Step 1.
+increase $j$ by one, and go to Step 1.
 
 \end{description}
-\end{algo}
+\end{guaralgo}
 
-Error bound \eqref{guarerr} is used to prove that Algorithm \ref{conealgo} is successful for integrands in $\cc_{\tau}$.  Let $N(f,\varepsilon,\tau)$ denote the eventual number of trapezoids required by this algorithm.  Because the algorithm is adaptive, the number of trapezoids depends on the particulars of $f$ as well as the error tolerance.  The two bounds \eqref{varfprimeless} and \eqref{varfprimegreat} may be used to derive both lower and upper bounds on $N(f,\varepsilon,\tau)$:
+Because the error bound $\terr$ is valid for all integrands in the cone $\cc$, this algorithm is successful for these integrands.  However, one would also like to know the computational cost of this algorithm, which corresponds to the number of trapezoids required plus one.  This question is answered in the following theorem.
 
-\begin{theorem}\cite{HicEtal14b}*{Theorem 7} \label{conealgothm}
-Let $N(f,\varepsilon,\tau)$ denote the final $n_j$ in Algorithm \ref{conealgo}.  Then this algorithm is successful for all functions in $\cc_{\tau}$,  i.e.,  $\abs{\int_0^1 f(x) \, \dif x - T_{N(f,\varepsilon,\tau)}(f)} \le \varepsilon$.  Moreover, $N(f,\varepsilon,\tau)$ is bounded below and above as follows:
+\begin{theorem} \label{conealgothm}
+Algorithm $\integ$ is successful, i.e.,  
+\[
+\abs{\int_a^b f(x) \, \dif x - \integ(f,a,b,\varepsilon)} \le \varepsilon \qquad \forall f \in \cc.
+\]
+Let $N(f,\varepsilon)$ denote the final number of trapezoids required by $\integ(f,a,b,\varepsilon)$.  Then this number is bounded below and above in terms of the true, yet unknown, $\Var(f')$.
 \begin{multline}
-\max \left(\left \lceil\frac{\tau+1}{2} \right \rceil, \left \lceil \sqrt{\frac{ \Var(f')}{8\varepsilon}} \right \rceil \right) \\
-\le \max \left(\left \lceil\frac{\tau+1}{2} \right \rceil, \left \lceil \sqrt{\frac{\tau \norm[1]{f'-f(1)+f(0)}}{8\varepsilon}} \right \rceil \right) \\
-\le
-N(f,\varepsilon,\tau) \\
-\le \sqrt{\frac{\tau \norm[1]{f'-f(1)+f(0)}}{2\varepsilon}} + \tau + 3
-\le \sqrt{\frac{\tau \Var(f') }{4\varepsilon}} + \tau + 3.
+\max\left(\left \lfloor \frac{2(b-a)}{\hcut} \right \rfloor +1, \left \lceil (b-a) \sqrt{\frac{\Var(f')}{8\varepsilon}} \right \rceil \right) \le
+N(f,\varepsilon) \\
+\le 2 \min\{ n \in \naturals : \fC(2(b-a)/n) \Var(f') \le 8 n^2 \varepsilon \}.
 \end{multline}
 \end{theorem}
 
-Note that the cost of the algorithm depends on $\Var(f')$, but without the algorithm needing to know $\Var(f')$ in advance.   Comparing the two error bounds on which Algorithms \ref{ballalgo} and \ref{conealgo} are based and applying the , we note that 
-\begin{equation*}
-\frac{\Var(f')}{\sigma} \le
-\frac{\terr(f,n)}{\oerr(f,n)}
-\le \frac{\tau\Var(f')}{\sigma (2-\tau/n)}.
-\end{equation*}
+\begin{proof} Algorithm is successful by the argument used to derive hte error bound $\terr$.  No matter what inputs $f$ and $\varepsilon$ are provided, the number of trapezoids must be at least $n_1 = \left \lfloor 2(b-a)/\hcut \right \rfloor +1$.  Then the number of trapezoids is increased until $\terr(f,n) \le \varepsilon$, which by \eqref{guarerr} implies that $\oerr(f,n) \le \varepsilon$.  This implies the lower bound on $N(f,\varepsilon)$ 
+
+Lemma  \ref{tVlem}
+
+\end{proof}
 
 
 
-For an integrand like \eqref{GaussExample} where $\Var(f')$ is known, the number of trapezoids required by Algorithm \ref{conealgo} is no greater than  $\sqrt{\tau \Var(f') /(4\varepsilon)} + \tau + 3$, whereas for Algorithm \ref{ballalgo} with $\sigma=\Var(f')$ the number of trapezoids is no more than $\bigl \lceil \sqrt{\Var(f') /(8\varepsilon)} \, \bigr\rceil$.  The extra cost for Algorithm \ref{conealgo} comes in the form of the factor $\sqrt{2\tau}$ and the additional additive term of $\tau+1$.  On the other hand, if $\Var(f')$ is not known in advance, then the disadvantage of Algorithm  \ref{ballalgo} is that if $\Var(f')$ is not known in advance, and $\sigma$ is chosen conservatively, then Algorithm \ref{conealgo} could cost arbitrarily more than $\sqrt{\Var(f') /(8\varepsilon)}+1$ in the limit of , 
+
+
 
 \section{Discussion} \label{discusssec}
 
