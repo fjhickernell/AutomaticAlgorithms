@@ -34,20 +34,6 @@
         date={2013},
 }
 
-\bib{HicEtal14b}{article}{
-      author={Clancy, N.},
-      author={Ding, Y.},
-      author={Hamilton, C.},
-      author={\HickernellFJ, F.~J.},
-      author={Zhang, Y.},
-       title={The cost of deterministic, adaptive, automatic algorithms: Cones,
-  not balls},
-        date={2014},
-     journal={J. Complexity},
-      volume={30},
-       pages={21\ndash 45},
-}
-
 \bib{TrefEtal14}{manual}{
       author={Hale, N.},
       author={Trefethen, L.~N.},
@@ -110,9 +96,18 @@
         date={2012},
 }
 
-\bib{MAT8.3}{manual}{
+\bib{Sha08a}{article}{
+      author={Shampine, L.~F.},
+       title={Vectorized adaptive quadrature in {\textsc{Matlab}\xspace}},
+        date={2008},
+     journal={J. Comput.\ Appl.\ Math.},
+      volume={211},
+       pages={131\ndash 140},
+}
+
+\bib{MAT8.4}{manual}{
       author={{The MathWorks, Inc.}},
-       title={{MATLAB} 8.3},
+       title={{MATLAB} 8.4},
      address={Natick, MA},
         date={2014},
 }
