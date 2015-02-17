@@ -3,15 +3,40 @@
 \begin{bibdiv}
 \begin{biblist}
 
+\bib{BerEtal14a}{article}{
+      author={Berkaliev, Z.},
+      author={Devi, S.},
+      author={Fasshauer, G.~E.},
+      author={\HickernellFJ, F.~J.},
+      author={Kartal, O.},
+      author={Li, X.},
+      author={McCray, P.},
+      author={Whitney, S.},
+      author={Zawojewski, J.~S.},
+       title={Initiating a programmatic assessment report},
+        date={2014},
+     journal={{PRIMUS}},
+      volume={24},
+       pages={403\ndash 420},
+}
+
 \bib{BraPet11a}{book}{
       author={Brass, H.},
       author={Petras, K.},
        title={Quadrature theory: the theory of numerical integration on a
   compact interval},
-     edition={First},
    publisher={American Mathematical Society},
      address={Rhode Island},
         date={2011},
+}
+
+\bib{Bre13a}{book}{
+      author={Brent, R.~P.},
+       title={Algorithms for minimization without derivatives},
+   publisher={Dover Publications, Inc.},
+     address={Mineola, NY},
+        date={2013},
+        note={republication of the 1973 edition by Prentice-Hall, Inc.},
 }
 
 \bib{BurFai10}{book}{
@@ -28,10 +53,24 @@
       author={Cheney, W.},
       author={Kincaid, D.},
        title={Numerical mathematics and computing},
-     edition={Seventh},
+     edition={Seventh Edition},
    publisher={Brooks/Cole},
      address={Boston},
         date={2013},
+}
+
+\bib{HicEtal14b}{article}{
+      author={Clancy, N.},
+      author={Ding, Y.},
+      author={Hamilton, C.},
+      author={\HickernellFJ, F.~J.},
+      author={Zhang, Y.},
+       title={The cost of deterministic, adaptive, automatic algorithms: Cones,
+  not balls},
+        date={2014},
+     journal={J. Complexity},
+      volume={30},
+       pages={21\ndash 45},
 }
 
 \bib{TrefEtal14}{manual}{
@@ -40,6 +79,39 @@
       author={Driscoll, T.~A.},
        title={Chebfun version 5},
         date={2014},
+}
+
+\bib{HicEtal14a}{inproceedings}{
+      author={\HickernellFJ, F.~J.},
+      author={Jiang, L.},
+      author={Liu, Y.},
+      author={Owen, A.~B.},
+       title={Guaranteed conservative fixed width confidence intervals via
+  {M}onte {C}arlo sampling},
+        date={2014},
+   booktitle={{M}onte {C}arlo and quasi-{M}onte {C}arlo methods 2012},
+      editor={Dick, J.},
+      editor={Kuo, F.~Y.},
+      editor={Peters, G.~W.},
+      editor={Sloan, I.~H.},
+   publisher={Springer-Verlag, Berlin},
+       pages={105\ndash 128},
+}
+
+\bib{HicJim16a}{misc}{
+      author={\HickernellFJ, F.~J.},
+      author={{Jim\'enez Rugama}, {\relax Ll}.~A.},
+       title={Reliable adaptive cubature using digital sequences},
+        date={2014},
+        note={submitted for publication, arXiv:1410.8615 [math.NA]},
+}
+
+\bib{JimHic16a}{misc}{
+      author={{Jim\'enez Rugama}, {\relax Ll}.~A.},
+      author={\HickernellFJ, F.~J.},
+       title={Adaptive multidimensional integration based on rank-1 lattices},
+        date={2014},
+        note={submitted for publication, arXiv:1411.1966},
 }
 
 \bib{Lyn83}{article}{
@@ -56,15 +128,16 @@
       author={Kearfott, {R.~B.}},
       author={Cloud, {M.~J.}},
        title={Introduction to interval analysis},
-   publisher={Cambridge Uni Press (CUP)},
+   publisher={Cambridge University Press},
+     address={Cambridge},
         date={2009},
 }
 
-\bib{R3.03_2013}{misc}{
+\bib{R3.1.2_2014}{misc}{
       author={{R Development Core Team}},
        title={{The R Project for Statistical Computing}},
          how={GNU Project},
-        date={2013},
+        date={2014},
 }
 
 \bib{Rum99a}{incollection}{
@@ -98,7 +171,7 @@
 
 \bib{Sha08a}{article}{
       author={Shampine, L.~F.},
-       title={Vectorized adaptive quadrature in {\textsc{Matlab}\xspace}},
+       title={Vectorized adaptive quadrature in {\textsc{matlab}\xspace}},
         date={2008},
      journal={J. Comput.\ Appl.\ Math.},
       volume={211},
@@ -112,19 +185,37 @@
         date={2014},
 }
 
-\bib{NAG23}{manual}{
+\bib{NAG24}{manual}{
       author={{The Numerical Algorithms Group}},
        title={The {NAG} library},
      edition={{M}ark 23},
      address={Oxford},
-        date={2012},
+        date={2013},
 }
 
-\bib{Mat9a}{manual}{
+\bib{Ton14a}{thesis}{
+      author={Tong, X.},
+       title={A guaranteed, adaptive, automatic algorithm for univariate
+  function minimization},
+        type={Master's Thesis},
+        date={2014},
+}
+
+\bib{TraWasWoz88}{book}{
+      author={Traub, J.~F.},
+      author={Wasilkowski, G.~W.},
+      author={Wo\'zniakowski, H.},
+       title={Information-based complexity},
+   publisher={Academic Press},
+     address={Boston},
+        date={1988},
+}
+
+\bib{Mat10a}{manual}{
       author={{Wolfram Research Inc.}},
-       title={Mathematica 9},
+       title={Mathematica 10},
      address={Champaign, IL},
-        date={2012},
+        date={2014},
 }
 
 \end{biblist}
