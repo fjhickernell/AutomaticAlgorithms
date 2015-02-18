@@ -1,5 +1,3 @@
-
-
 %Run all functions to produce figures for the paper submitted to the
 %American Mathematical Monthly
 
