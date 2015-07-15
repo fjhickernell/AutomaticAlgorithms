@@ -3,6 +3,25 @@
 \begin{bibdiv}
 \begin{biblist}
 
+\bib{BaiBor12a}{misc}{
+      author={Bailey, D.~H.},
+      author={Borwein, J.~M.},
+       title={Set the default to ``open'': Reproducible science in the computer
+  age},
+         how={Huffington Post},
+        date={2013},
+  url={http://www.huffingtonpost.com/david-h-bailey/set-the-default-to-open-r_b_2635850.html},
+  note={http://www.huffingtonpost.com/david-h-bailey/set-the-default-to-open-r\_b\_2635850.html},
+}
+
+\bib{BanHei14a}{article}{
+      author={Bangerth, W.},
+      author={Heister, T.},
+       title={Quo vadis, scientific software},
+        date={2014{ }January},
+     journal={SIAM News},
+}
+
 \bib{BerEtal14a}{article}{
       author={Berkaliev, Z.},
       author={Devi, S.},
@@ -39,6 +58,15 @@
         note={republication of the 1973 edition by Prentice-Hall, Inc.},
 }
 
+\bib{BucDon95a}{techreport}{
+      author={Buckheit, J.~B.},
+      author={Donoho, D.~L.},
+       title={Wavelab and reproducible research},
+ institution={Department of Statistics, Standford University},
+        date={1995},
+      number={474},
+}
+
 \bib{BurFai10}{book}{
       author={Burden, R.~L.},
       author={Faires, J.~D.},
@@ -57,6 +85,33 @@
    publisher={Brooks/Cole},
      address={Boston},
         date={2013},
+}
+
+\bib{Cho14a}{article}{
+      author={Choi, S.-C.~T.},
+       title={{MINRES-QLP} pack and reliable reproducible research via staunch
+  scientific software},
+        date={2014},
+     journal={J. Open Research Software},
+      volume={2},
+      number={1},
+       pages={1\ndash 7},
+}
+
+\bib{ChoEtal14a}{misc}{
+      author={Choi, S.-C.~T.},
+      author={Ding, Y.},
+      author={\HickernellFJ, F.~J.},
+      author={Jiang, L.},
+      author={{Jim\'enez Rugama}, {\relax Ll}.~A.},
+      author={Tong, X.},
+      author={Zhang, Y.},
+      author={Zhou, X.},
+       title={{GAIL}: {G}uaranteed {A}utomatic {I}ntegration {L}ibrary
+  (versions 1.0--2.0)},
+         how={MATLAB software},
+        date={{2013--2014}},
+         url={http://code.google.com/p/gail},
 }
 
 \bib{HicEtal14b}{article}{
@@ -114,6 +169,15 @@
         note={submitted for publication, arXiv:1411.1966},
 }
 
+\bib{LeV2013a}{article}{
+      author={LeVeque, R.~J.},
+       title={Top ten reasons to not share your code (and why you should
+  anyway)},
+        date={2013{ }April},
+     journal={SIAM News},
+        note={http://www.siam.org/news/news.php?id=2064},
+}
+
 \bib{Lyn83}{article}{
       author={Lyness, J.~N.},
        title={When not to use an automatic quadrature routine},
@@ -131,6 +195,61 @@
    publisher={Cambridge University Press},
      address={Cambridge},
         date={2009},
+}
+
+\bib{Nov96a}{article}{
+      author={Novak, E.},
+       title={On the power of adaption},
+        date={1996},
+     journal={J. Complexity},
+      volume={12},
+       pages={199\ndash 237},
+}
+
+\bib{PlaWas05a}{article}{
+      author={Plaskota, L.},
+      author={Wasilkowski, G.~W.},
+       title={Adaption allows efficient integration of functions with unknown
+  singularities},
+        date={2005},
+     journal={Numer.\ Math.},
+      volume={102},
+       pages={123\ndash 144},
+}
+
+\bib{PlaWoz09a}{article}{
+      author={Plaskota, L.},
+      author={Wasilkowski, G.~W.},
+       title={The power of adaptive algorithms for functions with
+  singularities},
+        date={2009},
+     journal={J. Fixed Point Theory and Applications},
+      volume={6},
+       pages={227\ndash 248},
+}
+
+\bib{PlaEtal08a}{article}{
+      author={Plaskota, L.},
+      author={Wasilkowski, G.~W.},
+      author={Zhao, Y.},
+       title={The power of adaption for approximating functions with
+  singularities},
+        date={2008},
+     journal={Math. Comput.},
+      volume={77},
+       pages={2309\ndash 2338},
+}
+
+\bib{PlaEtal13a}{article}{
+      author={Plaskota, L.},
+      author={Wasilkowski, G.~W.},
+      author={Zhao, Y.},
+       title={An adaptive algorithm for weighted approximation of singular
+  functions over $\mathbb{R}$},
+        date={2013},
+     journal={SIAM J. Numer.\ Anal.},
+      volume={51},
+       pages={1470\ndash 1493},
 }
 
 \bib{R3.1.2_2014}{misc}{
@@ -178,6 +297,16 @@
        pages={131\ndash 140},
 }
 
+\bib{Sto14a}{book}{
+      author={Stodden, V.},
+      author={Leisch, F.},
+      author={Peng, R.~D.},
+       title={Implementing reproducible research},
+   publisher={CRC Press},
+     address={Boca Raton, FL},
+        date={2014},
+}
+
 \bib{MAT8.4}{manual}{
       author={{The MathWorks, Inc.}},
        title={{MATLAB} 8.4},
@@ -209,6 +338,17 @@
    publisher={Academic Press},
      address={Boston},
         date={1988},
+}
+
+\bib{WasGao92a}{article}{
+      author={Wasilkowski, G.~W.},
+      author={Gao, F.},
+       title={On the power of adaptive information for functions with
+  singularities},
+        date={1992},
+     journal={Math.\ Comp.},
+      volume={58},
+       pages={285\ndash 304},
 }
 
 \bib{Mat10a}{manual}{
