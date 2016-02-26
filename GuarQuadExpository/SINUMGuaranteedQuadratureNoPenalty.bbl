@@ -1,0 +1,58 @@
+\def\Ignore#1{}\def\notesupp#1{}\def\Ignore#1{}\def\notesupp#1{}\providecommand{\HickernellFJ}{Hickernell\xspace}
+\begin{thebibliography}{10}
+
+\bibitem{BraPet11a}
+{\sc H.~Brass and K.~Petras}, {\em Quadrature theory: the theory of numerical
+  integration on a compact interval}, American Mathematical Society, Rhode
+  Island, 2011.
+
+\bibitem{BurFai10}
+{\sc R.~L. Burden and J.~D. Faires}, {\em Numerical Analysis}, Cengage
+  Brooks/Cole, Belmont, CA, ninth edition~ed., 2010.
+
+\bibitem{CheKin12a}
+{\sc W.~Cheney and D.~Kincaid}, {\em Numerical Mathematics and Computing},
+  Brooks/Cole, Boston, seventh edition~ed., 2013.
+
+\bibitem{TrefEtal14}
+{\sc N.~Hale, L.~N. Trefethen, and T.~A. Driscoll}, {\em Chebfun Version 5},
+  2014.
+
+\bibitem{Lyn83}
+{\sc J.~N. Lyness}, {\em When not to use an automatic quadrature routine}, SIAM
+  Rev., 25 (1983), pp.~63--87,
+  \href{http://dx.doi.org/10.1137/1025003}{doi:\nolinkurl{10.1137/1025003}}.
+
+\bibitem{MoKeCl09}
+{\sc R.~Moore, R.~Kearfott, and M.~Cloud}, {\em Introduction To Interval
+  Analysis}, Cambridge University Press, Cambridge, 2009.
+
+\bibitem{R3.3.0_2016}
+{\sc {R Development Core Team}}, {\em {The R Project for Statistical
+  Computing}}.
+\newblock GNU Project, 2016.
+
+\bibitem{Rum99a}
+{\sc S.~M. Rump}, {\em {INTLAB - INTerval LABoratory}}, in
+  {Developments~in~Reliable Computing}, T.~Csendes, ed., Kluwer Academic
+  Publishers, Dordrecht, 1999, pp.~77--104.
+\newblock \url{http://www.ti3.tuhh.de/rump/}.
+
+\bibitem{Rum10a}
+{\sc S.~M. Rump}, {\em Verification methods: {R}igorous results using
+  floating-point arithmetic}, Acta Numer., 19 (2010), pp.~287--449.
+
+\bibitem{Sau12a}
+{\sc T.~Sauer}, {\em Numerical Analysis}, Pearson, 2012.
+
+\bibitem{MAT9.0}
+{\sc {The MathWorks, Inc.}}, {\em {MATLAB} 9.0}, Natick, MA, 2016.
+
+\bibitem{NAG24}
+{\sc {The Numerical Algorithms Group}}, {\em The {NAG} Library}, Oxford, {M}ark
+  23~ed., 2013.
+
+\bibitem{Mat10a}
+{\sc {Wolfram Research Inc.}}, {\em Mathematica 10}, Champaign, IL, 2014.
+
+\end{thebibliography}
